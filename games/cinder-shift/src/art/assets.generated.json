@@ -1,0 +1,1001 @@
+{
+  "version": "m03.1",
+  "palette": {
+    "basalt": "#111823",
+    "oil": "#213747",
+    "steel": "#456171",
+    "violet": "#494163",
+    "terracotta": "#A76B70",
+    "cream": "#F1D8AE",
+    "ochre": "#DFA15C",
+    "mint": "#76DCC8",
+    "amber": "#FFB65B",
+    "coral": "#F36D76",
+    "text": "#EDF1EC",
+    "muted": "#BAC6C9"
+  },
+  "atlases": {
+    "mira": {
+      "image": {
+        "file": "mira-atlas-abfe2eb1c3.png",
+        "sha256": "abfe2eb1c390feecd2d4a45268695d183468a7862396b53da302d04bc4dde4fe",
+        "bytes": 1196
+      },
+      "json": {
+        "file": "mira-atlas-7a094b4190.json",
+        "sha256": "7a094b4190e357ca851b2d5b1f16cd92789a079af98a65c85c30d5ce571135f9",
+        "bytes": 2575
+      }
+    },
+    "enemies": {
+      "image": {
+        "file": "enemies-atlas-203e8fbe25.png",
+        "sha256": "203e8fbe2593ebc4ae64c5156c723acd861c804cc3f003f1eee8881fe585e1ce",
+        "bytes": 1516
+      },
+      "json": {
+        "file": "enemies-atlas-8d6cc6288e.json",
+        "sha256": "8d6cc6288ef6ebe7a298bac1484017b01ec56aae0caf484189c27cb7661518d5",
+        "bytes": 2251
+      }
+    },
+    "props": {
+      "image": {
+        "file": "props-atlas-0235c052a8.png",
+        "sha256": "0235c052a82f5280cdd0edd5b0594cbfeb092791909a321c8dce7b7695df1c18",
+        "bytes": 4552
+      },
+      "json": {
+        "file": "props-atlas-9a4e8d231b.json",
+        "sha256": "9a4e8d231bd87b8298776b40552dc32bb358b7e6880a102889308cbfa613d0c4",
+        "bytes": 3906
+      }
+    },
+    "environment": {
+      "image": {
+        "file": "environment-atlas-0d06cf6453.png",
+        "sha256": "0d06cf6453ad4a086414150bdf87f32960e65759551780646406bc2105e2012c",
+        "bytes": 1022
+      },
+      "json": {
+        "file": "environment-atlas-43e2f17290.json",
+        "sha256": "43e2f17290f2426b2a3f3f5cfc6d59480edd98ae5789560188bbebc2902bf2a3",
+        "bytes": 3227
+      }
+    }
+  },
+  "backgrounds": {
+    "far": {
+      "file": "bg-far-38b50b95a8.png",
+      "sha256": "38b50b95a8c7b8d67a53a10b8d9c2ddaf477cc5d1d85f08898fa0cca370b6e52",
+      "bytes": 12940
+    },
+    "A": {
+      "file": "architecture-a-f525a20314.png",
+      "sha256": "f525a2031410b89705a49bcc1a29e9fedf7e984018e38db85b5751f122fc1f58",
+      "bytes": 12454
+    },
+    "B": {
+      "file": "architecture-b-034c9862b9.png",
+      "sha256": "034c9862b9e898969165acc4d8808b0c21e63adbbef064310a2a913e318d86db",
+      "bytes": 22585
+    },
+    "C": {
+      "file": "architecture-c-60ca9a0761.png",
+      "sha256": "60ca9a07613ec99cae501e8c45dc97fc1ae642f48aa96405bf84a85ad3ed88ef",
+      "bytes": 29006
+    }
+  },
+  "frames": {
+    "mira-head": {
+      "asset_id": "mira-head",
+      "state_id": "mira.head",
+      "slot_id": "mira.head",
+      "atlas": "mira",
+      "source_canvas": [
+        20,
+        14
+      ],
+      "pivot": [
+        10,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-head",
+      "source_position": [
+        14,
+        16
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-body-stand": {
+      "asset_id": "mira-body-stand",
+      "state_id": "mira.body.stand",
+      "slot_id": "mira.body.stand",
+      "atlas": "mira",
+      "source_canvas": [
+        30,
+        24
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-body-stand",
+      "source_position": [
+        9,
+        28
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-body-crouch": {
+      "asset_id": "mira-body-crouch",
+      "state_id": "mira.body.crouch",
+      "slot_id": "mira.body.crouch",
+      "atlas": "mira",
+      "source_canvas": [
+        30,
+        9
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-body-crouch",
+      "source_position": [
+        9,
+        43
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-leg": {
+      "asset_id": "mira-leg",
+      "state_id": "mira.leg.procedural",
+      "slot_id": "mira.leg.procedural",
+      "atlas": "mira",
+      "source_canvas": [
+        7,
+        12
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-leg",
+      "source_position": [
+        15,
+        48
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-boot": {
+      "asset_id": "mira-boot",
+      "state_id": "mira.boot.procedural",
+      "slot_id": "mira.boot.procedural",
+      "atlas": "mira",
+      "source_canvas": [
+        10,
+        4
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-boot",
+      "source_position": [
+        13,
+        56
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-cutter": {
+      "asset_id": "mira-cutter",
+      "state_id": "mira.weapon",
+      "slot_id": "mira.weapon",
+      "atlas": "mira",
+      "source_canvas": [
+        22,
+        8
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": [
+        21,
+        4
+      ],
+      "source_psd": "mira.psd",
+      "source_layer": "mira-cutter",
+      "source_position": [
+        22,
+        28
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "mira-shadow": {
+      "asset_id": "mira-shadow",
+      "state_id": "mira.shadow",
+      "slot_id": "mira.shadow",
+      "atlas": "mira",
+      "source_canvas": [
+        30,
+        5
+      ],
+      "pivot": [
+        15,
+        2
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "mira.psd",
+      "source_layer": "mira-shadow",
+      "source_position": [
+        9,
+        59
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "walker": {
+      "asset_id": "walker",
+      "state_id": "walker.body",
+      "slot_id": "walker.body",
+      "atlas": "enemies",
+      "source_canvas": [
+        48,
+        40
+      ],
+      "pivot": [
+        24,
+        38
+      ],
+      "foot": [
+        24,
+        38
+      ],
+      "muzzle": [
+        41,
+        6
+      ],
+      "source_psd": "enemies.psd",
+      "source_layer": "walker",
+      "source_position": [
+        0,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "walker-wreck": {
+      "asset_id": "walker-wreck",
+      "state_id": "walker.dead",
+      "slot_id": "walker.dead",
+      "atlas": "enemies",
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "enemies.psd",
+      "source_layer": "walker-wreck",
+      "source_position": [
+        52,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "drone": {
+      "asset_id": "drone",
+      "state_id": "drone.body",
+      "slot_id": "drone.body",
+      "atlas": "enemies",
+      "source_canvas": [
+        56,
+        32
+      ],
+      "pivot": [
+        28,
+        16
+      ],
+      "foot": null,
+      "muzzle": [
+        28,
+        16
+      ],
+      "source_psd": "enemies.psd",
+      "source_layer": "drone",
+      "source_position": [
+        80,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "drone-wreck": {
+      "asset_id": "drone-wreck",
+      "state_id": "drone.dead",
+      "slot_id": "drone.dead",
+      "atlas": "enemies",
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "enemies.psd",
+      "source_layer": "drone-wreck",
+      "source_position": [
+        52,
+        14
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "warning-triangle": {
+      "asset_id": "warning-triangle",
+      "state_id": "walker.telegraph",
+      "slot_id": "walker.telegraph",
+      "atlas": "enemies",
+      "source_canvas": [
+        10,
+        10
+      ],
+      "pivot": [
+        5,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "enemies.psd",
+      "source_layer": "warning-triangle",
+      "source_position": [
+        52,
+        30
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "warning-reticle": {
+      "asset_id": "warning-reticle",
+      "state_id": "drone.telegraph",
+      "slot_id": "drone.telegraph",
+      "atlas": "enemies",
+      "source_canvas": [
+        18,
+        18
+      ],
+      "pivot": [
+        9,
+        9
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "enemies.psd",
+      "source_layer": "warning-reticle",
+      "source_position": [
+        72,
+        30
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "target": {
+      "asset_id": "target",
+      "state_id": "target.hp3",
+      "slot_id": "target.hp3",
+      "atlas": "props",
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "target",
+      "source_position": [
+        0,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "target-damaged": {
+      "asset_id": "target-damaged",
+      "state_id": "target.hp1-2",
+      "slot_id": "target.hp1-2",
+      "atlas": "props",
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "target-damaged",
+      "source_position": [
+        28,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "terminal-off": {
+      "asset_id": "terminal-off",
+      "state_id": "terminal.off",
+      "slot_id": "terminal.off",
+      "atlas": "props",
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "terminal-off",
+      "source_position": [
+        56,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "terminal-ready": {
+      "asset_id": "terminal-ready",
+      "state_id": "terminal.ready",
+      "slot_id": "terminal.ready",
+      "atlas": "props",
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "terminal-ready",
+      "source_position": [
+        92,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "terminal-on": {
+      "asset_id": "terminal-on",
+      "state_id": "terminal.on",
+      "slot_id": "terminal.on",
+      "atlas": "props",
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "terminal-on",
+      "source_position": [
+        128,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "gate-closed": {
+      "asset_id": "gate-closed",
+      "state_id": "gate.closed",
+      "slot_id": "gate.closed",
+      "atlas": "props",
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "gate-closed",
+      "source_position": [
+        0,
+        68
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "gate-open": {
+      "asset_id": "gate-open",
+      "state_id": "gate.open",
+      "slot_id": "gate.open",
+      "atlas": "props",
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "gate-open",
+      "source_position": [
+        52,
+        68
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "shot-player": {
+      "asset_id": "shot-player",
+      "state_id": "projectile.player",
+      "slot_id": "projectile.player",
+      "atlas": "props",
+      "source_canvas": [
+        8,
+        3
+      ],
+      "pivot": [
+        4,
+        1
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "shot-player",
+      "source_position": [
+        110,
+        70
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "shot-enemy": {
+      "asset_id": "shot-enemy",
+      "state_id": "projectile.enemy",
+      "slot_id": "projectile.enemy",
+      "atlas": "props",
+      "source_canvas": [
+        8,
+        8
+      ],
+      "pivot": [
+        4,
+        4
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "shot-enemy",
+      "source_position": [
+        124,
+        70
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "signal-coral": {
+      "asset_id": "signal-coral",
+      "state_id": "telegraph.line",
+      "slot_id": "telegraph.line",
+      "atlas": "props",
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "signal-coral",
+      "source_position": [
+        140,
+        70
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "signal-mint": {
+      "asset_id": "signal-mint",
+      "state_id": "interaction.progress",
+      "slot_id": "interaction.progress",
+      "atlas": "props",
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "props.psd",
+      "source_layer": "signal-mint",
+      "source_position": [
+        145,
+        70
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "floor-top": {
+      "asset_id": "floor-top",
+      "state_id": "tile.floor.top",
+      "slot_id": "tile.floor.top",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "floor-top",
+      "source_position": [
+        0,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "floor-face": {
+      "asset_id": "floor-face",
+      "state_id": "tile.floor.face",
+      "slot_id": "tile.floor.face",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "floor-face",
+      "source_position": [
+        20,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "cap-left": {
+      "asset_id": "cap-left",
+      "state_id": "tile.cap.left",
+      "slot_id": "tile.cap.left",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "cap-left",
+      "source_position": [
+        40,
+        0
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "cap-right": {
+      "asset_id": "cap-right",
+      "state_id": "tile.cap.right",
+      "slot_id": "tile.cap.right",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "cap-right",
+      "source_position": [
+        0,
+        20
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "ceiling": {
+      "asset_id": "ceiling",
+      "state_id": "tile.ceiling",
+      "slot_id": "tile.ceiling",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "ceiling",
+      "source_position": [
+        20,
+        20
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "wall": {
+      "asset_id": "wall",
+      "state_id": "tile.wall",
+      "slot_id": "tile.wall",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "wall",
+      "source_position": [
+        40,
+        20
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "vent": {
+      "asset_id": "vent",
+      "state_id": "decor.vent",
+      "slot_id": "decor.vent",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "vent",
+      "source_position": [
+        0,
+        40
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "support": {
+      "asset_id": "support",
+      "state_id": "decor.support",
+      "slot_id": "decor.support",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "support",
+      "source_position": [
+        20,
+        40
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    },
+    "corner": {
+      "asset_id": "corner",
+      "state_id": "decor.corner",
+      "slot_id": "decor.corner",
+      "atlas": "environment",
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "source_psd": "environment.psd",
+      "source_layer": "corner",
+      "source_position": [
+        40,
+        40
+      ],
+      "offset": [
+        0,
+        0
+      ]
+    }
+  },
+  "source": "layered PSDs in art/m03/source",
+  "module_anchors": {
+    "weapon": [
+      43,
+      32
+    ],
+    "movement": [
+      12,
+      35
+    ],
+    "defence": [
+      31,
+      30
+    ]
+  },
+  "tile_map": {
+    "grid": 16,
+    "rooms": {
+      "width": 640,
+      "height": 360,
+      "world_height": 320,
+      "hud_height": 40
+    },
+    "placement": "RoomDefinition solids, cropped at unchanged boundaries"
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "baseline_implementation_sha": "eeee3de50b252af407e7833b3c1feb31831917c2",
+  "baseline_artifact_sha": "826f27a11bcde7ad56c69146394f36767ec3f5ec",
+  "core_hashes": {
+    "src/player.ts": "ccb1cf8cfb1f3324c5ec5a291d8407400e8789d3c0af8d0c0a17a85b670abd84",
+    "src/enemies.ts": "2ab18ae67b2d0324fe5f2b0ca3bf420bfd1f0293f665fd0b24bfc5cb583d6c68",
+    "src/mission.ts": "27686cd774aace620e3aec9e0888c9c9a6994c341572dcead0cfd7c178247c94",
+    "src/projectiles.ts": "93d99cd13b0c118dc1a7b50f54df2045d2bf068567aa8ba52c2c42a254e1c5f6",
+    "src/geometry.ts": "ac7ccc12f4739d9fed916262d69be7a134b6b295d38bf02ec190afb5e8c8a060",
+    "src/input.ts": "d489274408ce1c3df06704cfaeb3e819d7c11a81a9104b561fa1b50acaea7e3b",
+    "src/audio.ts": "bdc6934b9d1fd80f336e739424cbddd807cb0054d2cef9897e20f2b7eb0ff186"
+  },
+  "room_method_hashes": {
+    "init": "3527bf37128a989c6e61518b9d4c5519ce61dc238e7ed38a546991608bb46a89",
+    "update": "3e8e94bc73855fd2b46646b3e56c93271691b2b33cabdc841652f9045e287960",
+    "step": "55c9e8e45bd4cd27ae61c7c4e9fc47941d95efa9e4cdb900ffd760d8287fe475",
+    "damage": "994470b43c9a73f8b459c5bbafd0239a24bcc8dcff3c1ecfaf8b2859e7cdf645",
+    "interact": "96ca9b969a96ebc1712e16ddb70f65f66a54e57db383b40219d160869ac9292c",
+    "beginTransition": "a70f84a4f9a6512f128ee80969a930c1872e23e382417c0fe6ea05cb0482977c",
+    "tutorial": "487d20561890577523fee78e544d00396f6f3a2a565add84915f823e63d6dbf2"
+  },
+  "mechanics": {
+    "viewport": {
+      "width": 640,
+      "height": 360,
+      "world_height": 320,
+      "hud_height": 40
+    },
+    "movement": {
+      "acceleration": 1200,
+      "deceleration": 1800,
+      "crouch_speed": 58,
+      "coyote_ms": 100,
+      "jump_buffer_ms": 120,
+      "standing_height": 44,
+      "crouching_height": 26,
+      "body_width": 22,
+      "dash_speed": 500,
+      "dash_ms": 160,
+      "dash_cooldown_ms": 3000
+    },
+    "combat": {
+      "walker": {
+        "hp": 3,
+        "speed": 26,
+        "range": 330,
+        "telegraph_ms": 600,
+        "first_telegraph_ms": 1000,
+        "burst_count": 2,
+        "burst_interval_ms": 250,
+        "projectile_speed": 150,
+        "recovery_ms": 1700,
+        "patrol_ms": 800
+      },
+      "drone": {
+        "hp": 2,
+        "speed": 38,
+        "range": 320,
+        "telegraph_ms": 800,
+        "burst_count": 1,
+        "projectile_speed": 125,
+        "recovery_ms": 2100,
+        "patrol_ms": 1600
+      },
+      "contact_damage": 1,
+      "terminal_hold_ms": 600,
+      "transition_ms": 180
+    },
+    "initial_balance": {
+      "player_hp": 6,
+      "walk_speed": 115,
+      "gravity": 900,
+      "jump_velocity": -330,
+      "shot_damage": 1,
+      "shots_per_second": 4,
+      "projectile_speed": 440,
+      "hurt_invulnerability_seconds": 0.7
+    }
+  },
+  "animation": {
+    "mira": {
+      "body": "one static head shared by stand and crouch; one torso per posture",
+      "leg_phase": "Math.sin(simMs / 75) * 3 * (Math.abs(vx) > 5 ? 1 : 0)",
+      "leg_quantization": "Math.round(step)",
+      "front_leg": {
+        "x": -9,
+        "top": "feet - 12 + round(step)",
+        "height": "12 - round(step)"
+      },
+      "back_leg": {
+        "x": 3,
+        "top": "feet - 12 - round(step)",
+        "height": "12 + round(step)"
+      },
+      "front_boot": {
+        "x": -11,
+        "top": "feet - 4 + round(step)"
+      },
+      "back_boot": {
+        "x": 2,
+        "top": "feet - 4 - round(step)"
+      },
+      "weapon": {
+        "muzzle_x": "player.x + facing * 19",
+        "standing_y": "feet - 28",
+        "crouching_y": "feet - 15"
+      },
+      "hurt": "simMs < hurtUntil && floor(simMs / 80) % 2 === 0",
+      "death_ms": 350,
+      "intermediate_frames": 0,
+      "blend": false
+    },
+    "walker": {
+      "frames_per_phase": 1,
+      "collider": [
+        26,
+        30
+      ],
+      "pivot": "feet = enemy.y + 15",
+      "muzzle_offset": [
+        17,
+        -32
+      ]
+    },
+    "drone": {
+      "frames_per_phase": 1,
+      "collider": [
+        26,
+        20
+      ],
+      "pivot": "enemy.x, enemy.y",
+      "muzzle_offset": [
+        0,
+        0
+      ]
+    },
+    "projectiles": {
+      "player": [
+        8,
+        3
+      ],
+      "enemy": [
+        8,
+        8
+      ],
+      "flight_frames": 1,
+      "impact_animation": "none"
+    },
+    "transition_ms": 180,
+    "terminal_hold_ms": 600
+  },
+  "notes": [
+    "No geometry or collider changes are permitted.",
+    "B has no gameplay terminal in M02; do not add a fake interactive object.",
+    "Pixel rounding affects rendering only."
+  ]
+}
