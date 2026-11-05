@@ -14,7 +14,11 @@ test('M03 rig preserves every sampled M02 leg position and muzzle anchor',()=>{
 });
 
 test('raster assets load locally, HUD stays legible, poses and debug are separate',async({page},info)=>{
-  const errors:string[]=[];const missing:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='warning'||m.type()==='error')errors.push(m.text());});page.on('response',r=>{if(r.status()>=400)missing.push(r.url());});
+  const errors:string[]=[];const missing:string[]=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{
+    // Linux software WebGL reports screenshot readback stalls; keep asset/CSP warnings fatal.
+    const screenshotReadback=/^\[\.WebGL-0x[0-9a-f]+\]GL Driver Message \(OpenGL, Performance, GL_CLOSE_PATH_NV, High\): GPU stall due to ReadPixels(?: \(this message will no longer repeat\))?$/i;
+    if(m.type()==='error'||(m.type()==='warning'&&!screenshotReadback.test(m.text())))errors.push(m.text());
+  });page.on('response',r=>{if(r.status()>=400)missing.push(r.url());});
   await page.goto('/games/cinder-shift/');await page.getByRole('button',{name:'Полигон управления'}).click();
   await page.waitForFunction(()=>Boolean((window as any).__CINDER__().player));
   await page.locator('#viewport').screenshot({path:info.outputPath('room-a-1x.png')});
