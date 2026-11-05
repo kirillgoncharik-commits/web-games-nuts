@@ -1,0 +1,12 @@
+import {readFile,writeFile} from 'node:fs/promises';import{execFileSync}from'node:child_process';import{createHash}from'node:crypto';import{methodText}from'./m03-contract-utils.mjs';
+const baseline='eeee3de50b252af407e7833b3c1feb31831917c2',root='games/cinder-shift/';
+const digest=s=>createHash('sha256').update(s).digest('hex');
+const read=p=>execFileSync('git',['show',baseline+':'+root+p],{encoding:'utf8'});
+const core=['src/player.ts','src/enemies.ts','src/mission.ts','src/projectiles.ts','src/geometry.ts','src/input.ts','src/audio.ts'];
+const hashes=Object.fromEntries(core.map(p=>[p,digest(read(p))]));
+const source=read('src/room-scene.ts');
+const methods=Object.fromEntries(['init','update','step','damage','interact','beginTransition','tutorial'].map(name=>[name,digest(methodText(source,name))]));
+const c=JSON.parse(read('game.config.json'));
+const contract={baseline_implementation_sha:baseline,baseline_artifact_sha:'826f27a11bcde7ad56c69146394f36767ec3f5ec',core_hashes:hashes,room_method_hashes:methods,mechanics:Object.fromEntries(['viewport','movement','combat','initial_balance'].map(k=>[k,c[k]])),animation:{mira:{body:'one static head shared by stand and crouch; one torso per posture',leg_phase:'Math.sin(simMs / 75) * 3 * (Math.abs(vx) > 5 ? 1 : 0)',leg_quantization:'Math.round(step)',front_leg:{x:-9,top:'feet - 12 + round(step)',height:'12 - round(step)'},back_leg:{x:3,top:'feet - 12 - round(step)',height:'12 + round(step)'},front_boot:{x:-11,top:'feet - 4 + round(step)'},back_boot:{x:2,top:'feet - 4 - round(step)'},weapon:{muzzle_x:'player.x + facing * 19',standing_y:'feet - 28',crouching_y:'feet - 15'},hurt:'simMs < hurtUntil && floor(simMs / 80) % 2 === 0',death_ms:350,intermediate_frames:0,blend:false},walker:{frames_per_phase:1,collider:[26,30],pivot:'feet = enemy.y + 15',muzzle_offset:[17,-32]},drone:{frames_per_phase:1,collider:[26,20],pivot:'enemy.x, enemy.y',muzzle_offset:[0,0]},projectiles:{player:[8,3],enemy:[8,8],flight_frames:1,impact_animation:'none'},transition_ms:c.combat.transition_ms,terminal_hold_ms:c.combat.terminal_hold_ms},notes:['No geometry or collider changes are permitted.','B has no gameplay terminal in M02; do not add a fake interactive object.','Pixel rounding affects rendering only.']};
+await writeFile('art/m03/animation-contract.json',JSON.stringify(contract,null,2)+'\n');await writeFile('art/m03/source/m02-render-reference.ts.txt',read('src/render.ts'));
+console.log('Captured M02 mechanics and render contract.');

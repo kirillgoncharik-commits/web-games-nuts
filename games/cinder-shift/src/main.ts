@@ -5,6 +5,7 @@ import {Effects} from './audio';
 import {Telemetry,type EventName} from './telemetry';
 import {MissionAttempt,rooms,type Mode,type Result} from './mission';
 import {RoomScene} from './room-scene';
+import {preloadArt} from './render';
 import './style.css';
 declare const __BUILD_ID__:string;
 declare const __SOURCE_SHA__:string;
@@ -21,6 +22,7 @@ function emit(name:EventName,params:Record<string,string|number>={}){
 }
 function panel(html:string,primary:()=>void,secondary?:()=>void){
   const overlay=$('overlay');overlay.hidden=false;overlay.innerHTML=`<div class="panel">${html}</div>`;
+  overlay.querySelector('[data-settings]')?.addEventListener('click',openSettings);
   overlay.querySelector('[data-primary]')?.addEventListener('click',primary);overlay.querySelector('[data-secondary]')?.addEventListener('click',secondary||(()=>{}));
 }
 function deviceHints(){
@@ -33,14 +35,16 @@ function updateDevice(){
   $('device').textContent={keyboard:'КЛАВИАТУРА',gamepad:'ГЕЙМПАД',touch:'СЕНСОР'}[controls.device];
   $('hints').textContent=deviceHints()+(attempt?.mode==='training'?' · K / C — тест импульса':'');
   const touch=touchMode==='on'||(touchMode==='auto'&&controls.device==='touch');
+  $('hud').hidden=!attempt;
+  document.querySelectorAll<HTMLButtonElement>('#touch-controls button').forEach(button=>{button.disabled=state!=='playing';});
   $('touch-controls').hidden=!touch;$('playframe').classList.toggle('touch-sides',touch&&layout==='sides');
   document.querySelector<HTMLElement>('[data-action="ability"]')!.hidden=attempt?.mode!=='training';
 }
 function menu(){
   if(attempt&&attempt.mode==='mission'&&attempt.finish('abandoned'))emit('mission_end',{result:'abandoned',reason:'Выход в меню'});
-  game.scene.stop('Room');state='menu';attempt=null;controls.setScope('menu');effects.pause();$('pause').setAttribute('disabled','');$('transition').hidden=true;
+  game.scene.stop('Room');game.scene.start('Backdrop');state='menu';attempt=null;controls.setScope('menu');effects.pause();$('pause').setAttribute('disabled','');$('transition').hidden=true;
   $('objective').textContent='Миссия 01 · Включить аварийную линию и выйти';
-  panel('<p class="tag">КАЛЬДЕРА 7 / МИССИЯ 01</p><h2>Шлюз</h2><p>Сеть изолировала комплекс. Верните питание эвакуационной линии и доберитесь до выхода через три отсека.</p><button class="primary" data-primary>Начать миссию →</button><button class="secondary" data-secondary>Полигон управления</button><p class="steps">ТРИ КОМНАТЫ · БАЗОВЫЙ КОСТЮМ · БЕЗ СОХРАНЕНИЯ</p>',briefing,()=>start('training'));
+  panel('<p class="tag">КАЛЬДЕРА 7 / МИССИЯ 01</p><h2>Шлюз</h2><p>Сеть изолировала комплекс. Верните питание эвакуационной линии и доберитесь до выхода через три отсека.</p><button class="primary" data-primary>Начать миссию →</button><button class="secondary" data-secondary>Полигон управления</button><button class="secondary" data-settings>Настройки</button><p class="steps">ТРИ КОМНАТЫ · БАЗОВЫЙ КОСТЮМ · БЕЗ СОХРАНЕНИЯ</p>',briefing,()=>start('training'));
   updateDevice();syncOrientation();
 }
 function briefing(){
@@ -49,7 +53,7 @@ function briefing(){
 }
 function start(mode:Mode,retry=false){
   if(portrait())return;
-  const previous=attempt?.id;game.scene.stop('Room');attempt=new MissionAttempt(mode);state='playing';controls.setScope('play');
+  const previous=attempt?.id;game.scene.stop('Backdrop');game.scene.stop('Room');attempt=new MissionAttempt(mode);state='playing';controls.setScope('play');
   $('overlay').hidden=true;$('transition').hidden=true;$('pause').removeAttribute('disabled');void effects.unlock();effects.tone(330,.14);
   if(retry)emit('retry',{previous_attempt_id:previous||''});
   emit(mode==='mission'?'mission_start':'test_start');game.scene.start('Room',{attempt});focusGame();updateDevice();
@@ -60,7 +64,7 @@ function finish(result:Result){
   game.scene.pause('Room');state=result==='victory'?'complete':'dead';controls.setScope('menu');$('pause').setAttribute('disabled','');effects.tone(result==='victory'?660:65,.2);
   emit(current.mode==='training'?'test_complete':'mission_end',{result,reason:result==='death'?current.reason:'Аварийная линия включена, шлюз достигнут'});
   const win=result==='victory',time=Math.round(current.activeMs/1000),title=win?(current.mode==='training'?'Системы в норме.':'Линия восстановлена.'):'Костюм повреждён';
-  panel(`<p class="tag">${win?'ЗАДАНИЕ ВЫПОЛНЕНО':'МИССИЯ ПРЕРВАНА'} / ОТСЕК ${current.current}</p><h2>${title}</h2><p>${win?'Питание включено. Шлюз достигнут.':`Причина: ${current.reason}.`}<br>Активное время: ${time} с · прочность: ${current.hp}/6</p><button class="primary" data-primary>${win?'Пройти ещё раз':'Повторить'}</button><button class="secondary" data-secondary>В меню</button>`,()=>start(current.mode,true),menu);
+  panel(`<p class="tag">${win?'ЗАДАНИЕ ВЫПОЛНЕНО':'МИССИЯ ПРЕРВАНА'} / ОТСЕК ${current.current}</p><span class="result-icon ${win?'success':'danger'}" aria-hidden="true">${win?'✓':'!'}</span><h2>${title}</h2><p>${win?'Питание включено. Шлюз достигнут.':`Причина: ${current.reason}.`}<br>Активное время: ${time} с · прочность: ${current.hp}/6</p><button class="primary" data-primary>${win?'Пройти ещё раз':'Повторить'}</button><button class="secondary" data-secondary>В меню</button>`,()=>start(current.mode,true),menu);
 }
 function pause(reason='manual'){
   if(state!=='playing')return;
@@ -77,13 +81,32 @@ function failure(message:string,contextLost=false){
   panel(`<p class="tag">${contextLost?'ГРАФИЧЕСКИЙ КОНТЕКСТ ПОТЕРЯН':'СБОЙ ЗАПУСКА'}</p><h2>Нужен перезапуск</h2><p>${contextLost?'Графика была отключена браузером. После обновления миссия начнётся заново.':'Обновите страницу, чтобы повторить загрузку. Подробности доступны в диагностике.'}</p><button class="primary" data-primary>Повторить загрузку</button>`,()=>location.reload());
 }
 const room=new RoomScene({controls,effects,emit,pause:()=>pause(),result:finish,dying:()=>{state='dying';},objective:text=>$('objective').textContent=text,transition:active=>{$('transition').hidden=!active;}});
+class Backdrop extends Phaser.Scene{
+  constructor(){super('Backdrop');}
+  create(){this.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0xb8bccb);this.add.image(0,40,'m03-bg-B').setOrigin(0).setTint(0xbac6c9);}
+}
 class Boot extends Phaser.Scene{
   constructor(){super('Boot');}
+  preload(){
+    this.load.on('progress',(value:number)=>{const progress=$<HTMLProgressElement>('loading-progress');progress.value=value;$('loading-label').textContent=`Загрузка ресурсов · ${Math.round(value*100)}%`;});
+    this.load.on('loaderror',()=>failure('art_load_error'));preloadArt(this);
+  }
   create(){
+    if(state==='error')return;
+    if(['mira','enemies','props','environment','bg-far','bg-A','bg-B','bg-C'].some(name=>!this.textures.exists('m03-'+name))){failure('art_process_error');return;}
     const g=this.make.graphics({x:0,y:0});g.fillStyle(0xffffff).fillRect(0,0,22,44).generateTexture('body',22,44);g.destroy();
     loadMs=Math.round(performance.now()-startedAt);emit('game_ready',{load_ms:loadMs});this.scene.stop();menu();
   }
 }
+function openSettings(){
+  pause();const settings=document.querySelector('.settings') as HTMLDetailsElement;settings.open=true;settings.scrollIntoView({block:'center'});$('touch-mode').focus();
+}
+function fitPixels(){
+  const frame=$('playframe'),viewport=$('viewport');
+  viewport.style.maxWidth=matchMedia('(pointer:coarse)').matches?'':`${Math.max(1,Math.floor(frame.clientWidth/640))*640}px`;
+}
+$('settings-open').addEventListener('click',openSettings);
+window.addEventListener('resize',fitPixels);fitPixels();
 $('build-label').textContent=`v${__BUILD_ID__} / ${__SOURCE_SHA__.slice(0,7)}`;
 $('pause').addEventListener('click',()=>{state==='paused'?resume():pause();focusGame();});
 $('mute').addEventListener('click',()=>{effects.muted=!effects.muted;$('mute').textContent=`Звук: ${effects.muted?'выкл':'вкл'}`;$('mute').setAttribute('aria-pressed',String(effects.muted));focusGame();});
@@ -97,9 +120,10 @@ window.addEventListener('error',e=>failure(e.message||'runtime_error'));window.a
 emit('game_boot');
 const benchmarkFps=new URLSearchParams(location.search).get('fps')==='30'?30:60;
 game=new Phaser.Game({type:Phaser.AUTO,parent:'game',width:640,height:360,backgroundColor:'#14232b',pixelArt:true,antialias:false,banner:false,
+  loader:{imageLoadType:'HTMLImageElement'},
   scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:false},
   fps:{target:benchmarkFps,limit:benchmarkFps===30?30:0,smoothStep:false},
-  physics:{default:'arcade',arcade:{gravity:{x:0,y:config.initial_balance.gravity},customUpdate:true,fixedStep:false}},scene:[Boot,room]});
+  physics:{default:'arcade',arcade:{gravity:{x:0,y:config.initial_balance.gravity},customUpdate:true,fixedStep:false}},scene:[Boot,Backdrop,room]});
 game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();failure('webgl_context_lost',true);}));
 game.events.on(Phaser.Core.Events.POST_RENDER,()=>{
   if(state!=='playing'&&state!=='dying'){

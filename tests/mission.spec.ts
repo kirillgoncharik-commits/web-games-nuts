@@ -59,6 +59,7 @@ test.describe('full mission demonstration',()=>{
   test('A to B to C, held terminal, victory and retry',async({page},info)=>{
     test.setTimeout(90000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
     await start(page);await roomA(page);
+    await page.locator('#viewport').screenshot({path:info.outputPath('corridor-live.png')});
     await page.keyboard.down('j');await forwardJump(page,194,350);
     await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:10000}).toBe(0);await page.keyboard.up('j');
     await page.screenshot({path:info.outputPath('corridor.png')});
@@ -78,8 +79,9 @@ test.describe('full mission demonstration',()=>{
   });
 });
 
-test('actual combat death stops input, emits one result and retry resets the mission',async({page})=>{
+test('actual combat death stops input, emits one result and retry resets the mission',async({page},info)=>{
   test.setTimeout(35000);await start(page);await roomA(page);await forwardJump(page,194,370);
+  await page.waitForFunction(()=>(window as any).__CINDER__().enemies.some((e:any)=>e.phase==='telegraph'));await page.locator('#viewport').screenshot({path:info.outputPath('attack-warning.png')});
   await expect.poll(async()=>(await state(page)).state,{timeout:15000}).toBe('dead');
   const dead=await state(page);expect(dead.hp).toBe(0);const end=dead.eventLog.filter((e:any)=>e.name==='mission_end');expect(end).toHaveLength(1);expect(end[0].params.result).toBe('death');expect(end[0].params.reason).toBeTruthy();
   await page.keyboard.down('d');await page.waitForTimeout(250);await page.keyboard.up('d');expect((await state(page)).player).toEqual(dead.player);

@@ -1,6 +1,6 @@
 # Nuts Games web games
 
-Browser-first 2D games by Nuts Games. Cinder Shift now has the M02 Airlock mission: three rooms, walkers and drones, damage, a power objective, victory/death and retry. The original control room remains available as training. Phaser, TypeScript and Vite are pinned.
+Browser-first 2D games by Nuts Games. Cinder Shift has the M03 raster art and UI pass over the M02 Airlock mission: three rooms, walkers and drones, damage, a power objective, victory/death and retry. The original control room remains available as training. Phaser, TypeScript and Vite are pinned.
 
 - First game: **Cinder Shift / Пепельная смена**, working creative direction for R01, inspired by Exolon.
 - [Detailed GDD in Russian](docs/cinder-shift/GDD.ru.md)
@@ -46,3 +46,5 @@ The first release route is the web. Paid editions, Steam and mobile stores are o
 For the additional Firefox/WebKit full-route and focus checks, install `npx playwright install firefox webkit` and run `CROSS_BROWSER=1 npm test`. These engine checks do not replace physical Safari/iPhone testing. `?fps=30` is a diagnostic render limit; gameplay remains on a fixed 60 Hz simulation. Recorded playthrough measurements and videos are retained in test results.
 
 Integration retains prior hashed files in the assets directory so an HTML response from just before an update can still load its bundle. The current manifest describes only the selected game build; preserved legacy bundles are hosting compatibility files.
+
+M03 art sources, state bindings and export commands: [production art](art/m03/README.md). Current milestone order: [roadmap](docs/cinder-shift/roadmap-current.ru.md). M03 is local pending publication approval and real-device acceptance.

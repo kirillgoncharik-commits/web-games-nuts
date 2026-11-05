@@ -5,7 +5,7 @@ import {Player} from './player';
 import {Projectiles} from './projectiles';
 import {stepEnemy,enemyRect} from './enemies';
 import {clearLine,intersects,segmentRect,expand} from './geometry';
-import {drawRoom,drawActors} from './render';
+import {SceneArt} from './render';
 import type {Controls,Frame,Action} from './input';
 import type {Effects} from './audio';
 import type {EventName} from './telemetry';
@@ -14,20 +14,18 @@ export type RoomHooks={controls:Controls;effects:Effects;emit:(name:EventName,pa
 export class RoomScene extends Phaser.Scene{
   attempt!:MissionAttempt;player!:Player;projectiles=new Projectiles();
   hold=0;transition:{to:RoomId;entry:'left'|'right';remaining:number}|null=null;
-  private entry:'left'|'right'='left';private art!:Phaser.GameObjects.Graphics;private hud!:Phaser.GameObjects.Text;private terminalLabel!:Phaser.GameObjects.Text;
+  private entry:'left'|'right'='left';private art!:SceneArt;
   private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();
   constructor(readonly hooks:RoomHooks){super('Room');}
   init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
   create(){
     this.hold=0;this.transition=null;this.deathMs=0;this.pendingPressed.clear();this.pendingReleased.clear();this.projectiles=new Projectiles();
     const def=rooms[this.attempt.current],saved=this.attempt.room();
-    this.physics.world.setBounds(0,40,640,280);drawRoom(this,def);
+    this.physics.world.setBounds(0,40,640,280);
     const platforms=this.physics.add.staticGroup();
     def.solids.forEach(s=>{const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0xffffff,0);this.physics.add.existing(r,true);platforms.add(r);});
     this.player=new Player(this,this.entry==='right'?584:64);this.physics.add.collider(this.player.sprite,platforms);
-    this.art=this.add.graphics().setDepth(4);
-    this.hud=this.add.text(90,14,'',{fontFamily:'Arial',fontSize:'10px',color:'#d7e3d5'});
-    this.terminalLabel=this.add.text(def.terminal?.x||0,240,'',{fontFamily:'Arial',fontSize:'8px',align:'center',color:'#b9e3d0'}).setOrigin(.5);
+    this.art=new SceneArt(this,def);
     this.hooks.controls.setScope('play');this.attempt.clock.clear();this.hooks.transition(false);
     this.hooks.emit('room_enter',{revisit:Number(saved.visited)});saved.visited=true;
     this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.projectiles.clear();this.hooks.controls.clear();});
@@ -107,9 +105,7 @@ export class RoomScene extends Phaser.Scene{
   }
   private renderState(){
     const a=this.attempt,def=rooms[a.current],saved=a.room();
-    drawActors(this.art,this.player,a,def,saved,this.projectiles,this.hold,this.deathMs>0);
-    this.hud.setText(`ПРОЧНОСТЬ ${a.hp}/6    ·    ${def.id==='T'?'ПОЛИГОН':`ОТСЕК ${def.id}/3`}    ·    ${a.mode==='training'?'ТЕСТ ИМПУЛЬСА':'БАЗОВЫЙ КОСТЮМ'}`);
-    this.terminalLabel.setText(def.terminal?(saved.terminal?'ПИТАНИЕ ВКЛЮЧЕНО':def.id==='C'?`[${this.hooks.controls.hint('interact')}] УДЕРЖИВАТЬ\nАВАРИЙНАЯ ЛИНИЯ`:saved.targetHp>0?'СНАЧАЛА МИШЕНЬ':`[${this.hooks.controls.hint('interact')}] ТЕРМИНАЛ`):'');
+    this.art.render(this.player,a,saved,this.projectiles,this.hold,this.deathMs>0);
     let objective=a.objective?'Добраться до выхода →':'Включить аварийную линию в отсеке C';
     if(a.current==='A'||a.current==='T'){
       const steps:[string,Action,string][]=[['move','right','Двигайтесь'],['jump','jump','Преодолейте уступ'],['crouch','crouch','Пройдите под потолком'],['fire','fire','Сбейте мишень'],['interact','interact','Откройте учебный шлюз']];
