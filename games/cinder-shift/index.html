@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Cinder Shift — технический полигон управления. Nuts Games, R01." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#101619" />
+  <title>Cinder Shift · Nuts Games</title>
+  <link rel="icon" href="data:," />
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <a class="brand" href="/games/" aria-label="Каталог Nuts Games">NUTS<span>GAMES</span></a>
+      <span class="edition">R01 <b>/</b> ПЕПЕЛЬНАЯ СМЕНА</span>
+      <button id="diagnostics-toggle" class="quiet" aria-expanded="false">Диагностика</button>
+    </header>
+    <section class="heading">
+      <div><p class="eyebrow">КАЛЬДЕРА 7 <span>●</span> ТЕХНИЧЕСКИЙ ПОЛИГОН</p><h1>CINDER SHIFT</h1></div>
+      <p class="build-label"><span class="status-light"></span> M0 · ПРОВЕРКА УПРАВЛЕНИЯ<br><small id="build-label"></small></p>
+    </section>
+    <section class="console" aria-label="Игра Cinder Shift">
+      <div class="console-bar"><span>СЕКТОР 00 <b>—</b> СЕРВИСНЫЙ ОТСЕК</span><div><button id="mute" class="quiet" aria-pressed="false">Звук: вкл</button><button id="pause" class="quiet" disabled>Пауза <kbd>Esc</kbd></button></div></div>
+      <div id="playframe" class="playframe">
+        <div id="viewport" class="viewport">
+          <div id="game" tabindex="0" role="application" aria-label="Игровое поле. Управление описано под игрой."></div>
+          <div id="overlay" class="overlay" aria-live="polite"><p>Загрузка полигона…</p></div>
+          <div id="rotate" class="rotate" hidden><span>↻</span><strong>Поверните телефон</strong><p>В альбомной ориентации виден весь отсек.</p></div>
+        </div>
+        <div id="touch-controls" class="touch-controls" hidden aria-label="Сенсорное управление">
+          <div class="directions"><button data-action="left" aria-label="Влево">◀</button><button data-action="crouch" aria-label="Присесть">↓</button><button data-action="right" aria-label="Вправо">▶</button></div>
+          <div class="actions"><button data-action="ability" aria-label="Способность">K<span>ИМПУЛЬС</span></button><button data-action="interact" aria-label="Взаимодействовать">E<span>ТЕРМИНАЛ</span></button><button data-action="fire" aria-label="Огонь">X<span>ОГОНЬ</span></button><button data-action="jump" class="jump" aria-label="Прыжок">↑<span>ПРЫЖОК</span></button></div>
+        </div>
+      </div>
+      <div class="console-footer"><span id="objective" aria-live="polite">Проверка систем костюма перед сменой</span><span id="device">КЛАВИАТУРА</span></div>
+    </section>
+    <section class="under-console">
+      <p id="hints" class="hints"><kbd>A</kbd><kbd>D</kbd> движение <kbd>Space</kbd> прыжок <kbd>S</kbd> присесть <kbd>J</kbd> огонь <kbd>E</kbd> терминал <kbd>K</kbd> импульс</p>
+      <details class="settings"><summary>Управление и настройки</summary><div class="settings-body"><label>Сенсорные кнопки <select id="touch-mode"><option value="auto">Автоматически</option><option value="on">Показать</option><option value="off">Скрыть</option></select></label><label>Расположение <select id="touch-layout"><option value="dock">Под полем</option><option value="sides">По бокам</option></select></label><label><input id="autofire" type="checkbox" checked /> Автоогонь на сенсоре</label><p>Геймпад: стик / крестовина — движение; A — прыжок; RT — огонь; X — терминал; B — импульс; Menu — пауза.</p></div></details>
+    </section>
+    <aside id="diagnostics" class="diagnostics" hidden><div><strong>Локальная диагностика</strong><span id="metrics"></span></div><canvas id="fps-chart" width="640" height="64" aria-label="График FPS последних 60 секунд"></canvas><pre id="events"></pre><p>Внешняя аналитика отключена. События остаются в этой вкладке.</p></aside>
+    <footer class="page-footer"><span>СНАЧАЛА ПРОВЕРЯЕМ КОСТЮМ. ПОТОМ ВЫХОДИМ НА СМЕНУ.</span><span>ПРОТОТИП · ГРАФИКА ВРЕМЕННАЯ</span></footer>
+  </main>
+  <script vite-ignore src="./boot-guard.js"></script>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
