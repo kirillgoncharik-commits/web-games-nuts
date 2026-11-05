@@ -15,9 +15,9 @@ test('complete mission with native touch input and at most two touches',async({b
   await page.goto('/games/cinder-shift/');await page.getByRole('button',{name:'Начать миссию'}).tap();await page.getByRole('button',{name:'Войти в шлюз'}).tap();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
   await jump(143,242);await moveTo(294);await action('crouch',true);await moveTo(442);await action('crouch',false);await expect.poll(async()=>(await state(page)).targetHp).toBe(0);
   await moveTo(546);await action('interact',true);await page.waitForTimeout(80);await action('interact',false);await expect.poll(async()=>(await state(page)).powered).toBe(true);
-  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await expect.poll(async()=>(await state(page)).room).toBe('B');
+  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
   await jump(194,350);await dead('b-walker');await dead('b-drone');
-  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await expect.poll(async()=>(await state(page)).room).toBe('C');
+  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
   await jump(130,224);await action('crouch',true);await dead('c-walker-1');await action('crouch',false);
   await jump(318,368);await action('crouch',true);await dead('c-drone');await action('crouch',false);await moveTo(420);await action('crouch',true);await dead('c-walker-2');await action('crouch',false);
   await jump(496,556);await action('interact',true);await expect.poll(async()=>(await state(page)).objective).toBe(true);await action('interact',false);

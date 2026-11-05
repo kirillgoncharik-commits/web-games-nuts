@@ -12,7 +12,7 @@ async function roomA(page:Page){
   await page.keyboard.down('s');await page.keyboard.down('d');await untilX(page,442);await page.keyboard.up('d');await page.keyboard.up('s');
   await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).targetHp).toBe(0);await page.keyboard.up('j');
   await page.keyboard.down('d');await untilX(page,546);await page.keyboard.up('d');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);
-  await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await expect.poll(async()=>(await state(page)).room).toBe('B');
+  await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
 }
 async function forwardJump(page:Page,from:number,to:number){
   await page.keyboard.down('d');await untilX(page,from);await page.keyboard.down('Space');await untilX(page,to);await page.keyboard.up('Space');await page.keyboard.up('d');
@@ -41,7 +41,7 @@ test('focus returns from page controls without Space activating two actions',asy
   await page.locator('#mute').focus();const y=(await state(page)).player.y;await page.keyboard.press('Space');await page.waitForTimeout(100);expect((await state(page)).player.y).toBeCloseTo(y,0);
 });
 test('returning to A preserves target and terminal, and removes old bullets',async({page})=>{
-  await start(page);await roomA(page);await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('a');await expect.poll(async()=>(await state(page)).room).toBe('A');const s=await state(page);expect(s.targetHp).toBe(0);expect(s.powered).toBe(true);expect(s.projectiles).toEqual([]);expect(s.hp).toBe(6);
+  await start(page);await roomA(page);await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('a');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='A'&&s.state==='playing'&&s.player?.x>500;});const s=await state(page);expect(s.targetHp).toBe(0);expect(s.powered).toBe(true);expect(s.projectiles).toEqual([]);expect(s.hp).toBe(6);
 });
 test('ten browser restarts keep one scene and full initial state',async({page})=>{
   await start(page);const ids=new Set<string>();
@@ -62,7 +62,7 @@ test.describe('full mission demonstration',()=>{
     await page.keyboard.down('j');await forwardJump(page,194,350);
     await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:10000}).toBe(0);await page.keyboard.up('j');
     await page.screenshot({path:info.outputPath('corridor.png')});
-    await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await expect.poll(async()=>(await state(page)).room).toBe('C');
+    await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
     await page.keyboard.down('j');await forwardJump(page,130,224);await page.keyboard.down('s');
     await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-1').hp,{timeout:8000}).toBe(0);await page.keyboard.up('s');
     await forwardJump(page,318,368);await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-drone').hp,{timeout:8000}).toBe(0);await page.keyboard.up('s');

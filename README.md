@@ -44,3 +44,5 @@ Preview destination: https://nuts.bid/games/. See [M02 verification status and o
 The first release route is the web. Paid editions, Steam and mobile stores are optional later decisions. Game identifiers remain stable when working titles change.
 
 For the additional Firefox/WebKit full-route and focus checks, install `npx playwright install firefox webkit` and run `CROSS_BROWSER=1 npm test`. These engine checks do not replace physical Safari/iPhone testing. `?fps=30` is a diagnostic render limit; gameplay remains on a fixed 60 Hz simulation. Recorded playthrough measurements and videos are retained in test results.
+
+Integration retains prior hashed files in the assets directory so an HTML response from just before an update can still load its bundle. The current manifest describes only the selected game build; preserved legacy bundles are hosting compatibility files.

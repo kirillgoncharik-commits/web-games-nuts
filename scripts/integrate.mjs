@@ -11,4 +11,7 @@ for(const file of manifest.files){const bytes=await readFile(join(source,file.pa
 const backup=resolve(target,'.cinder-shift-previous');
 try{await readFile(join(dest,'build-manifest.json'));await rm(backup,{recursive:true,force:true});await rename(dest,backup);}catch(error){if(error.code!=='ENOENT')throw error;}
 await mkdir(dest,{recursive:true});await cp(source,dest,{recursive:true});
+// An HTML response from just before deployment must still resolve its hashed bundle.
+// Current build files win; prior content-addressed assets remain available to old tabs.
+try{await cp(join(backup,'assets'),join(dest,'assets'),{recursive:true,force:false,errorOnExist:false});}catch(error){if(error.code!=='ENOENT')throw error;}
 console.log(`Integrated ${manifest.build_id}, source ${manifest.source_sha} into ${dest}. No deployment performed.`);
