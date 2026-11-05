@@ -2,7 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 async function snapshot(page: Page) { return page.evaluate(() => (window as any).__CINDER__()); }
 async function start(page: Page) {
   await page.goto('/games/cinder-shift/');
-  await page.getByRole('button',{name:'Начать проверку'}).click();
+  await page.getByRole('button',{name:'Полигон управления'}).click();
   await expect.poll(async()=> (await snapshot(page)).state).toBe('playing');
 }
 async function untilX(page: Page,x:number){await page.waitForFunction(x=>(window as any).__CINDER__().player.x>=x,x);}
@@ -11,9 +11,9 @@ test('keyboard completes the actual route and replay creates one room',async({pa
   const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
   const bad:string[]=[];page.on('response',r=>{if(r.status()>=400)bad.push(`${r.status()} ${r.url()}`);});
   await page.goto('/games/cinder-shift/');
-  await page.getByRole('button',{name:'Начать проверку'}).waitFor();
+  await page.getByRole('button',{name:'Полигон управления'}).waitFor();
   await page.screenshot({path:info.outputPath('menu.png'),fullPage:true});
-  await page.getByRole('button',{name:'Начать проверку'}).click();
+  await page.getByRole('button',{name:'Полигон управления'}).click();
   await page.keyboard.down('d');await untilX(page,143);
   await page.keyboard.down('Space');await untilX(page,240);await page.keyboard.up('Space');
   await untilX(page,294);await page.keyboard.up('d');
@@ -26,7 +26,7 @@ test('keyboard completes the actual route and replay creates one room',async({pa
   await page.keyboard.press('e');await expect.poll(async()=> (await snapshot(page)).powered).toBe(true);
   await page.keyboard.down('d');await expect.poll(async()=> (await snapshot(page)).state).toBe('complete');await page.keyboard.up('d');
   await expect(page.getByRole('heading',{name:'Системы в норме.'})).toBeVisible();
-  await page.getByRole('button',{name:'Проверить ещё раз'}).click();
+  await page.getByRole('button',{name:'Пройти ещё раз'}).click();
   await expect.poll(async()=> (await snapshot(page)).activeScenes).toEqual(['Room']);
   expect((await snapshot(page)).targetHp).toBe(3);
   expect(errors).toEqual([]);expect(bad).toEqual([]);
@@ -43,7 +43,7 @@ test('focus pause freezes the world and requires explicit resume',async({page})=
   await expect.poll(async()=> (await snapshot(page)).state).toBe('playing');
   await page.keyboard.press('Escape');await expect.poll(async()=> (await snapshot(page)).state).toBe('paused');
   await page.getByRole('button',{name:'В меню',exact:true}).click();
-  await page.getByRole('button',{name:'Начать проверку'}).click();expect((await snapshot(page)).targetHp).toBe(3);
+  await page.getByRole('button',{name:'Полигон управления'}).click();expect((await snapshot(page)).targetHp).toBe(3);
 });
 
 test('crouch stays forced below roof; module hits solid wall',async({page})=>{
@@ -59,7 +59,7 @@ test('iframe boots under site CSP, without external requests or storage access',
   const external:string[]=[];page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1:4175/'))external.push(r.url());});
   await page.addInitScript(()=>{Object.defineProperty(window,'localStorage',{get(){throw new Error('storage denied');}});});
   await page.goto('/iframe-test.html');const frame=page.frameLocator('iframe');
-  await frame.getByRole('button',{name:'Начать проверку'}).click();
+  await frame.getByRole('button',{name:'Полигон управления'}).click();
   await expect(frame.getByRole('button',{name:'Пауза Esc'})).toBeEnabled();
   expect(external).toEqual([]);
 });
@@ -99,5 +99,10 @@ test('failed game bundle offers a working reload',async({page})=>{
   await expect(page.getByRole('heading',{name:'Загрузка прервана'})).toBeVisible({timeout:18000});
   await page.unroute('**/assets/*.js');
   await page.getByRole('button',{name:'Повторить загрузку',exact:true}).click();
-  await expect(page.getByRole('button',{name:'Начать проверку'})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Полигон управления'})).toBeVisible();
+});
+
+test('graphics context loss explains that restart resets the mission',async({page})=>{
+  await start(page);await page.locator('#game canvas').evaluate(el=>el.dispatchEvent(new Event('webglcontextlost',{cancelable:true})));
+  await expect(page.getByText('ГРАФИЧЕСКИЙ КОНТЕКСТ ПОТЕРЯН')).toBeVisible();await expect(page.getByRole('button',{name:'Повторить загрузку',exact:true})).toBeVisible();
 });

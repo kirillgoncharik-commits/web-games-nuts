@@ -2,7 +2,8 @@ import { defineConfig } from 'vite';
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
-const sha = process.env.SOURCE_SHA || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+const sha = execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
+if (process.env.SOURCE_SHA && process.env.SOURCE_SHA !== sha) throw Error('SOURCE_SHA differs from checkout');
 export default defineConfig({
   root: 'games/cinder-shift',
   base: './',

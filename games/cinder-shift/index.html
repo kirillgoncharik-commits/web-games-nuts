@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="Cinder Shift — технический полигон управления. Nuts Games, R01." />
+  <meta name="description" content="Cinder Shift — первая миссия Шлюз. Nuts Games, R01." />
   <meta name="robots" content="noindex" />
   <meta name="theme-color" content="#101619" />
   <title>Cinder Shift · Nuts Games</title>
@@ -17,15 +17,16 @@
       <button id="diagnostics-toggle" class="quiet" aria-expanded="false">Диагностика</button>
     </header>
     <section class="heading">
-      <div><p class="eyebrow">КАЛЬДЕРА 7 <span>●</span> ТЕХНИЧЕСКИЙ ПОЛИГОН</p><h1>CINDER SHIFT</h1></div>
-      <p class="build-label"><span class="status-light"></span> M0 · ПРОВЕРКА УПРАВЛЕНИЯ<br><small id="build-label"></small></p>
+      <div><p class="eyebrow">КАЛЬДЕРА 7 <span>●</span> МИССИЯ 01 · ШЛЮЗ</p><h1>CINDER SHIFT</h1></div>
+      <p class="build-label"><span class="status-light"></span> M02 · ПЕРВАЯ МИССИЯ<br><small id="build-label"></small></p>
     </section>
     <section class="console" aria-label="Игра Cinder Shift">
-      <div class="console-bar"><span>СЕКТОР 00 <b>—</b> СЕРВИСНЫЙ ОТСЕК</span><div><button id="mute" class="quiet" aria-pressed="false">Звук: вкл</button><button id="pause" class="quiet" disabled>Пауза <kbd>Esc</kbd></button></div></div>
+      <div class="console-bar"><span id="sector-label">СЕКТОР 00 <b>—</b> СЕРВИСНЫЙ ОТСЕК</span><div><button id="mute" class="quiet" aria-pressed="false">Звук: вкл</button><button id="pause" class="quiet" disabled>Пауза <kbd>Esc</kbd></button></div></div>
       <div id="playframe" class="playframe">
         <div id="viewport" class="viewport">
           <div id="game" tabindex="0" role="application" aria-label="Игровое поле. Управление описано под игрой."></div>
           <div id="overlay" class="overlay" aria-live="polite"><p>Загрузка полигона…</p></div>
+          <div id="transition" class="transition" hidden>ПЕРЕХОД МЕЖДУ ОТСЕКАМИ</div>
           <div id="rotate" class="rotate" hidden><span>↻</span><strong>Поверните телефон</strong><p>В альбомной ориентации виден весь отсек.</p></div>
         </div>
         <div id="touch-controls" class="touch-controls" hidden aria-label="Сенсорное управление">

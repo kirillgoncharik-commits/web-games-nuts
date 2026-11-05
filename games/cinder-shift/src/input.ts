@@ -12,10 +12,13 @@ export class Controls {
   private padState = '';
   constructor() {
     window.addEventListener('keydown', e => {
-      if (!keys[e.code] || this.scope === 'menu' || (e.target instanceof HTMLElement && e.target.matches('input,select,textarea,button,summary'))) return;
+      const target=e.target instanceof HTMLElement?e.target:null;
+      // Editable controls own their keys; ordinary page buttons retain Tab/Enter/Space.
+      if (!keys[e.code] || this.scope === 'menu' || target?.closest('input,select,textarea,[contenteditable=true]') || ((e.code==='Space') && target?.closest('button,summary,a'))) return;
       e.preventDefault(); if (!e.repeat) this.queuedPress.add(keys[e.code]); this.keyboard.add(e.code); this.device = 'keyboard';
     });
     window.addEventListener('keyup', e => { if(this.keyboard.delete(e.code)) this.queuedRelease.add(keys[e.code]); });
+    window.addEventListener('gamepaddisconnected',()=>this.clear());
     document.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(button => {
       button.addEventListener('pointerdown', e => {
         if (this.scope !== 'play') return;
@@ -29,10 +32,15 @@ export class Controls {
   }
   clear() { this.keyboard.clear(); this.touch.clear(); this.previous.clear(); this.queuedPress.clear(); this.queuedRelease.clear(); document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
   setScope(scope: Controls['scope']) { this.clear(); this.scope = scope; this.previous = this.sample(); }
+  hint(action:Action) {
+    const labels={keyboard:{left:'A / D',right:'A / D',jump:'Space',crouch:'S / ↓',fire:'J / X',interact:'E',ability:'K / C',pause:'Esc'},gamepad:{left:'стик',right:'стик',jump:'A',crouch:'↓',fire:'RT',interact:'X',ability:'B',pause:'Menu'},touch:{left:'кнопки ◀ ▶',right:'кнопки ◀ ▶',jump:'кнопка ↑',crouch:'кнопка ↓',fire:'автоогонь / ОГОНЬ',interact:'ТЕРМИНАЛ',ability:'ИМПУЛЬС',pause:'Пауза'}};
+    return labels[this.device][action];
+  }
   private sample() {
     const down = new Set<Action>();
     this.keyboard.forEach(key => down.add(keys[key])); this.touch.forEach(action => down.add(action));
-    const pads = navigator.getGamepads?.() || [];
+    let pads:(Gamepad|null)[]=[];
+    try{pads=Array.from(navigator.getGamepads?.()||[]);}catch{/* Embedding may deny gamepad access. */}
     const pad = Array.from(pads).find(p => p?.connected);
     if (pad) {
       const on = (i: number) => pad.buttons[i]?.pressed || false;

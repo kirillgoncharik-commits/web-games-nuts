@@ -4,17 +4,98 @@
   "working_title_ru": "Пепельная смена",
   "slug": "cinder-shift",
   "brand": "Nuts Games",
-  "status": "m0_technical_preview",
+  "status": "m02_first_mission",
   "gdd_version": "0.1",
   "preview_base_path": "/games/cinder-shift/",
   "implementation_started": true,
-  "analytics": {"external_enabled": false, "consent_key": "nuts_analytics_consent_v1", "measurement_id": "G-HETCM80ZLX"},
-  "movement": {"acceleration": 1200, "deceleration": 1800, "crouch_speed": 58, "coyote_ms": 100, "jump_buffer_ms": 120, "standing_height": 44, "crouching_height": 26, "body_width": 22, "dash_speed": 500, "dash_ms": 160, "dash_cooldown_ms": 3000},
+  "analytics": {
+    "external_enabled": false,
+    "consent_key": "nuts_analytics_consent_v1",
+    "measurement_id": "G-HETCM80ZLX"
+  },
+  "movement": {
+    "acceleration": 1200,
+    "deceleration": 1800,
+    "crouch_speed": 58,
+    "coyote_ms": 100,
+    "jump_buffer_ms": 120,
+    "standing_height": 44,
+    "crouching_height": 26,
+    "body_width": 22,
+    "dash_speed": 500,
+    "dash_ms": 160,
+    "dash_cooldown_ms": 3000
+  },
   "paid_edition_required": false,
-  "campaign": {"mission_count": 5, "room_count": 20, "starting_research_points": 1, "research_rewards_after_missions": [1, 2, 3, 4]},
-  "research": {"branches": ["W", "M", "D"], "nodes_per_branch": 4, "node_cost": 1, "active_slots": 1},
-  "events": {"count": 6, "max_briefing_conditions_per_mission": 1, "max_optional_events_per_mission": 1},
-  "viewport": {"width": 640, "height": 360, "world_height": 320, "hud_height": 40},
-  "initial_balance": {"player_hp": 6, "walk_speed": 115, "gravity": 900, "jump_velocity": -330, "shot_damage": 1, "shots_per_second": 4, "projectile_speed": 440, "hurt_invulnerability_seconds": 0.7},
-  "balance_status": "proposed_for_first_playtest"
+  "campaign": {
+    "mission_count": 5,
+    "room_count": 20,
+    "starting_research_points": 1,
+    "research_rewards_after_missions": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "research": {
+    "branches": [
+      "W",
+      "M",
+      "D"
+    ],
+    "nodes_per_branch": 4,
+    "node_cost": 1,
+    "active_slots": 1
+  },
+  "events": {
+    "count": 6,
+    "max_briefing_conditions_per_mission": 1,
+    "max_optional_events_per_mission": 1
+  },
+  "viewport": {
+    "width": 640,
+    "height": 360,
+    "world_height": 320,
+    "hud_height": 40
+  },
+  "initial_balance": {
+    "player_hp": 6,
+    "walk_speed": 115,
+    "gravity": 900,
+    "jump_velocity": -330,
+    "shot_damage": 1,
+    "shots_per_second": 4,
+    "projectile_speed": 440,
+    "hurt_invulnerability_seconds": 0.7
+  },
+  "balance_status": "proposed_for_first_playtest",
+  "stage": "M02 first mission",
+  "combat": {
+    "walker": {
+      "hp": 3,
+      "speed": 26,
+      "range": 330,
+      "telegraph_ms": 600,
+      "first_telegraph_ms": 1000,
+      "burst_count": 2,
+      "burst_interval_ms": 250,
+      "projectile_speed": 150,
+      "recovery_ms": 1700,
+      "patrol_ms": 800
+    },
+    "drone": {
+      "hp": 2,
+      "speed": 38,
+      "range": 320,
+      "telegraph_ms": 800,
+      "burst_count": 1,
+      "projectile_speed": 125,
+      "recovery_ms": 2100,
+      "patrol_ms": 1600
+    },
+    "contact_damage": 1,
+    "terminal_hold_ms": 600,
+    "transition_ms": 180
+  }
 }
