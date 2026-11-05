@@ -12,7 +12,7 @@ const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.querySelector<T
 const controls=new Controls(),effects=new Effects(),telemetry=new Telemetry(__BUILD_ID__,__SOURCE_SHA__);
 let game:Phaser.Game,attempt:MissionAttempt|null=null;
 let state:'loading'|'menu'|'briefing'|'playing'|'paused'|'dying'|'complete'|'dead'|'error'='loading';
-let touchMode='auto',layout='dock',lastSample=0,loadMs=0,frames=0,longFrames=0;
+let touchMode='auto',layout='dock',lastSample=performance.now(),loadMs=0,frames=0,longFrames=0,sampleFrames=0;
 const fps:number[]=[];
 const startedAt=performance.now(),portrait=()=>matchMedia('(pointer:coarse)').matches&&innerHeight>innerWidth;
 const focusGame=()=>$('game').focus({preventScroll:true});
@@ -98,7 +98,7 @@ emit('game_boot');
 const benchmarkFps=new URLSearchParams(location.search).get('fps')==='30'?30:60;
 game=new Phaser.Game({type:Phaser.AUTO,parent:'game',width:640,height:360,backgroundColor:'#14232b',pixelArt:true,antialias:false,banner:false,
   scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:false},
-  fps:{target:benchmarkFps,limit:benchmarkFps,smoothStep:false},
+  fps:{target:benchmarkFps,limit:benchmarkFps===30?30:0,smoothStep:false},
   physics:{default:'arcade',arcade:{gravity:{x:0,y:config.initial_balance.gravity},customUpdate:true,fixedStep:false}},scene:[Boot,room]});
 game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();failure('webgl_context_lost',true);}));
 game.events.on(Phaser.Core.Events.POST_RENDER,()=>{
@@ -108,10 +108,10 @@ game.events.on(Phaser.Core.Events.POST_RENDER,()=>{
       if(state==='menu')briefing();else if(state==='briefing')start('mission');else if(attempt)start(attempt.mode,true);
     }
   }
-  updateDevice();
+  updateDevice();sampleFrames++;
   if(state==='playing'){frames++;if(game.loop.delta>50)longFrames++;}
-  if(performance.now()-lastSample<1000)return;lastSample=performance.now();
-  const value=Math.round(game.loop.actualFps);if(state==='playing'){fps.push(value);if(fps.length>60)fps.shift();}
+  const sampleNow=performance.now(),sampleMs=sampleNow-lastSample;if(sampleMs<1000)return;lastSample=sampleNow;
+  const value=Math.round(sampleFrames*1000/sampleMs);sampleFrames=0;if(state==='playing'){fps.push(value);if(fps.length>60)fps.shift();}
   $('metrics').textContent=`${value} FPS · загрузка ${loadMs} мс · длинных кадров ${longFrames}/${frames} · ${state} · ${effects.state()}`;
   const ctx=$<HTMLCanvasElement>('fps-chart').getContext('2d')!;ctx.clearRect(0,0,640,64);ctx.strokeStyle='#405951';ctx.beginPath();ctx.moveTo(0,34);ctx.lineTo(640,34);ctx.stroke();ctx.strokeStyle='#8fd8cd';ctx.beginPath();fps.forEach((v,i)=>{const x=i*640/59,y=64-Math.min(120,v)/120*60;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
 });
