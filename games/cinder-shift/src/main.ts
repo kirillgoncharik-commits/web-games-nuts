@@ -36,6 +36,7 @@ function updateDevice(){
   $('hints').textContent=deviceHints()+(attempt?.mode==='training'?' · K / C — тест импульса':'');
   const touch=touchMode==='on'||(touchMode==='auto'&&controls.device==='touch');
   $('hud').hidden=!attempt;
+  $('objective').parentElement!.hidden=!['playing','paused','dying'].includes(state);
   document.querySelectorAll<HTMLButtonElement>('#touch-controls button').forEach(button=>{button.disabled=state!=='playing';});
   $('touch-controls').hidden=!touch;$('playframe').classList.toggle('touch-sides',touch&&layout==='sides');
   document.querySelector<HTMLElement>('[data-action="ability"]')!.hidden=attempt?.mode!=='training';

@@ -58,7 +58,7 @@ test.describe('full mission demonstration',()=>{
 
   test('A to B to C, held terminal, victory and retry',async({page},info)=>{
     test.setTimeout(90000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
-    await start(page);await roomA(page);
+    await start(page);await page.locator('#viewport').screenshot({path:info.outputPath('airlock-live.png')});await roomA(page);
     await page.locator('#viewport').screenshot({path:info.outputPath('corridor-live.png')});
     await page.keyboard.down('j');await forwardJump(page,194,350);
     await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:10000}).toBe(0);await page.keyboard.up('j');
@@ -70,7 +70,7 @@ test.describe('full mission demonstration',()=>{
     await page.keyboard.down('d');await untilX(page,420);await page.keyboard.up('d');await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-2').hp,{timeout:8000}).toBe(0);await page.keyboard.up('s');
     await forwardJump(page,496,556);await page.keyboard.up('j');
     await page.keyboard.down('e');await page.waitForTimeout(250);await page.keyboard.up('e');expect((await state(page)).objective).toBe(false);await expect.poll(async()=>(await state(page)).holdMs).toBe(0);
-    await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).objective).toBe(true);await page.keyboard.up('e');await page.screenshot({path:info.outputPath('power-restored.png')});
+    await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).objective).toBe(true);await page.keyboard.up('e');await page.screenshot({path:info.outputPath('power-restored.png')});await page.locator('#viewport').screenshot({path:info.outputPath('generator-1x.png')});
     await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).state).toBe('complete');await page.keyboard.up('d');const end=await state(page);
     await writeFile(info.outputPath('measurement.json'),JSON.stringify({build:end.build,source_sha:end.sha,active_seconds:end.activeSeconds,hp:end.hp,fps:end.fps,frames:end.frames,long_frames:end.longFrames,load_ms:end.loadMs},null,2));
     expect(end.eventLog.filter((e:any)=>e.name==='mission_end'&&e.params.attempt_id===end.attemptId)).toHaveLength(1);expect(errors).toEqual([]);
