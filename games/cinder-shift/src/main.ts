@@ -14,7 +14,7 @@ let game:Phaser.Game,attempt:MissionAttempt|null=null;
 let state:'loading'|'menu'|'briefing'|'playing'|'paused'|'dying'|'complete'|'dead'|'error'='loading';
 let touchMode='auto',layout='dock',lastSample=performance.now(),loadMs=0,frames=0,longFrames=0,sampleFrames=0;
 const fps:number[]=[];
-const startedAt=performance.now(),portrait=()=>matchMedia('(pointer:coarse)').matches&&innerHeight>innerWidth;
+const startedAt=0,portrait=()=>matchMedia('(pointer:coarse)').matches&&innerHeight>innerWidth;
 const focusGame=()=>$('game').focus({preventScroll:true});
 function emit(name:EventName,params:Record<string,string|number>={}){
   try{telemetry.emit(name,{...(attempt?{mission_id:attempt.missionId,room_id:attempt.current,attempt_id:attempt.id,active_duration:Math.round(attempt.activeMs)/1000}:{}),...params});}catch{/* Diagnostics cannot stop the game. */}
