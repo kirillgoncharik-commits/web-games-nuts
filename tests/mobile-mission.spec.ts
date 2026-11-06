@@ -1,8 +1,9 @@
 import {test,expect,Page} from '@playwright/test';
+import {seedsForPlans} from '../games/cinder-shift/src/session/events';
 const state=(page:Page)=>page.evaluate(()=>(window as any).__CINDER__());
 test('complete mission with native touch input and at most two touches',async({browser},info)=>{
   test.setTimeout(90000);
-  const context=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true,deviceScaleFactor:2});const page=await context.newPage();const cdp=await context.newCDPSession(page);
+  const context=await browser.newContext({viewport:{width:844,height:390},isMobile:true,hasTouch:true,deviceScaleFactor:2,locale:'ru-RU'});const page=await context.newPage();const cdp=await context.newCDPSession(page);
   const held=new Map<string,{id:number;x:number;y:number}>();let nextId=1,maxTouches=0;
   async function action(name:string,down:boolean){
     if(down){const b=await page.locator(`[data-action="${name}"]`).boundingBox();if(!b)throw Error('Touch control missing: '+name);held.set(name,{id:nextId++,x:b.x+b.width/2,y:b.y+b.height/2});}else held.delete(name);
@@ -12,7 +13,7 @@ test('complete mission with native touch input and at most two touches',async({b
   async function moveTo(value:number){await action('right',true);await x(value);await action('right',false);}
   async function jump(from:number,to:number){await action('right',true);await x(from);await action('jump',true);await x(to);await action('jump',false);await action('right',false);}
   async function dead(id:string){await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===id)?.hp,{timeout:10000}).toBe(0);}
-  await page.goto('/games/cinder-shift/');await page.getByRole('button',{name:'Начать миссию'}).tap();await page.getByRole('button',{name:'Войти в шлюз'}).tap();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
+  await page.goto('/games/cinder-shift/?seed='+seedsForPlans().none);await page.getByTestId('new-shift').tap();await page.getByTestId('briefing').tap();await page.getByTestId('start-mission').tap();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
   await jump(143,242);await moveTo(294);await action('crouch',true);await moveTo(442);await action('crouch',false);await expect.poll(async()=>(await state(page)).targetHp).toBe(0);
   await moveTo(546);await action('interact',true);await page.waitForTimeout(80);await action('interact',false);await expect.poll(async()=>(await state(page)).powered).toBe(true);
   await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
@@ -28,7 +29,7 @@ test('complete mission with native touch input and at most two touches',async({b
 test('movement stays comparable at real 30 and 60 render limits, including a long frame',async({page})=>{
   const distances:number[]=[];
   for(const fps of [30,60]){
-    await page.goto(`/games/cinder-shift/?fps=${fps}`);await page.getByRole('button',{name:'Полигон управления'}).click();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);const before=await state(page);
+    await page.goto(`/games/cinder-shift/?fps=${fps}`);await page.getByTestId('training').click();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);const before=await state(page);
     await page.keyboard.down('d');await page.waitForTimeout(450);await page.keyboard.up('d');await page.waitForTimeout(100);const after=await state(page);distances.push(after.player.x-before.player.x);
     const sim=after.simMs;await page.evaluate(()=>{const start=performance.now();while(performance.now()-start<180){/* simulate a long frame */}});await page.waitForTimeout(100);const end=await state(page);expect(end.simMs-sim).toBeGreaterThan(180);expect(end.simMs-sim).toBeLessThan(450);expect(end.state).toBe('playing');
   }

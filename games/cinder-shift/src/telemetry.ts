@@ -1,6 +1,6 @@
 import config from '../game.config.json' with {type:'json'};
 declare global { interface Window { gtag?: (...args: unknown[]) => void } }
-export type EventName = 'game_boot' | 'game_ready' | 'error' | 'test_start' | 'test_complete' | 'pause' | 'resume' | 'mission_start' | 'room_enter' | 'tutorial_step' | 'hit_received' | 'mission_end' | 'retry';
+export type EventName = 'game_boot' | 'game_ready' | 'error' | 'test_start' | 'test_complete' | 'pause' | 'resume' | 'mission_start' | 'room_enter' | 'tutorial_step' | 'hit_received' | 'mission_end' | 'retry' | 'campaign_start' | 'research_purchase' | 'event_offered' | 'event_choice' | 'save_result' | 'continue' | 'locale_changed';
 export class Telemetry {
   readonly events: { name: EventName; event_id: string; at: number; params: Record<string, string | number> }[] = [];
   private started = performance.now();
@@ -15,6 +15,6 @@ export class Telemetry {
         host.gtag?.('event', name, { game_id: config.game_id, build_id: this.build, source_sha: this.sha, event_id: event.event_id, ...params });
       }
     } catch { /* Storage and cross-origin embedding cannot prevent play. */ }
-    document.querySelector('#events')!.textContent = [...this.events].reverse().map(e => `${(e.at / 1000).toFixed(2)}s  ${e.name}  ${JSON.stringify(e.params)}`).join('\n');
+    const output=document.querySelector('#events');if(output)output.textContent = [...this.events].reverse().map(e => `${(e.at / 1000).toFixed(2)}s  ${e.name}  ${JSON.stringify(e.params)}`).join('\n');
   }
 }

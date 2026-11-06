@@ -1,10 +1,10 @@
 {
   "game_id": "r01",
-  "working_title": "Cinder Shift",
+  "working_title": "Cinder Shift 64",
   "working_title_ru": "\u041f\u0435\u043f\u0435\u043b\u044c\u043d\u0430\u044f \u0441\u043c\u0435\u043d\u0430",
   "slug": "cinder-shift",
   "brand": "Nuts Games",
-  "status": "m03_art_and_ui",
+  "status": "m04_session_ui_i18n",
   "gdd_version": "0.1",
   "preview_base_path": "/games/cinder-shift/",
   "implementation_started": true,
@@ -70,7 +70,7 @@
     "hurt_invulnerability_seconds": 0.7
   },
   "balance_status": "proposed_for_first_playtest",
-  "stage": "M03 art and UI",
+  "stage": "M04 session, UI and EN/RU",
   "combat": {
     "walker": {
       "hp": 3,
@@ -97,5 +97,14 @@
     "contact_damage": 1,
     "terminal_hold_ms": 600,
     "transition_ms": 180
+  },
+  "m04": {
+    "event_probabilities": {
+      "E02": 0.5,
+      "E03": 0.5
+    },
+    "repair_hp": 2,
+    "salvage_score": 150,
+    "dash_distance": 80
   }
 }

@@ -1,50 +1,51 @@
-# Nuts Games web games
+# Nuts Games — Cinder Shift 64
 
-Browser-first 2D games by Nuts Games. Cinder Shift has the M03 raster art and UI pass over the M02 Airlock mission: three rooms, walkers and drones, damage, a power objective, victory/death and retry. The original control room remains available as training. Phaser, TypeScript and Vite are pinned.
+M04 is a playable vertical session over the existing Airlock A–B–C mission and separate training range. Start a shift with one research point, inspect and confirm W1 (three-shot splitter), M1 (ground dash) or D1 (8 HP), read the seeded briefing, complete the mission and spend the first-victory reward. Replays test another build without farming research points. The result identifies the end of this preview; further missions remain M05.
 
-- First game: **Cinder Shift / Пепельная смена**, working creative direction for R01, inspired by Exolon.
-- [Detailed GDD in Russian](docs/cinder-shift/GDD.ru.md)
-- [Development plan and first implementation task](docs/cinder-shift/development-plan.ru.md)
+The optional closed upper passage and repair cache are prepared in B from the campaign seed. Retry restores the same entry loadout and event plan, full allowed HP and zero score. Campaign stages and settings are stored separately in IndexedDB. Continue during combat explicitly restarts the mission entry. Storage failures leave the shift playable in memory with a warning. Damaged or incompatible progress requires explicit replacement.
+
+All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open.
+
+## Run and verify
+
+Node.js 22.12+ and npm are required. Dependencies remain pinned.
+
+    npm ci --ignore-scripts
+    npm run dev
+    npm run build
+    npm run preview
+    npm run check
+    npm run art:check
+    npm test
+    CROSS_BROWSER=1 npm test
+
+Production preview: http://127.0.0.1:4175/games/cinder-shift/. Move with A/D or arrows, jump Space, crouch S/down, fire J/X, interact E, use M1 K/C and pause Esc. M1 is available after purchase or in training. Menus support Tab/arrows, Enter/Space and Esc; gamepad A confirms, B returns and Menu pauses. Touch dock and sides remain selectable.
+
+check validates EN/RU keys/parameters and TypeScript. Tests exercise real playthroughs, four plans × four builds, three post-win pairs, saves and failures, reload stages, input, layouts and M02/M03 regressions. Firefox/WebKit add full-route and focus checks; install with npx playwright install firefox webkit. macOS uses installed Google Chrome unless CHROME_PATH is set. CINDER_BASE_URL selects an existing preview; pass Playwright options after npm test --. Videos, measurements and screenshots are written into its output folder.
+
+Simulation stays fixed at 60 Hz. ?fps=30 limits rendering; ?seed=<uint32> gives a repeatable new-campaign seed. Training awards no progress. Automated route durations are measured separately from screen-reading and whole-session time; these are not a human playtest or the future campaign's 20–30 minute target.
+
+## Artifact and existing hosting
+
+dist/cinder-shift/ is a relocatable static artifact. build-manifest.json records r01, build ID, actual source SHA, clean state and SHA-256/size of every file. Build from a final clean commit.
+
+    npm run integrate -- /absolute/path/to/nutsbid-checkout
+
+Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published M03 is 0.3.0-m03.1. Current M04 delivery/publication status and hashes are in the release report. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
+
+No external resources, translation service, SDK or mandatory server are required. Analytics stays disabled by default; the existing consent adapter never queues earlier events or loads an SDK. Diagnostics are inside Settings.
+
+## References
+
+- [M04 implementation](docs/cinder-shift/m04-status.ru.md)
+- [Requirements](docs/cinder-shift/m04-requirements.ru.md)
+- [Device and UX report](docs/cinder-shift/m04-device-report.ru.md)
+- [Localization guide](docs/cinder-shift/localization.md)
+- [Save compatibility and migration](docs/cinder-shift/save-format.md)
+- [Current roadmap](docs/cinder-shift/roadmap-current.ru.md)
 - [Series decisions](docs/series/decisions.ru.md)
-- [Preview publication under nuts.bid/games](docs/preview-publishing.ru.md)
+- [M04 art, prompts and PSD export](art/m04/README.md)
+- [Original GDD](docs/cinder-shift/GDD.ru.md)
+- [Preview publishing](docs/preview-publishing.ru.md)
 
-## Run the prototype
-
-Node.js 22.12+ and npm are required. Dependencies are pinned in `package-lock.json`.
-
-```sh
-npm ci --ignore-scripts
-npm run dev
-npm run build
-npm run preview
-```
-
-Production-build preview: `http://127.0.0.1:4175/games/cinder-shift/`. Dev server prints its own URL.
-
-`npm run check` checks TypeScript. `npm test` runs browser checks against the built artifact: actual keyboard completion and replay, focus pause, crouching and wall collisions, iframe/CSP/storage denial, touch cancellation and orientation, and emulated gamepad controls. On macOS tests use installed Google Chrome; override with `CHROME_PATH`. Elsewhere install Chromium with `npx playwright install chromium` first. CI installs its browser and uploads the artifact and screenshots.
-
-Use Start mission → briefing → Enter airlock for the mission, or the separate training button for the original test room.
-
-Movement: A/D or arrows; Space to jump; S/down to crouch; J/X to fire; E at the terminal; K/C for a test dash; Esc to pause. Touch and standard gamepad mappings are shown in the UI. The dash is available only in training. The mission uses the basic suit; campaign research and saves are not implemented.
-
-The scene draws its own temporary graphics and synthesizes short sound effects. It downloads no external assets. External analytics is disabled in `game.config.json`; local diagnostics records `game_boot`, `game_ready`, errors and test lifecycle events. The optional adapter can call the host's existing `gtag` only after `nuts_analytics_consent_v1=granted`; it never loads an SDK or sends pending events later.
-
-## Integrate with nuts.bid
-
-`dist/cinder-shift/` is a relocatable static artifact with relative asset paths. `build-manifest.json` records the build version, source commit SHA, SHA-256 of each file, and size. Build from the final clean commit before integration.
-
-```sh
-npm run integrate -- /absolute/path/to/nutsbid-checkout
-```
-
-This verifies file hashes and copies only the game folder into `public/games/cinder-shift/`. The previous artifact, if present, is retained in `.cinder-shift-previous/` outside `public/`. Commit only the intended publication files. Verify the site's build and final URL separately; a push here does not deploy nuts.bid.
-
-Preview destination: https://nuts.bid/games/. See [M02 verification status and open acceptance items](docs/cinder-shift/m02-status.ru.md) for completed checks and remaining acceptance work.
-
-The first release route is the web. Paid editions, Steam and mobile stores are optional later decisions. Game identifiers remain stable when working titles change.
-
-For the additional Firefox/WebKit full-route and focus checks, install `npx playwright install firefox webkit` and run `CROSS_BROWSER=1 npm test`. These engine checks do not replace physical Safari/iPhone testing. `?fps=30` is a diagnostic render limit; gameplay remains on a fixed 60 Hz simulation. Recorded playthrough measurements and videos are retained in test results.
-
-Integration retains prior hashed files in the assets directory so an HTML response from just before an update can still load its bundle. The current manifest describes only the selected game build; preserved legacy bundles are hosting compatibility files.
-
-M03 art sources, state bindings and export commands: [production art](art/m03/README.md). Current milestone order: [roadmap](docs/cinder-shift/roadmap-current.ru.md). M03 is local pending publication approval and real-device acceptance.
+Brand is Cinder Shift 64 in both languages. IDs, save keys, URLs and historical filenames remain stable. Other concepts are Iron Frontiers 64, Riverline Zero 64, Forge Below 64 and Silent Relay 64; M04 does not implement them.

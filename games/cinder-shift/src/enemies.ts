@@ -27,10 +27,10 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
       const from=origin();
       if(e.kind==='walker'){
         const dir=Math.sign(e.aim.x-e.x)||-1;
-        if(clearLine(from,{x:e.aim.x,y:from.y},solids))shots.fire({...from,x:from.x+dir*17},{x:dir*cfg.projectile_speed,y:0},'enemy','Сервисный ходок');
+        if(clearLine(from,{x:e.aim.x,y:from.y},solids))shots.fire({...from,x:from.x+dir*17},{x:dir*cfg.projectile_speed,y:0},'enemy','walker-shot');
       }else{
         const dx=e.aim.x-e.x,dy=e.aim.y-e.y,len=Math.hypot(dx,dy)||1;
-        if(clearLine(from,e.aim,solids))shots.fire(from,{x:dx/len*cfg.projectile_speed,y:dy/len*cfg.projectile_speed},'enemy','Сканирующий дрон');
+        if(clearLine(from,e.aim,solids))shots.fire(from,{x:dx/len*cfg.projectile_speed,y:dy/len*cfg.projectile_speed},'enemy','drone-shot');
       }
       e.shots++;e.remaining=e.kind==='walker'?config.combat.walker.burst_interval_ms:0;
       if(e.shots>=cfg.burst_count){e.phase='recovery';e.remaining=cfg.recovery_ms;}

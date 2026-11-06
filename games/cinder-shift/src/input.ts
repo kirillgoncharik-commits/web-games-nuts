@@ -9,15 +9,17 @@ export class Controls {
   private previous = new Set<Action>();
   private queuedPress = new Set<Action>();
   private queuedRelease = new Set<Action>();
-  private padState = '';
+  private padState = '';private blockedKeys=new Set<string>();private physicalKeys=new Set<string>();private blockedPad=new Set<Action>();
   constructor() {
     window.addEventListener('keydown', e => {
+      if(keys[e.code])this.physicalKeys.add(e.code);
+      if(this.blockedKeys.has(e.code)&&e.repeat)return;if(!e.repeat)this.blockedKeys.delete(e.code);
       const target=e.target instanceof HTMLElement?e.target:null;
       // Editable controls own their keys; ordinary page buttons retain Tab/Enter/Space.
       if (!keys[e.code] || this.scope === 'menu' || target?.closest('input,select,textarea,[contenteditable=true]') || ((e.code==='Space') && target?.closest('button,summary,a'))) return;
       e.preventDefault(); if (!e.repeat) this.queuedPress.add(keys[e.code]); this.keyboard.add(e.code); this.device = 'keyboard';
     });
-    window.addEventListener('keyup', e => { if(this.keyboard.delete(e.code)) this.queuedRelease.add(keys[e.code]); });
+    window.addEventListener('keyup', e => { this.physicalKeys.delete(e.code);this.blockedKeys.delete(e.code);if(this.keyboard.delete(e.code)) this.queuedRelease.add(keys[e.code]); });
     window.addEventListener('gamepaddisconnected',()=>this.clear());
     document.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(button => {
       button.addEventListener('pointerdown', e => {
@@ -31,11 +33,8 @@ export class Controls {
     });
   }
   clear() { this.keyboard.clear(); this.touch.clear(); this.previous.clear(); this.queuedPress.clear(); this.queuedRelease.clear(); document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
-  setScope(scope: Controls['scope']) { this.clear(); this.scope = scope; this.previous = this.sample(); }
-  hint(action:Action) {
-    const labels={keyboard:{left:'A / D',right:'A / D',jump:'Space',crouch:'S / ↓',fire:'J / X',interact:'E',ability:'K / C',pause:'Esc'},gamepad:{left:'стик',right:'стик',jump:'A',crouch:'↓',fire:'RT',interact:'X',ability:'B',pause:'Menu'},touch:{left:'кнопки ◀ ▶',right:'кнопки ◀ ▶',jump:'кнопка ↑',crouch:'кнопка ↓',fire:'автоогонь / ОГОНЬ',interact:'ТЕРМИНАЛ',ability:'ИМПУЛЬС',pause:'Пауза'}};
-    return labels[this.device][action];
-  }
+  setScope(scope: Controls['scope']) { this.clear();this.scope=scope;this.blockedKeys=new Set(this.physicalKeys);this.blockedPad.clear();const held=this.sample();this.blockedPad=new Set(held);this.previous=new Set(); }
+  hintKey(action:Action){return 'input.'+this.device+'.'+action;}
   private sample() {
     const down = new Set<Action>();
     this.keyboard.forEach(key => down.add(keys[key])); this.touch.forEach(action => down.add(action));
@@ -48,7 +47,7 @@ export class Controls {
       const signature = JSON.stringify(mapping);
       if (signature !== this.padState && mapping.some(([,v]) => v)) this.device = 'gamepad';
       this.padState = signature;
-      mapping.forEach(([action, held]) => { if (held) down.add(action); });
+      mapping.forEach(([action, held]) => { if(!held)this.blockedPad.delete(action);if(held&&!this.blockedPad.has(action))down.add(action); });
     }
     return down;
   }
