@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import assets from './art/assets.generated.json' with {type:'json'};
 import {miraRigPose} from './art/rig';
+import {hasEvent,repairPosition,type EventPlan} from './session/events';
 import type {MissionAttempt,RoomDefinition,RoomState,Rect} from './mission';
 import type {Player} from './player';
 import type {Projectiles} from './projectiles';
@@ -15,11 +16,16 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;
-  private debug:Phaser.GameObjects.Graphics;
-  constructor(private scene:Phaser.Scene,private room:RoomDefinition){
+  private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;
+  constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
     scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0xb8bccb);
     scene.add.image(0,40,'m03-bg-'+(room.id==='T'?'A':room.id)).setOrigin(0).setTint(0xbac6c9);
+    scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(0x3f4e60).setAlpha(.65).setDepth(1);
+    for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x526074).setAlpha(.5).setDepth(1);
+    if(room.id==='A'||room.id==='T')scene.add.image(0,40,'m03-bg-A').setOrigin(0).setCrop(298,70,208,146).setTint(0x626c80).setDepth(1);
     for(const solid of room.solids)this.platform(solid);
+    this.exitMarker=scene.add.text(609,222,'→',{fontFamily:'Arial',fontSize:'18px',color:'#FFB65B'}).setOrigin(.5).setDepth(3);
+    if(room.id==='B'&&hasEvent(plan,'E02'))for(const x of [320,382])scene.add.image(x,40,'m03-props','signal-mint').setOrigin(0).setDisplaySize(2,232).setTintFill(0xffb65b).setDepth(3);
     this.debug=scene.add.graphics().setDepth(20);
   }
   private platform(s:Rect){
@@ -66,6 +72,8 @@ export class SceneArt{
       if(hold>0)this.sprite('signal-mint',room.terminal.x-20,258,7).setDisplaySize(40*Math.min(1,hold/600),4);
     }
     this.sprite(state.terminal||room.id==='B'?'gate-open':'gate-closed',609,320,3);
+    this.exitMarker.setColor(state.terminal||room.id==='B'?'#76DCC8':'#FFB65B');
+    if(room.id==='B'&&hasEvent(this.plan,'E03')){const cache=this.sprite('repair-cache',repairPosition.x,320,3);if(state.containerUsed)cache.setTint(0x456171).setAlpha(.45);}
     if(room.previous)this.sprite('gate-open',31,320,3);
     for(const e of state.enemies){
       if(e.hp<=0){this.sprite(e.kind==='walker'?'walker-wreck':'drone-wreck',e.x,320);continue;}
@@ -86,14 +94,11 @@ export class SceneArt{
     for(const shot of shots.shots)this.sprite(shot.team==='player'?'shot-player':'shot-enemy',shot.x,shot.y,8,shot.vx>=0?1:-1);
     for(let i=this.used;i<this.pool.length;i++)this.pool[i].setVisible(false);
     this.debug.clear();
-    if((document.querySelector('#debug-bodies') as HTMLInputElement)?.checked){
+    if(this.debugEnabled()){
       this.debug.lineStyle(1,0x76dcc8);for(const s of room.solids)this.debug.strokeRect(s.x,s.y,s.width,s.height);
       const body=player.rect();this.debug.lineStyle(1,0xffb65b).strokeRect(body.x,body.y,body.width,body.height);
       this.debug.lineStyle(1,0xf36d76);for(const e of state.enemies)if(e.hp>0)this.debug.strokeRect(e.x-13,e.y-(e.kind==='walker'?15:10),26,e.kind==='walker'?30:20);
       const m=player.muzzle;this.debug.lineStyle(1,0xedf1ec).lineBetween(m.x-3,m.y,m.x+3,m.y).lineBetween(m.x,m.y-3,m.x,m.y+3);
     }
-    document.querySelector('#hp-value')!.textContent=`${attempt.hp}/6`;
-    document.querySelectorAll('#hp-segments i').forEach((s,i)=>s.classList.toggle('lost',i>=attempt.hp));
-    document.querySelector('#hud-room')!.textContent=room.id==='T'?'ПОЛИГОН':`ОТСЕК ${room.id} / 3`;
   }
 }

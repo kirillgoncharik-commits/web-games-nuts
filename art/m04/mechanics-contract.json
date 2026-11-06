@@ -1,0 +1,507 @@
+{
+  "baseline_sha": "3bdb1468091edb70e9fc4644fb6a97bc4ae37075",
+  "baseline_artifact_sha": "a508e8dfbb1cf5bd3d4d07d4c45daf329acad919",
+  "allowed_m04_changes": {
+    "src/player.ts": "M1 grounded 80 px dash, 160 ms effect, 3000 ms cooldown; base movement remains",
+    "src/mission.ts": "frozen loadout, dynamic maximum HP, event geometry/claim state",
+    "src/enemies.ts": "localized source IDs only; AI logic frozen",
+    "src/input.ts": "menu ownership, held-input suppression, language-independent hint keys",
+    "src/room-scene.ts": "W1 fan, M1 availability, E03 modal pause, localized objective keys"
+  },
+  "frozen_modules": {
+    "src/projectiles.ts": "93d99cd13b0c118dc1a7b50f54df2045d2bf068567aa8ba52c2c42a254e1c5f6",
+    "src/geometry.ts": "ac7ccc12f4739d9fed916262d69be7a134b6b295d38bf02ec190afb5e8c8a060",
+    "src/audio.ts": "bdc6934b9d1fd80f336e739424cbddd807cb0054d2cef9897e20f2b7eb0ff186",
+    "src/art/rig.ts": "fc44b7c0358fc2a0762749cc08cbb533d18b4c203b4fe6918583729dba61c6b3"
+  },
+  "frozen_room_methods": {
+    "init": "3527bf37128a989c6e61518b9d4c5519ce61dc238e7ed38a546991608bb46a89",
+    "damage": "994470b43c9a73f8b459c5bbafd0239a24bcc8dcff3c1ecfaf8b2859e7cdf645",
+    "beginTransition": "a70f84a4f9a6512f128ee80969a930c1872e23e382417c0fe6ea05cb0482977c",
+    "tutorial": "487d20561890577523fee78e544d00396f6f3a2a565add84915f823e63d6dbf2"
+  },
+  "frozen_player_methods": {
+    "rect": "20a9193050762e2a915362159b3750ebeba26d2040f9383fc11c0d58aa037e4d",
+    "knock": "11f118b6838172ae91878f33970bc714cc7682e69675b71a37667a01e6a4bf82",
+    "snapshot": "a8b1f6737ecae3b426fc8ad91b35400e37776b685cd7a5997eb0619dead864dc"
+  },
+  "frozen_clock_methods": {
+    "advance": "aa6a4e706989b42133678f1d769d6077ecdc37552e920f351a36235d2459a351",
+    "clear": "b80a1fe6db03df51c56cc48e444f73faf921f57e375988254304dd8edebe10fd"
+  },
+  "enemy_logic_sha": "a22e14fd783fdef7279f4cd18c74fe603b923654c797bdc8000aafd1d7230f53",
+  "base_rooms_sha": "9713abc5c302a484dbdb8565f3e87e58781cc871259640a4d6621531963e8077",
+  "rig_binding_sha": "27b3873ddccda6b0bc49148b4d632a03854fe1a9efaf751c7df0f11850658580",
+  "frame_anchors": {
+    "mira-head": {
+      "source_canvas": [
+        20,
+        14
+      ],
+      "pivot": [
+        10,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.head"
+    },
+    "mira-body-stand": {
+      "source_canvas": [
+        30,
+        24
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.body.stand"
+    },
+    "mira-body-crouch": {
+      "source_canvas": [
+        30,
+        9
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.body.crouch"
+    },
+    "mira-leg": {
+      "source_canvas": [
+        7,
+        12
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.leg.procedural"
+    },
+    "mira-boot": {
+      "source_canvas": [
+        10,
+        4
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.boot.procedural"
+    },
+    "mira-cutter": {
+      "source_canvas": [
+        22,
+        8
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": [
+        21,
+        4
+      ],
+      "slot_id": "mira.weapon"
+    },
+    "mira-shadow": {
+      "source_canvas": [
+        30,
+        5
+      ],
+      "pivot": [
+        15,
+        2
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.shadow"
+    },
+    "walker": {
+      "source_canvas": [
+        48,
+        40
+      ],
+      "pivot": [
+        24,
+        38
+      ],
+      "foot": [
+        24,
+        38
+      ],
+      "muzzle": [
+        41,
+        6
+      ],
+      "slot_id": "walker.body"
+    },
+    "walker-wreck": {
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "walker.dead"
+    },
+    "drone": {
+      "source_canvas": [
+        56,
+        32
+      ],
+      "pivot": [
+        28,
+        16
+      ],
+      "foot": null,
+      "muzzle": [
+        28,
+        16
+      ],
+      "slot_id": "drone.body"
+    },
+    "drone-wreck": {
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "drone.dead"
+    },
+    "warning-triangle": {
+      "source_canvas": [
+        10,
+        10
+      ],
+      "pivot": [
+        5,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "walker.telegraph"
+    },
+    "warning-reticle": {
+      "source_canvas": [
+        18,
+        18
+      ],
+      "pivot": [
+        9,
+        9
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "drone.telegraph"
+    },
+    "target": {
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "target.hp3"
+    },
+    "target-damaged": {
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "target.hp1-2"
+    },
+    "terminal-off": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.off"
+    },
+    "terminal-ready": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.ready"
+    },
+    "terminal-on": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.on"
+    },
+    "gate-closed": {
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "slot_id": "gate.closed"
+    },
+    "gate-open": {
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "slot_id": "gate.open"
+    },
+    "shot-player": {
+      "source_canvas": [
+        8,
+        3
+      ],
+      "pivot": [
+        4,
+        1
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "projectile.player"
+    },
+    "shot-enemy": {
+      "source_canvas": [
+        8,
+        8
+      ],
+      "pivot": [
+        4,
+        4
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "projectile.enemy"
+    },
+    "signal-coral": {
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "telegraph.line"
+    },
+    "signal-mint": {
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "interaction.progress"
+    },
+    "floor-top": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.floor.top"
+    },
+    "floor-face": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.floor.face"
+    },
+    "cap-left": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.cap.left"
+    },
+    "cap-right": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.cap.right"
+    },
+    "ceiling": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.ceiling"
+    },
+    "wall": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.wall"
+    },
+    "vent": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.vent"
+    },
+    "support": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.support"
+    },
+    "corner": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.corner"
+    }
+  },
+  "module_anchors": {
+    "weapon": [
+      43,
+      32
+    ],
+    "movement": [
+      12,
+      35
+    ],
+    "defence": [
+      31,
+      30
+    ]
+  }
+}

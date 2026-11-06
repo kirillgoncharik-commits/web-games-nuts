@@ -1,12 +1,13 @@
 import {writeFile} from 'node:fs/promises';
 import {test,expect,Page} from '@playwright/test';
+import {startMission} from './helpers';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {Projectiles} from '../games/cinder-shift/src/projectiles';
 import {clearLine} from '../games/cinder-shift/src/geometry';
 test.use({video:'on'});
 const state=(page:Page)=>page.evaluate(()=>(window as any).__CINDER__());
 async function untilX(page:Page,x:number){await page.waitForFunction(x=>(window as any).__CINDER__().player?.x>=x,x,{timeout:8000}).catch(async()=>{throw Error('Movement stopped: '+JSON.stringify(await state(page)));});}
-async function start(page:Page){await page.goto('/games/cinder-shift/');await page.getByRole('button',{name:'Начать миссию'}).click();await page.getByRole('button',{name:'Войти в шлюз'}).click();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);}
+async function start(page:Page){await startMission(page);}
 async function roomA(page:Page){
   await page.keyboard.down('d');await untilX(page,143);await page.keyboard.down('Space');await untilX(page,242);await page.keyboard.up('Space');await untilX(page,294);await page.keyboard.up('d');
   await page.keyboard.down('s');await page.keyboard.down('d');await untilX(page,442);await page.keyboard.up('d');await page.keyboard.up('s');
@@ -34,10 +35,8 @@ test('cover blocks both projectile teams and line of sight',()=>{
   shots.fire({x:90,y:292},{x:440,y:0},'player','test');shots.fire({x:125,y:292},{x:-150,y:0},'enemy','test');shots.step(100,[wall],()=>{hits++;return true;});expect(shots.shots).toHaveLength(0);expect(hits).toBe(0);expect(clearLine({x:20,y:292},{x:200,y:292},[wall])).toBe(false);
 });
 test('focus returns from page controls without Space activating two actions',async({page})=>{
-  await start(page);
-  for(const id of ['mute','diagnostics-toggle']){await page.locator('#'+id).click();const before=(await state(page)).player.x;await page.keyboard.down('d');await page.waitForTimeout(180);await page.keyboard.up('d');expect((await state(page)).player.x).toBeGreaterThan(before+8);}
-  await page.locator('.settings summary').click();await page.locator('#touch-mode').focus();await page.keyboard.press('ArrowDown');expect(await page.locator('#touch-mode').evaluate(el=>el===document.activeElement)).toBe(true);
-  await page.locator('.settings summary').click();await expect.poll(async()=>page.locator('#game').evaluate(el=>el===document.activeElement)).toBe(true);
+  await start(page);await page.locator('#mute').click();const before=(await state(page)).player.x;await page.keyboard.down('d');await page.waitForTimeout(180);await page.keyboard.up('d');expect((await state(page)).player.x).toBeGreaterThan(before+8);
+  await page.locator('#settings-open').click();const paused=await state(page);await page.waitForTimeout(100);expect((await state(page)).player).toEqual(paused.player);await page.locator('#touch-mode').focus();await page.keyboard.press('ArrowDown');await expect(page.locator('#touch-mode')).toBeFocused();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();await expect(page.locator('#game')).toBeFocused();
   await page.locator('#mute').focus();const y=(await state(page)).player.y;await page.keyboard.press('Space');await page.waitForTimeout(100);expect((await state(page)).player.y).toBeCloseTo(y,0);
 });
 test('returning to A preserves target and terminal, and removes old bullets',async({page})=>{
@@ -47,7 +46,7 @@ test('ten browser restarts keep one scene and full initial state',async({page})=
   await start(page);const ids=new Set<string>();
   for(let i=0;i<10;i++){
     await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);const s=await state(page);ids.add(s.attemptId);expect(s.activeScenes).toEqual(['Room']);expect(s.hp).toBe(6);expect(s.targetHp).toBe(3);
-    await page.keyboard.press('Escape');await page.getByRole('button',{name:'В меню',exact:true}).click();await page.getByRole('button',{name:'Начать миссию'}).click();await page.getByRole('button',{name:'Войти в шлюз'}).click();
+    await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
   }
   expect(ids.size).toBe(10);
   const log=(await state(page)).eventLog;
@@ -75,7 +74,7 @@ test.describe('full mission demonstration',()=>{
     await writeFile(info.outputPath('measurement.json'),JSON.stringify({build:end.build,source_sha:end.sha,active_seconds:end.activeSeconds,hp:end.hp,fps:end.fps,frames:end.frames,long_frames:end.longFrames,load_ms:end.loadMs},null,2));
     expect(end.eventLog.filter((e:any)=>e.name==='mission_end'&&e.params.attempt_id===end.attemptId)).toHaveLength(1);expect(errors).toEqual([]);
     await page.screenshot({path:info.outputPath('victory.png')});
-    await page.getByRole('button',{name:'Пройти ещё раз'}).click();await expect.poll(async()=>(await state(page)).attemptId).not.toBe(end.attemptId);expect((await state(page)).hp).toBe(6);
+    await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&Boolean(s.player)&&s.attemptId!==end.attemptId;}).toBe(true);expect((await state(page)).hp).toBe(6);
   });
 });
 
@@ -85,5 +84,5 @@ test('actual combat death stops input, emits one result and retry resets the mis
   await expect.poll(async()=>(await state(page)).state,{timeout:15000}).toBe('dead');
   const dead=await state(page);expect(dead.hp).toBe(0);const end=dead.eventLog.filter((e:any)=>e.name==='mission_end');expect(end).toHaveLength(1);expect(end[0].params.result).toBe('death');expect(end[0].params.reason).toBeTruthy();
   await page.keyboard.down('d');await page.waitForTimeout(250);await page.keyboard.up('d');expect((await state(page)).player).toEqual(dead.player);
-  await page.getByRole('button',{name:'Повторить',exact:true}).click();await expect.poll(async()=>(await state(page)).attemptId).not.toBe(dead.attemptId);const fresh=await state(page);expect(fresh.hp).toBe(6);expect(fresh.room).toBe('A');expect(fresh.powered).toBe(false);expect(fresh.targetHp).toBe(3);
+  await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&Boolean(s.player)&&s.attemptId!==dead.attemptId;}).toBe(true);const fresh=await state(page);expect(fresh.hp).toBe(6);expect(fresh.room).toBe('A');expect(fresh.powered).toBe(false);expect(fresh.targetHp).toBe(3);
 });

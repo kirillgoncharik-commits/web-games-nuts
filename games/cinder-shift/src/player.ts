@@ -5,6 +5,7 @@ import type {Rect} from './mission';
 import {intersects} from './geometry';
 export class Player{
   readonly sprite:Phaser.Physics.Arcade.Sprite;
+  private dashStartX=0;private dashDirection=1;
   facing=1;crouching=false;lastGrounded=-1000;jumpQueued=-1000;jumpConsumed=false;dashUntil=0;dashReady=0;knockUntil=0;nextShot=0;
   constructor(scene:Phaser.Scene,x:number){this.sprite=scene.physics.add.sprite(x,298,'body').setVisible(false).setCollideWorldBounds(true);}
   get body(){return this.sprite.body as Phaser.Physics.Arcade.Body;}
@@ -21,10 +22,11 @@ export class Player{
     const h=this.crouching?m.crouching_height:m.standing_height;
     if(b.height!==h){b.setSize(22,h,false);b.setOffset(0,44-h);b.updateFromGameObject();}
     const direction=Number(frame.down.has('right'))-Number(frame.down.has('left'));
-    if(direction)this.facing=direction;
+    if(direction&&now>=this.dashUntil)this.facing=direction;
     const speed=this.crouching?m.crouch_speed:config.initial_balance.walk_speed;
-    if(dashAllowed&&frame.pressed.has('ability')&&grounded&&now>=this.dashReady){this.dashUntil=now+m.dash_ms;this.dashReady=now+m.dash_cooldown_ms;}
-    if(now<this.dashUntil)b.setVelocityX(this.facing*m.dash_speed);
+    if(dashAllowed&&frame.pressed.has('ability')&&grounded&&now>=this.dashReady){this.dashUntil=now+m.dash_ms;this.dashReady=now+m.dash_cooldown_ms;this.dashStartX=this.x;this.dashDirection=this.facing;}
+    if(now<this.dashUntil){const remaining=Math.max(0,config.m04.dash_distance-(this.x-this.dashStartX)*this.dashDirection);b.setVelocityX(this.dashDirection*Math.min(m.dash_speed,remaining/(ms/1000)));}
+    else if(b.velocity.x*this.dashDirection>speed&&this.dashUntil>0&&now-this.dashUntil<ms+1)b.setVelocityX(direction*speed);
     else {
       const target=direction*speed,change=(direction?m.acceleration:m.deceleration)*ms/1000*(now<this.knockUntil?.5:1);
       b.setVelocityX(b.velocity.x+Math.sign(target-b.velocity.x)*Math.min(change,Math.abs(target-b.velocity.x)));

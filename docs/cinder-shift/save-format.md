@@ -1,0 +1,13 @@
+# Save format and compatibility
+
+Database cinder-shift-r01, IndexedDB version 1, object store records. Keys: campaign and settings. Current envelope: schema_version 1, content_version airlock-m04.1, game_id r01, build_id, saved_at and campaign. Display suffix 64 changes no keys.
+
+Campaign contains UUID campaign_id, uint32 campaign_seed, mission_id airlock, stage, nodes/active/points, completed missions, reward ledger campaign_id:mission_id, processed attempt IDs, frozen entry and applied result. Entry stores loadout, maximum/initial HP, seed, versioned event plan and initial_score 0. Result stores attempt ID, result/reason, HP/maxHP, score, active/screen duration and applied/reward flags. Separate settings contain locale, sound, touch visibility/layout, autofire and debug bodies.
+
+Purchases/results mutate once, then enqueue a cloned complete envelope into one readwrite transaction. Reward ledger, points and result commit together. A failed transaction retains the previous stored envelope; current play continues in memory. UI warns and offers Retry saving. Saves follow purchase, entry preparation, result and backgrounding; unload is not the only opportunity. Settings have a separate transaction; language also has a preboot mirror.
+
+Continue from research/briefing restores that stage/plan. Continue from mission explains that position is not saved and creates an attempt from the frozen entry. Continue from result/preview_complete displays the record without applying another reward. Retry creates a fresh ID, full allowed HP, zero score and original plan. New shift confirms replacement and preserves settings.
+
+Validation rejects malformed values, unsupported schema/content, unknown node IDs, incorrect modifiers, invalid event definitions and inconsistent points/rewards. Invalid originals remain unchanged until explicit replacement. Denied access never claims that progress is saved. Starting a shift when storage cannot be read asks about replacing potentially existing progress.
+
+M03 had no campaign saves, so there is no earlier schema to migrate. For future migration, increment schema/content as needed, read the original without mutation, validate its known shape, convert a complete envelope and validate again. Commit atomically only after success; preserve/export the original until then. If version or node/event meaning is unknown, retain it and offer localized explicit reset. Never hide an unknown node with defaults or silently reroll plans. Preserve settings across campaign reset. Add fixtures for each migration, unknown future versions and aborted writes.
