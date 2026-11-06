@@ -13,7 +13,7 @@ export async function startMission(page:Page,{seed=seedsForPlans().none,node,loc
 export async function roomA(page:Page){
   await page.keyboard.down('d');await x(page,143);await page.keyboard.down('Space');await x(page,242);await page.keyboard.up('Space');await x(page,294);await page.keyboard.up('d');
   await page.keyboard.down('s');await page.keyboard.down('d');await x(page,442);await page.keyboard.up('d');await page.keyboard.up('s');
-  await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).targetHp).toBe(0);await page.keyboard.up('j');
+  await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).targetHp).toBe(0).catch(async()=>{throw Error('Target route stalled '+JSON.stringify(await state(page)));});await page.keyboard.up('j');
   await page.keyboard.down('d');await x(page,546);await page.keyboard.up('d');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);
   await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
 }
