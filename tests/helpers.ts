@@ -5,7 +5,7 @@ export const state=(page:Page)=>page.evaluate(()=>(window as any).__CINDER__());
 export async function x(page:Page,value:number){await page.waitForFunction(x=>(window as any).__CINDER__().player?.x>=x,value,{timeout:8000}).catch(async()=>{throw Error('Movement stopped '+JSON.stringify(await state(page)));});}
 export async function startMission(page:Page,{seed=seedsForPlans().none,node,locale='ru'}:{seed?:number;node?:NodeId;locale?:'ru'|'en'}={}){
   await page.goto('/games/cinder-shift/?seed='+seed);await page.getByTestId('menu-locale').selectOption(locale);await page.getByTestId('new-shift').click();
-  if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();
+  if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();await page.getByTestId('choose-mira').click();
   await expect.poll(async()=>(await state(page)).screen).toBe('research');
   if(node){await page.getByTestId('research-'+node).click();await page.getByTestId('purchase').click();await page.getByTestId('confirm-buy').click();await expect.poll(async()=>(await state(page)).campaign.nodes).toContain(node);}
   await page.getByTestId('briefing').click();await page.getByTestId('start-mission').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);

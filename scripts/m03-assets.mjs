@@ -40,8 +40,9 @@ async function writeSourcePSD(name,defs,pixels,width,height){
   const psd=writePsdBuffer({width,height,children:layers,imageData:composite},{generateThumbnail:false,trimImageData:false});await writeFile(source+'/'+name+'.psd',psd);
 }
 async function importSources(){
-  const all=frameDefs();const cache={};for(const n of ['hero','hero-m04','repair-cache-m04','enemies','props','tiles'])cache[n]=await readFile(source+'/generated/'+n+'.png');
+  const all=frameDefs();const cache={};for(const n of ['hero','hero-m04','hero-m05a','repair-cache-m04','enemies','props','tiles'])cache[n]=await readFile(source+'/generated/'+n+'.png');
   const pixels={};for(const[group,defs]of Object.entries(all)){pixels[group]=[];for(const def of defs){if(def.color){const rgb=def.color.slice(1).match(/../g).map(s=>parseInt(s,16));pixels[group].push(image([...rgb,255],1,1));}else pixels[group].push(await normalized(def,cache[def.sheet]));}}
+  if(process.argv.includes('--hero-only')){await writeSourcePSD('mira',all.mira,pixels.mira,48,64);return;}
   // A separate raised cutter layer keeps the walker's original M02 muzzle at (+17,-32).
   const gun=pixels.mira[layout.hero.findIndex(d=>d.id==='mira-cutter')];const walkerIndex=all.enemies.findIndex(d=>d.id==='walker');
   pixels.enemies[walkerIndex]=await raw(await sharp(await png(pixels.enemies[walkerIndex])).composite([{input:await png(gun),left:20,top:2}]).png().toBuffer());
@@ -58,7 +59,7 @@ async function saveHashed(base,ext,data){const name=base+'-'+hash(data).slice(0,
 async function readPSD(name){return readPsd(await readFile(source+'/'+name+'.psd'),{useImageData:true,skipCompositeImageData:true,skipThumbnail:true});}
 async function exportSources(){
   for(const file of await readdir(out))await rm(join(out,file),{force:true,recursive:true});
-  const manifest={version:'m04.1',palette:layout.palette,atlases:{},backgrounds:{},frames:{},source:'layered PSDs in art/m03/source',module_anchors:layout.module_anchors};
+  const manifest={version:'m05a.1',palette:layout.palette,atlases:{},backgrounds:{},frames:{},source:'layered PSDs in art/m03/source',module_anchors:layout.module_anchors};
   for(const[group,defs]of Object.entries(frameDefs())){
     const psd=await readPSD(group),regions={},items=[];let x=2,y=2,rowH=0;const atlasW=256;
     for(const d of defs){const l=psd.children.find(l=>l.name===d.id);if(!l?.imageData)throw Error('PSD layer missing: '+d.id);const pixel=l.imageData;if(pixel.width!==d.size[0]||pixel.height!==d.size[1])throw Error('Unexpected frame dimensions: '+d.id);

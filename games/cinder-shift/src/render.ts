@@ -18,11 +18,12 @@ export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;
   private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
-    scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0xb8bccb);
-    scene.add.image(0,40,'m03-bg-'+(room.id==='T'?'A':room.id)).setOrigin(0).setTint(0xbac6c9);
-    scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(0x3f4e60).setAlpha(.65).setDepth(1);
-    for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x526074).setAlpha(.5).setDepth(1);
-    if(room.id==='A'||room.id==='T')scene.add.image(0,40,'m03-bg-A').setOrigin(0).setCrop(298,70,208,146).setTint(0x626c80).setDepth(1);
+    scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0x8e9aa9);
+    scene.add.image(0,40,'m03-bg-'+(room.id==='T'?'A':room.id)).setOrigin(0).setTint(0xa8b5bd);
+    scene.add.rectangle(0,216,640,104,0x1c2a39).setOrigin(0).setDepth(1);
+    scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
+    for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
+    if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
     for(const solid of room.solids)this.platform(solid);
     this.exitMarker=scene.add.text(609,222,'→',{fontFamily:'Arial',fontSize:'18px',color:'#FFB65B'}).setOrigin(.5).setDepth(3);
     if(room.id==='B'&&hasEvent(plan,'E02'))for(const x of [320,382])scene.add.image(x,40,'m03-props','signal-mint').setOrigin(0).setDisplaySize(2,232).setTintFill(0xffb65b).setDepth(3);

@@ -3,10 +3,10 @@ import {nodeIds,loadout,type NodeId} from './research';
 import {validPlan} from './events';
 export const databaseName='cinder-shift-r01';
 export const schemaVersion=1;
-export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean};
+export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;musicVolume:number;sfxVolume:number;uiVolume:number};
 export type SaveIssue='unavailable'|'write_failed'|'corrupt'|'incompatible'|'unknown_nodes'|null;
 export type Envelope={schema_version:1;content_version:string;game_id:'r01';build_id:string;saved_at:string;campaign:CampaignData};
-export const defaults=(locale:'en'|'ru'):Settings=>({locale,muted:false,touchMode:'auto',layout:'dock',autofire:true,debugBodies:false});
+export const defaults=(locale:'en'|'ru'):Settings=>({locale,muted:false,touchMode:'auto',layout:'dock',autofire:true,debugBodies:false,musicVolume:.18,sfxVolume:.75,uiVolume:.6});
 const object=(v:unknown):v is Record<string,any>=>Boolean(v&&typeof v==='object'&&!Array.isArray(v));
 const uint=(v:unknown)=>Number.isInteger(v)&&Number(v)>=0&&Number(v)<=0xffffffff;
 const ids=(v:unknown):v is NodeId[]=>Array.isArray(v)&&v.length<=3&&v.every(id=>nodeIds.includes(id))&&new Set(v).size===v.length;
@@ -14,6 +14,7 @@ export function validateSave(v:unknown):SaveIssue{
   if(!object(v)||v.game_id!=='r01')return'corrupt';
   if(v.schema_version!==schemaVersion||v.content_version!==contentVersion)return'incompatible';
   const d=v.campaign;if(!object(d)||!Array.isArray(d.nodes))return'corrupt';if(d.nodes.some(id=>!nodeIds.includes(id)))return'unknown_nodes';
+  if(d.character_id!==undefined&&d.character_id!=='mira')return'corrupt';
   if(!ids(d.nodes)||typeof d.campaign_id!=='string'||d.campaign_id.length<8||d.campaign_id.length>100||!uint(d.campaign_seed)||d.mission_id!=='airlock'||!['research','briefing','mission','result','preview_complete'].includes(d.stage))return'corrupt';
   const expectedActive=d.nodes.includes('M1')?'M1':null;if(d.active!==expectedActive)return'corrupt';
   if(!Array.isArray(d.reward_ledger)||d.reward_ledger.length>1||d.reward_ledger.some(k=>k!==d.campaign_id+':airlock')||!Array.isArray(d.completed_missions)||d.completed_missions.length!==d.reward_ledger.length||d.completed_missions.some(m=>m!=='airlock'))return'corrupt';
@@ -26,8 +27,8 @@ export function validateSave(v:unknown):SaveIssue{
   if(['result','preview_complete'].includes(d.stage)&&!d.result)return'corrupt';return null;
 }
 export function validateSettings(v:unknown,locale:'en'|'ru'):Settings{
-  const d=defaults(locale);if(!object(v))return d;
-  return {locale:v.locale==='en'||v.locale==='ru'?v.locale:locale,muted:typeof v.muted==='boolean'?v.muted:d.muted,touchMode:['auto','on','off'].includes(v.touchMode)?v.touchMode:d.touchMode,layout:['dock','sides'].includes(v.layout)?v.layout:d.layout,autofire:typeof v.autofire==='boolean'?v.autofire:d.autofire,debugBodies:typeof v.debugBodies==='boolean'?v.debugBodies:d.debugBodies};
+  const d=defaults(locale);if(!object(v))return d;const level=(key:'musicVolume'|'sfxVolume'|'uiVolume')=>typeof v[key]==='number'&&Number.isFinite(v[key])&&v[key]>=0&&v[key]<=1?v[key]:d[key];
+  return {locale:v.locale==='en'||v.locale==='ru'?v.locale:locale,muted:typeof v.muted==='boolean'?v.muted:d.muted,touchMode:['auto','on','off'].includes(v.touchMode)?v.touchMode:d.touchMode,layout:['dock','sides'].includes(v.layout)?v.layout:d.layout,autofire:typeof v.autofire==='boolean'?v.autofire:d.autofire,debugBodies:typeof v.debugBodies==='boolean'?v.debugBodies:d.debugBodies,musicVolume:level('musicVolume'),sfxVolume:level('sfxVolume'),uiVolume:level('uiVolume')};
 }
 export class SaveService{
   private db?:IDBDatabase;private queue:Promise<unknown>=Promise.resolve();private blocked=false;
@@ -42,7 +43,7 @@ export class SaveService{
   private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
   async load(locale:'en'|'ru'){
     if(!await this.connect())return{campaign:null,settings:defaults(locale)};
-    try{const [record,rawSettings]=await Promise.all([this.read('campaign'),this.read('settings')]);const settings=validateSettings(rawSettings,locale);try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=record as Envelope;this.savedAt=envelope.saved_at;return{campaign:envelope.campaign,settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}
+    try{const [record,rawSettings]=await Promise.all([this.read('campaign'),this.read('settings')]);const settings=validateSettings(rawSettings,locale);try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=record as Envelope;this.savedAt=envelope.saved_at;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}
   }
   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{
     if(!this.available||!this.db)return false;

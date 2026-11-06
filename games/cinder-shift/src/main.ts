@@ -23,6 +23,7 @@ class Boot extends Phaser.Scene{
 }
 const fps=new URLSearchParams(location.search).get('fps')==='30'?30:60;
 const game=new Phaser.Game({type:Phaser.AUTO,parent:'game',width:640,height:360,backgroundColor:'#111823',pixelArt:true,antialias:false,banner:false,
+  audio:{noAudio:true},
   loader:{imageLoadType:'HTMLImageElement'},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},input:{keyboard:false},fps:{target:fps,limit:fps===30?30:0,smoothStep:false},
   physics:{default:'arcade',arcade:{gravity:{x:0,y:config.initial_balance.gravity},customUpdate:true,fixedStep:false}},scene:[Boot,Backdrop,room]});
 app.attach(game,room);void app.initialize();

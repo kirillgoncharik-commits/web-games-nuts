@@ -1,10 +1,10 @@
 # Nuts Games — Cinder Shift 64
 
-M04 is a playable vertical session over the existing Airlock A–B–C mission and separate training range. Start a shift with one research point, inspect and confirm W1 (three-shot splitter), M1 (ground dash) or D1 (8 HP), read the seeded briefing, complete the mission and spend the first-victory reward. Replays test another build without farming research points. The result identifies the end of this preview; further missions remain M05.
+M05A adds Mira selection, a character workshop with current/preview parameters, a separate cost confirmation and original audio to the existing Airlock A–B–C vertical session. Start with one research point and choose W1 (three-shot splitter), M1 (ground dash) or D1 (8 HP). Purchases refresh the actual profile and next mission entry. Two future operator slots remain disabled. The first victory grants one point; replays do not farm rewards. The full five-mission campaign remains M05B.
 
 The optional closed upper passage and repair cache are prepared in B from the campaign seed. Retry restores the same entry loadout and event plan, full allowed HP and zero score. Campaign stages and settings are stored separately in IndexedDB. Continue during combat explicitly restarts the mission entry. Storage failures leave the shift playable in memory with a warning. Damaged or incompatible progress requires explicit replacement.
 
-All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open.
+All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open. M04 campaign records default to Mira without resetting progress. Three independent music/SFX/UI volumes persist; one AudioContext starts after a user gesture. Pause stops world audio and music while UI remains available, background suspends everything, and foreground requires explicit resume. Phaser audio is disabled to avoid an unused second context.
 
 ## Run and verify
 
@@ -16,6 +16,7 @@ Node.js 22.12+ and npm are required. Dependencies remain pinned.
     npm run preview
     npm run check
     npm run art:check
+    npm run audio:check
     npm test
     CROSS_BROWSER=1 npm test
 
@@ -31,11 +32,15 @@ dist/cinder-shift/ is a relocatable static artifact. build-manifest.json records
 
     npm run integrate -- /absolute/path/to/nutsbid-checkout
 
-Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published M03 is 0.3.0-m03.1. Current M04 delivery/publication status and hashes are in the release report. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
+Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published M04 is 0.4.0-m04.1. Current M05A delivery/publication status and hashes are in the release report. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
 
 No external resources, translation service, SDK or mandatory server are required. Analytics stays disabled by default; the existing consent adapter never queues earlier events or loads an SDK. Diagnostics are inside Settings.
 
 ## References
+
+- [M05A implementation and manual acceptance](docs/cinder-shift/m05a-status.ru.md)
+- [M05A art and exact generation prompt](art/m05a/README.md)
+- [Original audio sources, WAV registry and audition](audio/m05a/README.md)
 
 - [M04 implementation](docs/cinder-shift/m04-status.ru.md)
 - [Requirements](docs/cinder-shift/m04-requirements.ru.md)

@@ -1,5 +1,7 @@
 # Localization
 
+M05A exports 260 matching EN/RU keys, including character selection, profile comparisons, cost/remaining balance, death hints, salvage explanation and the three audio buses. All numbers and Mira's name/role use the same catalog and formatter as the existing flow.
+
 src/i18n/en.json is the complete canonical catalog; ru.json must have identical nonempty keys and named parameters. Values are complete phrases. IDs, save fields and telemetry event names never depend on translated text. I18n formats numbers/dates with Intl and falls back to English; an unknown key shows a generic error rather than its ID and warns in development.
 
 Saved language (cinder-shift-language-v1, with separately stored IndexedDB settings) takes priority; otherwise ru/ru-* selects Russian, everything else English. The mirror lets preboot use the language before Phaser/IndexedDB finishes. Denied storage still permits changing language in memory. html.lang, title, description and accessible labels change with the UI. Campaign, attempt, panel and focus survive switching.

@@ -1,6 +1,6 @@
 {
   "name": "nuts-web-games",
-  "version": "0.4.0-m04.1",
+  "version": "0.5.0-m05a.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -11,10 +11,12 @@
     "test": "playwright test",
     "integrate": "node scripts/integrate.mjs",
     "art:import": "node scripts/m03-assets.mjs --import",
-    "art:export": "node scripts/m03-assets.mjs",
+    "art:export": "node scripts/m03-assets.mjs && node scripts/m05a-art-previews.mjs",
     "art:check": "node scripts/check-m03-contract.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
-    "i18n:export": "node scripts/check-i18n.mjs --export"
+    "i18n:export": "node scripts/check-i18n.mjs --export",
+    "audio:export": "node scripts/m05a-audio.mjs",
+    "audio:check": "node scripts/check-m05a-audio.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
