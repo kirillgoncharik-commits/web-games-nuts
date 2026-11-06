@@ -8,7 +8,7 @@ export async function startMission(page:Page,{seed=seedsForPlans().none,node,loc
   if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();await page.getByTestId('choose-mira').click();
   await expect.poll(async()=>(await state(page)).screen).toBe('research');
   if(node){await page.getByTestId('research-'+node).click();await page.getByTestId('purchase').click();await page.getByTestId('confirm-buy').click();await expect.poll(async()=>(await state(page)).campaign.nodes).toContain(node);}
-  await page.getByTestId('briefing').click();await page.getByTestId('start-mission').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
+  await page.getByTestId('briefing').click();await page.getByTestId('start-mission').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.simMs>0&&s.player?.vy===0;});
 }
 export async function roomA(page:Page){
   await page.keyboard.down('d');await x(page,143);await page.keyboard.down('Space');await x(page,242);await page.keyboard.up('Space');await x(page,294);await page.keyboard.up('d');
