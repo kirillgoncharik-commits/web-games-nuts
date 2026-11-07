@@ -25,7 +25,7 @@
           <div id="game" tabindex="0" role="application" data-i18n-aria="accessibility.game" aria-label="Game field"></div>
           <div id="hud" class="hud" hidden>
             <div class="health" data-i18n-aria="accessibility.integrity" aria-live="off"><span data-i18n="hud.integrity">INTEGRITY</span><span id="hp-segments" aria-hidden="true"></span><strong id="hp-value"></strong></div>
-            <span id="interaction-progress" hidden></span><span id="ability-status" hidden><span data-i18n="hud.impulse">Impulse</span> <strong id="ability-time"></strong><i><b id="ability-fill"></b></i></span><strong id="hud-room"></strong>
+            <span id="interaction-progress" hidden></span><span id="ability-status" hidden><span data-i18n="hud.impulse">Impulse</span> <strong id="ability-time"></strong><i><b id="ability-fill"></b></i></span><span id="buffer-status" hidden></span><strong id="hud-room"></strong>
           </div>
           <div id="transition" class="transition" data-i18n="mission.transition" hidden>ROOM TRANSFER</div>
         </div>
@@ -33,12 +33,12 @@
           <div class="directions"><button data-action="left" data-i18n-aria="accessibility.left" aria-label="Move left">◀</button><button data-action="crouch" data-i18n-aria="accessibility.crouch" aria-label="Crouch">↓</button><button data-action="right" data-i18n-aria="accessibility.right" aria-label="Move right">▶</button></div>
           <div class="actions"><button data-action="ability" data-i18n-aria="accessibility.ability" aria-label="Ground impulse" hidden>K<span data-i18n="touch.ability">IMPULSE</span></button><button data-action="interact" data-i18n-aria="accessibility.interact" aria-label="Interact">E<span data-i18n="touch.interact">INTERACT</span></button><button data-action="fire" data-i18n-aria="accessibility.fire" aria-label="Fire cutter">X<span data-i18n="touch.fire">FIRE</span></button><button data-action="jump" class="jump" data-i18n-aria="accessibility.jump" aria-label="Jump">↑<span data-i18n="touch.jump">JUMP</span></button></div>
         </div>
-        <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div class="panel loading"><h1 id="screen-title">CINDER SHIFT 64</h1><p id="loading-label" data-i18n="loading.initial">Loading suit systems…</p><progress id="loading-progress" max="1" value="0" data-i18n-aria="accessibility.progress" aria-label="Loading resources"></progress></div></div>
+        <div id="overlay" class="overlay boot-loading" role="dialog" aria-modal="true" aria-labelledby="screen-title"><div class="panel loading"><h1 id="screen-title">CINDER SHIFT 64</h1><p id="loading-label" data-i18n="loading.initial">Loading suit systems…</p><progress id="loading-progress" max="1" value="0" data-i18n-aria="accessibility.progress" aria-label="Loading resources"></progress></div></div>
       </div>
       <div id="mission-footer" class="console-footer" hidden><span id="objective"></span><span id="device"></span></div>
     </section>
   </main>
-  <p class="game-description">Cinder Shift 64 is a browser action game in development by Nuts Games. Prepare Mira in the workshop, start a new shift, cross three damaged rooms on Caldera 7 and reach the airlock. Keyboard, touch and gamepad controls; English and Russian interface. No account required.</p>
+  <p class="game-description">Cinder Shift 64 is a browser action game in development by Nuts Games. This preview includes two missions and seven rooms on Caldera 7, a campaign map, six technologies and three possible events. Prepare Mira in the workshop; fight or bypass the service robots. Keyboard, touch and gamepad controls; English and Russian interface. The full campaign is still in development. No account required.</p>
   <script vite-ignore src="./boot-guard.js"></script>
   <script type="module" src="./src/main.ts"></script>
 </body>

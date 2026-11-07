@@ -17,7 +17,7 @@ class Boot extends Phaser.Scene{
   preload(){this.load.on('progress',(value:number)=>app.progress(value));this.load.on('loaderror',()=>app.failure('art_load_error'));preloadArt(this);}
   create(){
     if(app.state==='error')return;
-    if(['mira','enemies','props','environment','bg-far','bg-A','bg-B','bg-C'].some(name=>!this.textures.exists('m03-'+name))){app.failure('art_process_error');return;}
+    if(['mira','enemies','props','environment','bg-far','bg-A','bg-B','bg-C','promo-loading','promo-menu'].some(name=>!this.textures.exists(name.startsWith('promo-')?name:'m03-'+name))){app.failure('art_process_error');return;}
     const g=this.make.graphics({x:0,y:0});g.fillStyle(0xffffff).fillRect(0,0,22,44).generateTexture('body',22,44);g.destroy();this.scene.stop();app.artReady();
   }
 }

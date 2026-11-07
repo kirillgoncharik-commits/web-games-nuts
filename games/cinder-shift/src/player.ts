@@ -13,7 +13,7 @@ export class Player{
   get feet(){return this.sprite.y+22;}
   get muzzle(){return {x:this.x+this.facing*19,y:this.feet-(this.crouching?15:28)};}
   rect():Rect{return {x:this.body.x,y:this.body.y,width:this.body.width,height:this.body.height};}
-  step(frame:Frame,now:number,ms:number,solids:Rect[],dashAllowed:boolean){
+  step(frame:Frame,now:number,ms:number,solids:Rect[],dashAllowed:boolean,airDash=false){
     const b=this.body,m=config.movement,grounded=b.blocked.down||b.touching.down;
     if(grounded){this.lastGrounded=now;this.jumpConsumed=false;}
     if(frame.pressed.has('jump'))this.jumpQueued=now;
@@ -24,7 +24,7 @@ export class Player{
     const direction=Number(frame.down.has('right'))-Number(frame.down.has('left'));
     if(direction&&now>=this.dashUntil)this.facing=direction;
     const speed=this.crouching?m.crouch_speed:config.initial_balance.walk_speed;
-    if(dashAllowed&&frame.pressed.has('ability')&&grounded&&now>=this.dashReady){this.dashUntil=now+m.dash_ms;this.dashReady=now+m.dash_cooldown_ms;this.dashStartX=this.x;this.dashDirection=this.facing;}
+    if(dashAllowed&&frame.pressed.has('ability')&&(grounded||airDash)&&now>=this.dashReady){this.dashUntil=now+m.dash_ms;this.dashReady=now+m.dash_cooldown_ms;this.dashStartX=this.x;this.dashDirection=this.facing;}
     if(now<this.dashUntil){const remaining=Math.max(0,config.m04.dash_distance-(this.x-this.dashStartX)*this.dashDirection);b.setVelocityX(this.dashDirection*Math.min(m.dash_speed,remaining/(ms/1000)));}
     else if(b.velocity.x*this.dashDirection>speed&&this.dashUntil>0&&now-this.dashUntil<ms+1)b.setVelocityX(direction*speed);
     else {
