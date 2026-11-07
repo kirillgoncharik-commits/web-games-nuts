@@ -35,7 +35,7 @@ for(const [name,atlas] of Object.entries(index.atlases)){
  }
  for(let i=0;i<data.length;i+=4){assert.ok(data[i+3]===0||data[i+3]===255,'Alpha halo '+name);if(!data[i+3])assert.equal(data[i]+data[i+1]+data[i+2],0,'Transparent RGB halo');}
 }
-const render=await read(root+'src/render.ts'),styles=await read(root+'src/style.css')+await read(root+'src/ui.css');
-assert.ok(!/tweens?\.|add\.sprite|\.anims\.|crossfade|motion.blur/i.test(render));assert.ok(!/\btransition\s*:|\banimation\s*:/i.test(styles));
+const render=await read(root+'src/render.ts'),styles=await read(root+'src/style.css')+await read(root+'src/ui.css')+await read(root+'src/ui-art.css');
+assert.ok(!/tweens?\.|add\.sprite|\.anims\.|crossfade|motion.blur/i.test(render));for(const[,property,value]of styles.matchAll(/\b(transition|animation)\s*:\s*([^;}]+)/gi))assert.equal(value.trim().toLowerCase(),'none','CSS '+property+' must stay disabled');
 assert.ok(render.indexOf(m04?'if(this.debugEnabled())':'if((document.querySelector(\'#debug-bodies\')')<render.indexOf('this.debug.strokeRect'));
 console.log(`Art/animation contract OK; existing balance preserved; ${Object.keys(index.frames).length} frames; ${bytes} art bytes.`);
