@@ -6,6 +6,8 @@ The optional closed upper passage and repair cache are prepared in B from the ca
 
 All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open. M04 campaign records default to Mira without resetting progress. Three independent music/SFX/UI volumes persist; one AudioContext starts after a user gesture. Pause stops world audio and music while UI remains available, background suspends everything, and foreground requires explicit resume. Phaser audio is disabled to avoid an unused second context.
 
+M05A.1 adds a compact purchase summary, expandable technical stats, a separate workshop menu and clearer EN/RU labels. The published base remains 0.5.0-m05a.1; local delivery and acceptance are recorded in [M05A.1 status](docs/cinder-shift/m05a1-status.ru.md). [Development plan 0.2](docs/cinder-shift/development-plan.ru.md) defines M05B.1–M08 and the outstanding human/device checks.
+
 ## Run and verify
 
 Node.js 22.12+ and npm are required. Dependencies remain pinned.
@@ -32,7 +34,7 @@ dist/cinder-shift/ is a relocatable static artifact. build-manifest.json records
 
     npm run integrate -- /absolute/path/to/nutsbid-checkout
 
-Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published M04 is 0.4.0-m04.1. Current M05A delivery/publication status and hashes are in the release report. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
+Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published M05A is 0.5.0-m05a.1 (artifact b450c6e). M05A.1 is a separate 0.5.1-m05a.1 candidate; see its status report before integrating. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
 
 No external resources, translation service, SDK or mandatory server are required. Analytics stays disabled by default; the existing consent adapter never queues earlier events or loads an SDK. Diagnostics are inside Settings.
 
@@ -53,4 +55,4 @@ No external resources, translation service, SDK or mandatory server are required
 - [Original GDD](docs/cinder-shift/GDD.ru.md)
 - [Preview publishing](docs/preview-publishing.ru.md)
 
-Brand is Cinder Shift 64 in both languages. IDs, save keys, URLs and historical filenames remain stable. Other concepts are Iron Frontiers 64, Riverline Zero 64, Forge Below 64 and Silent Relay 64; M04 does not implement them.
+Brand is Cinder Shift 64 in both languages. IDs, save keys, URLs and historical filenames remain stable. Other concepts are Iron Frontiers 64, Riverline Zero 64, Forge Below 64 and Silent Relay 64; They are outside this delivery.
