@@ -1,41 +1,38 @@
 import config from '../game.config.json' with {type:'json'};
 import type {MissionEntry} from './session/campaign';
 import {loadout} from './session/research';
-import{characterProfile,type CharacterProfile}from'./session/profile';
-import {hasEvent,shutter,eventConfig,type EventPlan} from './session/events';
+import {characterProfile,type CharacterProfile}from'./session/profile';
+import {hasEvent,shutter,cargoShutter,eventConfig,type EventPlan} from './session/events';
+import {missions,type PlayableMissionId} from './session/missions';
+import {createEnemy,suspendEnemy,type EnemyState} from './enemies';
 export {rooms} from './room-data';
 export type {RoomId,Rect,Point,EnemyDefinition,RoomDefinition} from './room-data';
-import {rooms,type RoomId,type Rect,type Point,type EnemyDefinition,type RoomDefinition} from './room-data';
+export type {EnemyState} from './enemies';
+import {rooms,type RoomId,type RoomDefinition} from './room-data';
 export type Mode='mission'|'training';
-export type EnemyState=EnemyDefinition & {home:Point;hp:number;phase:'patrol'|'telegraph'|'attack'|'recovery'|'dead';remaining:number;direction:number;shots:number;aim:Point;activated:boolean;warnings:number};
-export type RoomState={targetHp:number;terminal:boolean;enemies:EnemyState[];visited:boolean;containerUsed:boolean};
+export type RoomState={targetHp:number;terminal:boolean;enemies:EnemyState[];visited:boolean;containerUsed:boolean;bufferUsed:boolean;brokenPanels:string[];route:'ground'|'service'};
 export type Result='victory'|'death';
 export class MissionAttempt{
-  readonly id=crypto.randomUUID();
-  readonly missionId='airlock';
-  current:RoomId;
-  hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;score:number;
-  objective=false;
-  activeMs=0;
-  hurtUntil=-1;
-  result:Result|'abandoned'|null=null;
-  reason='';
-  tutorial=new Set<string>();
-  clock=new SimulationClock();
-  states:Partial<Record<RoomId,RoomState>>={};
-  constructor(readonly mode:Mode,entry?:MissionEntry){this.current=mode==='training'?'T':'A';this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.profile=characterProfile(this.entry.build.nodes);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;}
-  get build(){return this.entry.build;}
-  get eventPlan():EventPlan{return this.entry.event_plan;}
-  definition(id=this.current):RoomDefinition{const base=rooms[id];return id==='B'&&hasEvent(this.eventPlan,'E02')?{...base,solids:[...base.solids,shutter]}:base;}
-  chooseContainer(choice:'repair'|'salvage'){const state=this.room('B');if(this.mode!=='mission'||this.current!=='B'||!hasEvent(this.eventPlan,'E03')||state.containerUsed||(choice==='repair'&&this.hp>=this.maxHp))return false;state.containerUsed=true;if(choice==='repair')this.hp=Math.min(this.maxHp,this.hp+eventConfig.repairHp);else this.score+=eventConfig.salvageScore;return true;}
-  room(id=this.current){
-    return this.states[id] ||= {targetHp:3,terminal:false,visited:false,containerUsed:false,enemies:rooms[id].enemies.map(e=>({...e,home:{x:e.x,y:e.y},hp:config.combat[e.kind].hp,phase:'patrol',remaining:0,direction:1,shots:0,aim:{x:0,y:0},activated:false,warnings:0}))};
-  }
-  damage(now:number,reason:string){
-    if(this.mode==='training'||this.result||this.hp<=0||now<this.hurtUntil)return false;
-    this.hp=Math.max(0,this.hp-1);this.hurtUntil=now+config.initial_balance.hurt_invulnerability_seconds*1000;this.reason=reason;return true;
-  }
-  finish(result:Result|'abandoned'){if(this.result)return false;this.result=result;return true;}
+ readonly id=crypto.randomUUID();readonly missionId:PlayableMissionId;
+ current:RoomId;hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;score:number;
+ objective=false;cellCollected=false;cellInstalled=false;activeMs=0;hurtUntil=-1;lastDamageAbsorbed=false;
+ result:Result|'abandoned'|null=null;reason='';tutorial=new Set<string>();clock=new SimulationClock();states:Partial<Record<RoomId,RoomState>>={};
+ constructor(readonly mode:Mode,entry?:MissionEntry){this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;}
+ get build(){return this.entry.build;}
+ get eventPlan():EventPlan{return this.entry.event_plan;}
+ definition(id=this.current):RoomDefinition{const base=rooms[id],saved=this.states[id];let solids=base.solids.filter(s=>!s.id||!saved?.brokenPanels.includes(s.id));if(id==='B'&&hasEvent(this.eventPlan,'E02'))solids=[...solids,shutter];if(id==='E'&&hasEvent(this.eventPlan,'E01')&&!saved?.terminal)solids=[...solids,cargoShutter];return{...base,solids};}
+ chooseContainer(choice:'repair'|'salvage'){const state=this.room('B'),hasChoice=hasEvent(this.eventPlan,'E03');if(this.mode!=='mission'||this.missionId!=='airlock'||this.current!=='B'||state.containerUsed||(choice==='salvage'&&!hasChoice)||(choice==='repair'&&this.hp>=this.maxHp))return false;state.containerUsed=true;if(choice==='repair')this.hp=Math.min(this.maxHp,this.hp+eventConfig.repairHp);else this.score+=eventConfig.salvageScore;return true;}
+ room(id=this.current):RoomState{return this.states[id]||=( {targetHp:3,terminal:false,visited:false,containerUsed:false,bufferUsed:false,brokenPanels:[],route:'ground',enemies:rooms[id].enemies.map(createEnemy)} );}
+ enemyPowered(){return this.current!=='E'||!hasEvent(this.eventPlan,'E01')||this.room().terminal;}
+ suspend(){for(const enemy of this.room().enemies)suspendEnemy(enemy);}
+ breakPanel(id:string){const saved=this.room();if(!saved.brokenPanels.includes(id))saved.brokenPanels.push(id);}
+ damage(now:number,reason:string){
+  this.lastDamageAbsorbed=false;if(this.mode==='training'||this.result||this.hp<=0||now<this.hurtUntil)return false;
+  this.hurtUntil=now+config.initial_balance.hurt_invulnerability_seconds*1000;
+  if(this.build.buffer&&!this.room().bufferUsed){this.room().bufferUsed=true;this.lastDamageAbsorbed=true;return true;}
+  this.hp=Math.max(0,this.hp-1);this.reason=reason;return true;
+ }
+ finish(result:Result|'abandoned'){if(this.result)return false;this.result=result;return true;}
 }
 // Render rate never changes simulation steps; long frames are admitted as bounded work.
 export class SimulationClock{

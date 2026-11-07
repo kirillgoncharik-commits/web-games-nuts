@@ -15,6 +15,7 @@ export const definitions={
  enemy_break:{seconds:.19,priority:2,bus:'sfx',peak:.2,parts:[p('noise',0,.19,300,40),p('triangle',0,.17,110,32,.65)]},
  hurt_player:{seconds:.2,priority:5,bus:'sfx',peak:.25,parts:[p('pulse',0,.1,94,65),p('pulse',.08,.12,75,48),p('noise',0,.08,130,60,.25)]},
  warn_walker:{seconds:.19,priority:4,bus:'sfx',peak:.25,parts:[p('pulse',0,.065,155,155),p('pulse',.09,.1,155,155)]},
+ warn_turret:{seconds:.23,priority:4,bus:'sfx',peak:.25,parts:[p('pulse',0,.05,330,330),p('pulse',.08,.05,247,247),p('triangle',.16,.07,165,165)]},
  warn_drone:{seconds:.15,priority:4,bus:'sfx',peak:.25,parts:[p('pulse',0,.15,720,1060,.7),p('triangle',0,.15,360,530,.4)]},
  terminal_ready:{seconds:.18,priority:2,bus:'sfx',peak:.17,parts:[p('triangle',0,.08,330,330),p('pulse',.09,.09,495,495)]},
  power_restore:{seconds:.28,priority:3,bus:'sfx',peak:.22,parts:[p('pulse',0,.075,220,220),p('pulse',.085,.075,330,330),p('triangle',.17,.11,440,440)]},

@@ -1,6 +1,6 @@
 import config from '../game.config.json' with {type:'json'};
 declare global { interface Window { gtag?: (...args: unknown[]) => void } }
-export type EventName = 'game_boot' | 'game_ready' | 'error' | 'test_start' | 'test_complete' | 'pause' | 'resume' | 'mission_start' | 'room_enter' | 'tutorial_step' | 'hit_received' | 'mission_end' | 'retry' | 'campaign_start' | 'research_purchase' | 'event_offered' | 'event_choice' | 'save_result' | 'continue' | 'locale_changed';
+export type EventName = 'game_boot' | 'game_ready' | 'error' | 'test_start' | 'test_complete' | 'pause' | 'resume' | 'mission_start' | 'room_enter' | 'tutorial_step' | 'hit_received' | 'mission_end' | 'retry' | 'campaign_start' | 'campaign_checkpoint' | 'campaign_end' | 'research_purchase' | 'event_offered' | 'event_choice' | 'repair_offered' | 'repair_used' | 'save_result' | 'continue' | 'locale_changed' | 'ability_used' | 'route_choice' | 'shield_absorbed' | 'mission_objective' | 'map_open';
 export class Telemetry {
   readonly events: { name: EventName; event_id: string; at: number; params: Record<string, string | number> }[] = [];
   private started = performance.now();
