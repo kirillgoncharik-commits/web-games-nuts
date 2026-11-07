@@ -12,7 +12,13 @@ export class Telemetry {
     try {
       if (config.analytics.external_enabled && localStorage.getItem(config.analytics.consent_key) === 'granted') {
         const host = window.parent === window ? window : window.parent;
-        host.gtag?.('event', name, { game_id: config.game_id, build_id: this.build, source_sha: this.sha, event_id: event.event_id, ...params });
+        // Existing local lifecycle names stay stable; only four consented external events are sent.
+        const names: Partial<Record<EventName, string>> = {game_ready:'game_loaded', mission_start:'game_start', mission_end:'game_end', retry:'game_restart'};
+        const remote = names[name];
+        if (remote && (name !== 'retry' || params.mode === 'mission')) {
+          const outcome = params.result === 'victory' ? 'win' : params.result === 'death' ? 'defeat' : params.result === 'abandoned' ? 'explicit_exit' : undefined;
+          host.gtag?.('event', remote, { game_id: config.game_id, build_id: this.build, source_sha: this.sha, event_id: event.event_id, language: params.locale, level_id: params.mission_id, ...(outcome ? {outcome} : {}) });
+        }
       }
     } catch { /* Storage and cross-origin embedding cannot prevent play. */ }
     const output=document.querySelector('#events');if(output)output.textContent = [...this.events].reverse().map(e => `${(e.at / 1000).toFixed(2)}s  ${e.name}  ${JSON.stringify(e.params)}`).join('\n');
