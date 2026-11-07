@@ -17,6 +17,7 @@ export class Panels{
     root.addEventListener('pointerdown',e=>{this.controls.device=e.pointerType==='touch'?'touch':'keyboard';this.onDevice();});
     window.addEventListener('keydown',e=>{
       if(!this.visible)return;this.controls.device='keyboard';this.onDevice();
+      if(this.controls.isRebinding)return;
       if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat){this.onSound('ui_cancel');this.back();}return;}
       if(e.key==='Tab'){e.preventDefault();this.move(e.shiftKey?-1:1);return;}
       if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&!(e.target instanceof HTMLSelectElement)&&!(e.target instanceof HTMLInputElement&&e.target.type!=='checkbox')){e.preventDefault();this.move(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1);return;}

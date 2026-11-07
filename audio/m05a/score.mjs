@@ -33,7 +33,8 @@ function add(data,part,seed){let state=seed||1,filtered=0,phase=0;const first=Ma
   const attack=Math.min(1,time/.003),release=Math.min(1,(part.duration-time)/.012),decay=part.sustain?1:Math.pow(Math.max(0,1-u),.7);data[first+i]+=value*part.level*attack*release*decay;
  }
 }
-export function renderSfx(id){const def=definitions[id],data=new Float32Array(Math.round(def.seconds*rate));def.parts.forEach((part,i)=>add(data,part,seedFor(id)+i));let peak=0;for(const v of data)peak=Math.max(peak,Math.abs(v));for(let i=0;i<data.length;i++)data[i]*=def.peak/(peak||1);return data;}
+export function renderDefinition(id,def){const data=new Float32Array(Math.round(def.seconds*rate));def.parts.forEach((part,i)=>add(data,part,seedFor(id)+i));let peak=0;for(const v of data)peak=Math.max(peak,Math.abs(v));for(let i=0;i<data.length;i++)data[i]*=def.peak/(peak||1);return data;}
+export function renderSfx(id){return renderDefinition(id,definitions[id]);}
 const hz=midi=>440*Math.pow(2,(midi-69)/12);
 export function renderMusic(id){const combat=id==='combat',bars=combat?16:8,beat=60/bpm,step=beat/2,data=new Float32Array(Math.round(bars*4*beat*rate));const roots=[38,34,41,36],arp=[0,7,12,15,12,7,3,7];
  for(let bar=0;bar<bars;bar++){const root=roots[Math.floor(bar/2)%roots.length];for(let s=0;s<8;s++){const at=(bar*8+s)*step,remaining=data.length/rate-at;
@@ -41,4 +42,4 @@ export function renderMusic(id){const combat=id==='combat',bars=combat?16:8,beat
   if(combat||s%2===0){const n=root+24+arp[(s+(bar%2)*2)%arp.length];add(data,{wave:'pulse',start:at,duration:Math.min(step*(combat?.65:.85),remaining-.006),from:hz(n),to:hz(n),level:combat?.12:.09,sustain:true},0);}
   if(combat||s%4===0)add(data,{wave:'noise',start:at,duration:.045,from:combat?1700:900,to:400,level:s%2?.045:.065},bar*19+s+23);
  }}let peak=0;for(const v of data)peak=Math.max(peak,Math.abs(v));for(let i=0;i<data.length;i++)data[i]*=.18/(peak||1);return data;}
-export function wav(data){const b=Buffer.alloc(44+data.length*2);b.write('RIFF',0);b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(rate,24);b.writeUInt32LE(rate*2,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(data.length*2,40);for(let i=0;i<data.length;i++)b.writeInt16LE(Math.round(Math.max(-1,Math.min(1,data[i]))*32767),44+i*2);return b;}
+export function wav(data,sampleRate=rate){const b=Buffer.alloc(44+data.length*2);b.write('RIFF',0);b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(sampleRate,24);b.writeUInt32LE(sampleRate*2,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(data.length*2,40);for(let i=0;i<data.length;i++)b.writeInt16LE(Math.round(Math.max(-1,Math.min(1,data[i]))*32767),44+i*2);return b;}

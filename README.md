@@ -6,7 +6,7 @@ The optional closed upper passage and repair cache are prepared in B from the ca
 
 All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open. M04 campaign records default to Mira without resetting progress. Three independent music/SFX/UI volumes persist; one AudioContext starts after a user gesture. Pause stops world audio and music while UI remains available, background suspends everything, and foreground requires explicit resume. Phaser audio is disabled to avoid an unused second context.
 
-M05A.1 added a compact purchase summary, expandable technical stats, a separate workshop menu and clearer EN/RU labels. M05B.1 is now published on nuts.bid as the 0.6.0-m05b1.3 development preview from source 4c7b965; it adds the Cargo sector, campaign map and enemy profiles. It is an internal stage, not the complete Beta, and full game/device/audio acceptance remains open. See the [unified beta gap list](docs/cinder-shift/unified-beta-gap-list.ru.md), [M05B.1 status](docs/cinder-shift/m05b1-status.ru.md) and earlier [development plan 0.2](docs/cinder-shift/development-plan.ru.md).
+M05A.1 added a compact purchase summary, expandable technical stats, a separate workshop menu and clearer EN/RU labels. M05B.1 is published on nuts.bid as the 0.6.0-m05b1.3 development preview from source 4c7b965. The local, uncommitted `0.6.0-m06.0` candidate includes M05B.2–M05B.3, all 12 research nodes, accessibility settings, the supplied loading/menu art, eight original procedural music themes, six cues, eight build-time target profiles and an expanded consent-gated web event contract. Music master WAVs are stored separately from runtime effects. Static build checks pass; GameAnalytics is not connected, and gameplay, device, human listening and platform acceptance remain open. The candidate is not published. See the [implementation status and release register](docs/cinder-shift/implementation-status.json), [unified beta gap list](docs/cinder-shift/unified-beta-gap-list.ru.md), [M05B.1 status](docs/cinder-shift/m05b1-status.ru.md) and earlier [development plan 0.2](docs/cinder-shift/development-plan.ru.md).
 
 ## Run and verify
 
@@ -15,12 +15,15 @@ Node.js 22.12+ and npm are required. Dependencies remain pinned.
     npm ci --ignore-scripts
     npm run dev
     npm run build
+    npm run build:target -- web
+    npm run build:target -- itch
     npm run preview
     npm run check
     npm run art:check
-    npm run audio:check
     npm test
     CROSS_BROWSER=1 npm test
+
+`games/cinder-shift/platforms/targets.json` defines eight compile-time targets. `CINDER_TARGET` is not read from the URL. The web candidate is built by default; `npm run build:target -- <target>` rejects unknown names. Native target entries remain profile records until their official SDK, storage, locale and ad integrations are added. No target currently sends ad requests.
 
 Production preview: http://127.0.0.1:4175/games/cinder-shift/. Move with A/D or arrows, jump Space, crouch S/down, fire J/X, interact E, use M1 K/C and pause Esc. M1 is available after purchase or in training. Menus support Tab/arrows, Enter/Space and Esc; gamepad A confirms, B returns and Menu pauses. Touch dock and sides remain selectable.
 
@@ -42,7 +45,9 @@ The standalone web preview needs no translation endpoint or game backend. Web an
 
 - [M05A implementation and manual acceptance](docs/cinder-shift/m05a-status.ru.md)
 - [M05A art and exact generation prompt](art/m05a/README.md)
-- [Original audio sources, WAV registry and audition](audio/m05a/README.md)
+- [Original M05A audio sources and WAV registry](audio/m05a/README.md)
+- [M06 music themes, cue list and WAV masters](audio/m06/README.md)
+- [Platform target profiles and current limits](games/cinder-shift/platforms/README.md)
 
 - [M04 implementation](docs/cinder-shift/m04-status.ru.md)
 - [Requirements](docs/cinder-shift/m04-requirements.ru.md)

@@ -1,12 +1,13 @@
 {
   "name": "nuts-web-games",
-  "version": "0.6.0-m05b1.3",
+  "version": "0.6.0-m06.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "check": "node scripts/check-i18n.mjs && tsc --noEmit",
     "build": "npm run check && node scripts/build.mjs",
+    "build:target": "node scripts/build-target.mjs",
     "preview": "node scripts/serve.mjs",
     "test": "playwright test",
     "integrate": "node scripts/integrate.mjs",
@@ -15,8 +16,7 @@
     "art:check": "node scripts/check-m03-contract.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
     "i18n:export": "node scripts/check-i18n.mjs --export",
-    "audio:export": "node scripts/m05a-audio.mjs",
-    "audio:check": "node scripts/check-m05a-audio.mjs"
+    "audio:export": "node scripts/m06-audio.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

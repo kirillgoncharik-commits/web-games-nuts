@@ -1,0 +1,72 @@
+{
+  "version": "m06-quality-art-1.0",
+  "scope": "Airlock and Cargo quality gate follow-up",
+  "assets": [
+    {
+      "asset_id": "cargo_turret_states",
+      "source": "games/cinder-shift/src/render.ts · SceneArt.turret",
+      "runtime": "Procedural Phaser Graphics; no atlas frame",
+      "anchor": "games/cinder-shift/src/enemies.ts · enemyMuzzle",
+      "states": ["off", "armored", "warning", "burst", "exposed", "destroyed"],
+      "rooms": ["E", "F", "G"],
+      "connected": true,
+      "evidence": "render.ts reads turretPresentation for state and damageability"
+    },
+    {
+      "asset_id": "cargo_security_walker",
+      "source": "Existing walker atlas frame plus SceneArt procedural armor overlay",
+      "runtime": "m03-enemies · walker; Phaser Graphics armor plates",
+      "anchor": "Existing walker frame pivot; projectile source is enemyMuzzle",
+      "states": ["patrol", "warning", "chase", "attack", "return", "destroyed"],
+      "rooms": ["G"],
+      "connected": true,
+      "evidence": "preset walker_security and G room definition"
+    },
+    {
+      "asset_id": "cargo_energy_cell",
+      "source": "SceneArt procedural object and DOM HUD state",
+      "runtime": "Phaser Graphics in F; hud.cellCarried / hud.cellInstalled",
+      "anchor": "RoomDefinition.cell",
+      "states": ["uncollected", "carried", "installed"],
+      "rooms": ["F", "G"],
+      "connected": true,
+      "evidence": "room-scene objective and Application.hud"
+    },
+    {
+      "asset_id": "service_repairs_R01_R02",
+      "source": "Existing repair-cache atlas frame for R01; procedural repair station for R02",
+      "runtime": "R01 sprite, R02 shield field and repair mark in Phaser Graphics",
+      "anchor": "repairPosition for R01; RoomDefinition.repair for R02",
+      "states": ["ready", "used", "protected"],
+      "rooms": ["B", "F"],
+      "connected": true,
+      "evidence": "RoomState.containerUsed / repairUsed and shielded safeZones"
+    },
+    {
+      "asset_id": "cargo_short_passage_gate",
+      "source": "Event geometry f-power-gate and standard solid rendering",
+      "runtime": "Procedural Phaser Graphics solid",
+      "anchor": "Rect in session/events.ts",
+      "states": ["closed", "open"],
+      "rooms": ["F"],
+      "connected": true,
+      "evidence": "E01 v2 definition; removed on restore_power"
+    },
+    {
+      "asset_id": "critical_suit_status",
+      "source": "games/cinder-shift/index.html and src/ui.css",
+      "runtime": "Accessible DOM SVG icon, localized status and edge vignette",
+      "anchor": "MissionAttempt.hp / maxHp",
+      "states": ["normal", "critical", "cleared"],
+      "rooms": ["all combat rooms"],
+      "connected": true,
+      "evidence": "Application.updateDevice threshold hp/maxHp <= 1/3"
+    }
+  ],
+  "not_yet_verified": [
+    "Rendered contact sheet at 1x and 2x",
+    "Review at target mobile viewport scales",
+    "Human visual review and accessibility contrast review",
+    "Dedicated raster source files for the new turret, walker armor and cell"
+  ]
+}

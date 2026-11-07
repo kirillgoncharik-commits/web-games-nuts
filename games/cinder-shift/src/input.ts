@@ -1,6 +1,10 @@
 export type Action = 'left' | 'right' | 'jump' | 'crouch' | 'fire' | 'interact' | 'ability' | 'pause';
 export type Frame = { down: Set<Action>; pressed: Set<Action>; released: Set<Action> };
-const keys: Record<string, Action> = { KeyA:'left', ArrowLeft:'left', KeyD:'right', ArrowRight:'right', Space:'jump', KeyS:'crouch', ArrowDown:'crouch', KeyJ:'fire', KeyX:'fire', KeyE:'interact', KeyK:'ability', KeyC:'ability', Escape:'pause' };
+export const actions:readonly Action[]=['left','right','jump','crouch','fire','interact','ability','pause'];
+const defaultKeys:Record<string,Action>={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyS:'crouch',ArrowDown:'crouch',KeyJ:'fire',KeyX:'fire',KeyE:'interact',KeyK:'ability',KeyC:'ability',Escape:'pause'};
+const primaryKeys:Record<Action,string>={left:'KeyA',right:'KeyD',jump:'Space',crouch:'KeyS',fire:'KeyJ',interact:'KeyE',ability:'KeyK',pause:'Escape'};
+export function keyLabel(code:string){return code==='Space'?'Space':code==='Escape'?'Esc':code.startsWith('Arrow')?({'ArrowLeft':'←','ArrowRight':'→','ArrowUp':'↑','ArrowDown':'↓'} as Record<string,string>)[code]||code:code.startsWith('Key')?code.slice(3):code.startsWith('Digit')?code.slice(5):code;}
+export function bindingAllowed(action:Action,code:string){const current=defaultKeys[code];return !current||current===action;}
 export class Controls {
   device: 'keyboard' | 'touch' | 'gamepad' = matchMedia('(pointer:coarse)').matches ? 'touch' : 'keyboard';
   scope: 'menu' | 'play' | 'pause' = 'menu';
@@ -9,17 +13,18 @@ export class Controls {
   private previous = new Set<Action>();
   private queuedPress = new Set<Action>();
   private queuedRelease = new Set<Action>();
-  private padState = '';private blockedKeys=new Set<string>();private physicalKeys=new Set<string>();private blockedPad=new Set<Action>();
+  private padState = '';private blockedKeys=new Set<string>();private physicalKeys=new Set<string>();private blockedPad=new Set<Action>();private keyMap:Record<string,Action>={...defaultKeys};private keyOverrides:Partial<Record<Action,string>>={};private rebind:((action:Action,code:string|null)=>void)|null=null;private rebindAction:Action|null=null;
   constructor() {
     window.addEventListener('keydown', e => {
-      if(keys[e.code])this.physicalKeys.add(e.code);
+      if(this.keyMap[e.code])this.physicalKeys.add(e.code);
+      if(this.rebindAction){e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;const action=this.rebindAction,callback=this.rebind;this.rebindAction=null;this.rebind=null;const code=e.code==='Escape'?null:/^(Key[A-Z]|Digit[0-9]|Arrow(Left|Right|Up|Down)|Space)$/.test(e.code)?e.code:null;callback?.(action,code);return;}
       if(this.blockedKeys.has(e.code)&&e.repeat)return;if(!e.repeat)this.blockedKeys.delete(e.code);
       const target=e.target instanceof HTMLElement?e.target:null;
       // Editable controls own their keys; ordinary page buttons retain Tab/Enter/Space.
-      if (!keys[e.code] || this.scope === 'menu' || target?.closest('input,select,textarea,[contenteditable=true]') || ((e.code==='Space') && target?.closest('button,summary,a'))) return;
-      e.preventDefault(); if (!e.repeat) this.queuedPress.add(keys[e.code]); this.keyboard.add(e.code); this.device = 'keyboard';
+      if (!this.keyMap[e.code] || this.scope === 'menu' || target?.closest('input,select,textarea,[contenteditable=true]') || ((e.code==='Space') && target?.closest('button,summary,a'))) return;
+      e.preventDefault(); if (!e.repeat) this.queuedPress.add(this.keyMap[e.code]); this.keyboard.add(e.code); this.device = 'keyboard';
     });
-    window.addEventListener('keyup', e => { this.physicalKeys.delete(e.code);this.blockedKeys.delete(e.code);if(this.keyboard.delete(e.code)) this.queuedRelease.add(keys[e.code]); });
+    window.addEventListener('keyup', e => { this.physicalKeys.delete(e.code);this.blockedKeys.delete(e.code);if(this.keyboard.delete(e.code)) {const action=this.keyMap[e.code];if(action)this.queuedRelease.add(action);} });
     window.addEventListener('gamepaddisconnected',()=>this.clear());
     document.querySelectorAll<HTMLButtonElement>('[data-action]').forEach(button => {
       button.addEventListener('pointerdown', e => {
@@ -32,12 +37,19 @@ export class Controls {
       button.addEventListener('contextmenu', e => e.preventDefault());
     });
   }
+  get isRebinding(){return this.rebindAction!==null;}
+  setBindings(bindings:Partial<Record<Action,string>>){this.keyOverrides={...bindings};this.keyMap={...defaultKeys};for(const[action,code]of Object.entries(this.keyOverrides) as [Action,string][]){for(const[key,value]of Object.entries(this.keyMap))if(value===action)delete this.keyMap[key];this.keyMap[code]=action;}this.clear();}
+  binding(action:Action){return this.keyOverrides[action]||primaryKeys[action];}
+  bindingLabel(action:Action){return keyLabel(this.binding(action));}
+  actionForKey(code:string){return this.keyMap[code];}
+  beginRebind(action:Action,callback:(action:Action,code:string|null)=>void){this.clear();this.rebindAction=action;this.rebind=callback;}
+  cancelRebind(){this.rebindAction=null;this.rebind=null;}
   clear() { this.keyboard.clear(); this.touch.clear(); this.previous.clear(); this.queuedPress.clear(); this.queuedRelease.clear(); document.querySelectorAll('.held').forEach(el => el.classList.remove('held')); }
   setScope(scope: Controls['scope']) { this.clear();this.scope=scope;this.blockedKeys=new Set(this.physicalKeys);this.blockedPad.clear();const held=this.sample();this.blockedPad=new Set(held);this.previous=new Set(); }
   hintKey(action:Action){return 'input.'+this.device+'.'+action;}
   private sample() {
     const down = new Set<Action>();
-    this.keyboard.forEach(key => down.add(keys[key])); this.touch.forEach(action => down.add(action));
+    this.keyboard.forEach(key => {const action=this.keyMap[key];if(action)down.add(action);}); this.touch.forEach(action => down.add(action));
     let pads:(Gamepad|null)[]=[];
     try{pads=Array.from(navigator.getGamepads?.()||[]);}catch{/* Embedding may deny gamepad access. */}
     const pad = Array.from(pads).find(p => p?.connected);

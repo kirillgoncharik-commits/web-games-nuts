@@ -6,7 +6,7 @@ import {intersects} from './geometry';
 export class Player{
   readonly sprite:Phaser.Physics.Arcade.Sprite;
   private dashStartX=0;private dashDirection=1;
-  facing=1;crouching=false;lastGrounded=-1000;jumpQueued=-1000;jumpConsumed=false;dashUntil=0;dashReady=0;knockUntil=0;nextShot=0;
+  facing=1;crouching=false;lastGrounded=-1000;jumpQueued=-1000;jumpConsumed=false;dashUntil=0;dashReady=0;chargeReady=0;knockUntil=0;nextShot=0;
   constructor(scene:Phaser.Scene,x:number){this.sprite=scene.physics.add.sprite(x,298,'body').setVisible(false).setCollideWorldBounds(true);}
   get body(){return this.sprite.body as Phaser.Physics.Arcade.Body;}
   get x(){return this.sprite.x;}
@@ -35,5 +35,5 @@ export class Player{
     if(frame.released.has('jump')&&b.velocity.y< -110)b.setVelocityY(-110);
   }
   knock(direction:number,now:number){this.body.setVelocityX(direction*130);this.knockUntil=now+120;}
-  snapshot(){return {x:this.x,y:this.sprite.y,vx:this.body.velocity.x,vy:this.body.velocity.y,crouching:this.crouching};}
+  snapshot(){return {x:this.x,y:this.sprite.y,vx:this.body.velocity.x,vy:this.body.velocity.y,crouching:this.crouching,dashReady:this.dashReady,chargeReady:this.chargeReady};}
 }
