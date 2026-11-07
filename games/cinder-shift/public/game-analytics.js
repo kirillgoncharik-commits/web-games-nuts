@@ -2,7 +2,8 @@
   // Send a clean page address; campaign labels are separate from contact/form query strings.
   function analyticsContext() {
     const context = {
-      ...analyticsContext(),
+      site: 'nuts.bid',
+      page_type: 'game',
       page_location: location.origin + location.pathname,
       page_referrer: '',
       allow_google_signals: false,
