@@ -6,18 +6,22 @@
   "source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
     "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-    "working_tree": "modified_uncommitted",
+    "working_tree": "clean",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
-    "source_pr_head_includes_current_changes": false,
+    "source_pr_head_includes_current_changes": true,
     "ci_for_current_changes": "not_run",
-    "quality_fix_scope": "locally implemented on dirty worktree; not committed or published"
+    "quality_fix_scope": "source commit 22da406 pushed to source PR #7; nuts.bid development preview published through site PR #8; acceptance remains open",
+    "site_pr": 8
   },
   "production": {
-    "build_id": "0.6.0-m05b1.3",
-    "source_sha": "4c7b965d366e532b0d34e2437d046d4ddcf3fbd0",
-    "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m05b1.3",
-    "site_main_sha": "2afa92da22ffe71dd338dea002d5f945d5e7d65f",
-    "description": "M05B.1 early preview; M05B.2 and M05B.3 are not published"
+    "build_id": "0.6.0-m06.0",
+    "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+    "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0",
+    "site_main_sha": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+    "description": "M06 development preview published; not final Beta; quality gate remains open at 0/39 acceptance scenarios",
+    "source_dirty": false,
+    "previous_build_id": "0.6.0-m05b1.3",
+    "site_pr": 8
   },
   "release_register": [
     {
@@ -28,33 +32,36 @@
       "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m05b1.3"
     },
     {
-      "channel": "local web candidate",
+      "channel": "nuts.bid web",
       "build_id": "0.6.0-m06.0",
       "content_version": "campaign-m05b3.0",
-      "source_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-      "source_dirty": true,
+      "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+      "source_dirty": false,
       "artifact_path": "dist/cinder-shift/",
       "artifact_bytes": 3910502,
-      "artifact_gzip_bytes": 2395789,
+      "artifact_gzip_bytes": 2395790,
       "runtime_audio_bytes": 1643076,
       "runtime_music_bytes": 0,
-      "status": "built_from_dirty_worktree_not_published",
-      "url": null,
+      "status": "published_development_preview",
+      "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0",
       "target": "web",
-      "platform_status": "local_candidate",
-      "quality_gate": "static_build_passed; gameplay/device acceptance not run",
-      "artifact_sha256": "9c12cdb855757d3731836f46b45fa17fb9bb7a5e1d3149c988985658f9348dcc",
-      "build_manifest_sha256": "c0e439947bbffb55621ae256c80d5433543efd3e1ca736ea961587b959e45dc7",
+      "platform_status": "published_on_nuts.bid",
+      "quality_gate": "static builds passed; live version label confirmed; gameplay/device acceptance not run",
+      "artifact_sha256": "da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4",
+      "build_manifest_sha256": "0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81",
       "manual_qa_seed": 4,
       "manual_qa_seed_status": "planned_not_run",
-      "artifact_hash_method": "SHA-256 of sorted build-manifest path + NUL + per-file SHA-256 entries"
+      "artifact_hash_method": "SHA-256 of sorted build-manifest path + NUL + per-file SHA-256 entries",
+      "site_commit": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+      "source_pr": 7,
+      "site_pr": 8
     }
   ],
   "acceptance": {
     "scenario_count": 39,
     "passed": 0,
     "open": 39,
-    "notes": "The supplied checklist is an empty form. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this local candidate."
+    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
   },
   "verification_performed": [
     "npm run check passed: EN/RU keys and parameters plus TypeScript type check; this does not establish gameplay acceptance",
@@ -62,9 +69,11 @@
     "npm run check passed: 454 EN/RU keys/parameters match and TypeScript passes",
     "npm run build passed for target web; local candidate is 3,841,036 bytes / 2,363,961 gzip bytes; runtime audio is 1,595,316 bytes under the 4,194,304-byte proposed budget",
     "Eight compile-time target profiles and a fail-open shared adapter contract are present; only the web target was compiled, and non-web entries are not native integrations",
-    "No gameplay tests, browser playthrough, device checks, human listening, CI, publication or platform submissions were performed for this candidate; only the web build profile was compiled",
-    "Latest local QA quality-gate revision: i18n export and production web build passed; build 0.6.0-m06.0, source base 64629a20ee455627121b9faaad8f7858814ac949 (dirty worktree), 3,910,502 raw / 2,395,789 gzip bytes, artifact tree SHA-256 9c12cdb855757d3731836f46b45fa17fb9bb7a5e1d3149c988985658f9348dcc, build-manifest SHA-256 c0e439947bbffb55621ae256c80d5433543efd3e1ca736ea961587b959e45dc7.",
-    "No gameplay/browser acceptance scenarios, physical-device run, human audio review, contact-sheet review, CI, commit, push, PR update or publication were performed for this revision; all 39 checklist scenarios remain open."
+    "At the local candidate checkpoint, gameplay/device/human checks, CI, publication and platform submissions had not run; subsequent deployment is recorded below, while the 39 acceptance cases remain open.",
+    "Historical pre-commit QA build: source tree was dirty and artifact hashes differed; superseded for release tracking by the clean source commit and published artifact recorded in the release register below.",
+    "No gameplay acceptance scenario, physical-device run, human audio review, contact-sheet review, or loading timing run was performed; all 39 cases remain open. A read-only live page check confirmed the deployed build label.",
+    "Published 0.6.0-m06.0 through nutsbid PR #8 (site commit 00cac0b04b5b184052c07f18fe2f801e43ca5cfd); the live URL returned title Cinder Shift 64 · Nuts Games and build label v0.6.0-m06.0 / 22da406. Artifact SHA-256 da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; build-manifest SHA-256 0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81.",
+    "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open."
   ],
   "blocks": [
     {
@@ -75,15 +84,15 @@
       "publication_status": "not_applicable",
       "actual": {
         "source_base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-        "live_build": "0.6.0-m05b1.3",
+        "live_build": "0.6.0-m06.0",
         "source_pr": 7,
-        "site_pr": 7
+        "site_pr": 8
       },
       "evidence": [
         "docs/cinder-shift/m05b1-status.ru.md",
         "docs/cinder-shift/unified-beta-gap-list.ru.md"
       ],
-      "next_action": "Preserve the earlier implementation and keep the live release separate from this local candidate."
+      "next_action": "Keep the prior M05B.1 publication as historical evidence and continue acceptance on the currently published M06 preview."
     },
     {
       "id": "B01",
@@ -102,14 +111,14 @@
         "docs/cinder-shift/m05b1-status.ru.md",
         "https://nuts.bid/games/cinder-shift/?build=0.6.0-m05b1.3"
       ],
-      "next_action": "Keep the published M05B.1 artifact as historical evidence; accept the local Airlock/Cargo quality-gate candidate on its exact build before any later release."
+      "next_action": "Accept Airlock/Cargo quality fixes on the exact published M06 build; preserve M05B.1 as historical evidence."
     },
     {
       "id": "B02",
       "title": "M05B.2 — Foundry and Archive",
-      "implementation_status": "implemented_locally_uncommitted",
+      "implementation_status": "implemented_committed",
       "verification_status": "static_check_passed; gameplay_acceptance_open",
-      "publication_status": "not_published",
+      "publication_status": "included_in_development_preview_not_beta",
       "actual": {
         "missions_enabled_in_working_tree": 4,
         "authored_room_slots_in_campaign": 15,
@@ -132,9 +141,9 @@
     {
       "id": "B03",
       "title": "M05B.3 — Reactor and finale",
-      "implementation_status": "implemented_locally_uncommitted",
+      "implementation_status": "implemented_committed",
       "verification_status": "static_check_passed; gameplay_acceptance_open",
-      "publication_status": "not_published",
+      "publication_status": "included_in_development_preview_not_beta",
       "actual": {
         "missions_enabled_in_working_tree": 5,
         "authored_room_slots_in_campaign": 20,
@@ -159,7 +168,7 @@
       "title": "M06 — UI, accessibility, music and sound",
       "implementation_status": "local_campaign_UI_accessibility_art_and_audio_authoring_in_progress",
       "verification_status": "static_check_and_build_passed; audio_runtime_and_human_acceptance_open",
-      "publication_status": "not_published_as_beta",
+      "publication_status": "included_in_development_preview_not_beta",
       "actual": {
         "locales": [
           "en",
@@ -223,7 +232,7 @@
       "title": "Analytics",
       "implementation_status": "local_consent_gated_GA4_gameplay_event_allowlist; GameAnalytics_not_connected",
       "verification_status": "static_build_passed; consent_network_delivery_and_revoke_open",
-      "publication_status": "existing_nutsbid_preview_only",
+      "publication_status": "included_in_web_preview_not_beta",
       "actual": {
         "consent_required": true,
         "remote_lifecycle_events": [
@@ -277,7 +286,7 @@
       "title": "M06M — platforms and monetization",
       "implementation_status": "common_platform_adapter_contract_and_eight_compile_time_profiles_local; web_target_compiled; native_sdks_pending_access",
       "verification_status": "web_build_passed; native_integrations_and_ad_flows_open",
-      "publication_status": "not_published",
+      "publication_status": "web_preview_published_native_targets_not_submitted",
       "actual": {
         "platform_adapter_contract": true,
         "ad_coordinator": false,
@@ -331,22 +340,22 @@
       "title": "M08 — builds and release",
       "implementation_status": "not_started_for_beta",
       "verification_status": "open",
-      "publication_status": "only_existing_m05b1_preview_published",
+      "publication_status": "development_preview_published_beta_not_submitted",
       "actual": {
         "beta_target_builds": 0,
         "beta_submissions": 0
       },
       "evidence": [
-        "release_register contains the existing web preview and local candidate only"
+        "nuts.bid development preview 0.6.0-m06.0 is live through site PR #8; beta submission remains separate and not started"
       ],
       "next_action": "Prepare channel artifacts after beta acceptance; maintain a rollback record and report inaccessible channels accurately."
     },
     {
       "id": "B09",
       "title": "QA-01…QA-12 — Airlock/Cargo quality gate",
-      "implementation_status": "implemented_locally_uncommitted",
+      "implementation_status": "implemented_committed",
       "verification_status": "i18n_and_types_and_web_build_passed; gameplay_device_visual_and_audio_acceptance_open",
-      "publication_status": "not_published",
+      "publication_status": "published_development_preview",
       "actual": {
         "mobile_layout": "automatic dock/sides viewport with CSS-pixel controls, safe-area input and browser viewport resize handling",
         "event_migration": "E01 v1 room E migrates explicitly to E01 v2 room F; campaign ID, seed, purchases, score, reward ledger and active module remain untouched",
@@ -361,17 +370,20 @@
         "combat": "Authoritative turret presentation and recovery damageability; shared enemy muzzle; distinct hit_armour, hit_open, hit_wall; true-HP-loss flash and <=1/3 critical HUD",
         "loading": "One first-page intro of >=6000ms visible time after rendered loading art; technical load proceeds in parallel; real progress; hidden-tab time excluded; no later repeat",
         "build_id": "0.6.0-m06.0",
-        "source_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-        "source_dirty": true,
+        "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+        "source_dirty": false,
         "artifact_bytes": 3910502,
-        "artifact_gzip_bytes": 2395789,
+        "artifact_gzip_bytes": 2395790,
         "runtime_audio_bytes": 1643076,
         "acceptance_cases_run": 0,
         "acceptance_cases_open": 39,
-        "artifact_sha256": "9c12cdb855757d3731836f46b45fa17fb9bb7a5e1d3149c988985658f9348dcc",
-        "build_manifest_sha256": "c0e439947bbffb55621ae256c80d5433543efd3e1ca736ea961587b959e45dc7",
+        "artifact_sha256": "da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4",
+        "build_manifest_sha256": "0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81",
         "manual_qa_seed": 4,
-        "manual_qa_seed_status": "planned_not_run"
+        "manual_qa_seed_status": "planned_not_run",
+        "site_commit": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+        "site_pr": 8,
+        "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0"
       },
       "evidence": [
         "games/cinder-shift/src/ui/mobile-layout.ts",
@@ -386,9 +398,11 @@
         "games/cinder-shift/src/i18n/en.json",
         "games/cinder-shift/src/i18n/ru.json",
         "art/m06/quality-runtime-art-contract.json",
-        "docs/cinder-shift/quality-gate-qa.ru.md"
+        "docs/cinder-shift/quality-gate-qa.ru.md",
+        "https://github.com/kirillgoncharik-commits/nutsbid/pull/8",
+        "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0"
       ],
-      "next_action": "Run the 39-scenario acceptance plan and viewport matrix on the exact build; complete real iPhone Safari and Android Chrome runs, visual contact-sheet review and human audio review before marking acceptance."
+      "next_action": "Run the 39-scenario acceptance plan and viewport matrix on the published build; complete real iPhone Safari and Android Chrome runs, visual contact-sheet review and human audio review before marking acceptance."
     }
   ]
 }
