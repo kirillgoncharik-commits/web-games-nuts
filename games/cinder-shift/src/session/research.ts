@@ -2,8 +2,8 @@ import config from '../../game.config.json' with {type:'json'};
 export const nodeIds=['W1','W2','W3','W4','M1','M2','M3','M4','D1','D2','D3','D4'] as const;
 export type NodeId=typeof nodeIds[number];
 export type ActiveSkill='M1'|'W4'|null;
-export type ResearchDefinition={id:NodeId;cost:number;requires:NodeId[];branch:'weapon'|'movement'|'defence';nameKey:string;effectKey:string;icon:'spread'|'dash'|'shield'};
-export const research:ResearchDefinition[]=nodeIds.map(id=>({id,cost:1,requires:Number(id[1])>1?[id[0]+String(Number(id[1])-1) as NodeId]:[],branch:id[0]==='W'?'weapon':id[0]==='M'?'movement':'defence',nameKey:'research.'+id+'.name',effectKey:'research.'+id+'.effect',icon:id[0]==='W'?'spread':id[0]==='M'?'dash':'shield'}));
+export type ResearchDefinition={id:NodeId;cost:number;requires:NodeId[];branch:'weapon'|'movement'|'defence';nameKey:string;effectKey:string;icon:NodeId};
+export const research:ResearchDefinition[]=nodeIds.map(id=>({id,cost:1,requires:Number(id[1])>1?[id[0]+String(Number(id[1])-1) as NodeId]:[],branch:id[0]==='W'?'weapon':id[0]==='M'?'movement':'defence',nameKey:'research.'+id+'.name',effectKey:'research.'+id+'.effect',icon:id}));
 export type Loadout={nodes:NodeId[];maxHp:number;spread:boolean;piercing:boolean;ricochet:boolean;chargedShot:boolean;dash:boolean;airDash:boolean;wallMove:boolean;phaseDash:boolean;buffer:boolean;shieldClear:boolean;deathSave:boolean;active:ActiveSkill};
 export function loadout(nodes:readonly NodeId[],active:ActiveSkill=nodes.includes('M1')?'M1':null):Loadout{
  const chosen=active==='M1'&&nodes.includes('M1')?'M1':active==='W4'&&nodes.includes('W4')?'W4':null;

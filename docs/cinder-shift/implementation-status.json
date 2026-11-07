@@ -2,16 +2,18 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-07",
-  "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (1).txt · редакция 1.1",
+  "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
   "source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
     "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-    "working_tree": "clean",
+    "working_tree": "modified_uncommitted",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
-    "source_pr_head_includes_current_changes": true,
+    "source_pr_head_includes_current_changes": false,
     "ci_for_current_changes": "not_run",
-    "quality_fix_scope": "source commit 22da406 pushed to source PR #7; nuts.bid development preview published through site PR #8; acceptance remains open",
-    "site_pr": 8
+    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; source work is being prepared for the existing draft PR and is not published to nuts.bid",
+    "site_pr": 8,
+    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
+    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
   },
   "production": {
     "build_id": "0.6.0-m06.0",
@@ -73,7 +75,9 @@
     "Historical pre-commit QA build: source tree was dirty and artifact hashes differed; superseded for release tracking by the clean source commit and published artifact recorded in the release register below.",
     "No gameplay acceptance scenario, physical-device run, human audio review, contact-sheet review, or loading timing run was performed; all 39 cases remain open. A read-only live page check confirmed the deployed build label.",
     "Published 0.6.0-m06.0 through nutsbid PR #8 (site commit 00cac0b04b5b184052c07f18fe2f801e43ca5cfd); the live URL returned title Cinder Shift 64 · Nuts Games and build label v0.6.0-m06.0 / 22da406. Artifact SHA-256 da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; build-manifest SHA-256 0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81.",
-    "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open."
+    "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open.",
+    "Scope 1.2 baseline: published build 0.6.0-m06.0 remains tied to source 22da406857d2b690f136880d0fd642dce196e071 and artifact SHA da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; local HEAD before this scope work was 4028405f690c8dadf322172793d589f35f253771; no new build, tests, visual review or deployment recorded yet.",
+    "Scope 1.2 local production build passed after UI-control styling: i18n 478 keys/parameters and TypeScript; build_id 0.6.0-m06.0, source SHA 4028405f690c8dadf322172793d589f35f253771 with dirty worktree, 3,933,736 raw / 2,401,604 gzip bytes, 52 manifest entries, build-manifest SHA-256 b1265a25e27271275bb6eaf1509c848d911917c6122153aabe9798c5a742a7a6. This local artifact is not published; no gameplay tests or acceptance were run. Local preview server failed with EPERM while binding 127.0.0.1:4175; runtime screenshots and human visual review remain open."
   ],
   "blocks": [
     {
@@ -403,6 +407,72 @@
         "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0"
       ],
       "next_action": "Run the 39-scenario acceptance plan and viewport matrix on the published build; complete real iPhone Safari and Android Chrome runs, visual contact-sheet review and human audio review before marking acceptance."
+    },
+    {
+      "id": "B10",
+      "title": "Visual UI 1.2 — station chrome, illustrated map and module icon system",
+      "implementation_status": "implemented_locally_in_progress",
+      "verification_status": "i18n_and_types_and_web_production_build_passed; runtime_visual_and_human_acceptance_open",
+      "publication_status": "not_published",
+      "actual": {
+        "ui_chrome": "Shared layered equipment frames and explicit normal/hover/focus/pressed/disabled styles around live DOM controls",
+        "sector_map": "Five separate vector architecture layers; live route, position, selection and access states use CampaignData/MissionDefinition",
+        "module_icon_count": 12,
+        "module_icon_nodes": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "D1",
+          "D2",
+          "D3",
+          "D4"
+        ],
+        "icon_surfaces": [
+          "workshop",
+          "selection_summary",
+          "purchase_confirmation",
+          "mission_briefing",
+          "active_skill_HUD",
+          "touch_ability"
+        ],
+        "production_build": "PASS",
+        "visual_contact_sheet": "art/m06/previews/module-icons-contact-sheet.png and -2x.png; 12 glyphs plus six state samples",
+        "mobile_visual_review": "NOT RUN",
+        "real_device_review": "NOT RUN",
+        "local_build_id": "0.6.0-m06.0",
+        "local_source_sha": "4028405f690c8dadf322172793d589f35f253771",
+        "local_source_dirty": true,
+        "local_build_raw_bytes": 3932534,
+        "local_build_gzip_estimate_bytes": 2401402,
+        "local_build_manifest_sha256": "9c2509f933ec8c13fbdfb4d858adf24fb0fa1f941eef094e082a6523a640bce2",
+        "local_build_manifest_entries": 52,
+        "i18n_keys": 478,
+        "map_scale_previews": [
+          "art/m06/previews/caldera-complex-360.png",
+          "art/m06/previews/caldera-complex-720.png",
+          "art/m06/previews/caldera-complex-1200.png"
+        ],
+        "agent_vector_art_review": "completed for map and icon contact sheet",
+        "runtime_visual_review": "NOT RUN; local preview bind failed with EPERM",
+        "human_visual_review": "NOT RUN"
+      },
+      "evidence": [
+        "games/cinder-shift/src/ui-art.css",
+        "games/cinder-shift/src/ui/caldera-complex.svg",
+        "games/cinder-shift/src/ui/research-icons.ts",
+        "games/cinder-shift/src/ui/world-map.ts",
+        "games/cinder-shift/src/ui/workshop.ts",
+        "art/m06/quality-runtime-art-contract.json",
+        "art/m06/previews/module-icons-contact-sheet.png",
+        "art/m06/previews/module-icons-contact-sheet-2x.png",
+        "scripts/m06-icon-contact-sheet.mjs"
+      ],
+      "next_action": "Open the updated screens in a working browser preview and capture the same desktop/mobile views; obtain human visual/contrast review. Keep real-device and gameplay acceptance marked NOT RUN until performed."
     }
   ]
 }
