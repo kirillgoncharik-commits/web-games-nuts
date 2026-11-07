@@ -6,7 +6,7 @@ The optional closed upper passage and repair cache are prepared in B from the ca
 
 All menus, HUD, prompts, settings, errors and preboot text support offline English/Russian. Saved language takes priority over the browser language; switching preserves the shift and focus. Keyboard, touch and standard gamepad mappings are supported. Physical-device acceptance remains open. M04 campaign records default to Mira without resetting progress. Three independent music/SFX/UI volumes persist; one AudioContext starts after a user gesture. Pause stops world audio and music while UI remains available, background suspends everything, and foreground requires explicit resume. Phaser audio is disabled to avoid an unused second context.
 
-M05A.1 adds a compact purchase summary, expandable technical stats, a separate workshop menu and clearer EN/RU labels. Version 0.5.1-m05a.1 is published on nuts.bid; [M05A.1 status](docs/cinder-shift/m05a1-status.ru.md) records the artifact and the human/device checks that remain open. M05B is in local development as 0.6.0-m05b1.3; it is an internal stage, not the complete beta. See the [unified beta gap list](docs/cinder-shift/unified-beta-gap-list.ru.md), [M05B.1 status](docs/cinder-shift/m05b1-status.ru.md) and earlier [development plan 0.2](docs/cinder-shift/development-plan.ru.md).
+M05A.1 added a compact purchase summary, expandable technical stats, a separate workshop menu and clearer EN/RU labels. M05B.1 is now published on nuts.bid as the 0.6.0-m05b1.3 development preview from source 4c7b965; it adds the Cargo sector, campaign map and enemy profiles. It is an internal stage, not the complete Beta, and full game/device/audio acceptance remains open. See the [unified beta gap list](docs/cinder-shift/unified-beta-gap-list.ru.md), [M05B.1 status](docs/cinder-shift/m05b1-status.ru.md) and earlier [development plan 0.2](docs/cinder-shift/development-plan.ru.md).
 
 ## Run and verify
 
@@ -34,9 +34,9 @@ dist/cinder-shift/ is a relocatable static artifact. build-manifest.json records
 
     npm run integrate -- /absolute/path/to/nutsbid-checkout
 
-Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published builds are 0.5.0-m05a.1 (artifact b450c6e) and 0.5.1-m05a.1 (artifact 6f1a0cc). M05B.1 is still local and must not be treated as a live release. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
+Integration verifies hashes and copies only the game into public/games/cinder-shift/. The previous artifact is backed up in .cinder-shift-previous/; prior hashed assets remain for already open tabs. A source push does not deploy nuts.bid. Published builds include 0.5.0-m05a.1 (artifact b450c6e), 0.5.1-m05a.1 (artifact 6f1a0cc) and 0.6.0-m05b1.3 (source 4c7b965). Keep M05B.1 identified as an intermediate preview, not the complete Beta. Preserve site CSP, consent, forms, locale pages and game-only no-transform HTML headers.
 
-The standalone web preview needs no external service, translation endpoint or backend. External analytics stays disabled by default; the existing consent adapter never queues earlier events or loads an SDK. The unified beta work package defines separate SDK integrations for later platform-target builds.
+The standalone web preview needs no translation endpoint or game backend. Web analytics loads only after the visitor grants consent; the consent adapter does not queue earlier events or load an SDK without consent. The unified beta work package defines separate SDK integrations for later platform-target builds.
 
 ## References
 
