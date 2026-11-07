@@ -1,6 +1,7 @@
 import config from '../game.config.json' with {type:'json'};
 import type {MissionEntry} from './session/campaign';
 import {loadout} from './session/research';
+import{characterProfile,type CharacterProfile}from'./session/profile';
 import {hasEvent,shutter,eventConfig,type EventPlan} from './session/events';
 export {rooms} from './room-data';
 export type {RoomId,Rect,Point,EnemyDefinition,RoomDefinition} from './room-data';
@@ -13,7 +14,7 @@ export class MissionAttempt{
   readonly id=crypto.randomUUID();
   readonly missionId='airlock';
   current:RoomId;
-  hp:number;readonly maxHp:number;readonly entry:MissionEntry;score:number;
+  hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;score:number;
   objective=false;
   activeMs=0;
   hurtUntil=-1;
@@ -22,7 +23,7 @@ export class MissionAttempt{
   tutorial=new Set<string>();
   clock=new SimulationClock();
   states:Partial<Record<RoomId,RoomState>>={};
-  constructor(readonly mode:Mode,entry?:MissionEntry){this.current=mode==='training'?'T':'A';this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;}
+  constructor(readonly mode:Mode,entry?:MissionEntry){this.current=mode==='training'?'T':'A';this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.profile=characterProfile(this.entry.build.nodes);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;}
   get build(){return this.entry.build;}
   get eventPlan():EventPlan{return this.entry.event_plan;}
   definition(id=this.current):RoomDefinition{const base=rooms[id];return id==='B'&&hasEvent(this.eventPlan,'E02')?{...base,solids:[...base.solids,shutter]}:base;}

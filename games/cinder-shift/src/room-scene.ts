@@ -9,19 +9,19 @@ import {SceneArt} from './render';
 import {shotVelocities} from './session/research';
 import {hasEvent,repairPosition} from './session/events';
 import type {Controls,Frame,Action} from './input';
-import type {Effects} from './audio';
+import type {AudioService} from './audio';
 import type {EventName} from './telemetry';
 
-export type RoomHooks={controls:Controls;effects:Effects;emit:(name:EventName,params?:Record<string,string|number>)=>void;pause:()=>void;result:(result:Result)=>void;dying:()=>void;objective:(key:string,params?:Record<string,string|number>)=>void;hud:(attempt:MissionAttempt,player:Player,hold:number)=>void;container:()=>void;autoFire:()=>boolean;debug:()=>boolean;transition:(active:boolean)=>void};
+export type RoomHooks={controls:Controls;effects:AudioService;emit:(name:EventName,params?:Record<string,string|number>)=>void;pause:()=>void;result:(result:Result)=>void;dying:()=>void;objective:(key:string,params?:Record<string,string|number>)=>void;hud:(attempt:MissionAttempt,player:Player,hold:number)=>void;container:()=>void;autoFire:()=>boolean;debug:()=>boolean;transition:(active:boolean)=>void};
 export class RoomScene extends Phaser.Scene{
   attempt!:MissionAttempt;player!:Player;projectiles=new Projectiles();
   hold=0;transition:{to:RoomId;entry:'left'|'right';remaining:number}|null=null;
   private entry:'left'|'right'='left';private art!:SceneArt;
-  private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();
+  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();
   constructor(readonly hooks:RoomHooks){super('Room');}
   init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
   create(){
-    this.hold=0;this.transition=null;this.deathMs=0;this.modalOpened=false;this.pendingPressed.clear();this.pendingReleased.clear();this.projectiles=new Projectiles();
+    this.readyAnnounced=false;this.hold=0;this.transition=null;this.deathMs=0;this.modalOpened=false;this.pendingPressed.clear();this.pendingReleased.clear();this.projectiles=new Projectiles();
     const def=this.attempt.definition(),saved=this.attempt.room();
     this.physics.world.setBounds(0,40,640,280);
     const platforms=this.physics.add.staticGroup();
@@ -30,7 +30,7 @@ export class RoomScene extends Phaser.Scene{
     this.art=new SceneArt(this,def,this.attempt.eventPlan,this.hooks.debug);
     this.hooks.controls.setScope('play');this.attempt.clock.clear();this.hooks.transition(false);
     this.hooks.emit('room_enter',{revisit:Number(saved.visited)});saved.visited=true;
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.projectiles.clear();this.hooks.controls.clear();});
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.hooks.effects.clearCombat();this.projectiles.clear();this.hooks.controls.clear();});
   }
   update(_time:number,delta:number){
     const frame=this.hooks.controls.poll();
@@ -53,25 +53,28 @@ export class RoomScene extends Phaser.Scene{
   private step(ms:number,frame:Frame){
     const attempt=this.attempt,now=attempt.clock.now,def=attempt.definition(),saved=attempt.room();
     attempt.activeMs+=ms;
-    const oldVy=this.player.body.velocity.y;
+    const oldVy=this.player.body.velocity.y,wasDashing=now<this.player.dashUntil;
     this.player.step(frame,now,ms,def.solids,attempt.mode==='training'||attempt.build.dash);
-    if(oldVy>=0&&this.player.body.velocity.y< -200)this.hooks.effects.tone(140,.12);
+    if(oldVy>=0&&this.player.body.velocity.y< -200)this.hooks.effects.play('jump');
+    if(!wasDashing&&now<this.player.dashUntil)this.hooks.effects.play('dash');
     this.physics.world.update(now,ms);this.physics.world.postUpdate();
+    if(oldVy>30&&(this.player.body.blocked.down||this.player.body.touching.down))this.hooks.effects.play('land');
     const muzzle=this.player.muzzle;
     const targets=[...(def.target&&saved.targetHp>0?[{x:def.target.x-10,y:def.target.y-18,width:20,height:36}]:[]),...saved.enemies.filter(e=>e.hp>0).map(enemyRect)].map(r=>expand(r,4,1.5));
     const auto=this.hooks.controls.device==='touch' && this.hooks.autoFire() && targets.some(t=>(t.x+t.width/2-this.player.x)*this.player.facing>0 && muzzle.y>=t.y && muzzle.y<=t.y+t.height && clearLine(muzzle,{x:t.x+t.width/2,y:muzzle.y},def.solids));
     if((frame.down.has('fire')||frame.pressed.has('fire')||auto)&&now>=this.player.nextShot){
-      for(const velocity of shotVelocities(this.player.facing,config.initial_balance.projectile_speed,attempt.build.spread))this.projectiles.fire(muzzle,velocity,'player','cutter');this.player.nextShot=now+1000/config.initial_balance.shots_per_second;this.hooks.effects.tone(380,.055,.025);
+      for(const velocity of shotVelocities(this.player.facing,attempt.profile.projectileSpeed,attempt.build.spread))this.projectiles.fire(muzzle,velocity,'player','cutter');this.player.nextShot=now+1000/attempt.profile.shotsPerSecond;this.hooks.effects.play('shot');
     }
-    for(const enemy of saved.enemies)stepEnemy(enemy,ms,{x:this.player.x,y:this.player.feet-25},def.solids,this.projectiles,kind=>this.hooks.effects.tone(kind==='walker'?210:680,kind==='walker'?.18:.1,.025));
+    for(const enemy of saved.enemies)stepEnemy(enemy,ms,{x:this.player.x,y:this.player.feet-25},def.solids,this.projectiles,kind=>this.hooks.effects.play(kind==='walker'?'warn_walker':'warn_drone'));
     this.projectiles.step(ms,def.solids,(shot,from,to)=>{
       if(shot.team==='enemy'){
         if(segmentRect(from,to,expand(this.player.rect(),4,3))){this.damage(shot.source,Math.sign(shot.vx));return true;}return false;
       }
-      if(def.target&&saved.targetHp>0&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){saved.targetHp--;this.hooks.effects.tone(180,.09);return true;}
-      for(const e of saved.enemies)if(e.hp>0&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){e.hp--;if(e.hp<=0)e.phase='dead';this.hooks.effects.tone(e.hp<=0?95:180,.1);return true;}
+      if(def.target&&saved.targetHp>0&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){saved.targetHp-=attempt.profile.projectileDamage;this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');return true;}
+      for(const e of saved.enemies)if(e.hp>0&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){e.hp-=attempt.profile.projectileDamage;if(e.hp<=0)e.phase='dead';this.hooks.effects.play(e.hp<=0?'enemy_break':'hit_enemy');return true;}
       return false;
     });
+    if(def.terminal&&!saved.terminal&&!this.readyAnnounced&&(def.id==='C'||saved.targetHp<=0)){this.readyAnnounced=true;this.hooks.effects.play('terminal_ready');}
     for(const e of saved.enemies)if(e.hp>0&&intersects(this.player.rect(),enemyRect(e)))this.damage(e.kind==='walker'?'walker-contact':'drone-contact',Math.sign(this.player.x-e.x)||1);
     if(attempt.hp<=0)return;
     this.interact(ms,frame);
@@ -85,7 +88,7 @@ export class RoomScene extends Phaser.Scene{
   }
   private damage(reason:string,direction:number){
     if(!this.attempt.damage(this.attempt.clock.now,reason))return;
-    this.player.knock(direction,this.attempt.clock.now);this.hooks.effects.tone(70,.16,.055);this.hooks.emit('hit_received',{reason,hp:this.attempt.hp});
+    this.player.knock(direction,this.attempt.clock.now);this.hooks.effects.play('hurt_player');this.hooks.emit('hit_received',{reason,hp:this.attempt.hp});
     if(this.attempt.hp<=0){this.hold=0;this.projectiles.clear();this.player.body.setVelocity(0,0);this.deathMs=350;this.hooks.controls.setScope('menu');this.hooks.dying();}
   }
   private interact(ms:number,frame:Frame){
@@ -93,10 +96,10 @@ export class RoomScene extends Phaser.Scene{
     if(this.attempt.current==='B'&&hasEvent(this.attempt.eventPlan,'E03')&&!saved.containerUsed&&Math.abs(this.player.x-repairPosition.x)<repairPosition.radius&&this.player.feet>303&&frame.pressed.has('interact')){this.modalOpened=true;this.hold=0;this.hooks.container();return;}
     const inRange=terminal&&Math.abs(this.player.x-terminal.x)<34&&this.player.feet>303;
     if(!inRange||saved.terminal){this.hold=0;return;}
-    if((def.id==='A'||def.id==='T')&&frame.pressed.has('interact')&&saved.targetHp<=0){saved.terminal=true;this.hooks.effects.tone(440,.16);return;}
+    if((def.id==='A'||def.id==='T')&&frame.pressed.has('interact')&&saved.targetHp<=0){saved.terminal=true;this.hooks.effects.play('power_restore');this.hooks.effects.play('gate_open');return;}
     if(def.id==='C'&&frame.down.has('interact')){
       this.hold+=ms;
-      if(this.hold+1e-6>=config.combat.terminal_hold_ms){saved.terminal=true;this.attempt.objective=true;this.hold=0;this.hooks.effects.tone(550,.2);}
+      if(this.hold+1e-6>=config.combat.terminal_hold_ms){saved.terminal=true;this.attempt.objective=true;this.hold=0;this.hooks.effects.play('power_restore');this.hooks.effects.play('gate_open');}
     }else this.hold=0;
   }
   private beginTransition(to:RoomId,entry:'left'|'right'){

@@ -2,13 +2,15 @@ import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
+import {checkM05A} from './check-m05a-contract.mjs';
 import {checkM04} from './check-m04-contract.mjs';
 import {methodText} from './m03-contract-utils.mjs';
 const digest=s=>createHash('sha256').update(s).digest('hex');
 const read=p=>readFile(p,'utf8'),root='games/cinder-shift/';
 const baseline=JSON.parse(await read('art/m03/animation-contract.json'));
 let m04=null;try{m04=JSON.parse(await read('art/m04/mechanics-contract.json'));}catch(error){if(error.code!=='ENOENT')throw error;}
-if(m04)await checkM04(m04);else{
+let m05a=null;try{m05a=JSON.parse(await read('art/m05a/mechanics-contract.json'));}catch(error){if(error.code!=='ENOENT')throw error;}
+if(m05a)await checkM05A(m05a);else if(m04)await checkM04(m04);else{
 for(const [file,sha] of Object.entries(baseline.core_hashes))assert.equal(digest(await read(root+file)),sha,'M02 core changed: '+file);
 const scene=await read(root+'src/room-scene.ts');
 for(const [method,sha] of Object.entries(baseline.room_method_hashes))assert.equal(digest(methodText(scene,method)),sha,'M02 simulation changed: '+method);

@@ -1,0 +1,519 @@
+{
+  "baseline_sha": "5ed5bede0411504e337fac3384e3f8eb54697674",
+  "allowed_m05a_changes": [
+    "original semantic audio and mixer",
+    "Mira/profile UI, compatibility defaults",
+    "same-canvas sprite repaint and background contrast",
+    "same numerical profile data used in mission and workshop"
+  ],
+  "frozen_modules": {
+    "src/player.ts": "672685dcfdf2dd647c34a04534044f41764ba3e123ebd5ee8ba97c3f92073320",
+    "src/projectiles.ts": "93d99cd13b0c118dc1a7b50f54df2045d2bf068567aa8ba52c2c42a254e1c5f6",
+    "src/geometry.ts": "ac7ccc12f4739d9fed916262d69be7a134b6b295d38bf02ec190afb5e8c8a060",
+    "src/enemies.ts": "e80d20598a8206d99608647ca06cc65c6d4d559d36b7a8c26210fdc48c40f038",
+    "src/art/rig.ts": "fc44b7c0358fc2a0762749cc08cbb533d18b4c203b4fe6918583729dba61c6b3",
+    "src/room-data.ts": "b5ae3dd4dcc31ef23a25febd695c6132ca5f39bba6461a8c91a7431c18584a01",
+    "src/session/research.ts": "04a1991fc5cbf4547dee7615b499c0935b742c6d9b5cb66e75c6e2f00925e612",
+    "src/session/events.ts": "17fb322b6bb8ee5ef44c5ec26b56f60c1f29f9cba11eb78926f26d2a1ee6b511"
+  },
+  "room_methods": {
+    "init": "3527bf37128a989c6e61518b9d4c5519ce61dc238e7ed38a546991608bb46a89",
+    "damage": "f88f1a426776eab81020c8e8dcc3bffb23087e02b236b924eae04b4d9ee0c2e7",
+    "beginTransition": "a70f84a4f9a6512f128ee80969a930c1872e23e382417c0fe6ea05cb0482977c",
+    "tutorial": "487d20561890577523fee78e544d00396f6f3a2a565add84915f823e63d6dbf2"
+  },
+  "mission_damage_sha": "73cd8e9c6cb0e41f1a08033fbc2877e2b583297c0e8536768d81d0bacf377e93",
+  "clock_methods": {
+    "advance": "aa6a4e706989b42133678f1d769d6077ecdc37552e920f351a36235d2459a351",
+    "clear": "b80a1fe6db03df51c56cc48e444f73faf921f57e375988254304dd8edebe10fd"
+  },
+  "rig_binding_sha": "27b3873ddccda6b0bc49148b4d632a03854fe1a9efaf751c7df0f11850658580",
+  "frame_anchors": {
+    "mira-head": {
+      "source_canvas": [
+        20,
+        14
+      ],
+      "pivot": [
+        10,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.head"
+    },
+    "mira-body-stand": {
+      "source_canvas": [
+        30,
+        24
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.body.stand"
+    },
+    "mira-body-crouch": {
+      "source_canvas": [
+        30,
+        9
+      ],
+      "pivot": [
+        15,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.body.crouch"
+    },
+    "mira-leg": {
+      "source_canvas": [
+        7,
+        12
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.leg.procedural"
+    },
+    "mira-boot": {
+      "source_canvas": [
+        10,
+        4
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.boot.procedural"
+    },
+    "mira-cutter": {
+      "source_canvas": [
+        22,
+        8
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": [
+        21,
+        4
+      ],
+      "slot_id": "mira.weapon"
+    },
+    "mira-shadow": {
+      "source_canvas": [
+        30,
+        5
+      ],
+      "pivot": [
+        15,
+        2
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "mira.shadow"
+    },
+    "walker": {
+      "source_canvas": [
+        48,
+        40
+      ],
+      "pivot": [
+        24,
+        38
+      ],
+      "foot": [
+        24,
+        38
+      ],
+      "muzzle": [
+        41,
+        6
+      ],
+      "slot_id": "walker.body"
+    },
+    "walker-wreck": {
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "walker.dead"
+    },
+    "drone": {
+      "source_canvas": [
+        56,
+        32
+      ],
+      "pivot": [
+        28,
+        16
+      ],
+      "foot": null,
+      "muzzle": [
+        28,
+        16
+      ],
+      "slot_id": "drone.body"
+    },
+    "drone-wreck": {
+      "source_canvas": [
+        24,
+        6
+      ],
+      "pivot": [
+        12,
+        6
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "drone.dead"
+    },
+    "warning-triangle": {
+      "source_canvas": [
+        10,
+        10
+      ],
+      "pivot": [
+        5,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "walker.telegraph"
+    },
+    "warning-reticle": {
+      "source_canvas": [
+        18,
+        18
+      ],
+      "pivot": [
+        9,
+        9
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "drone.telegraph"
+    },
+    "target": {
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "target.hp3"
+    },
+    "target-damaged": {
+      "source_canvas": [
+        24,
+        40
+      ],
+      "pivot": [
+        12,
+        20
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "target.hp1-2"
+    },
+    "terminal-off": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.off"
+    },
+    "terminal-ready": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.ready"
+    },
+    "terminal-on": {
+      "source_canvas": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        64
+      ],
+      "foot": [
+        16,
+        64
+      ],
+      "muzzle": null,
+      "slot_id": "terminal.on"
+    },
+    "gate-closed": {
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "slot_id": "gate.closed"
+    },
+    "gate-open": {
+      "source_canvas": [
+        48,
+        96
+      ],
+      "pivot": [
+        24,
+        96
+      ],
+      "foot": [
+        24,
+        96
+      ],
+      "muzzle": null,
+      "slot_id": "gate.open"
+    },
+    "shot-player": {
+      "source_canvas": [
+        8,
+        3
+      ],
+      "pivot": [
+        4,
+        1
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "projectile.player"
+    },
+    "shot-enemy": {
+      "source_canvas": [
+        8,
+        8
+      ],
+      "pivot": [
+        4,
+        4
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "projectile.enemy"
+    },
+    "repair-cache": {
+      "source_canvas": [
+        32,
+        32
+      ],
+      "pivot": [
+        16,
+        32
+      ],
+      "foot": [
+        16,
+        32
+      ],
+      "muzzle": null,
+      "slot_id": "event.E03.available"
+    },
+    "signal-coral": {
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "telegraph.line"
+    },
+    "signal-mint": {
+      "source_canvas": [
+        1,
+        1
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "interaction.progress"
+    },
+    "floor-top": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.floor.top"
+    },
+    "floor-face": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.floor.face"
+    },
+    "cap-left": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.cap.left"
+    },
+    "cap-right": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.cap.right"
+    },
+    "ceiling": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.ceiling"
+    },
+    "wall": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "tile.wall"
+    },
+    "vent": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.vent"
+    },
+    "support": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.support"
+    },
+    "corner": {
+      "source_canvas": [
+        16,
+        16
+      ],
+      "pivot": [
+        0,
+        0
+      ],
+      "foot": null,
+      "muzzle": null,
+      "slot_id": "decor.corner"
+    }
+  },
+  "module_anchors": {
+    "weapon": [
+      43,
+      32
+    ],
+    "movement": [
+      12,
+      35
+    ],
+    "defence": [
+      31,
+      30
+    ]
+  }
+}
