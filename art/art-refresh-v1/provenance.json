@@ -1,0 +1,272 @@
+{
+  "version": "art-refresh-v1",
+  "source_work_order": "Cinder_Shift_64_Art_Generation_Integration_Production_Work_Order_RU_2026-11-08.txt",
+  "baseline_source_sha": "317f423a57b844fe18ac29fd07a8fb89bd7f5f22",
+  "tool": {
+    "name": "OpenAI image_gen",
+    "model_identifier": "not present in persisted generation output"
+  },
+  "references": [
+    {
+      "path": "art/m03/previews/enemies-atlas-8x.png",
+      "sha256": "f2987de66d73fe313904f1af2467257af5f706da2687d66c553fd1ade539172c"
+    },
+    {
+      "path": "art/m03/previews/props-atlas-8x.png",
+      "sha256": "398b363d8a43c32df432bb6a2252f7c76819d7cdc0564c7ef65f2818a96a29ff"
+    },
+    {
+      "path": "art/m03/source/frames/walker.png",
+      "sha256": "aafb9cbdbf163e9dcdcf3643482312f487e42b1c58cc9c3ed556e2568d487a82"
+    },
+    {
+      "path": "art/m03/source/frames/terminal-ready.png",
+      "sha256": "23b12987a2236b9e625d9c3bb5991c04c4c9a2626eaec40886030b2fb464883d"
+    }
+  ],
+  "generation_prompt_record": "art/art-refresh-v1/generation-prompts.json",
+  "prompt_recovery_note": "The master PNGs ART-01–14 and ART-16–21 were generated in earlier image-generation calls. Their exact prompt text was not included in the supplied work package and could not be recovered from the PNG metadata. The prompt text below is a reconstruction from the adopted work order, not a claim that it is verbatim historical input. ART-15 records the exact corrective prompt used for the selected replacement master.",
+  "selected": [
+    {
+      "family": "ART-01",
+      "id": "turret",
+      "generation_id": "exec-4a62d197-d534-4da0-837a-93e4881f69fa",
+      "master": "source/generated/art01_turret-master.png",
+      "sha256": "cedad0b04a2139f0e6850e007f66004087f0bb31d5cb6de49dea51c064ebdd45",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Generate a heavy stationary industrial turret with a shared steel base, readable right-facing barrel and red inner core. Exactly six aligned frames: off, armored, warning, burst, exposed core, destroyed wreck. Closed and open armor plates must have different silhouettes. Keep the barrel and muzzle anchor consistent across live states."
+    },
+    {
+      "family": "ART-02",
+      "id": "security-walker",
+      "generation_id": "exec-762928b6-f21e-4ac9-ac7b-084c3ef35476",
+      "master": "source/generated/art02_security_walker-master.png",
+      "sha256": "3f434ec5096e004a7474f42f320013b775a4f405df4fcc4f1723346138c33635",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create a heavy security walker related to the approved service walker but with a distinct armored torso, protected sensor and broad shoulder silhouette. Exactly six frames: patrol, notice/chase, warning, fire, recovery, destroyed wreck. Preserve foot baseline and right-facing muzzle."
+    },
+    {
+      "family": "ART-03",
+      "id": "ram-charger",
+      "generation_id": "exec-9eecc36a-43da-4a3e-91d8-4103e584aa9a",
+      "master": "source/generated/art03_ram_charger-master.png",
+      "sha256": "e9eaa9f592041aa39fd7f89651a615ce0b2521f826932e1862ea5b2a52d3506c",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create a low industrial ram robot with a reinforced front impact plate, compact body and clear charge direction. Exactly five frames: idle/patrol, windup, charge, recovery, destroyed wreck. Keep the charge plate and baseline consistent."
+    },
+    {
+      "family": "ART-04",
+      "id": "energy-cell",
+      "generation_id": "exec-ecc5bac7-0806-4fe4-a97e-8454ba3f1588",
+      "master": "source/generated/art04_energy_cell-master.png",
+      "sha256": "19f1249f7f291822786d85f2d2f84acebe4f8be4d67f254a2825338e77e645f0",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one interchangeable industrial energy cell with protective casing, handle, end contacts and a readable mint indicator. Exactly four frames: uncollected upright cell, same cell carried horizontally, cell installed in a switchboard socket, empty socket. Keep one construction and scale."
+    },
+    {
+      "family": "ART-05",
+      "id": "repair-station",
+      "generation_id": "exec-bd4eec27-1b19-4688-a370-1c34766e9338",
+      "master": "source/generated/art05_repairs-master.png",
+      "sha256": "61a49d29ac9cad2f14913cc96d4907e6d725058e7f39a3aeffc322ed8f55315a",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one compact service repair station using the approved repair-cache visual language. Exactly three aligned states: ready with visible tools and cross mark, used but still present, protected inside a local mint shield field. No text or station numbers."
+    },
+    {
+      "family": "ART-06",
+      "id": "service-cache",
+      "generation_id": "exec-1e98ebca-b386-496f-8367-1e4f6147e392",
+      "master": "source/generated/art06_caches-master.png",
+      "sha256": "d1b80ae269494a719181c7d548f2c666984da3828ef55fa94612a265fc5874b7",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create three distinct service containers, each with exactly three states: salvage crate with parts, archive module with cassette symbol, challenge beacon with activation ring; for each show available, interaction/open, and used. Do not imply any unmodeled reward."
+    },
+    {
+      "family": "ART-07",
+      "id": "press",
+      "generation_id": "exec-aa7b5d8c-b76d-4a12-a544-6c686d1188b1",
+      "master": "source/generated/art07_press-master.png",
+      "sha256": "63aca0e1113a4843808e435250a670ea4b9437e7796d054d5c02dfeef5746d5b",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create a fixed industrial press machine with guide rails, upper platen, working plate and visible danger hardware. Exactly four states: safe, warning, active strike, recovery. Keep the physical strike area consistent with the supplied hazard rectangle; do not create a walkable platform."
+    },
+    {
+      "family": "ART-08",
+      "id": "heat-emitter",
+      "generation_id": "exec-489f5650-43d0-4f35-87f7-30607b08268d",
+      "master": "source/generated/art08_heat_emitter-master.png",
+      "sha256": "75584eb79df28a3e0b5b6ac0c4d192b6eb8f11fef89ebbcb8f1a0fa96004a876",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create a fixed heat emitter with a physical grille/nozzle and clear exhaust direction, separate from its overlay. Exactly four states: cool, warning, active heat, recovery. No floor or new geometry."
+    },
+    {
+      "family": "ART-09",
+      "id": "thin-sheet",
+      "generation_id": "exec-8b1f7dd0-fa70-46b1-8852-dc8d90919f75",
+      "master": "source/generated/art09_thin_sheet-master.png",
+      "sha256": "bc35185b7108b695bcc55242336cd9b8fd1c7f37342192f12856e90310d9a74e",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one thin phase-material sheet in two aligned states: intact barrier and visibly broken fragments with a clear empty passage. Match the supplied collision rectangle and palette."
+    },
+    {
+      "family": "ART-10",
+      "id": "magnetic-wall",
+      "generation_id": "exec-5dc1a59e-43a6-4f0a-bcd8-d95cfb987f00",
+      "master": "source/generated/art10_magnetic_wall-master.png",
+      "sha256": "30f17d3be0038ab775116c097daed7542d2728fa37e86cdd8dc0c9b6f8b4e38e",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one magnetic industrial wall panel in two states: idle and a short mint pass ripple. Preserve the wall silhouette and the supplied collision rectangle."
+    },
+    {
+      "family": "ART-11",
+      "id": "phase-curtain",
+      "generation_id": "exec-e750e62f-d76d-47d1-bfd2-e30ba50f2d07",
+      "master": "source/generated/art11_phase_curtain-master.png",
+      "sha256": "d6c8887606089d29615fe49f1c2c0f722f757688942853055fd4f4019f13aea9",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one supported phase curtain in three states: active field, permitted passage, restored field. Keep the support frame stable and make the field distinct from a normal wall."
+    },
+    {
+      "family": "ART-12",
+      "id": "ricochet-panel",
+      "generation_id": "exec-6067248c-ddb0-45f6-bb75-1155a425660b",
+      "master": "source/generated/art12_ricochet_panel-master.png",
+      "sha256": "2aae270d21386c86ad8b8bf19c5bd425d7cfe80dc70d1f01a1df81cae2516b58",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one industrial ricochet panel in two states: normal reflector and brief impact. Show directional bevels that match the existing reflection; do not invent a new reflection angle."
+    },
+    {
+      "family": "ART-13",
+      "id": "power-shutter",
+      "generation_id": "exec-0c3863a4-7626-4d13-9971-5b03aac1ce3f",
+      "master": "source/generated/art13_power_shutter-master.png",
+      "sha256": "f3af6e066b395bdc15b81f19c65245c50aab0db09bed71d8d0566635f6a83c04",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one industrial power shutter with visible frame and panels in four states: closed, opening, fully open with a clear passable hole, warning. Keep the construction and baseline consistent."
+    },
+    {
+      "family": "ART-14",
+      "id": "terminal",
+      "generation_id": "exec-57c03c5e-046a-4ee1-931f-3b3f38ef8230",
+      "master": "source/generated/art14_terminals-master.png",
+      "sha256": "9475b1ffafc8e610eae6e0c39914400a276a55614f94906d45075fd81c31851a",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one terminal family with four visibly distinct functions: power/restore, cell installation, data upload and exit/evacuation. For each function show unavailable/off, ready, interaction/hold and completed/on. Use symbols only; no lettering."
+    },
+    {
+      "family": "ART-15",
+      "id": "buffer-discharge",
+      "generation_id": "exec-bd54a99b-a704-4ddb-9f3a-f4953197c748",
+      "master": "source/generated/art15_buffer_discharge-master.png",
+      "sha256": "d4ddbafe2b27088d20f6cfa143e21629735456cb047ce8a07fb7a7dfa23771f5",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "image edit; transparent_background=true",
+      "prompt_record": "Create ONLY a clean transparent gameplay effect overlay asset, replacing the reference entirely. Four separate frames horizontally on an exact 4-column strip: (1) compact stable mint protective-buffer ring with sparse amber nodes, (2) same ring buckling inward with short mint impact ripple, (3) controlled outward discharge arc with a few amber sparks, (4) dissipating mint and amber particles. Each frame is centered on the same empty center. Do not draw Mira or any character, person, humanoid, body, head, face, suit, armor, robot or silhouette. Empty centers stay transparent. Hard chunky pixel clusters, crisp edges, no blur, glow or gradients; palette #76DCC8 mint, #FFB65B amber, few #F36D76 warning pixels. Genuine alpha channel, absolutely no white or colored backdrop, no checkerboard, no text, no borders, no gameplay geometry. Match the supplied approved sprite style and effect-only purpose."
+    },
+    {
+      "family": "ART-16",
+      "id": "regulator",
+      "generation_id": "exec-81860cf4-2b03-4bd9-8c0a-7b18cd827f27",
+      "master": "source/generated/art16_regulator_boss-master.png",
+      "sha256": "58d90fd8e9c6fc3b8acb1322d9ff265ec0c2dda3b73327164a20f21462d46910",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create one heavy stationary Regulator machine with shell, supports, exposed core and linked emitters. Exactly eight aligned states: armored phase one, attack warning, active attack, exposed core, phase two, hit, shutdown, destroyed/disabled. Keep attack geometry out of the sprite."
+    },
+    {
+      "family": "ART-17",
+      "id": "window-view",
+      "generation_id": "exec-0745df01-0c9d-4830-ae44-b53841be2ba2",
+      "master": "source/generated/art17_window_views-master.png",
+      "sha256": "b079796450f343614941f09ea96d28b8d39fde60a6e568b81c7099fead7d7f2b",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create two separate opaque side-elevation distant views for existing windows: Caldera 7 reactor infrastructure and the evacuation platform with the outside world. Keep contrast quiet, no characters, interface, text or invented playable ledges."
+    },
+    {
+      "family": "ART-18",
+      "id": "cargo-landmark",
+      "generation_id": "exec-c702a11c-7a86-4f76-b75b-002a46f576f7",
+      "master": "source/generated/art18_cargo_landmarks-master.png",
+      "sha256": "8cc9800939153fc40ce89c167ca91fa1f597f6a42bbf1077bbf24acc1fdcb7db",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create three transparent cargo-sector landmarks: industrial container stack, rail/crane structure and cable/power junction. Keep combat lanes and existing collectible/exit positions clear."
+    },
+    {
+      "family": "ART-19",
+      "id": "foundry-landmark",
+      "generation_id": "exec-02507cac-00f2-4e93-81c6-18cf5b60553e",
+      "master": "source/generated/art19_foundry_landmarks-master.png",
+      "sha256": "54d0296c022a0373cc475cc51bc0e3886ffbb75070300b3b02fec3b5f058d876",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create three transparent foundry landmarks: furnace, process pipes/forms and press/cooling assembly. Keep safe service route distinct from the existing press hazard; no new walkable ledges."
+    },
+    {
+      "family": "ART-20",
+      "id": "archive-landmark",
+      "generation_id": "exec-6c4b8a1e-c900-4675-a3bd-4eb40090bf0f",
+      "master": "source/generated/art20_archive_landmarks-master.png",
+      "sha256": "841e140f3d799a4c9b1ecf1a2a8fa7f1b8022bdec617259a662517d7419fdebb",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create three transparent archive landmarks: data racks, archive cabinet/modules and transfer bus. Use large calm silhouettes; keep S04 and the data terminal legible."
+    },
+    {
+      "family": "ART-21",
+      "id": "reactor-landmark",
+      "generation_id": "exec-9f48924b-797c-4049-8e34-a9f06a265ee2",
+      "master": "source/generated/art21_reactor_landmarks-master.png",
+      "sha256": "da749aeeb6a2350abeb243234c15d5c11a57e2a2416fd3932587294c2ed1af74",
+      "selected_variant": "single supplied master",
+      "prompt_mode": "text-to-image; exact historical text unavailable",
+      "prompt_record": "Create three transparent reactor landmarks: power bus, cooling manifold and beacon mast. Keep the arena and evacuation route clear; do not include the Regulator or window vista."
+    }
+  ],
+  "processing": {
+    "editable_source_format": "OpenRaster (.ora), one editable layer per generated state frame; object subparts remain flattened because the generator supplied flattened raster masters.",
+    "command": "npm run art:refresh",
+    "steps": [
+      "split source grid by documented family layout; omit unused grid cells",
+      "create one full-source-canvas OpenRaster layer per frame/state",
+      "crop visible alpha bounds for runtime export",
+      "nearest-neighbour fit within a 96x96 transparent frame with common 8px safety inset",
+      "snap alpha to binary at threshold 128; clear RGB on transparent pixels",
+      "pack into PNG atlas with 2px inter-frame padding and rotation/trim disabled"
+    ],
+    "limitations": [
+      "No separate armor/core/background component masks exist in the flattened generated masters.",
+      "ART-01–14 and ART-16–21 prompts are labeled reconstructions, not verbatim prompt history.",
+      "Human/mobile/mono runtime acceptance remains open."
+    ]
+  },
+  "rejected_variants": [
+    {
+      "source": "art/art-refresh-v1/source/generated/turret-states-master.png",
+      "sha256": "cedad0b04a2139f0e6850e007f66004087f0bb31d5cb6de49dea51c064ebdd45",
+      "selected": false,
+      "reason": "Rejected: background contains dark gradient/halo and the image is not a clean transparent, model-aligned six-state master."
+    },
+    {
+      "generation_id": "exec-81539cdc-a729-46de-bd90-b1b3ef2ecfa1",
+      "family": "ART-15",
+      "selected": false,
+      "reason": "Rejected: original buffer/discharge sheet included Mira in each frame; replaced with the effect-only transparent corrective generation."
+    }
+  ]
+}

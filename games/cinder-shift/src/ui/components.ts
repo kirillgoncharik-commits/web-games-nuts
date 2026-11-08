@@ -1,11 +1,7 @@
 import type {Controls} from '../input';
 import type{SoundId}from'../audio';
 export const escape=(value:unknown)=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
-export function icon(kind:'spread'|'dash'|'shield'){
-  const shape=kind==='spread'?'<path d="M6 24H54M14 24L50 8M14 24L50 40M44 2L54 7L48 16M44 32L54 41L44 46M46 16L56 24L46 32"/>':kind==='dash'?'<path d="M6 12H30M2 24H24M6 36H30M30 5L52 24L30 43M42 5L62 24L42 43"/>':'<path d="M32 3L54 11V26L48 37L32 45L16 37L10 26V11Z M22 24H42 M32 14V34"/>';
-  return '<svg class="module-icon" viewBox="0 0 64 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true">'+shape+'</svg>';
-}
-type ButtonOptions={kind?:'primary'|'secondary'|'danger';disabled?:boolean;pressed?:boolean;sound?:'silent'|'cancel';className?:string;html?:boolean};
+type ButtonOptions={kind?:'primary'|'secondary'|'danger';disabled?:boolean;pressed?:boolean;sound?:'silent'|'cancel';className?:string;html?:boolean;label?:string;style?:string;busy?:boolean};
 export class Panels{
   private actions=new Map<string,()=>void>();private changes=new Map<string,(value:string,checked:boolean)=>void>();
   private scrollPositions=new Map<string,number>();private scopeKey='';private back:()=>void=()=>{};private padPrevious=new Set<string>();
@@ -17,6 +13,7 @@ export class Panels{
     root.addEventListener('pointerdown',e=>{this.controls.device=e.pointerType==='touch'?'touch':'keyboard';this.onDevice();});
     window.addEventListener('keydown',e=>{
       if(!this.visible)return;this.controls.device='keyboard';this.onDevice();
+      if(this.controls.isRebinding)return;
       if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();if(!e.repeat){this.onSound('ui_cancel');this.back();}return;}
       if(e.key==='Tab'){e.preventDefault();this.move(e.shiftKey?-1:1);return;}
       if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&!(e.target instanceof HTMLSelectElement)&&!(e.target instanceof HTMLInputElement&&e.target.type!=='checkbox')){e.preventDefault();this.move(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1);return;}
@@ -24,7 +21,7 @@ export class Panels{
     },true);
     document.addEventListener('focusin',e=>{if(this.visible&&!root.contains(e.target as Node))this.focus();else if(this.visible){const el=e.target as HTMLElement,id=el.dataset.focus||el.id;if(id&&id!==this.previousFocus){this.previousFocus=id;this.onSound('ui_focus');}}});
   }
-  button(id:string,content:string,action:()=>void,options:ButtonOptions={}){this.actions.set(id,action);return `<button type="button" data-command="${escape(id)}" data-sound="${options.sound||'confirm'}" data-testid="${escape(id)}" data-focus="${escape(id)}" class="${options.kind||'secondary'} ${options.className||''}" ${options.disabled?'disabled':''} ${options.pressed===undefined?'':`aria-pressed="${options.pressed}"`}>${options.html?content:escape(content)}</button>`;}
+  button(id:string,content:string,action:()=>void,options:ButtonOptions={}){this.actions.set(id,action);return `<button type="button" data-command="${escape(id)}" data-sound="${options.sound||'confirm'}" data-testid="${escape(id)}" data-focus="${escape(id)}" class="${options.kind||'secondary'} ${options.className||''}" ${options.label?`aria-label="${escape(options.label)}"`:''} ${options.style?`style="${escape(options.style)}"`:''} ${options.busy?'aria-busy="true"':''} ${options.disabled?'disabled':''} ${options.pressed===undefined?'':`aria-pressed="${options.pressed}"`}>${options.html?content:escape(content)}</button>`;}
   change(id:string,callback:(value:string,checked:boolean)=>void){this.changes.set(id,callback);}
   show(build:()=>string,back:()=>void,focusId?:string,scopeKey=''){
     const previous=(document.activeElement as HTMLElement)?.dataset.focus||document.activeElement?.id;

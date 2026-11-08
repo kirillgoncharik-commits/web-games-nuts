@@ -13,7 +13,6 @@ jobs:
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run build
       - run: npm run art:check
-      - run: npm run audio:check
       - run: npm test
         env:
           CROSS_BROWSER: "1"

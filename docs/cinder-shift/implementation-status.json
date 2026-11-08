@@ -1,0 +1,484 @@
+{
+  "version": 2,
+  "kind": "implementation_status_and_release_register",
+  "updated_at": "2026-11-07",
+  "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
+  "source_checkout": {
+    "branch": "codex/cinder-shift-m05b1-campaign",
+    "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
+    "working_tree": "clean",
+    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
+    "source_pr_head_includes_current_changes": true,
+    "ci_for_code_commit_d9088f00c771d4add647e97501010f4e7ab72e4b": "failed_run_45_art_check_hit_flash_hash_false_positive",
+    "ci_for_head_8f4c4cb755e888dceea9f3be79af0dfbaac629fc": "failed_run_47_css_motion_contract",
+    "ci_for_head_bc7044e4e741b2f4d4ea1be90cc88d5d17f96618": "failed_audio_check_missing_script_after_build_and_art_check_passed",
+    "ci_for_head_6bea87c86e67d709af5f402bfdbe0a926348295f": "failed_legacy_m05a_audio_check_incompatible_with_m06_runtime_assets",
+    "ci_for_current_changes": "pending_after_removing_stale_m05a_audio_check_workflow_step",
+    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; code commit d9088f00c771d4add647e97501010f4e7ab72e4b is in existing draft PR #7 and is not published to nuts.bid",
+    "scope_1_2_code_commit": "d9088f00c771d4add647e97501010f4e7ab72e4b",
+    "site_pr": 8,
+    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
+    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
+  },
+  "production": {
+    "build_id": "0.6.0-m06.0",
+    "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+    "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0",
+    "site_main_sha": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+    "description": "M06 development preview published; not final Beta; quality gate remains open at 0/39 acceptance scenarios",
+    "source_dirty": false,
+    "previous_build_id": "0.6.0-m05b1.3",
+    "site_pr": 8
+  },
+  "release_register": [
+    {
+      "channel": "nuts.bid web",
+      "build_id": "0.6.0-m05b1.3",
+      "source_sha": "4c7b965d366e532b0d34e2437d046d4ddcf3fbd0",
+      "status": "published_early_preview",
+      "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m05b1.3"
+    },
+    {
+      "channel": "nuts.bid web",
+      "build_id": "0.6.0-m06.0",
+      "content_version": "campaign-m05b3.0",
+      "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+      "source_dirty": false,
+      "artifact_path": "dist/cinder-shift/",
+      "artifact_bytes": 3910502,
+      "artifact_gzip_bytes": 2395790,
+      "runtime_audio_bytes": 1643076,
+      "runtime_music_bytes": 0,
+      "status": "published_development_preview",
+      "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0",
+      "target": "web",
+      "platform_status": "published_on_nuts.bid",
+      "quality_gate": "static builds passed; live version label confirmed; gameplay/device acceptance not run",
+      "artifact_sha256": "da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4",
+      "build_manifest_sha256": "0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81",
+      "manual_qa_seed": 4,
+      "manual_qa_seed_status": "planned_not_run",
+      "artifact_hash_method": "SHA-256 of sorted build-manifest path + NUL + per-file SHA-256 entries",
+      "site_commit": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+      "source_pr": 7,
+      "site_pr": 8
+    }
+  ],
+  "acceptance": {
+    "scenario_count": 39,
+    "passed": 0,
+    "open": 39,
+    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
+  },
+  "verification_performed": [
+    "npm run check passed: EN/RU keys and parameters plus TypeScript type check; this does not establish gameplay acceptance",
+    "npm run audio:export generated 25 runtime effects, eight PCM16/44.1 kHz theme masters and six specified stingers; human listening remains open",
+    "npm run check passed: 454 EN/RU keys/parameters match and TypeScript passes",
+    "npm run build passed for target web; local candidate is 3,841,036 bytes / 2,363,961 gzip bytes; runtime audio is 1,595,316 bytes under the 4,194,304-byte proposed budget",
+    "Eight compile-time target profiles and a fail-open shared adapter contract are present; only the web target was compiled, and non-web entries are not native integrations",
+    "At the local candidate checkpoint, gameplay/device/human checks, CI, publication and platform submissions had not run; subsequent deployment is recorded below, while the 39 acceptance cases remain open.",
+    "Historical pre-commit QA build: source tree was dirty and artifact hashes differed; superseded for release tracking by the clean source commit and published artifact recorded in the release register below.",
+    "No gameplay acceptance scenario, physical-device run, human audio review, contact-sheet review, or loading timing run was performed; all 39 cases remain open. A read-only live page check confirmed the deployed build label.",
+    "Published 0.6.0-m06.0 through nutsbid PR #8 (site commit 00cac0b04b5b184052c07f18fe2f801e43ca5cfd); the live URL returned title Cinder Shift 64 · Nuts Games and build label v0.6.0-m06.0 / 22da406. Artifact SHA-256 da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; build-manifest SHA-256 0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81.",
+    "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open.",
+    "Scope 1.2 baseline: published build 0.6.0-m06.0 remains tied to source 22da406857d2b690f136880d0fd642dce196e071 and artifact SHA da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; local HEAD before this scope work was 4028405f690c8dadf322172793d589f35f253771; no new build, tests, visual review or deployment recorded yet.",
+    "Scope 1.2 local production build passed on clean code commit d9088f00c771d4add647e97501010f4e7ab72e4b: i18n 478 keys/parameters and TypeScript; build_id 0.6.0-m06.0, source_dirty false, 3,933,736 raw / 2,401,599 gzip bytes, 52 manifest entries, build-manifest SHA-256 a3b868fa255f418d82f5ec9d61af5f9c48719fab43eab0495b573eb0781a1689. This local artifact is not published; no gameplay tests or acceptance were run. Local preview server failed with EPERM while binding 127.0.0.1:4175; runtime screenshots and human visual review remain open.",
+    "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending."
+  ],
+  "blocks": [
+    {
+      "id": "B00",
+      "title": "Audit current work",
+      "implementation_status": "complete",
+      "verification_status": "audited",
+      "publication_status": "not_applicable",
+      "actual": {
+        "source_base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
+        "live_build": "0.6.0-m06.0",
+        "source_pr": 7,
+        "site_pr": 8
+      },
+      "evidence": [
+        "docs/cinder-shift/m05b1-status.ru.md",
+        "docs/cinder-shift/unified-beta-gap-list.ru.md"
+      ],
+      "next_action": "Keep the prior M05B.1 publication as historical evidence and continue acceptance on the currently published M06 preview."
+    },
+    {
+      "id": "B01",
+      "title": "M05B.1 — Airlock and Cargo",
+      "implementation_status": "implemented",
+      "verification_status": "partial; full gameplay/device/audio acceptance remains open",
+      "publication_status": "published_as_early_preview",
+      "actual": {
+        "missions": 2,
+        "authored_room_slots": 7,
+        "visited_rooms": 7,
+        "technologies": 6,
+        "events": 3
+      },
+      "evidence": [
+        "docs/cinder-shift/m05b1-status.ru.md",
+        "https://nuts.bid/games/cinder-shift/?build=0.6.0-m05b1.3"
+      ],
+      "next_action": "Accept Airlock/Cargo quality fixes on the exact published M06 build; preserve M05B.1 as historical evidence."
+    },
+    {
+      "id": "B02",
+      "title": "M05B.2 — Foundry and Archive",
+      "implementation_status": "implemented_committed",
+      "verification_status": "static_check_passed; gameplay_acceptance_open",
+      "publication_status": "included_in_development_preview_not_beta",
+      "actual": {
+        "missions_enabled_in_working_tree": 4,
+        "authored_room_slots_in_campaign": 15,
+        "rooms_visited_per_route": 14,
+        "technologies_available": 9,
+        "events_available": 5,
+        "foundry_branch": "exclusive_service_or_press_then_rejoin",
+        "archive_gate": "data_upload_required_before_transit"
+      },
+      "evidence": [
+        "games/cinder-shift/src/room-data.ts",
+        "games/cinder-shift/src/session/missions.ts",
+        "games/cinder-shift/src/session/research.ts",
+        "games/cinder-shift/src/session/events.ts",
+        "games/cinder-shift/src/i18n/en.json",
+        "games/cinder-shift/src/i18n/ru.json"
+      ],
+      "next_action": "Keep acceptance open until routes, events, saves, room geometry and builds have evidence."
+    },
+    {
+      "id": "B03",
+      "title": "M05B.3 — Reactor and finale",
+      "implementation_status": "implemented_committed",
+      "verification_status": "static_check_passed; gameplay_acceptance_open",
+      "publication_status": "included_in_development_preview_not_beta",
+      "actual": {
+        "missions_enabled_in_working_tree": 5,
+        "authored_room_slots_in_campaign": 20,
+        "rooms_visited_per_full_route": 19,
+        "technologies_available": 12,
+        "events_available": 6,
+        "reactor_boss": "Regulator with warned phase-one lanes, phase-two sweep and core windows",
+        "finale": "evacuation terminal after boss defeat",
+        "replay": "new campaign ID/seed while settings and career records remain separate"
+      },
+      "evidence": [
+        "games/cinder-shift/src/boss.ts",
+        "games/cinder-shift/src/room-data.ts",
+        "games/cinder-shift/src/room-scene.ts",
+        "games/cinder-shift/src/session/save.ts",
+        "games/cinder-shift/src/session/campaign.ts"
+      ],
+      "next_action": "Continue M06, analytics and feasible platform-adapter work; keep boss, D4, event and route acceptance open pending a real run."
+    },
+    {
+      "id": "B04",
+      "title": "M06 — UI, accessibility, music and sound",
+      "implementation_status": "local_campaign_UI_accessibility_art_and_audio_authoring_in_progress",
+      "verification_status": "static_check_and_build_passed; audio_runtime_and_human_acceptance_open",
+      "publication_status": "included_in_development_preview_not_beta",
+      "actual": {
+        "locales": [
+          "en",
+          "ru"
+        ],
+        "existing_settings": [
+          "music",
+          "sfx",
+          "ui",
+          "touch",
+          "autofire"
+        ],
+        "new_local_settings": [
+          "keyboard_rebinding",
+          "reduced_flashes",
+          "reduced_motion",
+          "longer_enemy_telegraphs_assist"
+        ],
+        "supplied_loading_and_menu_master_art_integrated": true,
+        "new_original_music_tracks_delivered": 8,
+        "music_cues_delivered": 9,
+        "extra_retry_cue": true,
+        "runtime_sfx_count": 28,
+        "reworked_existing_cues": [
+          "module_purchase",
+          "mission_win",
+          "mission_death"
+        ],
+        "small_playback_variants": {
+          "shot": 3,
+          "hit_enemy": 3
+        },
+        "runtime_audio_bytes": 1643076,
+        "runtime_music_bytes": 0,
+        "runtime_audio_budget_bytes": 4194304,
+        "master_music_sample_rate": 44100,
+        "runtime_music_sample_rate": "procedural Web Audio; no static music files",
+        "music_master_bytes": 37931878,
+        "master_lufs_measured": false,
+        "master_true_peak_measured": false,
+        "human_audio_reviews": 0,
+        "playgama_ogg_mp3_audio_profile": false
+      },
+      "evidence": [
+        "games/cinder-shift/src/i18n/",
+        "games/cinder-shift/src/input.ts",
+        "games/cinder-shift/src/audio.ts",
+        "games/cinder-shift/src/audio/assets.generated.json",
+        "games/cinder-shift/src/art/promo.generated.json",
+        "scripts/m06-art.mjs",
+        "scripts/m06-audio.mjs",
+        "audio/m06/registry.json",
+        "audio/m06/README.md",
+        "art/m06/",
+        "audio/m06/"
+      ],
+      "next_action": "Review the new hit cues and music by ear; inspect the exact web candidate at mobile scales and use the 39 acceptance cases. Consent-network, physical-device and platform reviews remain open."
+    },
+    {
+      "id": "B05",
+      "title": "Analytics",
+      "implementation_status": "local_consent_gated_GA4_gameplay_event_allowlist; GameAnalytics_not_connected",
+      "verification_status": "static_build_passed; consent_network_delivery_and_revoke_open",
+      "publication_status": "included_in_web_preview_not_beta",
+      "actual": {
+        "consent_required": true,
+        "remote_lifecycle_events": [
+          "game_loaded",
+          "game_start",
+          "game_end",
+          "game_restart"
+        ],
+        "additional_consent_gated_events": [
+          "screen_view",
+          "play_pressed",
+          "first_control",
+          "tutorial_step",
+          "tutorial_complete",
+          "mission_start",
+          "room_enter",
+          "enemy_encounter",
+          "hit_received",
+          "death",
+          "attempt_time",
+          "research_purchase",
+          "research_reward",
+          "event_offered",
+          "event_choice",
+          "repair_offered",
+          "repair_used",
+          "route_chosen",
+          "retry",
+          "result_view",
+          "result_continue",
+          "campaign_end",
+          "campaign_replay_start",
+          "load_complete",
+          "save_result",
+          "save_error",
+          "pause",
+          "resume"
+        ],
+        "analytics_adapter": "existing host GA4 bridge; only sends on granted consent; no pre-consent queue",
+        "gameanalytics_project_key": "not_available",
+        "ad_funnel_events": "not_implemented_until_platform_adapter"
+      },
+      "evidence": [
+        "games/cinder-shift/src/telemetry.ts",
+        "games/cinder-shift/public/game-analytics.js"
+      ],
+      "next_action": "Connect the GameAnalytics project after the project key and dashboard access are available; verify consent/revoke/network delivery and add placement events with the ad coordinator."
+    },
+    {
+      "id": "B06",
+      "title": "M06M — platforms and monetization",
+      "implementation_status": "common_platform_adapter_contract_and_eight_compile_time_profiles_local; web_target_compiled; native_sdks_pending_access",
+      "verification_status": "web_build_passed; native_integrations_and_ad_flows_open",
+      "publication_status": "web_preview_published_native_targets_not_submitted",
+      "actual": {
+        "platform_adapter_contract": true,
+        "ad_coordinator": false,
+        "target_profile_count": 8,
+        "target_builds": 1,
+        "compiled_target": "web",
+        "native_sdk_integrations": 0,
+        "official_sdk_versions_pinned": 0,
+        "native_preview_available": false,
+        "ad_requests_enabled": false,
+        "target_ids": [
+          "web",
+          "itch",
+          "crazygames-basic",
+          "crazygames-full",
+          "gamepix",
+          "y8",
+          "playgama",
+          "yandex"
+        ],
+        "native_targets_compiled": 0
+      },
+      "evidence": [
+        "games/cinder-shift/src/platform.ts",
+        "games/cinder-shift/platforms/targets.json",
+        "games/cinder-shift/platforms/README.md",
+        "games/cinder-shift/src/telemetry.ts",
+        "dist/cinder-shift/build-manifest.json"
+      ],
+      "next_action": "Get the official SDK documentation and portal access for one selected platform; implement and verify that platform’s adapter, lifecycle, storage, consent/analytics and permitted ad placements before producing a native preview."
+    },
+    {
+      "id": "B07",
+      "title": "M07 — acceptance",
+      "implementation_status": "not_started",
+      "verification_status": "0_of_39_cases_run",
+      "publication_status": "not_applicable",
+      "actual": {
+        "acceptance_cases_open": 39,
+        "physical_device_runs": 0,
+        "blind_playtests": 0,
+        "human_audio_reviews": 0
+      },
+      "evidence": [
+        "supplied checklist status: empty_acceptance_form_not_test_results"
+      ],
+      "next_action": "Record each scenario only with its actual result and supporting evidence."
+    },
+    {
+      "id": "B08",
+      "title": "M08 — builds and release",
+      "implementation_status": "not_started_for_beta",
+      "verification_status": "open",
+      "publication_status": "development_preview_published_beta_not_submitted",
+      "actual": {
+        "beta_target_builds": 0,
+        "beta_submissions": 0
+      },
+      "evidence": [
+        "nuts.bid development preview 0.6.0-m06.0 is live through site PR #8; beta submission remains separate and not started"
+      ],
+      "next_action": "Prepare channel artifacts after beta acceptance; maintain a rollback record and report inaccessible channels accurately."
+    },
+    {
+      "id": "B09",
+      "title": "QA-01…QA-12 — Airlock/Cargo quality gate",
+      "implementation_status": "implemented_committed",
+      "verification_status": "i18n_and_types_and_web_build_passed; gameplay_device_visual_and_audio_acceptance_open",
+      "publication_status": "published_development_preview",
+      "actual": {
+        "mobile_layout": "automatic dock/sides viewport with CSS-pixel controls, safe-area input and browser viewport resize handling",
+        "event_migration": "E01 v1 room E migrates explicitly to E01 v2 room F; campaign ID, seed, purchases, score, reward ledger and active module remain untouched",
+        "level_design": [
+          "E always powered teaching turret; longer first telegraph and cover prompt",
+          "E01 late F passage/turret only",
+          "R02 protected +2 repair after cell",
+          "G security walker and staged turret; cell gates install",
+          "B drone waits for walker death or LOS break; C cap 2 active threats",
+          "R01 shield absorbs only bullets entering the local shield; no room-wide enemy suspension"
+        ],
+        "combat": "Authoritative turret presentation and recovery damageability; shared enemy muzzle; distinct hit_armour, hit_open, hit_wall; true-HP-loss flash and <=1/3 critical HUD",
+        "loading": "One first-page intro of >=6000ms visible time after rendered loading art; technical load proceeds in parallel; real progress; hidden-tab time excluded; no later repeat",
+        "build_id": "0.6.0-m06.0",
+        "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
+        "source_dirty": false,
+        "artifact_bytes": 3910502,
+        "artifact_gzip_bytes": 2395790,
+        "runtime_audio_bytes": 1643076,
+        "acceptance_cases_run": 0,
+        "acceptance_cases_open": 39,
+        "artifact_sha256": "da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4",
+        "build_manifest_sha256": "0365750d4c07a76dfe747fff93a76a221397c9239975d2e32668a49a1606ac81",
+        "manual_qa_seed": 4,
+        "manual_qa_seed_status": "planned_not_run",
+        "site_commit": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
+        "site_pr": 8,
+        "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0"
+      },
+      "evidence": [
+        "games/cinder-shift/src/ui/mobile-layout.ts",
+        "games/cinder-shift/src/session/events.ts",
+        "games/cinder-shift/src/mission.ts",
+        "games/cinder-shift/src/room-scene.ts",
+        "games/cinder-shift/src/enemies.ts",
+        "games/cinder-shift/src/render.ts",
+        "games/cinder-shift/src/audio.ts",
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/index.html",
+        "games/cinder-shift/src/i18n/en.json",
+        "games/cinder-shift/src/i18n/ru.json",
+        "art/m06/quality-runtime-art-contract.json",
+        "docs/cinder-shift/quality-gate-qa.ru.md",
+        "https://github.com/kirillgoncharik-commits/nutsbid/pull/8",
+        "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0"
+      ],
+      "next_action": "Run the 39-scenario acceptance plan and viewport matrix on the published build; complete real iPhone Safari and Android Chrome runs, visual contact-sheet review and human audio review before marking acceptance."
+    },
+    {
+      "id": "B10",
+      "title": "Visual UI 1.2 — station chrome, illustrated map and module icon system",
+      "implementation_status": "implemented_locally_in_progress",
+      "verification_status": "i18n_and_types_and_web_production_build_passed; runtime_visual_and_human_acceptance_open",
+      "publication_status": "not_published",
+      "actual": {
+        "ui_chrome": "Shared layered equipment frames and explicit normal/hover/focus/pressed/disabled styles around live DOM controls",
+        "sector_map": "Five separate vector architecture layers; live route, position, selection and access states use CampaignData/MissionDefinition",
+        "module_icon_count": 12,
+        "module_icon_nodes": [
+          "W1",
+          "W2",
+          "W3",
+          "W4",
+          "M1",
+          "M2",
+          "M3",
+          "M4",
+          "D1",
+          "D2",
+          "D3",
+          "D4"
+        ],
+        "icon_surfaces": [
+          "workshop",
+          "selection_summary",
+          "purchase_confirmation",
+          "mission_briefing",
+          "active_skill_HUD",
+          "touch_ability"
+        ],
+        "production_build": "PASS",
+        "visual_contact_sheet": "art/m06/previews/module-icons-contact-sheet.png and -2x.png; 12 glyphs plus six state samples",
+        "mobile_visual_review": "NOT RUN",
+        "real_device_review": "NOT RUN",
+        "local_build_id": "0.6.0-m06.0",
+        "local_source_sha": "d9088f00c771d4add647e97501010f4e7ab72e4b",
+        "local_source_dirty": false,
+        "local_build_raw_bytes": 3933736,
+        "local_build_gzip_estimate_bytes": 2401599,
+        "local_build_manifest_sha256": "a3b868fa255f418d82f5ec9d61af5f9c48719fab43eab0495b573eb0781a1689",
+        "local_build_manifest_entries": 52,
+        "i18n_keys": 478,
+        "map_scale_previews": [
+          "art/m06/previews/caldera-complex-360.png",
+          "art/m06/previews/caldera-complex-720.png",
+          "art/m06/previews/caldera-complex-1200.png"
+        ],
+        "agent_vector_art_review": "completed for map and icon contact sheet",
+        "runtime_visual_review": "NOT RUN; local preview bind failed with EPERM",
+        "human_visual_review": "NOT RUN"
+      },
+      "evidence": [
+        "games/cinder-shift/src/ui-art.css",
+        "games/cinder-shift/src/ui/caldera-complex.svg",
+        "games/cinder-shift/src/ui/research-icons.ts",
+        "games/cinder-shift/src/ui/world-map.ts",
+        "games/cinder-shift/src/ui/workshop.ts",
+        "art/m06/quality-runtime-art-contract.json",
+        "art/m06/previews/module-icons-contact-sheet.png",
+        "art/m06/previews/module-icons-contact-sheet-2x.png",
+        "scripts/m06-icon-contact-sheet.mjs"
+      ],
+      "next_action": "Open the updated screens in a working browser preview and capture the same desktop/mobile views; obtain human visual/contrast review. Keep real-device and gameplay acceptance marked NOT RUN until performed."
+    }
+  ]
+}

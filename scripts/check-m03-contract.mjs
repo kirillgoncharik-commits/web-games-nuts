@@ -2,6 +2,7 @@ import {readFile,readdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import sharp from 'sharp';
+import {checkM05B1} from './check-m05b1-contract.mjs';
 import {checkM05A} from './check-m05a-contract.mjs';
 import {checkM04} from './check-m04-contract.mjs';
 import {methodText} from './m03-contract-utils.mjs';
@@ -10,13 +11,14 @@ const read=p=>readFile(p,'utf8'),root='games/cinder-shift/';
 const baseline=JSON.parse(await read('art/m03/animation-contract.json'));
 let m04=null;try{m04=JSON.parse(await read('art/m04/mechanics-contract.json'));}catch(error){if(error.code!=='ENOENT')throw error;}
 let m05a=null;try{m05a=JSON.parse(await read('art/m05a/mechanics-contract.json'));}catch(error){if(error.code!=='ENOENT')throw error;}
-if(m05a)await checkM05A(m05a);else if(m04)await checkM04(m04);else{
+let m05b1=null;try{m05b1=JSON.parse(await read('art/m05b1/mechanics-contract.json'));}catch(error){if(error.code!=='ENOENT')throw error;}
+if(m05b1)await checkM05B1(m05b1);else if(m05a)await checkM05A(m05a);else if(m04)await checkM04(m04);else{
 for(const [file,sha] of Object.entries(baseline.core_hashes))assert.equal(digest(await read(root+file)),sha,'M02 core changed: '+file);
 const scene=await read(root+'src/room-scene.ts');
 for(const [method,sha] of Object.entries(baseline.room_method_hashes))assert.equal(digest(methodText(scene,method)),sha,'M02 simulation changed: '+method);
 }
 const config=JSON.parse(await read(root+'game.config.json'));
-for(const [key,value] of Object.entries(baseline.mechanics))assert.deepEqual(config[key],value,'M02 mechanics changed: '+key);
+for(const [key,value] of Object.entries(baseline.mechanics)){if(m05b1&&key==='combat'){for(const[name,old]of Object.entries(value))assert.deepEqual(config.combat[name],old,'Existing combat changed: '+name);}else assert.deepEqual(config[key],value,'Existing mechanics changed: '+key);}
 const dir=root+'public/assets/m03/',index=JSON.parse(await read(dir+'asset-index.json'));
 let bytes=0;
 for(const item of [...Object.values(index.backgrounds),...Object.values(index.atlases).flatMap(a=>[a.image,a.json])]){
@@ -33,7 +35,7 @@ for(const [name,atlas] of Object.entries(index.atlases)){
  }
  for(let i=0;i<data.length;i+=4){assert.ok(data[i+3]===0||data[i+3]===255,'Alpha halo '+name);if(!data[i+3])assert.equal(data[i]+data[i+1]+data[i+2],0,'Transparent RGB halo');}
 }
-const render=await read(root+'src/render.ts'),styles=await read(root+'src/style.css')+await read(root+'src/ui.css');
-assert.ok(!/tweens?\.|add\.sprite|\.anims\.|crossfade|motion.blur/i.test(render));assert.ok(!/\btransition\s*:|\banimation\s*:/i.test(styles));
-assert.ok(render.indexOf(m04?'if(this.debugEnabled())':'if((document.querySelector(\'#debug-bodies\')')<render.indexOf('strokeRect'));
-console.log(`Art/animation contract OK; baseline balance preserved; ${Object.keys(index.frames).length} frames; ${bytes} art bytes.`);
+const render=await read(root+'src/render.ts'),styles=await read(root+'src/style.css')+await read(root+'src/ui.css')+await read(root+'src/ui-art.css');
+assert.ok(!/tweens?\.|add\.sprite|\.anims\.|crossfade|motion.blur/i.test(render));for(const[,property,value]of styles.matchAll(/\b(transition|animation)\s*:\s*([^;}]+)/gi))assert.equal(value.trim().toLowerCase(),'none','CSS '+property+' must stay disabled');
+assert.ok(render.indexOf(m04?'if(this.debugEnabled())':'if((document.querySelector(\'#debug-bodies\')')<render.indexOf('this.debug.strokeRect'));
+console.log(`Art/animation contract OK; existing balance preserved; ${Object.keys(index.frames).length} frames; ${bytes} art bytes.`);

@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "default_target": "web",
+  "one_native_sdk_per_bundle": true,
+  "targets": {
+    "web": {"integration_status":"local_candidate","ads":[],"storage":"IndexedDB local","analytics":"host GA4 only after consent"},
+    "itch": {"integration_status":"profile_only","ads":[],"storage":"IndexedDB local","analytics":"disabled pending iframe consent review"},
+    "crazygames-basic": {"integration_status":"profile_only","ads":[],"storage":"local fallback; platform profile contract pending","analytics":"platform metrics; external off"},
+    "crazygames-full": {"integration_status":"blocked_sdk_access","ads":["mission_complete_next_after_tutorial","mission_failed_retry_after_tutorial"],"storage":"platform profile contract pending","analytics":"platform metrics; external off"},
+    "gamepix": {"integration_status":"blocked_sdk_access","ads":["mission_complete_next"],"storage":"compact SDK save pending","analytics":"no external SDK","distribution":"OFF"},
+    "y8": {"integration_status":"blocked_sdk_access","ads":["mission_complete_next_on_click","mission_failed_retry_on_click"],"storage":"persistent guest contract pending","analytics":"platform metrics; external off"},
+    "playgama": {"integration_status":"blocked_bridge_access","ads":["mission_complete_next","mission_failed_retry"],"storage":"Bridge only; pending","analytics":"Bridge only; pending","locale":"Bridge; pending","audio":"tool-produced or recorded OGG/MP3 still required"},
+    "yandex": {"integration_status":"blocked_partner_onboarding","ads":["mission_complete_next","mission_failed_retry"],"storage":"persistent guest; cloud only when verified","analytics":"platform metrics; external off"}
+  }
+}

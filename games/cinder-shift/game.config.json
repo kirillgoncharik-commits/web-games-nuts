@@ -4,7 +4,7 @@
   "working_title_ru": "Пепельная смена",
   "slug": "cinder-shift",
   "brand": "Nuts Games",
-  "status": "m05a1_ui_polish",
+  "status": "m06_1_art_refresh_candidate_in_progress",
   "gdd_version": "0.1",
   "preview_base_path": "/games/cinder-shift/",
   "implementation_started": true,
@@ -70,7 +70,7 @@
     "hurt_invulnerability_seconds": 0.7
   },
   "balance_status": "proposed_for_first_playtest",
-  "stage": "M05A.1 workshop and UI polish",
+  "stage": "M06.1 art refresh and visual fixes; gameplay, human review, physical-device and platform acceptance open",
   "combat": {
     "walker": {
       "hp": 3,
@@ -96,7 +96,18 @@
     },
     "contact_damage": 1,
     "terminal_hold_ms": 600,
-    "transition_ms": 180
+    "transition_ms": 180,
+    "turret": {
+      "hp": 4,
+      "speed": 0,
+      "range": 320,
+      "telegraph_ms": 900,
+      "burst_count": 3,
+      "burst_interval_ms": 180,
+      "projectile_speed": 150,
+      "recovery_ms": 1800,
+      "patrol_ms": 1400
+    }
   },
   "m04": {
     "event_probabilities": {
@@ -106,5 +117,46 @@
     "repair_hp": 2,
     "salvage_score": 150,
     "dash_distance": 80
+  },
+  "m05b1": {
+    "ai": {
+      "detection_radius": 220,
+      "release_radius": 280,
+      "attack_radius": 120,
+      "attack_release_radius": 150,
+      "acquire_ms": 200,
+      "memory_ms": 1200,
+      "chase_speed": 52,
+      "stuck_ms": 1500
+    }
+  },
+  "m05b2": {
+    "event_probabilities": {
+      "E04": 0.5,
+      "E05": 0.5
+    },
+    "heat_warning_ms": 3000,
+    "heat_active_ms": 3000,
+    "ram_speed": 180,
+    "ram_charge_ms": 420,
+    "ram_recovery_ms": 1100
+  },
+  "m05b3": {
+    "event_probabilities": {
+      "E06": 0.5
+    },
+    "boss_hp": 32,
+    "boss_phase_two_hp": 16,
+    "boss_cycle_ms": 6000,
+    "boss_core_window_ms": 1800,
+    "boss_telegraph_ms": 900,
+    "boss_attack_ms": 650,
+    "boss_recovery_ms": 1100,
+    "boss_move_telegraph_ms": 1000,
+    "boss_move_active_ms": 700,
+    "w4_damage": 4,
+    "w4_cooldown_ms": 5000,
+    "d4_restore_hp": 2,
+    "e06_score": 250
   }
 }
