@@ -1,6 +1,6 @@
 export type LayoutRect={x:number;y:number;width:number;height:number};
 export type TouchLayoutMode='dock'|'sides'|'none';
-export type MobileLayoutInput={width:number;height:number;safe:{top:number;right:number;bottom:number;left:number};touch:boolean;previous?:TouchLayoutMode};
+export type MobileLayoutInput={width:number;height:number;safe:{top:number;right:number;bottom:number;left:number};touch:boolean;preferred?:TouchLayoutMode;previous?:TouchLayoutMode};
 export type MobileViewportLayout={mode:TouchLayoutMode;scale:number;frame:LayoutRect;canvas:LayoutRect;controls:LayoutRect|null;controlRects:Record<string,LayoutRect>;available:{width:number;height:number};};
 
 const clamp=(value:number,min:number,max:number)=>Math.max(min,Math.min(max,value));
@@ -20,8 +20,8 @@ export function mobileViewportLayout(input:MobileLayoutInput):MobileViewportLayo
  }
  const feasible=candidates.filter(candidate=>candidate.scale>0&&candidate.scale*360>=150&&(!input.touch||candidate.mode==='dock'||input.width>=sideWidth+320));
  const options=feasible.length?feasible:candidates;
- let selected=options.reduce((best,candidate)=>candidate.scale>best.scale?candidate:best,options[0]);
- const previous=input.previous&&options.find(candidate=>candidate.mode===input.previous);
+ let selected=(input.preferred&&options.find(candidate=>candidate.mode===input.preferred))||options.reduce((best,candidate)=>candidate.scale>best.scale?candidate:best,options[0]);
+ const previous=!input.preferred&&input.previous&&options.find(candidate=>candidate.mode===input.previous);
  if(previous&&previous.scale>=selected.scale*.95)selected=previous;
  const canvasWidth=Math.floor(640*selected.scale),canvasHeight=Math.floor(360*selected.scale),frameX=input.safe.left+(width-canvasWidth)/2;
  const frameY=input.safe.top+(height-(selected.mode==='dock'?canvasHeight+dockHeight:canvasHeight))/2;

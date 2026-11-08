@@ -1,6 +1,6 @@
 # Cinder Shift 64 art refresh v1
 
-This package contains the 21 selected image families for build \`0.6.1-art.1\`.
+This package contains the 21 selected image families for build \`0.6.1-art.2\`.
 The 96 runtime frames are in \`games/cinder-shift/public/assets/art-refresh-v1/\`.
 
 ## Rebuild

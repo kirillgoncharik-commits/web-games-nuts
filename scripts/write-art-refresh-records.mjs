@@ -70,7 +70,7 @@ const vEvidence={
  V10:'ART-14 terminals and ART-18–21 sector landmarks bind to mission room ids.',
 };
 const fixes=Object.keys(vEvidence).map(id=>({id,generated:false,processed:false,exported:false,integrated:true,automated_verified:id==='V01',visually_verified:false,published:false,not_applicable:['generated','processed','exported'],evidence:vEvidence[id],pending:id==='V01'?['Browser click/focus and responsive map screenshot']:['Automated viewport/state verification','Visual review at production/mobile scale']}));
-await writeFile(base+'coverage.json',JSON.stringify({version:'art-refresh-v1',build_id:'0.6.1-art.1',baseline_source_sha:'317f423a57b844fe18ac29fd07a8fb89bd7f5f22',generated_at:'2026-11-08',status:'pre-deployment; visual and publication flags are deliberately open',families:familyCoverage,visual_fixes:fixes},null,2)+'\n');
+await writeFile(base+'coverage.json',JSON.stringify({version:'art-refresh-v1',build_id:'0.6.1-art.2',baseline_source_sha:'317f423a57b844fe18ac29fd07a8fb89bd7f5f22',generated_at:'2026-11-08',status:'pre-deployment; visual and publication flags are deliberately open',families:familyCoverage,visual_fixes:fixes},null,2)+'\n');
 const refs={};for(const path of prompts.reference_sources){refs[path]=hash(await readFile(path));}
 const extras=[];
 const alternate='art/art-refresh-v1/source/generated/turret-states-master.png';
