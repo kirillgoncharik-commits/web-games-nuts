@@ -1,96 +1,7 @@
 {
-  "version": "m06-quality-art-1.2",
-  "scope": "Airlock and Cargo quality gate plus visual UI and sector map introduced by scope revision 1.2",
+  "version": "m06-quality-art-1.3",
+  "scope": "M06.1 art refresh: 21 generated families, V01–V10 visual fixes, source/runtime contracts, ongoing visual and production acceptance",
   "assets": [
-    {
-      "asset_id": "cargo_turret_states",
-      "source": "games/cinder-shift/src/render.ts · SceneArt.turret",
-      "runtime": "Procedural Phaser Graphics; no atlas frame",
-      "anchor": "games/cinder-shift/src/enemies.ts · enemyMuzzle",
-      "states": [
-        "off",
-        "armored",
-        "warning",
-        "burst",
-        "exposed",
-        "destroyed"
-      ],
-      "rooms": [
-        "E",
-        "F",
-        "G"
-      ],
-      "connected": true,
-      "evidence": "render.ts reads turretPresentation for state and damageability"
-    },
-    {
-      "asset_id": "cargo_security_walker",
-      "source": "Existing walker atlas frame plus SceneArt procedural armor overlay",
-      "runtime": "m03-enemies · walker; Phaser Graphics armor plates",
-      "anchor": "Existing walker frame pivot; projectile source is enemyMuzzle",
-      "states": [
-        "patrol",
-        "warning",
-        "chase",
-        "attack",
-        "return",
-        "destroyed"
-      ],
-      "rooms": [
-        "G"
-      ],
-      "connected": true,
-      "evidence": "preset walker_security and G room definition"
-    },
-    {
-      "asset_id": "cargo_energy_cell",
-      "source": "SceneArt procedural object and DOM HUD state",
-      "runtime": "Phaser Graphics in F; hud.cellCarried / hud.cellInstalled",
-      "anchor": "RoomDefinition.cell",
-      "states": [
-        "uncollected",
-        "carried",
-        "installed"
-      ],
-      "rooms": [
-        "F",
-        "G"
-      ],
-      "connected": true,
-      "evidence": "room-scene objective and Application.hud"
-    },
-    {
-      "asset_id": "service_repairs_R01_R02",
-      "source": "Existing repair-cache atlas frame for R01; procedural repair station for R02",
-      "runtime": "R01 sprite, R02 shield field and repair mark in Phaser Graphics",
-      "anchor": "repairPosition for R01; RoomDefinition.repair for R02",
-      "states": [
-        "ready",
-        "used",
-        "protected"
-      ],
-      "rooms": [
-        "B",
-        "F"
-      ],
-      "connected": true,
-      "evidence": "RoomState.containerUsed / repairUsed and shielded safeZones"
-    },
-    {
-      "asset_id": "cargo_short_passage_gate",
-      "source": "Event geometry f-power-gate and standard solid rendering",
-      "runtime": "Procedural Phaser Graphics solid",
-      "anchor": "Rect in session/events.ts",
-      "states": [
-        "closed",
-        "open"
-      ],
-      "rooms": [
-        "F"
-      ],
-      "connected": true,
-      "evidence": "E01 v2 definition; removed on restore_power"
-    },
     {
       "asset_id": "critical_suit_status",
       "source": "games/cinder-shift/index.html and src/ui.css",
@@ -193,16 +104,970 @@
         "D4": "reserve_section"
       },
       "evidence": "All twelve node IDs resolve to unique path groups; active M1/W4 glyph is shared with the HUD and touch ability control"
+    },
+    {
+      "asset_id": "art_refresh_v1_turret",
+      "source": "art/art-refresh-v1/source/generated/art01_turret-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix turret",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "off",
+        "armored",
+        "warning",
+        "burst",
+        "exposed",
+        "destroyed"
+      ],
+      "rooms": [
+        "E",
+        "F",
+        "G",
+        "M4C",
+        "M5A"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "off",
+          "frame": "turret_off",
+          "integrated": true
+        },
+        {
+          "state": "armored",
+          "frame": "turret_armored",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "turret_warning",
+          "integrated": true
+        },
+        {
+          "state": "burst",
+          "frame": "turret_burst",
+          "integrated": true
+        },
+        {
+          "state": "exposed",
+          "frame": "turret_exposed",
+          "integrated": true
+        },
+        {
+          "state": "destroyed",
+          "frame": "turret_destroyed",
+          "integrated": true
+        }
+      ],
+      "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+    },
+    {
+      "asset_id": "art_refresh_v1_security-walker",
+      "source": "art/art-refresh-v1/source/generated/art02_security_walker-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix security-walker",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "patrol",
+        "notice",
+        "warning",
+        "fire",
+        "recovery",
+        "destroyed"
+      ],
+      "rooms": [
+        "D",
+        "G",
+        "M4C",
+        "M5A"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "patrol",
+          "frame": "security-walker_patrol",
+          "integrated": true
+        },
+        {
+          "state": "notice",
+          "frame": "security-walker_notice",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "security-walker_warning",
+          "integrated": true
+        },
+        {
+          "state": "fire",
+          "frame": "security-walker_fire",
+          "integrated": true
+        },
+        {
+          "state": "recovery",
+          "frame": "security-walker_recovery",
+          "integrated": true
+        },
+        {
+          "state": "destroyed",
+          "frame": "security-walker_destroyed",
+          "integrated": true
+        }
+      ],
+      "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+    },
+    {
+      "asset_id": "art_refresh_v1_ram-charger",
+      "source": "art/art-refresh-v1/source/generated/art03_ram_charger-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix ram-charger",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "idle",
+        "windup",
+        "charge",
+        "recovery",
+        "destroyed"
+      ],
+      "rooms": [
+        "M3A",
+        "M3C",
+        "M3D",
+        "M4D",
+        "E06"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "idle",
+          "frame": "ram-charger_idle",
+          "integrated": true
+        },
+        {
+          "state": "windup",
+          "frame": "ram-charger_windup",
+          "integrated": true
+        },
+        {
+          "state": "charge",
+          "frame": "ram-charger_charge",
+          "integrated": true
+        },
+        {
+          "state": "recovery",
+          "frame": "ram-charger_recovery",
+          "integrated": true
+        },
+        {
+          "state": "destroyed",
+          "frame": "ram-charger_destroyed",
+          "integrated": true
+        }
+      ],
+      "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+    },
+    {
+      "asset_id": "art_refresh_v1_energy-cell",
+      "source": "art/art-refresh-v1/source/generated/art04_energy_cell-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix energy-cell",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "uncollected",
+        "carried",
+        "installed",
+        "socket"
+      ],
+      "rooms": [
+        "F",
+        "G"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "uncollected",
+          "frame": "energy-cell_uncollected",
+          "integrated": true
+        },
+        {
+          "state": "carried",
+          "frame": "energy-cell_carried",
+          "integrated": true
+        },
+        {
+          "state": "installed",
+          "frame": "energy-cell_installed",
+          "integrated": true
+        },
+        {
+          "state": "socket",
+          "frame": "energy-cell_socket",
+          "integrated": true
+        }
+      ],
+      "evidence": "RoomDefinition.cell maps uncollected, carried, empty socket after pickup, and installed switchboard states."
+    },
+    {
+      "asset_id": "art_refresh_v1_repair-station",
+      "source": "art/art-refresh-v1/source/generated/art05_repairs-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix repair-station",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "ready",
+        "used",
+        "protected"
+      ],
+      "rooms": [
+        "B",
+        "F",
+        "M3D",
+        "M4C",
+        "M5C"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "ready",
+          "frame": "repair-station_ready",
+          "integrated": true
+        },
+        {
+          "state": "used",
+          "frame": "repair-station_used",
+          "integrated": true
+        },
+        {
+          "state": "protected",
+          "frame": "repair-station_protected",
+          "integrated": true
+        }
+      ],
+      "evidence": "RoomDefinition.repair.slot and safeZones drive ready/used/protected; B service station uses R01 data."
+    },
+    {
+      "asset_id": "art_refresh_v1_service-cache",
+      "source": "art/art-refresh-v1/source/generated/art06_caches-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix service-cache",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "salvage-available",
+        "salvage-interact",
+        "salvage-used",
+        "archive-available",
+        "archive-interact",
+        "archive-used",
+        "beacon-available",
+        "beacon-interact",
+        "beacon-used"
+      ],
+      "rooms": [
+        "M3C",
+        "M4B",
+        "M5B"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "salvage-available",
+          "frame": "service-cache_salvage-available",
+          "integrated": true
+        },
+        {
+          "state": "salvage-interact",
+          "frame": "service-cache_salvage-interact",
+          "integrated": true
+        },
+        {
+          "state": "salvage-used",
+          "frame": "service-cache_salvage-used",
+          "integrated": true
+        },
+        {
+          "state": "archive-available",
+          "frame": "service-cache_archive-available",
+          "integrated": true
+        },
+        {
+          "state": "archive-interact",
+          "frame": "service-cache_archive-interact",
+          "integrated": true
+        },
+        {
+          "state": "archive-used",
+          "frame": "service-cache_archive-used",
+          "integrated": true
+        },
+        {
+          "state": "beacon-available",
+          "frame": "service-cache_beacon-available",
+          "integrated": true
+        },
+        {
+          "state": "beacon-interact",
+          "frame": "service-cache_beacon-interact",
+          "integrated": true
+        },
+        {
+          "state": "beacon-used",
+          "frame": "service-cache_beacon-used",
+          "integrated": true
+        }
+      ],
+      "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+    },
+    {
+      "asset_id": "art_refresh_v1_press",
+      "source": "art/art-refresh-v1/source/generated/art07_press-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix press",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "safe",
+        "warning",
+        "strike",
+        "recovery"
+      ],
+      "rooms": [
+        "M3C"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "safe",
+          "frame": "press_safe",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "press_warning",
+          "integrated": true
+        },
+        {
+          "state": "strike",
+          "frame": "press_strike",
+          "integrated": true
+        },
+        {
+          "state": "recovery",
+          "frame": "press_recovery",
+          "integrated": true
+        }
+      ],
+      "evidence": "HazardDefinition.kind=press plus its existing cycle drives safe/warning/strike/recovery."
+    },
+    {
+      "asset_id": "art_refresh_v1_heat-emitter",
+      "source": "art/art-refresh-v1/source/generated/art08_heat_emitter-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix heat-emitter",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "cool",
+        "warning",
+        "active",
+        "recovery"
+      ],
+      "rooms": [
+        "M3C",
+        "M5B",
+        "E04"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "cool",
+          "frame": "heat-emitter_cool",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "heat-emitter_warning",
+          "integrated": true
+        },
+        {
+          "state": "active",
+          "frame": "heat-emitter_active",
+          "integrated": true
+        },
+        {
+          "state": "recovery",
+          "frame": "heat-emitter_recovery",
+          "integrated": true
+        }
+      ],
+      "evidence": "HazardDefinition.kind=heat plus its existing cycle drives cool/warning/active/recovery."
+    },
+    {
+      "asset_id": "art_refresh_v1_thin-sheet",
+      "source": "art/art-refresh-v1/source/generated/art09_thin_sheet-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix thin-sheet",
+      "anchor": "shared 48,48 pixel pivot on 96x96 frame",
+      "states": [
+        "intact",
+        "broken"
+      ],
+      "rooms": [
+        "E"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "intact",
+          "frame": "thin-sheet_intact",
+          "integrated": true
+        },
+        {
+          "state": "broken",
+          "frame": "thin-sheet_broken",
+          "integrated": true
+        }
+      ],
+      "evidence": "solid material=thin selects intact; RoomState.brokenPanels selects broken after the existing piercing event."
+    },
+    {
+      "asset_id": "art_refresh_v1_magnetic-wall",
+      "source": "art/art-refresh-v1/source/generated/art10_magnetic_wall-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix magnetic-wall",
+      "anchor": "shared 48,48 pixel pivot on 96x96 frame",
+      "states": [
+        "idle",
+        "pass-ripple"
+      ],
+      "rooms": [
+        "M3B",
+        "M3D",
+        "M4C"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "idle",
+          "frame": "magnetic-wall_idle",
+          "integrated": true
+        },
+        {
+          "state": "pass-ripple",
+          "frame": "magnetic-wall_pass-ripple",
+          "integrated": true
+        }
+      ],
+      "evidence": "solid material=wall selects idle or pass-ripple only while the existing wallMove dash crosses it."
+    },
+    {
+      "asset_id": "art_refresh_v1_phase-curtain",
+      "source": "art/art-refresh-v1/source/generated/art11_phase_curtain-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix phase-curtain",
+      "anchor": "shared 48,48 pixel pivot on 96x96 frame",
+      "states": [
+        "active",
+        "passable",
+        "restore"
+      ],
+      "rooms": [
+        "M4A",
+        "M4B",
+        "M5A",
+        "M5B"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "active",
+          "frame": "phase-curtain_active",
+          "integrated": true
+        },
+        {
+          "state": "passable",
+          "frame": "phase-curtain_passable",
+          "integrated": true
+        },
+        {
+          "state": "restore",
+          "frame": "phase-curtain_restore",
+          "integrated": true
+        }
+      ],
+      "evidence": "solid material=phase selects active/passable/restore from the existing phaseDash window."
+    },
+    {
+      "asset_id": "art_refresh_v1_ricochet-panel",
+      "source": "art/art-refresh-v1/source/generated/art12_ricochet_panel-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix ricochet-panel",
+      "anchor": "shared 48,48 pixel pivot on 96x96 frame",
+      "states": [
+        "normal",
+        "impact"
+      ],
+      "rooms": [
+        "M3A",
+        "M4A",
+        "M5A"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "normal",
+          "frame": "ricochet-panel_normal",
+          "integrated": true
+        },
+        {
+          "state": "impact",
+          "frame": "ricochet-panel_impact",
+          "integrated": true
+        }
+      ],
+      "evidence": "solid material=ricochet selects normal or impact when an existing player shot overlaps it."
+    },
+    {
+      "asset_id": "art_refresh_v1_power-shutter",
+      "source": "art/art-refresh-v1/source/generated/art13_power_shutter-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix power-shutter",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "closed",
+        "opening",
+        "open",
+        "warning"
+      ],
+      "rooms": [
+        "B",
+        "F"
+      ],
+      "connected": true,
+      "state_bindings_complete": false,
+      "runtime_frames": [
+        {
+          "state": "closed",
+          "frame": "power-shutter_closed",
+          "integrated": true
+        },
+        {
+          "state": "opening",
+          "frame": "power-shutter_opening",
+          "integrated": false
+        },
+        {
+          "state": "open",
+          "frame": "power-shutter_open",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "power-shutter_warning",
+          "integrated": false
+        }
+      ],
+      "evidence": "event geometry selects closed/open. Opening and warning art are exported but intentionally unused because the model exposes no corresponding transition state."
+    },
+    {
+      "asset_id": "art_refresh_v1_terminal",
+      "source": "art/art-refresh-v1/source/generated/art14_terminals-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix terminal",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "power-off",
+        "cell-off",
+        "data-off",
+        "exit-off",
+        "power-ready",
+        "cell-ready",
+        "data-ready",
+        "exit-ready",
+        "power-hold",
+        "cell-hold",
+        "data-hold",
+        "exit-hold",
+        "power-done",
+        "cell-done",
+        "data-done",
+        "exit-done"
+      ],
+      "rooms": [
+        "all rooms with terminals"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "power-off",
+          "frame": "terminal_power-off",
+          "integrated": true
+        },
+        {
+          "state": "cell-off",
+          "frame": "terminal_cell-off",
+          "integrated": true
+        },
+        {
+          "state": "data-off",
+          "frame": "terminal_data-off",
+          "integrated": true
+        },
+        {
+          "state": "exit-off",
+          "frame": "terminal_exit-off",
+          "integrated": true
+        },
+        {
+          "state": "power-ready",
+          "frame": "terminal_power-ready",
+          "integrated": true
+        },
+        {
+          "state": "cell-ready",
+          "frame": "terminal_cell-ready",
+          "integrated": true
+        },
+        {
+          "state": "data-ready",
+          "frame": "terminal_data-ready",
+          "integrated": true
+        },
+        {
+          "state": "exit-ready",
+          "frame": "terminal_exit-ready",
+          "integrated": true
+        },
+        {
+          "state": "power-hold",
+          "frame": "terminal_power-hold",
+          "integrated": true
+        },
+        {
+          "state": "cell-hold",
+          "frame": "terminal_cell-hold",
+          "integrated": true
+        },
+        {
+          "state": "data-hold",
+          "frame": "terminal_data-hold",
+          "integrated": true
+        },
+        {
+          "state": "exit-hold",
+          "frame": "terminal_exit-hold",
+          "integrated": true
+        },
+        {
+          "state": "power-done",
+          "frame": "terminal_power-done",
+          "integrated": true
+        },
+        {
+          "state": "cell-done",
+          "frame": "terminal_cell-done",
+          "integrated": true
+        },
+        {
+          "state": "data-done",
+          "frame": "terminal_data-done",
+          "integrated": true
+        },
+        {
+          "state": "exit-done",
+          "frame": "terminal_exit-done",
+          "integrated": true
+        }
+      ],
+      "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+    },
+    {
+      "asset_id": "art_refresh_v1_buffer-discharge",
+      "source": "art/art-refresh-v1/source/generated/art15_buffer_discharge-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix buffer-discharge",
+      "anchor": "shared 48,48 pixel pivot on 96x96 frame",
+      "states": [
+        "ready",
+        "absorbed",
+        "discharge",
+        "spent"
+      ],
+      "rooms": [
+        "D2/D3 buffer-capable combat rooms"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "ready",
+          "frame": "buffer-discharge_ready",
+          "integrated": true
+        },
+        {
+          "state": "absorbed",
+          "frame": "buffer-discharge_absorbed",
+          "integrated": true
+        },
+        {
+          "state": "discharge",
+          "frame": "buffer-discharge_discharge",
+          "integrated": true
+        },
+        {
+          "state": "spent",
+          "frame": "buffer-discharge_spent",
+          "integrated": true
+        }
+      ],
+      "evidence": "D2 availability and RoomState.bufferUsed map ready/absorbed/discharge/spent; discharge is bounded to the existing event edge."
+    },
+    {
+      "asset_id": "art_refresh_v1_regulator",
+      "source": "art/art-refresh-v1/source/generated/art16_regulator_boss-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix regulator",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "armored",
+        "warning",
+        "attack",
+        "exposed",
+        "phase-two",
+        "hit",
+        "shutdown",
+        "destroyed"
+      ],
+      "rooms": [
+        "M5D"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "armored",
+          "frame": "regulator_armored",
+          "integrated": true
+        },
+        {
+          "state": "warning",
+          "frame": "regulator_warning",
+          "integrated": true
+        },
+        {
+          "state": "attack",
+          "frame": "regulator_attack",
+          "integrated": true
+        },
+        {
+          "state": "exposed",
+          "frame": "regulator_exposed",
+          "integrated": true
+        },
+        {
+          "state": "phase-two",
+          "frame": "regulator_phase-two",
+          "integrated": true
+        },
+        {
+          "state": "hit",
+          "frame": "regulator_hit",
+          "integrated": true
+        },
+        {
+          "state": "shutdown",
+          "frame": "regulator_shutdown",
+          "integrated": true
+        },
+        {
+          "state": "destroyed",
+          "frame": "regulator_destroyed",
+          "integrated": true
+        }
+      ],
+      "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+    },
+    {
+      "asset_id": "art_refresh_v1_window-view",
+      "source": "art/art-refresh-v1/source/generated/art17_window_views-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix window-view",
+      "anchor": "shared 48,0 pixel pivot on 96x96 frame",
+      "states": [
+        "reactor-view",
+        "evacuation-view"
+      ],
+      "rooms": [
+        "M5C",
+        "M5E"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "reactor-view",
+          "frame": "window-view_reactor-view",
+          "integrated": true
+        },
+        {
+          "state": "evacuation-view",
+          "frame": "window-view_evacuation-view",
+          "integrated": true
+        }
+      ],
+      "evidence": "RoomDefinition.window selects reactor vista at M5C and evacuation vista at M5E."
+    },
+    {
+      "asset_id": "art_refresh_v1_cargo-landmark",
+      "source": "art/art-refresh-v1/source/generated/art18_cargo_landmarks-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix cargo-landmark",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "container",
+        "rail-crane",
+        "power-junction"
+      ],
+      "rooms": [
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "container",
+          "frame": "cargo-landmark_container",
+          "integrated": true
+        },
+        {
+          "state": "rail-crane",
+          "frame": "cargo-landmark_rail-crane",
+          "integrated": true
+        },
+        {
+          "state": "power-junction",
+          "frame": "cargo-landmark_power-junction",
+          "integrated": true
+        }
+      ],
+      "evidence": "Room ID D/E/F/G selects the cargo container, rail-crane and power-junction landmarks."
+    },
+    {
+      "asset_id": "art_refresh_v1_foundry-landmark",
+      "source": "art/art-refresh-v1/source/generated/art19_foundry_landmarks-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix foundry-landmark",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "furnace",
+        "process-pipes",
+        "press-line"
+      ],
+      "rooms": [
+        "M3A",
+        "M3B",
+        "M3C",
+        "M3D"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "furnace",
+          "frame": "foundry-landmark_furnace",
+          "integrated": true
+        },
+        {
+          "state": "process-pipes",
+          "frame": "foundry-landmark_process-pipes",
+          "integrated": true
+        },
+        {
+          "state": "press-line",
+          "frame": "foundry-landmark_press-line",
+          "integrated": true
+        }
+      ],
+      "evidence": "Room ID M3A–M3D selects foundry furnace, process-pipes and press-line landmarks."
+    },
+    {
+      "asset_id": "art_refresh_v1_archive-landmark",
+      "source": "art/art-refresh-v1/source/generated/art20_archive_landmarks-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix archive-landmark",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "data-racks",
+        "archive-cabinet",
+        "transfer-bus"
+      ],
+      "rooms": [
+        "M4A",
+        "M4B",
+        "M4C",
+        "M4D"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "data-racks",
+          "frame": "archive-landmark_data-racks",
+          "integrated": true
+        },
+        {
+          "state": "archive-cabinet",
+          "frame": "archive-landmark_archive-cabinet",
+          "integrated": true
+        },
+        {
+          "state": "transfer-bus",
+          "frame": "archive-landmark_transfer-bus",
+          "integrated": true
+        }
+      ],
+      "evidence": "Room ID M4A–M4D selects archive data-racks, archive-cabinet and transfer-bus landmarks."
+    },
+    {
+      "asset_id": "art_refresh_v1_reactor-landmark",
+      "source": "art/art-refresh-v1/source/generated/art21_reactor_landmarks-master.png",
+      "runtime": "games/cinder-shift/public/assets/art-refresh-v1/art-refresh-v1.png · frame prefix reactor-landmark",
+      "anchor": "shared 48,96 pixel pivot on 96x96 frame",
+      "states": [
+        "power-bus",
+        "cooling-manifold",
+        "beacon-mast"
+      ],
+      "rooms": [
+        "M5A",
+        "M5B",
+        "M5C",
+        "M5D",
+        "M5E"
+      ],
+      "connected": true,
+      "state_bindings_complete": true,
+      "runtime_frames": [
+        {
+          "state": "power-bus",
+          "frame": "reactor-landmark_power-bus",
+          "integrated": true
+        },
+        {
+          "state": "cooling-manifold",
+          "frame": "reactor-landmark_cooling-manifold",
+          "integrated": true
+        },
+        {
+          "state": "beacon-mast",
+          "frame": "reactor-landmark_beacon-mast",
+          "integrated": true
+        }
+      ],
+      "evidence": "Room ID M5A–M5E selects reactor power-bus, cooling-manifold and beacon-mast landmarks."
     }
   ],
   "not_yet_verified": [
-    "Human visual review of the generated contact sheet at 1x and 2x",
-    "Human review of previews at target mobile viewport scales",
-    "Accessibility contrast review at normal and large text sizes",
-    "Dedicated raster source files for the new turret, walker armor and cell",
-    "Same desktop/mobile viewport screenshots for all window states and map composition",
-    "Human sign-off on generated module icon contact sheet and map scale previews",
-    "Runtime screenshots of all revised screens on desktop and mobile",
-    "Human visual contrast, focus, reduced-motion and state-shape review"
-  ]
+    "Full in-game screenshot matrix for 20 campaign rooms and training",
+    "State-transition screenshots at 1x, 2x and target mobile scale",
+    "Requested viewport matrix for map, workshop, touch controls and combat",
+    "Human monochrome, contrast, focus and reduced-flash review",
+    "Physical-device review",
+    "Production CSP, old-save, cache, loading, pause/resume and deployment verification"
+  ],
+  "coverage_file": "art/art-refresh-v1/coverage.json",
+  "provenance_file": "art/art-refresh-v1/provenance.json"
 }

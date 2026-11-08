@@ -1,0 +1,1311 @@
+{
+  "version": "art-refresh-v1",
+  "build_id": "0.6.1-art.1",
+  "baseline_source_sha": "317f423a57b844fe18ac29fd07a8fb89bd7f5f22",
+  "generated_at": "2026-11-08",
+  "status": "pre-deployment; visual and publication flags are deliberately open",
+  "families": [
+    {
+      "family": "ART-01",
+      "id": "turret",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art01_turret-master.png",
+      "source_sha256": "cedad0b04a2139f0e6850e007f66004087f0bb31d5cb6de49dea51c064ebdd45",
+      "frames": [
+        {
+          "state": "off",
+          "frame": "turret_off",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        },
+        {
+          "state": "armored",
+          "frame": "turret_armored",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        },
+        {
+          "state": "warning",
+          "frame": "turret_warning",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        },
+        {
+          "state": "burst",
+          "frame": "turret_burst",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        },
+        {
+          "state": "exposed",
+          "frame": "turret_exposed",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        },
+        {
+          "state": "destroyed",
+          "frame": "turret_destroyed",
+          "integrated": true,
+          "evidence": "SceneArt.turret reads turretPresentation; the warning line uses enemyMuzzle. Destroyed/wreck states use the matching frame."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-02",
+      "id": "security-walker",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art02_security_walker-master.png",
+      "source_sha256": "3f434ec5096e004a7474f42f320013b775a4f405df4fcc4f1723346138c33635",
+      "frames": [
+        {
+          "state": "patrol",
+          "frame": "security-walker_patrol",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        },
+        {
+          "state": "notice",
+          "frame": "security-walker_notice",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        },
+        {
+          "state": "warning",
+          "frame": "security-walker_warning",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        },
+        {
+          "state": "fire",
+          "frame": "security-walker_fire",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        },
+        {
+          "state": "recovery",
+          "frame": "security-walker_recovery",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        },
+        {
+          "state": "destroyed",
+          "frame": "security-walker_destroyed",
+          "integrated": true,
+          "evidence": "walker_security preset maps patrol/notice/telegraph/fire/recovery/death to family frames; return shares patrol."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-03",
+      "id": "ram-charger",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art03_ram_charger-master.png",
+      "source_sha256": "e9eaa9f592041aa39fd7f89651a615ce0b2521f826932e1862ea5b2a52d3506c",
+      "frames": [
+        {
+          "state": "idle",
+          "frame": "ram-charger_idle",
+          "integrated": true,
+          "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+        },
+        {
+          "state": "windup",
+          "frame": "ram-charger_windup",
+          "integrated": true,
+          "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+        },
+        {
+          "state": "charge",
+          "frame": "ram-charger_charge",
+          "integrated": true,
+          "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+        },
+        {
+          "state": "recovery",
+          "frame": "ram-charger_recovery",
+          "integrated": true,
+          "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+        },
+        {
+          "state": "destroyed",
+          "frame": "ram-charger_destroyed",
+          "integrated": true,
+          "evidence": "ram_charge preset maps idle/windup/charge/recovery/death to family frames."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-04",
+      "id": "energy-cell",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art04_energy_cell-master.png",
+      "source_sha256": "19f1249f7f291822786d85f2d2f84acebe4f8be4d67f254a2825338e77e645f0",
+      "frames": [
+        {
+          "state": "uncollected",
+          "frame": "energy-cell_uncollected",
+          "integrated": true,
+          "evidence": "RoomDefinition.cell maps uncollected, carried, empty socket after pickup, and installed switchboard states."
+        },
+        {
+          "state": "carried",
+          "frame": "energy-cell_carried",
+          "integrated": true,
+          "evidence": "RoomDefinition.cell maps uncollected, carried, empty socket after pickup, and installed switchboard states."
+        },
+        {
+          "state": "installed",
+          "frame": "energy-cell_installed",
+          "integrated": true,
+          "evidence": "RoomDefinition.cell maps uncollected, carried, empty socket after pickup, and installed switchboard states."
+        },
+        {
+          "state": "socket",
+          "frame": "energy-cell_socket",
+          "integrated": true,
+          "evidence": "RoomDefinition.cell maps uncollected, carried, empty socket after pickup, and installed switchboard states."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-05",
+      "id": "repair-station",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art05_repairs-master.png",
+      "source_sha256": "61a49d29ac9cad2f14913cc96d4907e6d725058e7f39a3aeffc322ed8f55315a",
+      "frames": [
+        {
+          "state": "ready",
+          "frame": "repair-station_ready",
+          "integrated": true,
+          "evidence": "RoomDefinition.repair.slot and safeZones drive ready/used/protected; B service station uses R01 data."
+        },
+        {
+          "state": "used",
+          "frame": "repair-station_used",
+          "integrated": true,
+          "evidence": "RoomDefinition.repair.slot and safeZones drive ready/used/protected; B service station uses R01 data."
+        },
+        {
+          "state": "protected",
+          "frame": "repair-station_protected",
+          "integrated": true,
+          "evidence": "RoomDefinition.repair.slot and safeZones drive ready/used/protected; B service station uses R01 data."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-06",
+      "id": "service-cache",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art06_caches-master.png",
+      "source_sha256": "d1b80ae269494a719181c7d548f2c666984da3828ef55fa94612a265fc5874b7",
+      "frames": [
+        {
+          "state": "salvage-available",
+          "frame": "service-cache_salvage-available",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "salvage-interact",
+          "frame": "service-cache_salvage-interact",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "salvage-used",
+          "frame": "service-cache_salvage-used",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "archive-available",
+          "frame": "service-cache_archive-available",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "archive-interact",
+          "frame": "service-cache_archive-interact",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "archive-used",
+          "frame": "service-cache_archive-used",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "beacon-available",
+          "frame": "service-cache_beacon-available",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "beacon-interact",
+          "frame": "service-cache_beacon-interact",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        },
+        {
+          "state": "beacon-used",
+          "frame": "service-cache_beacon-used",
+          "integrated": true,
+          "evidence": "cache ids S04, S05 and salvage map to purpose-specific available/interact/used frames."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-07",
+      "id": "press",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art07_press-master.png",
+      "source_sha256": "63aca0e1113a4843808e435250a670ea4b9437e7796d054d5c02dfeef5746d5b",
+      "frames": [
+        {
+          "state": "safe",
+          "frame": "press_safe",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=press plus its existing cycle drives safe/warning/strike/recovery."
+        },
+        {
+          "state": "warning",
+          "frame": "press_warning",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=press plus its existing cycle drives safe/warning/strike/recovery."
+        },
+        {
+          "state": "strike",
+          "frame": "press_strike",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=press plus its existing cycle drives safe/warning/strike/recovery."
+        },
+        {
+          "state": "recovery",
+          "frame": "press_recovery",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=press plus its existing cycle drives safe/warning/strike/recovery."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-08",
+      "id": "heat-emitter",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art08_heat_emitter-master.png",
+      "source_sha256": "75584eb79df28a3e0b5b6ac0c4d192b6eb8f11fef89ebbcb8f1a0fa96004a876",
+      "frames": [
+        {
+          "state": "cool",
+          "frame": "heat-emitter_cool",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=heat plus its existing cycle drives cool/warning/active/recovery."
+        },
+        {
+          "state": "warning",
+          "frame": "heat-emitter_warning",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=heat plus its existing cycle drives cool/warning/active/recovery."
+        },
+        {
+          "state": "active",
+          "frame": "heat-emitter_active",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=heat plus its existing cycle drives cool/warning/active/recovery."
+        },
+        {
+          "state": "recovery",
+          "frame": "heat-emitter_recovery",
+          "integrated": true,
+          "evidence": "HazardDefinition.kind=heat plus its existing cycle drives cool/warning/active/recovery."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-09",
+      "id": "thin-sheet",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art09_thin_sheet-master.png",
+      "source_sha256": "bc35185b7108b695bcc55242336cd9b8fd1c7f37342192f12856e90310d9a74e",
+      "frames": [
+        {
+          "state": "intact",
+          "frame": "thin-sheet_intact",
+          "integrated": true,
+          "evidence": "solid material=thin selects intact; RoomState.brokenPanels selects broken after the existing piercing event."
+        },
+        {
+          "state": "broken",
+          "frame": "thin-sheet_broken",
+          "integrated": true,
+          "evidence": "solid material=thin selects intact; RoomState.brokenPanels selects broken after the existing piercing event."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-10",
+      "id": "magnetic-wall",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art10_magnetic_wall-master.png",
+      "source_sha256": "30f17d3be0038ab775116c097daed7542d2728fa37e86cdd8dc0c9b6f8b4e38e",
+      "frames": [
+        {
+          "state": "idle",
+          "frame": "magnetic-wall_idle",
+          "integrated": true,
+          "evidence": "solid material=wall selects idle or pass-ripple only while the existing wallMove dash crosses it."
+        },
+        {
+          "state": "pass-ripple",
+          "frame": "magnetic-wall_pass-ripple",
+          "integrated": true,
+          "evidence": "solid material=wall selects idle or pass-ripple only while the existing wallMove dash crosses it."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-11",
+      "id": "phase-curtain",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art11_phase_curtain-master.png",
+      "source_sha256": "d6c8887606089d29615fe49f1c2c0f722f757688942853055fd4f4019f13aea9",
+      "frames": [
+        {
+          "state": "active",
+          "frame": "phase-curtain_active",
+          "integrated": true,
+          "evidence": "solid material=phase selects active/passable/restore from the existing phaseDash window."
+        },
+        {
+          "state": "passable",
+          "frame": "phase-curtain_passable",
+          "integrated": true,
+          "evidence": "solid material=phase selects active/passable/restore from the existing phaseDash window."
+        },
+        {
+          "state": "restore",
+          "frame": "phase-curtain_restore",
+          "integrated": true,
+          "evidence": "solid material=phase selects active/passable/restore from the existing phaseDash window."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-12",
+      "id": "ricochet-panel",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art12_ricochet_panel-master.png",
+      "source_sha256": "2aae270d21386c86ad8b8bf19c5bd425d7cfe80dc70d1f01a1df81cae2516b58",
+      "frames": [
+        {
+          "state": "normal",
+          "frame": "ricochet-panel_normal",
+          "integrated": true,
+          "evidence": "solid material=ricochet selects normal or impact when an existing player shot overlaps it."
+        },
+        {
+          "state": "impact",
+          "frame": "ricochet-panel_impact",
+          "integrated": true,
+          "evidence": "solid material=ricochet selects normal or impact when an existing player shot overlaps it."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-13",
+      "id": "power-shutter",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art13_power_shutter-master.png",
+      "source_sha256": "f3af6e066b395bdc15b81f19c65245c50aab0db09bed71d8d0566635f6a83c04",
+      "frames": [
+        {
+          "state": "closed",
+          "frame": "power-shutter_closed",
+          "integrated": true,
+          "evidence": "event geometry selects closed/open. Opening and warning art are exported but intentionally unused because the model exposes no corresponding transition state."
+        },
+        {
+          "state": "opening",
+          "frame": "power-shutter_opening",
+          "integrated": false,
+          "evidence": "Exported in atlas; no matching model transition is defined."
+        },
+        {
+          "state": "open",
+          "frame": "power-shutter_open",
+          "integrated": true,
+          "evidence": "event geometry selects closed/open. Opening and warning art are exported but intentionally unused because the model exposes no corresponding transition state."
+        },
+        {
+          "state": "warning",
+          "frame": "power-shutter_warning",
+          "integrated": false,
+          "evidence": "Exported in atlas; no matching model transition is defined."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-14",
+      "id": "terminal",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art14_terminals-master.png",
+      "source_sha256": "9475b1ffafc8e610eae6e0c39914400a276a55614f94906d45075fd81c31851a",
+      "frames": [
+        {
+          "state": "power-off",
+          "frame": "terminal_power-off",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "cell-off",
+          "frame": "terminal_cell-off",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "data-off",
+          "frame": "terminal_data-off",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "exit-off",
+          "frame": "terminal_exit-off",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "power-ready",
+          "frame": "terminal_power-ready",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "cell-ready",
+          "frame": "terminal_cell-ready",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "data-ready",
+          "frame": "terminal_data-ready",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "exit-ready",
+          "frame": "terminal_exit-ready",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "power-hold",
+          "frame": "terminal_power-hold",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "cell-hold",
+          "frame": "terminal_cell-hold",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "data-hold",
+          "frame": "terminal_data-hold",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "exit-hold",
+          "frame": "terminal_exit-hold",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "power-done",
+          "frame": "terminal_power-done",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "cell-done",
+          "frame": "terminal_cell-done",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "data-done",
+          "frame": "terminal_data-done",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        },
+        {
+          "state": "exit-done",
+          "frame": "terminal_exit-done",
+          "integrated": true,
+          "evidence": "terminalKind and RoomState/hold map purpose-specific off/ready/hold/done states."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-15",
+      "id": "buffer-discharge",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art15_buffer_discharge-master.png",
+      "source_sha256": "d4ddbafe2b27088d20f6cfa143e21629735456cb047ce8a07fb7a7dfa23771f5",
+      "frames": [
+        {
+          "state": "ready",
+          "frame": "buffer-discharge_ready",
+          "integrated": true,
+          "evidence": "D2 availability and RoomState.bufferUsed map ready/absorbed/discharge/spent; discharge is bounded to the existing event edge."
+        },
+        {
+          "state": "absorbed",
+          "frame": "buffer-discharge_absorbed",
+          "integrated": true,
+          "evidence": "D2 availability and RoomState.bufferUsed map ready/absorbed/discharge/spent; discharge is bounded to the existing event edge."
+        },
+        {
+          "state": "discharge",
+          "frame": "buffer-discharge_discharge",
+          "integrated": true,
+          "evidence": "D2 availability and RoomState.bufferUsed map ready/absorbed/discharge/spent; discharge is bounded to the existing event edge."
+        },
+        {
+          "state": "spent",
+          "frame": "buffer-discharge_spent",
+          "integrated": true,
+          "evidence": "D2 availability and RoomState.bufferUsed map ready/absorbed/discharge/spent; discharge is bounded to the existing event edge."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-16",
+      "id": "regulator",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art16_regulator_boss-master.png",
+      "source_sha256": "58d90fd8e9c6fc3b8acb1322d9ff265ec0c2dda3b73327164a20f21462d46910",
+      "frames": [
+        {
+          "state": "armored",
+          "frame": "regulator_armored",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "warning",
+          "frame": "regulator_warning",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "attack",
+          "frame": "regulator_attack",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "exposed",
+          "frame": "regulator_exposed",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "phase-two",
+          "frame": "regulator_phase-two",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "hit",
+          "frame": "regulator_hit",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "shutdown",
+          "frame": "regulator_shutdown",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        },
+        {
+          "state": "destroyed",
+          "frame": "regulator_destroyed",
+          "integrated": true,
+          "evidence": "Regulator pattern phase and boss HP map armored/warning/attack/exposed/phase-two/hit/shutdown/destroyed."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-17",
+      "id": "window-view",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art17_window_views-master.png",
+      "source_sha256": "b079796450f343614941f09ea96d28b8d39fde60a6e568b81c7099fead7d7f2b",
+      "frames": [
+        {
+          "state": "reactor-view",
+          "frame": "window-view_reactor-view",
+          "integrated": true,
+          "evidence": "RoomDefinition.window selects reactor vista at M5C and evacuation vista at M5E."
+        },
+        {
+          "state": "evacuation-view",
+          "frame": "window-view_evacuation-view",
+          "integrated": true,
+          "evidence": "RoomDefinition.window selects reactor vista at M5C and evacuation vista at M5E."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-18",
+      "id": "cargo-landmark",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art18_cargo_landmarks-master.png",
+      "source_sha256": "8cc9800939153fc40ce89c167ca91fa1f597f6a42bbf1077bbf24acc1fdcb7db",
+      "frames": [
+        {
+          "state": "container",
+          "frame": "cargo-landmark_container",
+          "integrated": true,
+          "evidence": "Room ID D/E/F/G selects the cargo container, rail-crane and power-junction landmarks."
+        },
+        {
+          "state": "rail-crane",
+          "frame": "cargo-landmark_rail-crane",
+          "integrated": true,
+          "evidence": "Room ID D/E/F/G selects the cargo container, rail-crane and power-junction landmarks."
+        },
+        {
+          "state": "power-junction",
+          "frame": "cargo-landmark_power-junction",
+          "integrated": true,
+          "evidence": "Room ID D/E/F/G selects the cargo container, rail-crane and power-junction landmarks."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-19",
+      "id": "foundry-landmark",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art19_foundry_landmarks-master.png",
+      "source_sha256": "54d0296c022a0373cc475cc51bc0e3886ffbb75070300b3b02fec3b5f058d876",
+      "frames": [
+        {
+          "state": "furnace",
+          "frame": "foundry-landmark_furnace",
+          "integrated": true,
+          "evidence": "Room ID M3A–M3D selects foundry furnace, process-pipes and press-line landmarks."
+        },
+        {
+          "state": "process-pipes",
+          "frame": "foundry-landmark_process-pipes",
+          "integrated": true,
+          "evidence": "Room ID M3A–M3D selects foundry furnace, process-pipes and press-line landmarks."
+        },
+        {
+          "state": "press-line",
+          "frame": "foundry-landmark_press-line",
+          "integrated": true,
+          "evidence": "Room ID M3A–M3D selects foundry furnace, process-pipes and press-line landmarks."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-20",
+      "id": "archive-landmark",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art20_archive_landmarks-master.png",
+      "source_sha256": "841e140f3d799a4c9b1ecf1a2a8fa7f1b8022bdec617259a662517d7419fdebb",
+      "frames": [
+        {
+          "state": "data-racks",
+          "frame": "archive-landmark_data-racks",
+          "integrated": true,
+          "evidence": "Room ID M4A–M4D selects archive data-racks, archive-cabinet and transfer-bus landmarks."
+        },
+        {
+          "state": "archive-cabinet",
+          "frame": "archive-landmark_archive-cabinet",
+          "integrated": true,
+          "evidence": "Room ID M4A–M4D selects archive data-racks, archive-cabinet and transfer-bus landmarks."
+        },
+        {
+          "state": "transfer-bus",
+          "frame": "archive-landmark_transfer-bus",
+          "integrated": true,
+          "evidence": "Room ID M4A–M4D selects archive data-racks, archive-cabinet and transfer-bus landmarks."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    },
+    {
+      "family": "ART-21",
+      "id": "reactor-landmark",
+      "generated": true,
+      "processed": true,
+      "exported": true,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "source": "source/generated/art21_reactor_landmarks-master.png",
+      "source_sha256": "da749aeeb6a2350abeb243234c15d5c11a57e2a2416fd3932587294c2ed1af74",
+      "frames": [
+        {
+          "state": "power-bus",
+          "frame": "reactor-landmark_power-bus",
+          "integrated": true,
+          "evidence": "Room ID M5A–M5E selects reactor power-bus, cooling-manifold and beacon-mast landmarks."
+        },
+        {
+          "state": "cooling-manifold",
+          "frame": "reactor-landmark_cooling-manifold",
+          "integrated": true,
+          "evidence": "Room ID M5A–M5E selects reactor power-bus, cooling-manifold and beacon-mast landmarks."
+        },
+        {
+          "state": "beacon-mast",
+          "frame": "reactor-landmark_beacon-mast",
+          "integrated": true,
+          "evidence": "Room ID M5A–M5E selects reactor power-bus, cooling-manifold and beacon-mast landmarks."
+        }
+      ],
+      "evidence": [
+        "Master inventory and hashes: previews/master-inventory.json",
+        "Runtime atlas/hash/padding/alpha contract: scripts/check-art-refresh-v1.mjs",
+        "Contact sheets inspected at 1x/2x; full in-game visual review is pending."
+      ],
+      "pending": [
+        "Full in-game state transition screenshots at 1x, 2x and target mobile scale",
+        "20 campaign rooms plus training scene matrix",
+        "Mono, reduced-flash, accessibility and physical-device visual review"
+      ]
+    }
+  ],
+  "visual_fixes": [
+    {
+      "id": "V01",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": true,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "world-map.ts emits five semantic position classes; art:check confirms no inline position styles and expected CSS coordinates.",
+      "pending": [
+        "Browser click/focus and responsive map screenshot"
+      ]
+    },
+    {
+      "id": "V02",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "mobile-layout.ts requests 60x60 Fire/Jump and 196x60/264x60 groups; runtime bounding boxes and no-overlap are pending.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V03",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ui.css adds short-landscape map/workshop composition; viewport screenshot matrix is pending.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V04",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-01 turret states bind to turretPresentation and shared enemyMuzzle line.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V05",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-02/03 bind security walker and ram charge states; full combat sequence review is pending.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V06",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-04/05/06 bind cell, repair and cache states to room/session data.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V07",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-07–13 bind hazards/materials/shutters; E01 restore_power opens the actual model gate.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V08",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-16 binds regulator phase and disabled states; boss sequence review is pending.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V09",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "R01–R05 repair labels are read from RoomDefinition/safeZone slot data.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    },
+    {
+      "id": "V10",
+      "generated": false,
+      "processed": false,
+      "exported": false,
+      "integrated": true,
+      "automated_verified": false,
+      "visually_verified": false,
+      "published": false,
+      "not_applicable": [
+        "generated",
+        "processed",
+        "exported"
+      ],
+      "evidence": "ART-14 terminals and ART-18–21 sector landmarks bind to mission room ids.",
+      "pending": [
+        "Automated viewport/state verification",
+        "Visual review at production/mobile scale"
+      ]
+    }
+  ]
+}
