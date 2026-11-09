@@ -294,11 +294,15 @@ export class Application{
     this.privacyReturn=from;
     this.show('privacy');
   }
+  private closePrivacy(){
+    this.focusHistory.set(this.privacyReturn,this.privacyReturn+'-privacy');
+    this.show(this.privacyReturn);
+  }
   private setAnalytics(choice:Consent){
     this.analyticsChoice=choice;
     try{localStorage.setItem(config.analytics.consent_key,choice);}catch{/* Consent does not prevent play. */}
     window.dispatchEvent(new CustomEvent<Consent>('cinder:analytics-choice',{detail:choice}));
-    this.show(this.privacyReturn);
+    this.closePrivacy();
   }
   private audioSettings(){
     for(const bus of ['music','sfx','ui'] as const)this.ui.change(bus+'-volume',value=>{this.settings[(bus+'Volume') as 'musicVolume']=Number(value);this.effects.configure(this.settings);void this.persistSettings();});
@@ -323,7 +327,7 @@ export class Application{
         }
         case'privacy':return this.wrap(t('privacy.title'),
           '<p>'+e(t('privacy.description'))+'</p><p role="status">'+e(t(this.analyticsChoice==='granted'?'privacy.allowed':this.analyticsChoice==='denied'?'privacy.denied':'privacy.unset'))+'</p>',
-          this.button('analytics-decline','privacy.decline',()=>this.setAnalytics('denied'),true)+this.button('analytics-accept','privacy.accept',()=>this.setAnalytics('granted'))+this.button('analytics-back','common.back',()=>this.show(this.privacyReturn)));
+          this.button('analytics-decline','privacy.decline',()=>this.setAnalytics('denied'),true)+this.button('analytics-accept','privacy.accept',()=>this.setAnalytics('granted'))+this.button('analytics-back','common.back',()=>this.closePrivacy()));
         case'challenges':{
           const choices=trialMissions.map(id=>`<option value="${id}" ${id===this.challengeMission?'selected':''}>${e(t(missions[id].nameKey))}</option>`).join('');
           this.ui.change('challenge-mission',value=>{if(isTrialMission(value))this.challengeMission=value;});
@@ -395,7 +399,7 @@ export class Application{
     },()=>this.back(),nextFocus,this.screen);
     this.i18n.applyStatic();this.updateDevice();this.storageNotice();this.layout();
   }
-  private back(){if(this.busy)return;if(this.screen==='character'){if(this.characterInspect)void this.showResearch();else this.showMenu();return;}if(this.screen==='map'){this.show(this.mapReturn);return;}if(this.screen==='privacy')this.show(this.privacyReturn);else if(this.screen==='settings')this.closeSettings();else if(this.screen==='challenges')this.showMenu();else if(this.screen==='challenge-countdown')this.cancelChallenge();else if(this.screen==='relay-support')this.show('challenges');else if(this.screen==='confirm-purchase'||this.screen==='workshop-menu')this.show('research');else if(this.screen==='confirm-event')this.show('event');else if(this.screen==='event')this.leaveEvent();else if(this.screen==='pause')this.resume();else if(this.screen==='briefing')void this.showResearch();else if(this.screen==='confirm-new')this.show(this.newShiftReturn);else if(this.screen==='resume-entry')this.show('menu');else if(this.screen==='research'||this.screen==='result')this.showMenu();}
+  private back(){if(this.busy)return;if(this.screen==='character'){if(this.characterInspect)void this.showResearch();else this.showMenu();return;}if(this.screen==='map'){this.show(this.mapReturn);return;}if(this.screen==='privacy')this.closePrivacy();else if(this.screen==='settings')this.closeSettings();else if(this.screen==='challenges')this.showMenu();else if(this.screen==='challenge-countdown')this.cancelChallenge();else if(this.screen==='relay-support')this.show('challenges');else if(this.screen==='confirm-purchase'||this.screen==='workshop-menu')this.show('research');else if(this.screen==='confirm-event')this.show('event');else if(this.screen==='event')this.leaveEvent();else if(this.screen==='pause')this.resume();else if(this.screen==='briefing')void this.showResearch();else if(this.screen==='confirm-new')this.show(this.newShiftReturn);else if(this.screen==='resume-entry')this.show('menu');else if(this.screen==='research'||this.screen==='result')this.showMenu();}
   private storageNotice(){const notice=$('storage-notice');notice.hidden=!this.saves.issue||this.screen==='menu'&&this.ui.visible;notice.textContent=this.saves.issue?this.t('errors.save.'+this.saves.issue):'';}
   private updateDevice(){
     const playing=this.state==='playing',playInputActive=playing,active=playInputActive||this.state==='dying',touchMode=this.settings.touchMode==='on'||this.settings.touchMode==='auto'&&this.controls.device==='touch';
