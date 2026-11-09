@@ -2,7 +2,7 @@ import {expect,test} from '@playwright/test';
 import {rooms} from '../games/cinder-shift/src/room-data';
 import {cacheInReach,terminalInReach} from '../games/cinder-shift/src/interactions';
 import {fitSprite,coverSprite} from '../games/cinder-shift/src/art/placement';
-import manifest from '../games/cinder-shift/public/assets/art-refresh-v1/runtime-manifest.json';
+import manifest from '../games/cinder-shift/public/assets/art-refresh-v1/runtime-manifest.json' with {type:'json'};
 import {state} from './helpers';
 
 const origin='https://nuts.bid';
