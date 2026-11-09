@@ -17,8 +17,8 @@ test('complete mission with native touch input and at most two touches',async({b
   await jump(143,242);await moveTo(294);await action('crouch',true);await moveTo(442);await action('crouch',false);await expect.poll(async()=>(await state(page)).targetHp).toBe(0);
   await moveTo(546);await action('interact',true);await page.waitForTimeout(80);await action('interact',false);await expect.poll(async()=>(await state(page)).powered).toBe(true);
   await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
-  await jump(194,350);await dead('b-walker');await dead('b-drone');
-  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
+  await jump(194,350);await dead('b-walker');await dead('b-drone');await jump(492,556);
+  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().room==='C',null,{timeout:8000});await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
   await jump(130,224);await action('crouch',true);await dead('c-walker-1');await action('crouch',false);
   await jump(318,368);await moveTo(465);
   await jump(492,556);await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);await action('interact',true);await expect.poll(async()=>(await state(page)).objective).toBe(true);await action('interact',false);

@@ -74,6 +74,7 @@ test.describe('full mission demonstration',()=>{
     await page.keyboard.down('j');await forwardJump(page,194,350);
     await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:10000}).toBe(0);await page.keyboard.up('j');
     await page.screenshot({path:info.outputPath('corridor.png')});
+    await forwardJump(page,492,556);
     await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().room==='C',null,{timeout:8000});await page.keyboard.up('d');
     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.player?.vy===0;});
     await page.keyboard.down('j');await forwardJump(page,130,224);await page.keyboard.down('s');
