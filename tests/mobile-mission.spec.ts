@@ -23,7 +23,7 @@ test('complete mission with native touch input and at most two touches',async({b
   await jump(318,368);await moveTo(465);
   await jump(492,556);await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);await action('interact',true);await expect.poll(async()=>(await state(page)).objective).toBe(true);await action('interact',false);
   await page.screenshot({path:info.outputPath('mobile-power.png')});await action('right',true);await expect.poll(async()=>(await state(page)).state).toBe('complete');await action('right',false);
-  expect(maxTouches).toBeLessThanOrEqual(2);expect((await state(page)).hp).toBeGreaterThan(0);await context.close();
+  expect(maxTouches).toBeLessThanOrEqual(2);expect((await state(page)).campaign.result).toMatchObject({result:"victory",hp:expect.any(Number)});expect((await state(page)).campaign.result.hp).toBeGreaterThan(0);await context.close();
 });
 
 test('movement stays comparable at real 30 and 60 render limits, including a long frame',async({page})=>{
