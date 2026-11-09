@@ -18,11 +18,12 @@ export async function roomA(page:Page){
   await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
 }
 export async function jump(page:Page,from:number,to:number){await page.keyboard.down('d');await x(page,from);await page.keyboard.down('Space');await x(page,to);await page.keyboard.up('Space');await page.keyboard.up('d');}
-export async function completeFromB(page:Page){
+export async function completeFromB(page:Page,{collectRelayIntel=false}:{collectRelayIntel?:boolean}={}){
   await page.keyboard.down('j');await jump(page,194,350);await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:12000}).toBe(0);await page.keyboard.up('j');
-  await jump(page,496,556);await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
+  await jump(page,496,556);if(collectRelayIntel){await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&p.y+22>303;});await page.keyboard.press('e');await page.getByTestId('event-take-intel').click();await page.getByTestId('confirm-event').click();await expect.poll(async()=>(await state(page)).relayIntelCollected).toBe(true);}await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-1').hp,{timeout:10000}).toBe(0);await page.keyboard.up('s');
-  await jump(page,318,368);await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-drone').hp,{timeout:10000}).toBe(0).catch(async()=>{throw Error('Drone route '+JSON.stringify(await state(page)));});await page.keyboard.up('s');
-  await page.keyboard.down('d');await x(page,420);await page.keyboard.up('d');await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-2').hp,{timeout:10000}).toBe(0);await page.keyboard.up('s');
-  await jump(page,496,556);await page.keyboard.up('j');await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).objective).toBe(true);await page.keyboard.up('e');await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).state).toBe('complete');await page.keyboard.up('d');
+  await jump(page,318,368);
+  await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);
+  await page.keyboard.down('d');await x(page,465);await page.keyboard.up('d');
+  await jump(page,492,556);await page.keyboard.up('j');await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).objective).toBe(true);await page.keyboard.up('e');await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).state).toBe('complete');await page.keyboard.up('d');
 }

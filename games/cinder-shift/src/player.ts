@@ -35,5 +35,5 @@ export class Player{
     if(frame.released.has('jump')&&b.velocity.y< -110)b.setVelocityY(-110);
   }
   knock(direction:number,now:number){this.body.setVelocityX(direction*130);this.knockUntil=now+120;}
-  snapshot(){return {x:this.x,y:this.sprite.y,vx:this.body.velocity.x,vy:this.body.velocity.y,crouching:this.crouching,dashReady:this.dashReady,chargeReady:this.chargeReady};}
+  snapshot(){const vx=this.body.velocity.x,vy=this.body.velocity.y;return {x:this.x,y:this.sprite.y,vx,vy,facing:this.facing,animation_id:this.crouching?'crouch':vy< -20?'jump':Math.abs(vx)>20?'run':'idle',crouching:this.crouching,dashReady:this.dashReady,chargeReady:this.chargeReady};}
 }

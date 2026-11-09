@@ -7,3 +7,14 @@
 .touch-sides .touch-controls button{height:52px;min-height:48px;padding:4px}
 
 @media(pointer:coarse) and (orientation:landscape) and (max-height:600px){#interaction-progress{position:absolute;right:6px;top:100%;padding:2px 6px;background:#111823;border:1px solid #456171}}
+ .hud-split{padding:.22rem .45rem;border:1px solid #76dcc8;color:#b9f5e8;background:#06110fe6;font:700 11px/1.2 ui-monospace,SFMono-Regular,monospace;letter-spacing:.03em;box-shadow:0 0 1rem #76dcc834}
+
+/* The stage never scrolls. Only the active panel's content can scroll. */
+html,body{overflow:clip}
+.panel-content{overscroll-behavior:contain}
+.touch-controls .directions,.touch-controls .actions{gap:8px}
+.touch-sides .touch-controls .directions,.touch-sides .touch-controls .actions{gap:8px}
+.touch-sides .touch-controls .actions [data-action=jump],
+.touch-sides .touch-controls .actions [data-action=fire]{min-width:56px;min-height:56px}
+
+.game-description { max-width:960px; margin:12px auto; padding:0 20px; color:#c0cad0; font:14px/1.5 system-ui,sans-serif; }

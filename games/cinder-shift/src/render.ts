@@ -3,10 +3,15 @@ import assets from './art/assets.generated.json' with {type:'json'};
 import promo from './art/promo.generated.json' with {type:'json'};
 import {enemyPhase,enemyRect,enemyMuzzle,turretPresentation} from './enemies';
 import {miraRigPose} from './art/rig';
-import {cargoShutter,hasEvent,repairPosition,type EventPlan} from './session/events';
+import {cargoShutter,hasEvent,repairPosition,shutter,type EventPlan} from './session/events';
 import {regulatorBody,regulatorPattern} from './boss';
 import type {MissionAttempt,RoomDefinition,RoomState,Rect} from './mission';
 import {rooms} from './room-data';
+import {cacheInReach} from './interactions';
+import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
+import {roomLighting,signals} from './art/lighting';
+import {CombatEffects,type CombatCue} from './art/combat-effects';
+import type {Point} from './room-data';
 import type {Player} from './player';
 import type {Projectiles} from './projectiles';
 
@@ -22,12 +27,19 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
-  private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
+  private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
-    scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0x8e9aa9);
-    scene.add.image(0,40,'m03-bg-'+room.theme).setOrigin(0).setTint(room.sector==='foundry'?0xc98b5b:room.sector==='archive'?0x829fb8:0xa8b5bd);
-    scene.add.rectangle(0,216,640,104,0x1c2a39).setOrigin(0).setDepth(1);
-    scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
+    const light=roomLighting(room,new URLSearchParams(location.search).get('light')==='high');
+    scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0x616c81);
+    scene.add.image(0,40,'m03-bg-'+room.theme).setOrigin(0).setTint(light.back);
+    scene.add.rectangle(0,216,640,104,0x101827).setOrigin(0).setDepth(1);
+    scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(light.foreground).setAlpha(.34).setDepth(1);
+    const lamps=scene.add.graphics().setDepth(1.1);
+    for(const x of [142,492]){
+      lamps.fillStyle(light.light,light.strength*.55).fillEllipse(x,232,154,104);
+      lamps.fillStyle(light.light,light.strength).fillEllipse(x,220,84,60);
+    }
+    this.cueGraphics=scene.add.graphics().setDepth(8);
     for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
     if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
     for(const solid of room.solids)if(!solid.id)this.platform(solid);
@@ -52,14 +64,39 @@ export class SceneArt{
     sprite.setPosition(Math.round(x),Math.round(y)).setScale(flip,1).setAngle(0).setAlpha(1).clearTint().setDepth(depth).setVisible(true);
     return sprite;
   }
-  private art(frame:string,x:number,y:number,width:number,height:number,depth=4,flip=1,origin:[number,number]=[.5,1],alpha=1){
+  cue(kind:CombatCue,point:Point,now:number,direction=1){
+    this.cues.push(kind,point,now,direction);
+  }
+
+  private artImage(frame:ArtFrame,x:number,y:number,depth:number){
     let image=this.artPool[this.artUsed++];
     if(!image){image=this.scene.add.image(0,0,'art-refresh-v1');this.artPool.push(image);}
-    image.setTexture('art-refresh-v1',frame).setOrigin(origin[0],origin[1]).setPosition(Math.round(x),Math.round(y)).setDisplaySize(width,height).setFlipX(flip<0).setAngle(0).setAlpha(alpha).clearTint().setDepth(depth).setVisible(true);
-    return image;
+    return image.setTexture('art-refresh-v1',frame).setCrop().setPosition(Math.round(x),Math.round(y))
+      .setFlipX(false).setAngle(0).setAlpha(1).clearTint().setDepth(depth).setVisible(true);
+  }
+
+  private art(frame:ArtFrame,x:number,y:number,width:number,height:number,depth=4,flip=1,anchor:SpriteAnchor='bottom',alpha=1){
+    const layout=fitSprite(frame,width,height,anchor);
+    return this.artImage(frame,x,y,depth).setOrigin(layout.originX,layout.originY).setScale(layout.scale).setFlipX(flip<0).setAlpha(alpha);
+  }
+
+  private window(frame:ArtFrame,rect:Rect){
+    const layout=coverSprite(frame,rect.width,rect.height);
+    this.artImage(frame,rect.x,rect.y,1.6).setOrigin(layout.originX,layout.originY).setScale(layout.scale)
+      .setCrop(layout.x,layout.y,layout.width,layout.height);
+  }
+
+  private materialPlate(rect:Rect,color:number,segments:number){
+    const {x,y,width,height}=rect;
+    this.threats.fillStyle(0x172937).fillRect(x,y,width,height);
+    this.threats.lineStyle(1,color,.85).strokeRect(x,y,width,height);
+    for(let i=1;i<segments;i++){
+      const offset=Math.round(i*height/segments);
+      this.threats.lineStyle(1,color,.5).lineBetween(x,y+offset,x+width,y+offset);
+    }
   }
   private landmarks(room:RoomDefinition){
-    const groups:Record<string,Array<[string,number,number,number,number]>>={
+    const groups:Record<string,Array<[ArtFrame,number,number,number,number]>>={
       D:[['cargo-landmark_container',164,234,112,68],['cargo-landmark_rail-crane',452,192,148,62],['cargo-landmark_power-junction',548,254,62,48]],
       E:[['cargo-landmark_rail-crane',160,194,138,56],['cargo-landmark_container',300,240,112,68],['cargo-landmark_power-junction',560,252,62,48]],
       F:[['cargo-landmark_power-junction',168,248,64,50],['cargo-landmark_rail-crane',312,188,148,56],['cargo-landmark_container',476,236,104,62]],
@@ -78,7 +115,7 @@ export class SceneArt{
       M5D:[['reactor-landmark_cooling-manifold',132,236,144,70],['reactor-landmark_power-bus',456,204,152,64]],
       M5E:[['reactor-landmark_beacon-mast',184,216,76,82],['reactor-landmark_power-bus',440,202,156,66]],
     };
-    for(const [frame,x,y,w,h] of groups[room.id]||[])this.art(frame,x,y,w,h,1.5);
+    for(const [frame,x,y,w,h] of groups[room.id]||[])this.art(frame,x,y,w,h,1.5,1,'bottom',.69);
   }
   private line(x:number,y:number,toX:number,toY:number,color:'signal-coral'|'signal-mint',thickness=1){
     const a=Math.round(toX)-Math.round(x),b=Math.round(toY)-Math.round(y);
@@ -86,13 +123,14 @@ export class SceneArt{
   }
   private turret(e:import('./enemies').EnemyState,powered:boolean){
     const g=this.threats,{state}=turretPresentation(e,powered),cx=e.x,muzzle=enemyMuzzle(e),facing=Math.sign(e.aim.x-e.x)||1;
-    this.art('turret_'+state,cx,e.y+15,54,50,5,facing);
+    this.art(`turret_${state}`,cx,e.y+15,54,50,5,facing);
     if(state==='destroyed')return;
     if(state==='warning'){
       this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral',2).setAlpha(.85);
       this.sprite('warning-reticle',e.aim.x,e.aim.y,8);g.lineStyle(2,0xf36d76).lineBetween(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y);
     }
-    if(state==='burst'&&e.shotFlashMs>0)g.fillStyle(0xffb65b,.95).fillCircle(muzzle.x,muzzle.y,5);
+    if(state==='burst'&&e.shotFlashMs>0)g.fillStyle(signals.shot,.9).fillRect(muzzle.x-2,muzzle.y-2,5,5);
+    if(state==='exposed')g.lineStyle(2,signals.energy,.9).lineBetween(cx-8,e.y-8,cx+8,e.y-8);
   }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
@@ -102,7 +140,7 @@ export class SceneArt{
     const pose=miraRigPose(now,player.body.velocity.x,y,player.crouching);
     const hit=now<attempt.damageFlashUntil;
     const hero=(id:AssetId,px:number,py:number)=>{
-      const s=this.sprite(id,px,py,6,f);if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTintFill(0xf36d76);}return s;
+      const s=this.sprite(id,px,py,6,f);if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };
     this.sprite('mira-shadow',x,y+1,3).setAlpha(.6);
     if(now<player.dashUntil)this.sprite('mira-body-stand',x-f*30,y-40,5,f).setTintFill(0x76dcc8).setAlpha(.2);
@@ -126,7 +164,7 @@ export class SceneArt{
     }
     if(room.window){
       const view=room.id==='M5C'?'window-view_reactor-view':'window-view_evacuation-view';
-      this.art(view,room.window.x,room.window.y,room.window.width,room.window.height,1,1,[0,0]);
+      this.window(view,room.window);
       this.threats.lineStyle(4,0x456171,.95).strokeRect(room.window.x,room.window.y,room.window.width,room.window.height);
       this.threats.lineStyle(2,0x91a7b0,.65).lineBetween(room.window.x+room.window.width/2,room.window.y,room.window.x+room.window.width/2,room.window.y+room.window.height);
     }
@@ -134,33 +172,45 @@ export class SceneArt{
     this.art(exitOpen?'power-shutter_open':'power-shutter_closed',609,320,40,84,3);
     this.exitMarker.setColor(exitOpen?'#76DCC8':'#FFB65B');
     for(const panel of room.solids.filter(s=>s.id)){
-      if(panel.id==='f-power-gate')this.art('power-shutter_closed',panel.x+panel.width/2,panel.y+panel.height,48,panel.height+8,4);
-      else if(panel.material==='thin')this.art('thin-sheet_intact',panel.x+panel.width/2,panel.y+panel.height,Math.max(24,panel.width+16),panel.height,4);
+      if(panel.id==='f-power-gate'){
+        this.materialPlate(panel,0x7895a7,3);
+        this.art('power-shutter_closed',panel.x+panel.width/2,panel.y+panel.height,panel.width,panel.height,5);
+      }
+      else if(panel.material==='thin'){
+        this.materialPlate(panel,0x7895a7,5);
+        this.art('thin-sheet_intact',panel.x+panel.width/2,panel.y+panel.height,20,15,5);
+      }
       else if(panel.material==='ricochet'){
         const impact=shots.shots.some(s=>s.team==='player'&&s.x>=panel.x-4&&s.x<=panel.x+panel.width+4&&s.y>=panel.y-4&&s.y<=panel.y+panel.height+4);
-        this.art(`ricochet-panel_${impact?'impact':'normal'}`,panel.x+panel.width/2,panel.y+panel.height/2,panel.width+18,panel.height+18,4,1,[.5,.5]);
+        this.art(`ricochet-panel_${impact?'impact':'normal'}`,panel.x+panel.width/2,panel.y+panel.height/2,panel.width+18,panel.height+18,4,1,'center');
       }else if(panel.material==='wall'){
         const overlapping=player.x+14>=panel.x&&player.x-14<=panel.x+panel.width&&player.feet>=panel.y&&player.feet-44<=panel.y+panel.height;
         const crossing=attempt.build.wallMove&&now<player.dashUntil&&overlapping;
-        this.art(`magnetic-wall_${crossing?'pass-ripple':'idle'}`,panel.x+panel.width/2,panel.y+panel.height/2,Math.max(48,panel.width+28),panel.height+16,4,1,[.5,.5],crossing?.9:1);
+        this.art(`magnetic-wall_${crossing?'pass-ripple':'idle'}`,panel.x+panel.width/2,panel.y+panel.height/2,Math.max(48,panel.width+28),panel.height+16,4,1,'center',crossing?.9:1);
       }
       else if(panel.material==='phase'){
         const overlapping=player.x+14>=panel.x&&player.x-14<=panel.x+panel.width&&player.feet>=panel.y&&player.feet-44<=panel.y+panel.height;
         const crossing=attempt.build.phaseDash&&overlapping;
         const frame=crossing&&now<player.dashUntil?'passable':crossing&&now-player.dashUntil<120?'restore':'active';
-        this.art(`phase-curtain_${frame}`,panel.x+panel.width/2,panel.y+panel.height/2,Math.max(32,panel.width+20),panel.height+16,4,1,[.5,.5],frame==='active'?.82:.9);
+        if(frame==='active')this.materialPlate(panel,signals.violet,5);
+        this.art(`phase-curtain_${frame}`,panel.x+panel.width/2,panel.y+panel.height/2,Math.max(32,panel.width+20),panel.height+16,4,1,'center',frame==='active'?.82:.9);
       }
     }
-    if(room.id==='B'&&hasEvent(attempt.eventPlan,'E02'))this.art('power-shutter_closed',352,256,72,216,3.5);
+    if(room.id==='B'&&hasEvent(attempt.eventPlan,'E02')){
+      const plate=shutter;
+      this.materialPlate(plate,0x7895a7,7);
+      this.art('power-shutter_closed',352,256,50,100,5);
+    }
     if(room.id==='F'&&hasEvent(attempt.eventPlan,'E01')&&state.terminal)this.art('power-shutter_open',cargoShutter.x+cargoShutter.width/2,cargoShutter.y+cargoShutter.height,42,44,4);
-    for(const broken of rooms[room.id].solids.filter(s=>s.id&&s.material==='thin'&&state.brokenPanels.includes(s.id)))this.art('thin-sheet_broken',broken.x+broken.width/2,broken.y+broken.height/2,Math.max(24,broken.width+16),broken.height,4,1,[.5,.5]);
+    for(const broken of rooms[room.id].solids.filter(s=>s.id&&s.material==='thin'&&state.brokenPanels.includes(s.id)))this.art('thin-sheet_broken',broken.x+broken.width/2,broken.y+broken.height/2,Math.max(24,broken.width+16),broken.height,4,1,'center');
     if(room.cell){
       if(!attempt.cellCollected)this.art('energy-cell_uncollected',room.cell.x,320,32,52,4);
       else{
         this.art('energy-cell_socket',room.cell.x,320,32,52,4);
-        this.art('energy-cell_carried',x+f*16,y-16,22,30,7,f,[.5,.5]);
+
       }
     }
+    if(attempt.cellCollected&&!attempt.cellInstalled)this.art('energy-cell_carried',x+f*13,y-14,20,18,7,f,'center');
     if(room.id==='G'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
     if(this.bufferUsedLast===null)this.bufferUsedLast=state.bufferUsed;
     else if(!this.bufferUsedLast&&state.bufferUsed)this.bufferEffectUntil=now+180;
@@ -168,7 +218,7 @@ export class SceneArt{
     this.bufferUsedLast=state.bufferUsed;
     if(attempt.build.buffer){
       const activated=now<this.bufferEffectUntil,frame=!state.bufferUsed?'ready':activated?(attempt.build.shieldClear?'discharge':'absorbed'):'spent';
-      this.art(`buffer-discharge_${frame}`,x,y-22,54,54,7,1,[.5,.5],frame==='ready'?.62:frame==='spent'?.45:1);
+      this.art(`buffer-discharge_${frame}`,x,y-22,54,54,7,1,'center',frame==='ready'?.62:frame==='spent'?.45:1);
     }
     for(const zone of room.safeZones||[]){const protectedPocket=zone.shielded===true;this.threats.fillStyle(0x153c3f,protectedPocket?.3:.22).fillRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?3:2,0x76dcc8,.8).strokeRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?4:3,0x76dcc8).lineBetween(zone.x,zone.y+4,zone.x,zone.y+zone.height-4);if(protectedPocket)for(let px=zone.x+10;px<zone.x+zone.width-3;px+=14)this.threats.lineStyle(1,0x76dcc8,.65).lineBetween(px,zone.y+4,px,zone.y+zone.height-4);}
     if(room.id==='B'){
@@ -181,22 +231,49 @@ export class SceneArt{
       this.art(`repair-station_${frame}`,room.repair.x,320,46,50,5);
     }
     if(room.cache){
-      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=Math.abs(player.x-room.cache.x)<=room.cache.radius+12,frame=state.cacheUsed?'used':nearby?'interact':'available';
-      this.art(`service-cache_${family}-${frame}`,room.cache.x,320,52,46,5);
+      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby?'interact':'available';
+      this.art(`service-cache_${family}-${frame}`,room.cache.x,room.cache.y,38,26,5);
     }
     for(const hazard of room.hazards||[]){
-      const phase=(now+(hazard.offset_ms||0))%hazard.cycle_ms,warning=phase<hazard.warning_ms,active=phase>=hazard.warning_ms&&phase<hazard.warning_ms+hazard.active_ms,recovery=phase>=hazard.warning_ms+hazard.active_ms,color=active?0xf36d76:warning?0xffb65b:0x687784;
-      const frame=active?hazard.kind==='press'?'strike':'active':warning?'warning':recovery?'recovery':hazard.kind==='press'?'safe':'cool',asset=hazard.kind==='press'?'press':'heat-emitter';
-      this.art(`${asset}_${frame}`,hazard.x+hazard.width/2,hazard.y+hazard.height,hazard.width+18,hazard.height+14,3);
+      const phase=(now+(hazard.offset_ms||0))%hazard.cycle_ms;
+      const warning=phase<hazard.warning_ms,active=phase>=hazard.warning_ms&&phase<hazard.warning_ms+hazard.active_ms;
+      const recovering=!warning&&!active&&phase<hazard.warning_ms+hazard.active_ms+420;
+      const color=active?signals.damage:warning?signals.warning:0x687784;
+      const frame=hazard.kind==='press'
+        ?active?'press_strike':warning?'press_warning':recovering?'press_recovery':'press_safe'
+        :active?'heat-emitter_active':warning?'heat-emitter_warning':recovering?'heat-emitter_recovery':'heat-emitter_cool';
+      this.art(frame,hazard.x+hazard.width/2,hazard.y+hazard.height,hazard.width+18,hazard.height+14,3);
       this.threats.fillStyle(color,active ? .30 : warning ? .17 : .035).fillRect(hazard.x,hazard.y,hazard.width,hazard.height);
       this.threats.lineStyle(2,color,active ? .95 : warning ? .8 : .4).strokeRect(hazard.x,hazard.y,hazard.width,hazard.height);
-      if(warning||active)this.sprite('warning-triangle',hazard.x+hazard.width/2,hazard.y+hazard.height/2,8);
+      if(warning)this.sprite('warning-triangle',hazard.x+hazard.width/2,hazard.y+hazard.height/2,8);
+      if(active){
+        this.threats.lineStyle(1,0xfff0c9,.65);
+        for(let x=hazard.x+5;x<hazard.x+hazard.width-3;x+=10)this.threats.lineBetween(x,hazard.y+4,x,hazard.y+hazard.height-4);
+      }
     }
     if(room.boss){
       const pattern=regulatorPattern(attempt.bossElapsedMs,attempt.bossHp),body=regulatorBody(room.boss.x,room.boss.y,room.boss.width,room.boss.height);
-      const bossState=attempt.bossHp<=0?(state.terminal?'destroyed':'shutdown'):now<this.bossHitUntil?'hit':attempt.bossHp<=room.boss.hp/2&&pattern.phase==='idle'?'phase-two':pattern.phase==='warning'?'warning':pattern.phase==='active'?'attack':pattern.phase==='core'?'exposed':'armored';
-      this.art(`regulator_${bossState}`,room.boss.x,room.boss.y,room.boss.width,room.boss.height,3,1,[.5,1]);
-      for(const rect of pattern.rects){const color=pattern.phase==='active'?0xf36d76:0xffb65b;this.threats.fillStyle(color,pattern.phase==='active'?.34:.16).fillRect(rect.x,rect.y,rect.width,rect.height);this.threats.lineStyle(2,color,pattern.phase==='active'?.95:.8).strokeRect(rect.x,rect.y,rect.width,rect.height);}
+      const alive=attempt.bossHp>0,open=alive&&pattern.phase==='core',phaseTwo=alive&&attempt.bossHp<=room.boss.hp/2;
+      const bossState=!alive?'shutdown':open?(now<this.bossHitUntil?'hit':'exposed'):pattern.phase==='warning'?'warning':pattern.phase==='active'?'attack':'armored';
+      this.art(`regulator_${bossState}`,room.boss.x,body.y+body.height,body.width,body.height,3);
+      if(alive){
+        const bottom=body.y+body.height,center=room.boss.x;
+        this.threats.lineStyle(2,0x7895a7,.75).strokeRect(body.x,body.y,body.width,body.height);
+        for(const side of [-1,1]){
+          const offset=open?25:0,plateX=side<0?center-23-offset:center+offset;
+          this.threats.fillStyle(0x244053).fillRect(plateX,bottom-44,23,34);
+          this.threats.lineStyle(2,0x9bb3bf).strokeRect(plateX,bottom-44,23,34);
+          if(phaseTwo)this.threats.lineStyle(2,signals.violet,.75).lineBetween(plateX+4,bottom-40,plateX+18,bottom-40);
+        }
+        if(open){
+          this.threats.fillStyle(0x101827).fillRect(center-19,bottom-43,38,31);
+          this.threats.lineStyle(2,signals.energy).strokeRect(center-19,bottom-43,38,31);
+          this.threats.fillStyle(signals.shot).fillRect(center-9,bottom-35,18,15);
+        }else{
+          this.threats.lineStyle(2,signals.warning,.65).lineBetween(center-14,bottom-17,center+14,bottom-32);
+        }
+      }
+      for(const rect of pattern.rects){const color=pattern.phase==='active'?signals.damage:signals.warning;this.threats.fillStyle(color,pattern.phase==='active'?.34:.16).fillRect(rect.x,rect.y,rect.width,rect.height);this.threats.lineStyle(2,color,pattern.phase==='active'?.95:.8).strokeRect(rect.x,rect.y,rect.width,rect.height);}
       this.threats.fillStyle(0x101823).fillRect(room.boss.x-44,body.y-14,88,8);this.threats.fillStyle(0xf36d76).fillRect(room.boss.x-42,body.y-12,84*Math.max(0,attempt.bossHp/room.boss.hp),4);this.threats.lineStyle(1,0xedf1ec,.9).strokeRect(room.boss.x-44,body.y-14,88,8);
     }
     if(room.previous)this.sprite('gate-open',31,320,3);
@@ -216,7 +293,11 @@ export class SceneArt{
       if(phase==='telegraph'&&e.kind==='walker'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,muzzle.y,'signal-coral').setAlpha(.85);this.sprite('warning-triangle',e.x,e.y-43,8);}
       else if(phase==='telegraph'&&e.kind==='drone'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.85);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);this.line(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y,'signal-coral');}
     }
-    for(const shot of shots.shots)this.sprite(shot.team==='player'?'shot-player':'shot-enemy',shot.x,shot.y,8,shot.vx>=0?1:-1);
+    for(const shot of shots.shots){
+      const bolt=this.sprite(shot.team==='player'?'shot-player':'shot-enemy',shot.x,shot.y,8,shot.vx>=0?1:-1);
+      if(shot.team==='player')bolt.setTintFill(signals.shot);
+    }
+    this.cues.draw(this.cueGraphics,now,reducedFlashes);
     for(let i=this.used;i<this.pool.length;i++)this.pool[i].setVisible(false);
     for(let i=this.artUsed;i<this.artPool.length;i++)this.artPool[i].setVisible(false);
     this.debug.clear();

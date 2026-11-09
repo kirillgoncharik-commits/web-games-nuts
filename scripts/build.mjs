@@ -1,6 +1,6 @@
 import { build } from 'vite';
 import { execFileSync } from 'node:child_process';
-import { readFile, readdir, stat, writeFile } from 'node:fs/promises';
+import { readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { gzipSync } from 'node:zlib';
 import { join, relative } from 'node:path';
@@ -16,6 +16,7 @@ const dirty=Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'
 process.env.SOURCE_SHA=sha;process.env.CINDER_TARGET=target;
 await build();
 const dir='dist/cinder-shift', files=[];
+if(target!=='web')await rm(join(dir,'game-analytics.js'),{force:true});
 async function walk(path){for(const name of (await readdir(path)).sort()){const file=join(path,name);if((await stat(file)).isDirectory())await walk(file);else{const bytes=await readFile(file);files.push({path:relative(dir,file),bytes:bytes.length,gzip_bytes:gzipSync(bytes).length,sha256:createHash('sha256').update(bytes).digest('hex')});}}}
 await walk(dir);
 await writeFile(join(dir,'build-manifest.json'),JSON.stringify({game_id:'r01',build_id:pkg.version,target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\n');

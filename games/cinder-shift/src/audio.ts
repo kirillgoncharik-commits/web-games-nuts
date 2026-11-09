@@ -4,7 +4,7 @@ import type {PlayableMissionId} from './session/missions';
 export type SoundId=keyof typeof assets.sfx;
 export type AudioLevels={musicVolume:number;sfxVolume:number;uiVolume:number};
 type Bus='ui'|'sfx'|'result';
-type Music={id:ThemeId;track:MusicTrack;started:number;next:number;cycle:number;gain:GainNode;nodes:Set<AudioScheduledSourceNode>;timer:number};
+type Music={id:ThemeId;track:MusicTrack;started:number;next:number;cycle:number;gain:GainNode;nodes:Set<AudioScheduledSourceNode>;timer:ReturnType<typeof setInterval>|0};
 type Voice={source:AudioBufferSourceNode;gain:GainNode;bus:Bus;priority:number;id:SoundId;started:number;ends:number};
 export function musicTheme(mission:PlayableMissionId,room?:string):ThemeId{return room==='M5D'?'boss':mission==='cargo'?'freight':mission==='foundry'?'foundry':mission==='archive'?'archive':mission==='reactor'?'reactor':'airlock';}
 export class AudioService{
@@ -52,7 +52,7 @@ export class AudioService{
  private scheduleMusic(music:Music){const ctx=this.context;if(!ctx||this.music!==music||ctx.state!=='running')return;const beatSeconds=60/music.track.bpm,cycleSeconds=music.track.bars*4*beatSeconds,horizon=ctx.currentTime+.16;
   while(true){const cycleAt=music.started+music.cycle*cycleSeconds,event=music.track.events[music.next];if(!event){music.cycle++;music.next=0;continue;}const at=cycleAt+event.beat*beatSeconds;if(at>horizon)break;music.next++;if(at<ctx.currentTime-.02)continue;this.scheduleNote(music,event,at,beatSeconds);}
  }
- private syncMusic(){const ctx=this.context,id=this.desiredMusic;if(this.mute||this.hidden||document.hidden||ctx?.state!=='running'||!id){this.stopMusic(this.hidden);return;}if(this.music?.id===id)return;this.stopMusic();const track=buildTrack(id),gain=ctx.createGain(),music:Music={id,track,started:ctx.currentTime+.04,next:0,cycle:0,gain,nodes:new Set(),timer:0};gain.gain.value=1;gain.connect(this.musicBus!);this.music=music;this.scheduleMusic(music);music.timer=window.setInterval(()=>this.scheduleMusic(music),25);}
+ private syncMusic(){const ctx=this.context,id=this.desiredMusic;if(this.mute||this.hidden||document.hidden||ctx?.state!=='running'||!id){this.stopMusic(this.hidden);return;}if(this.music?.id===id)return;this.stopMusic();const track=buildTrack(id),gain=ctx.createGain(),music:Music={id,track,started:ctx.currentTime+.04,next:0,cycle:0,gain,nodes:new Set(),timer:0};gain.gain.value=1;gain.connect(this.musicBus!);this.music=music;this.scheduleMusic(music);music.timer=globalThis.setInterval(()=>this.scheduleMusic(music),25);}
  menu(theme:ThemeId='menu'){this.world=false;this.stopVoices(v=>v.bus!=='ui');this.desiredMusic=theme;this.syncMusic();}
  startWorld(theme?:ThemeId){this.world=true;if(theme)this.worldTheme=theme;this.stopVoices(v=>v.bus==='result');this.desiredMusic=this.worldTheme;this.syncMusic();}
  clearCombat(){this.stopVoices(v=>v.bus==='sfx');}
