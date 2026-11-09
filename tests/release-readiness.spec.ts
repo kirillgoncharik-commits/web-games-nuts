@@ -9,33 +9,38 @@ const origin='https://nuts.bid';
 const basePath='/games/cinder-shift/';
 const productionCsp="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
 
-for(const width of [667,844])test(`release shell preserves focus and consent at ${width}px under production CSP`,async({browser,baseURL},info)=>{
+for(const width of [667,844])test(`release shell preserves focus and consent at ${width}px under production CSP`,async({browser,browserName,baseURL},info)=>{
   test.setTimeout(60000);
   const height=width===667?300:390;
   const context=await browser.newContext({viewport:{width,height},hasTouch:true});
   const requests:string[]=[];
   try{
+    // Report samples identify WebKit's own native select style without relaxing enforcement.
+    const cspHeader=browserName==='webkit'?productionCsp.replace("style-src 'self'","style-src 'self' 'report-sample'"):productionCsp;
     await context.route('**/*',async route=>{
       const url=new URL(route.request().url());
       if(url.origin===origin){
         const response=await context.request.get(new URL(url.pathname+url.search,baseURL).href);
-        await route.fulfill({response,headers:{...response.headers(),'content-security-policy':productionCsp}});
+        await route.fulfill({response,headers:{...response.headers(),'content-security-policy':cspHeader}});
       }else{
         requests.push(url.href);
         await route.fulfill({status:200,contentType:'text/javascript',body:''});
       }
     });
     await context.addInitScript(()=>{
-      const probe=window as typeof window&{qaCsp:string[]};
+      const probe=window as typeof window&{qaCsp:{directive:string;sample:string;tag:string|null;source:string}[]};
       probe.qaCsp=[];
-      document.addEventListener('securitypolicyviolation',event=>probe.qaCsp.push(event.violatedDirective+' '+event.blockedURI+' '+event.sourceFile));
+      document.addEventListener('securitypolicyviolation',event=>probe.qaCsp.push({directive:event.violatedDirective,sample:event.sample,tag:event.target instanceof Element?event.target.tagName:null,source:event.sourceFile}));
     });
     const page=await context.newPage();
     await page.goto(origin+basePath);
     const button=(id:string)=>page.getByTestId(id);
     const consent=()=>page.evaluate(()=>localStorage.getItem('nuts_analytics_consent_v1'));
     const events=()=>page.evaluate(()=>((window as any).dataLayer??[]).filter((entry:any)=>entry[0]==='event').length);
-    const csp=()=>page.evaluate(()=>(window as any).qaCsp as string[]);
+    const csp=()=>page.evaluate(()=>(window as any).qaCsp as {directive:string;sample:string;tag:string|null;source:string}[]);
+    const unexpectedViolations=async()=>(await csp()).filter(issue=>!(
+      browserName==='webkit'&&issue.directive==='style-src-attr'&&issue.tag==='SELECT'&&issue.sample==='text-overflow:inherit'
+    ));
     const geometry=async()=>{
       expect(await page.evaluate(()=>[window.scrollY,document.body.scrollTop,document.documentElement.scrollTop])).toEqual([0,0,0]);
       const stage=(await page.locator('#viewport').boundingBox())!;
@@ -46,6 +51,7 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     await expect(button('new-shift')).toBeFocused();
     expect(await consent()).toBeNull();
     await geometry();
+    await button('menu-privacy').scrollIntoViewIfNeeded();
     await button('menu-privacy').tap();
     await expect(button('analytics-decline')).toBeFocused();
     await page.keyboard.press('Tab');
@@ -56,7 +62,7 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     expect(await consent()).toBe('denied');
     expect(requests).toEqual([]);
     expect(await events()).toBe(0);
-    expect(await csp()).toEqual([]);
+    expect(await unexpectedViolations()).toEqual([]);
     await page.reload();
     await expect(button('new-shift')).toBeFocused();
     expect(await consent()).toBe('denied');
@@ -73,7 +79,7 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     await page.locator('#hud-pause').tap();
     await button('pause-menu').tap();
     expect(await events()).toBeGreaterThan(0);
-    expect(await csp()).toEqual([]);
+    expect(await unexpectedViolations()).toEqual([]);
     await page.reload();
     await expect(button('new-shift')).toBeFocused();
     expect(await consent()).toBe('granted');
@@ -96,7 +102,7 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     expect(await events()).toBe(sent);
     expect(await consent()).toBe('denied');
     await geometry();
-    expect(await csp()).toEqual([]);
+    expect(await unexpectedViolations()).toEqual([]);
     await info.attach('strict-csp', {body:JSON.stringify({width,height,requests,violations:await csp()}),contentType:'application/json'});
   }finally{
     await context.close();

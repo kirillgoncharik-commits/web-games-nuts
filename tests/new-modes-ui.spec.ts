@@ -58,7 +58,9 @@ test('Duel imports across profiles, rejects malformed and incompatible codes, an
     await expect.poll(async()=>(await state(target)).screen).toBe('result');
     const first=await state(target);
     expect(first.campaign).toBeNull();
-    expect(first.challengeResult.outcome).toBe('dnf');
+    expect(first.challengeResult).toMatchObject({state:'dnf',outcome:'cancelled'});
+    await target.getByTestId('challenge-export-duel').click();
+    await expect.poll(()=>target.locator('#result-code').inputValue()).toMatch(/^CS64-R1\./);
     await target.getByTestId('challenge-retry').click();
     await expect.poll(async()=>(await state(target)).state).toBe('playing');
     expect((await state(target)).challengeKey).toBe(first.challengeKey);
