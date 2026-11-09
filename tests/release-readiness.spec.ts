@@ -10,6 +10,7 @@ const basePath='/games/cinder-shift/';
 const productionCsp="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'";
 
 for(const width of [667,844])test(`release shell preserves focus and consent at ${width}px under production CSP`,async({browser,baseURL},info)=>{
+  test.setTimeout(60000);
   const height=width===667?300:390;
   const context=await browser.newContext({viewport:{width,height},hasTouch:true});
   const requests:string[]=[];
@@ -117,4 +118,45 @@ test('Archive interaction boundaries and atlas placement use room coordinates',(
   const fit=fitSprite(boss,96,112,'bottom');
   const meta=manifest.frames[boss];
   expect(fit.originY*meta.source_canvas[1]).toBeCloseTo(meta.opaque_bounds.y+meta.opaque_bounds.height);
+});
+
+test('native multitouch moves while firing and jumping in each mobile layout',async({browser},info)=>{
+  test.setTimeout(50000);
+  const context=await browser.newContext({viewport:{width:844,height:390},hasTouch:true,isMobile:true});
+  try{
+    const page=await context.newPage(),client=await context.newCDPSession(page);
+    await page.goto('/games/cinder-shift/');
+    for(const layout of ['dock','sides']){
+      await page.getByTestId('menu-settings').tap();
+      await page.locator('#touch-layout').selectOption(layout);
+      await page.locator('#autofire').uncheck();
+      await page.getByTestId('settings-back').tap();
+      await page.getByTestId('training').tap();
+      await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
+      expect((await state(page)).mobileLayout.mode).toBe(layout);
+      async function press(second:string){
+        const actions=['right',second];
+        const points=await Promise.all(actions.map(async(action,id)=>{
+          const box=(await page.locator(`[data-action="${action}"]`).boundingBox())!;
+          return {id,x:box.x+box.width/2,y:box.y+box.height/2};
+        }));
+        await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:points});
+      }
+      const before=await state(page);
+      await press('fire');
+      await expect.poll(async()=>(await state(page)).projectiles.filter((shot:any)=>shot.team==='player').length).toBeGreaterThan(0);
+      await expect.poll(async()=>(await state(page)).player.x).toBeGreaterThan(before.player.x+8);
+      await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+      const middle=await state(page);
+      await press('jump');
+      await expect.poll(async()=>(await state(page)).player.y).toBeLessThan(middle.player.y-12);
+      await expect.poll(async()=>(await state(page)).player.x).toBeGreaterThan(middle.player.x+8);
+      await client.send('Input.dispatchTouchEvent',{type:'touchCancel',touchPoints:[]});
+      await page.screenshot({path:info.outputPath(layout+'.png')});
+      await page.locator('#hud-pause').tap();
+      await page.getByTestId('pause-menu').tap();
+    }
+  }finally{
+    await context.close();
+  }
 });

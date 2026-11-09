@@ -1,4 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
+import {decodeCode,encodeCode} from '../games/cinder-shift/src/session/challenge-code';
 import {completeFromB,roomA,state} from './helpers';
 
 async function openChallenges(page:Page){await page.goto('/games/cinder-shift/?seed=4');await page.getByTestId('menu-challenges').click();await expect.poll(async()=>(await state(page)).screen).toBe('challenges');}
@@ -23,4 +24,43 @@ test('Daily, Duel, and Relay have explicit local entry and manual code paths',as
 
 test('Relay completes Stage A, collects Intel, exports H1, and starts Stage B',async({page})=>{
   test.setTimeout(120_000);await openChallenges(page);await page.getByTestId('mode-relay').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await roomA(page);await completeFromB(page,{collectRelayIntel:true});await expect.poll(async()=>(await state(page)).screen).toBe('relay-support');await expect.poll(async()=>(await state(page)).challengeResult?.outcome).toBe('victory');await page.getByTestId('relay-support-power').click();const handoff=page.locator('#relay-handoff-code');await expect.poll(()=>handoff.inputValue()).toMatch(/^CS64-H1\./);await page.getByTestId('relay-start-stage-b').click();await expect.poll(async()=>(await state(page)).relayLeg).toBe('B');await expect.poll(async()=>(await state(page)).state).toBe('countdown');await page.getByTestId('challenge-cancel').click();await expect.poll(async()=>(await state(page)).screen).toBe('challenges');
+});
+
+test('Duel imports across profiles, rejects malformed and incompatible codes, and retries DNF',async({browser})=>{
+  test.setTimeout(60000);
+  const author=await browser.newContext(),recipient=await browser.newContext();
+  try{
+    const source=await author.newPage(),target=await recipient.newPage();
+    await openChallenges(source);
+    await source.getByTestId('challenge-create-duel').click();
+    const sourceCode=source.locator('#challenge-code');
+    await expect.poll(()=>sourceCode.inputValue()).toMatch(/^CS64-C1\./);
+    const code=await sourceCode.inputValue(),decoded=await decodeCode(code,'challenge');
+    const spec=decoded.payload.spec as Record<string,unknown>;
+    const incompatible=await encodeCode('challenge',{...decoded.payload,spec:{...spec,simulation_version:'incompatible'}});
+    await openChallenges(target);
+    const importCode=async(value:string)=>{
+      await target.locator('#challenge-code').fill(value);
+      await target.getByTestId('challenge-import-code').click();
+      await expect(target.locator('[data-code-status]')).toBeVisible();
+    };
+    for(const invalid of ['invalid',incompatible]){
+      await importCode(invalid);
+      await expect(target.getByTestId('challenge-accept-duel')).toHaveCount(0);
+    }
+    await importCode(code);
+    await target.getByTestId('challenge-accept-duel').click();
+    await expect.poll(async()=>(await state(target)).state,{timeout:10000}).toBe('playing');
+    await target.keyboard.press('Escape');
+    await target.getByTestId('challenge-abandon').click();
+    await expect.poll(async()=>(await state(target)).screen).toBe('result');
+    const first=await state(target);
+    expect(first.campaign).toBeNull();
+    expect(first.challengeResult.outcome).toBe('dnf');
+    await target.getByTestId('challenge-retry').click();
+    await expect.poll(async()=>(await state(target)).state).toBe('playing');
+    expect((await state(target)).challengeKey).toBe(first.challengeKey);
+  }finally{
+    await Promise.all([author.close(),recipient.close()]);
+  }
 });

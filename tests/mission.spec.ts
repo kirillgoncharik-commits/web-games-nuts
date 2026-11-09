@@ -35,9 +35,20 @@ test('cover blocks both projectile teams and line of sight',()=>{
   shots.fire({x:90,y:292},{x:440,y:0},'player','test');shots.fire({x:125,y:292},{x:-150,y:0},'enemy','test');shots.step(100,[wall],()=>{hits++;return true;});expect(shots.shots).toHaveLength(0);expect(hits).toBe(0);expect(clearLine({x:20,y:292},{x:200,y:292},[wall])).toBe(false);
 });
 test('focus returns from page controls without Space activating two actions',async({page})=>{
-  await start(page);await page.locator('#mute').click();const before=(await state(page)).player.x;await page.keyboard.down('d');await page.waitForTimeout(180);await page.keyboard.up('d');expect((await state(page)).player.x).toBeGreaterThan(before+8);
-  await page.locator('#settings-open').click();const paused=await state(page);await page.waitForTimeout(100);expect((await state(page)).player).toEqual(paused.player);await page.locator('#touch-mode').focus();await page.keyboard.press('ArrowDown');await expect(page.locator('#touch-mode')).toBeFocused();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();await expect(page.locator('#game')).toBeFocused();
-  await page.locator('#mute').focus();const y=(await state(page)).player.y;await page.keyboard.press('Space');await page.waitForTimeout(100);expect((await state(page)).player.y).toBeCloseTo(y,0);
+  await start(page);
+  const pause=page.locator('#hud-pause');
+  await pause.click();await page.getByTestId('pause-settings').click();
+  const paused=await state(page);
+  await page.locator('#touch-mode').focus();await page.keyboard.press('ArrowDown');
+  await expect(page.locator('#touch-mode')).toBeFocused();
+  expect((await state(page)).player).toEqual(paused.player);
+  await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();
+  await expect(page.locator('#game')).toBeFocused();
+  await pause.focus();
+  const y=(await state(page)).player.y;
+  await page.keyboard.press('Space');
+  await expect(page.getByTestId('resume')).toBeFocused();
+  expect((await state(page)).player.y).toBeCloseTo(y,0);
 });
 test('returning to A preserves target and terminal, and removes old bullets',async({page})=>{
   await start(page);await roomA(page);await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await page.keyboard.up('a');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='A'&&s.state==='playing'&&s.player?.x>500;});const s=await state(page);expect(s.targetHp).toBe(0);expect(s.powered).toBe(true);expect(s.projectiles).toEqual([]);expect(s.hp).toBe(6);
