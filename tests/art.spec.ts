@@ -26,7 +26,7 @@ test('raster assets load locally, HUD stays legible, poses and debug are separat
   await expect(page.locator('#hp-segments i')).toHaveCount(6);expect(await page.locator('#hp-value').innerText()).toBe('6/6');
   expect(await page.locator('#hud').evaluate(el=>parseFloat(getComputedStyle(el).fontSize))).toBeGreaterThanOrEqual(14);
   const pause=await page.locator('#hud-pause').boundingBox();expect(pause!.width).toBeGreaterThanOrEqual(48);expect(pause!.height).toBeGreaterThanOrEqual(48);
-  await page.locator('#settings-open').click();await page.locator('.technical summary').click();await page.locator('#debug-bodies').check();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();await page.locator('#viewport').screenshot({path:info.outputPath('body-overlay.png')});await page.locator('#settings-open').click();await page.locator('.technical summary').click();await page.locator('#debug-bodies').uncheck();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();
+  await page.locator('#hud-pause').click();await page.getByTestId('pause-settings').click();await page.locator('.technical summary').click();await page.locator('#debug-bodies').check();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();await page.locator('#viewport').screenshot({path:info.outputPath('body-overlay.png')});await page.locator('#hud-pause').click();await page.getByTestId('pause-settings').click();await page.locator('.technical summary').click();await page.locator('#debug-bodies').uncheck();await page.getByTestId('settings-back').click();await page.getByTestId('resume').click();
   expect(errors).toEqual([]);expect(missing).toEqual([]);
 });
 

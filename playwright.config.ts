@@ -6,8 +6,8 @@ export default defineConfig({
   projects:[
     {name:'chromium',use:{browserName:'chromium'}},
     ...(process.env.CROSS_BROWSER==='1'?[
-      {name:'firefox',testMatch:/^(mission|release-readiness)\.spec\.ts$/,grep:/A to B to C|focus returns|release shell/,use:{browserName:'firefox' as const,launchOptions:{}}},
-      {name:'webkit',testMatch:/^(mission|release-readiness)\.spec\.ts$/,grep:/A to B to C|focus returns|release shell/,use:{browserName:'webkit' as const,launchOptions:{}}},
+      {name:'firefox',testMatch:/(mission|release-readiness)\.spec\.ts$/,grep:/A to B to C|focus returns|release shell/,use:{browserName:'firefox' as const,launchOptions:{}}},
+      {name:'webkit',testMatch:/(mission|release-readiness)\.spec\.ts$/,grep:/A to B to C|focus returns|release shell/,use:{browserName:'webkit' as const,launchOptions:{}}},
     ]:[]),
   ],
   webServer:process.env.CINDER_BASE_URL?undefined:{command:'npm run preview',env:{CINDER_QA_MUTE:'1'},url:'http://127.0.0.1:4175/games/cinder-shift/',reuseExistingServer:false},
