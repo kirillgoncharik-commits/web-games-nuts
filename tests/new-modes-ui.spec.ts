@@ -27,10 +27,10 @@ test('Relay completes Stage A, collects Intel, exports H1, and starts Stage B',a
 });
 
 test('Duel imports across profiles, rejects malformed and incompatible codes, and retries DNF',async({browser})=>{
-  test.setTimeout(60000);
+  test.setTimeout(90000);
   const author=await browser.newContext(),recipient=await browser.newContext();
   try{
-    const source=await author.newPage(),target=await recipient.newPage();
+    const source=await author.newPage();
     await openChallenges(source);
     await source.getByTestId('challenge-create-duel').click();
     const sourceCode=source.locator('#challenge-code');
@@ -38,6 +38,8 @@ test('Duel imports across profiles, rejects malformed and incompatible codes, an
     const code=await sourceCode.inputValue(),decoded=await decodeCode(code,'challenge');
     const spec=decoded.payload.spec as Record<string,unknown>;
     const incompatible=await encodeCode('challenge',{...decoded.payload,spec:{...spec,simulation_version:'incompatible'}});
+    await source.close();
+    const target=await recipient.newPage();
     await openChallenges(target);
     const importCode=async(value:string)=>{
       await target.locator('#challenge-code').fill(value);

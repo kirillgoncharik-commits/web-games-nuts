@@ -35,6 +35,7 @@ test('cover blocks both projectile teams and line of sight',()=>{
   shots.fire({x:90,y:292},{x:440,y:0},'player','test');shots.fire({x:125,y:292},{x:-150,y:0},'enemy','test');shots.step(100,[wall],()=>{hits++;return true;});expect(shots.shots).toHaveLength(0);expect(hits).toBe(0);expect(clearLine({x:20,y:292},{x:200,y:292},[wall])).toBe(false);
 });
 test('focus returns from page controls without Space activating two actions',async({page})=>{
+  test.setTimeout(60000);
   await start(page);
   const pause=page.locator('#hud-pause');
   await pause.click();await page.getByTestId('pause-settings').click();

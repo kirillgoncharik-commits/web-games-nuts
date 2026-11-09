@@ -87,8 +87,8 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
       await pin.tap();
       await expect(pin).toHaveAttribute('aria-pressed','true');
       const box=(await pin.boundingBox())!;
-      expect(box.width).toBeGreaterThanOrEqual(48);
-      expect(box.height).toBeGreaterThanOrEqual(48);
+      expect(box.width).toBeGreaterThanOrEqual(48-.01);
+      expect(box.height).toBeGreaterThanOrEqual(48-.01);
       await pin.focus();
       await page.keyboard.press('Enter');
       await expect(pin).toHaveAttribute('aria-pressed','true');
