@@ -44,9 +44,9 @@ export function characterSlots(i:I18n){
  return'<p class="helper">'+e(i.t('character.context'))+'</p><div class="character-grid"><section class="character-slot available" aria-label="'+e(i.t('character.mira.name'))+'">'+heroImage(i)+'<h3>'+e(i.t('character.mira.name'))+'</h3><p class="helper">'+e(i.t('character.mira.role'))+'</p></section>'+[2,3].map(slot=>'<section class="character-slot locked" aria-disabled="true"><span class="locked-mark" aria-hidden="true">?</span><strong>'+e(i.t('character.slot',{slot}))+'</strong><p>'+e(i.t('character.soon'))+'</p></section>').join('')+'</div>';
 }
 
-export function selectionSummary(i:I18n,nodes:readonly NodeId[],selected:NodeId,active:ActiveSkill=nodes.includes('M1')?'M1':null){
+export function selectionSummary(i:I18n,nodes:readonly NodeId[],selected:NodeId,points:number,active:ActiveSkill=nodes.includes('M1')?'M1':null){
  const node=research.find(n=>n.id===selected)!,now=characterProfile(nodes,active),next=previewProfile(nodes,selected,active);
  const key=selected==='D1'?'maxHp':selected==='D2'?'buffer':selected==='D3'?'shieldClear':selected==='D4'?'deathSave':selected==='W1'?'projectilesPerShot':selected==='W2'?'piercing':selected==='W3'?'ricochet':selected==='W4'?'chargedShot':selected==='M2'?'airDash':selected==='M3'?'wallMove':selected==='M4'?'phaseDash':'active';
  const display=(p:CharacterProfile)=>value(i,p,key);
- return'<div class="selected-module" role="status" aria-live="polite">'+researchIcon(node.icon)+'<div><strong>'+e(selected+' / '+i.t(node.nameKey))+'</strong><p class="selected-change">'+e(i.t('workshop.stat.'+key))+': <span data-testid="current-'+key+'">'+e(display(now))+'</span> → <span class="stat-change" data-testid="preview-'+key+'">'+e(display(next))+'</span></p></div></div>';
+ return'<div class="selected-module" role="status" aria-live="polite">'+researchIcon(node.icon)+'<div><strong>'+e(selected+' / '+i.t(node.nameKey))+'</strong><p class="selection-cost"><span data-testid="selected-cost">'+e(i.t('research.cost',{cost:node.cost}))+'</span><span data-testid="selected-points">'+e(i.t('common.points',{points}))+'</span></p><p class="selected-change">'+e(i.t('workshop.stat.'+key))+': <span data-testid="current-'+key+'">'+e(display(now))+'</span> → <span class="stat-change" data-testid="preview-'+key+'">'+e(display(next))+'</span></p></div></div>';
 }

@@ -36,7 +36,6 @@
   window.gtag('consent', 'default', {analytics_storage:'denied', ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied'});
   function apply(value) {
     choice = value;
-    try { localStorage.setItem(key, value); } catch (_) {}
     window['ga-disable-' + id] = value !== 'granted';
     window.gtag('consent', 'update', {analytics_storage: value === 'granted' ? 'granted' : 'denied'});
     if (value !== 'granted' || loaded) return;
@@ -55,30 +54,11 @@
     tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
     document.head.appendChild(tag);
   }
-  if (choice) apply(choice);
-  document.addEventListener('DOMContentLoaded', () => {
-    const ru = document.documentElement.lang === 'ru';
-    const settings = document.createElement('button');
-    settings.type = 'button'; settings.className = 'game-analytics-settings';
-    settings.textContent = ru ? 'Настройки аналитики' : 'Analytics preferences';
-    function show() {
-      if (document.querySelector('.game-analytics-consent')) return;
-      const banner = document.createElement('aside');
-      banner.className = 'game-analytics-consent';
-      banner.setAttribute('aria-label', settings.textContent);
-      const text = document.createElement('p');
-      text.textContent = ru ? 'Разрешить статистику посещений и игровых действий? Игра работает и без аналитики.' : 'Allow visit and gameplay statistics? The game also works without analytics.';
-      banner.appendChild(text);
-      for (const value of ['denied', 'granted']) {
-        const button = document.createElement('button'); button.type = 'button';
-        button.textContent = value === 'granted' ? (ru ? 'Разрешить' : 'Allow analytics') : (ru ? 'Нет, спасибо' : 'No thanks');
-        button.addEventListener('click', () => { apply(value); banner.remove(); settings.focus(); });
-        banner.appendChild(button);
-      }
-      document.body.appendChild(banner);
-    }
-    settings.addEventListener('click', show);
-    document.body.appendChild(settings);
-    if (!choice) show();
+  if (choice === 'granted' || choice === 'denied') apply(choice);
+  window.addEventListener('cinder:analytics-choice', event => {
+    if (event.detail === 'granted' || event.detail === 'denied') apply(event.detail);
+  });
+  window.addEventListener('storage', event => {
+    if (event.key === key) apply(event.newValue === 'granted' ? 'granted' : 'denied');
   });
 })();

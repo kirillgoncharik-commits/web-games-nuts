@@ -2,29 +2,44 @@ import{test,expect}from'@playwright/test';
 import{Campaign,newCampaign,contentVersion,type MissionEntry}from'../games/cinder-shift/src/session/campaign';
 import{missions,missionIds,missionSeed}from'../games/cinder-shift/src/session/missions';
 import{loadout}from'../games/cinder-shift/src/session/research';
-import{planEvents,validPlan}from'../games/cinder-shift/src/session/events';
+import{planEvents,validPlan,migrateEventPlan}from'../games/cinder-shift/src/session/events';
 import{migrateSave,validateSave}from'../games/cinder-shift/src/session/save';
 import{MissionAttempt,SimulationClock,rooms}from'../games/cinder-shift/src/mission';
 import{createEnemy,stepEnemy,suspendEnemy,enemyRect}from'../games/cinder-shift/src/enemies';
 import{Projectiles}from'../games/cinder-shift/src/projectiles';
-import{intersects}from'../games/cinder-shift/src/geometry';
+import{clearLine,intersects}from'../games/cinder-shift/src/geometry';
+import{roomThreatCanActivate}from'../games/cinder-shift/src/session/threat-activation';
 const envelope=(c:Campaign)=>({schema_version:1,content_version:contentVersion,game_id:'r01',build_id:'0.6.0-m05b1.2',saved_at:'2026-11-07T08:00:00Z',campaign:c.snapshot()});
 function win(c:Campaign,id:string){c.prepare();c.begin();return c.applyResult({attempt_id:id,mission_id:c.data.mission_id,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:60000,screen_ms:1000,nodes:[...c.data.nodes]});}
 const cargoEntry=(nodes:Parameters<typeof loadout>[0]=[]):MissionEntry=>({mission_id:'cargo',seed:missionSeed(3,'cargo'),build:loadout(nodes),max_hp:loadout(nodes).maxHp,initial_hp:loadout(nodes).maxHp,initial_score:0,event_plan:planEvents(missionSeed(3,'cargo'),'cargo')});
 
-test('two-sector progression freezes entries, rewards once, preserves the last result and records a campaign checkpoint',()=>{
+test('campaign progression freezes entries and grants each sector reward once across five sectors',()=>{
  const c=new Campaign(newCampaign(45));expect(c.selectMission('cargo')).toBe(false);expect(c.data.points).toBe(1);expect(win(c,'airlock-1')).toBe(true);expect(c.data.points).toBe(2);expect(validateSave(envelope(c))).toBeNull();
  const airlockEntry=structuredClone(c.data.entry);expect(c.advance()).toBe(true);expect(c.data).toMatchObject({mission_id:'cargo',location_id:'airlock',stage:'map',points:2});expect(c.data.entry).toEqual(airlockEntry);expect(validateSave(envelope(c))).toBeNull();
  c.selectMission('cargo');const next=c.prepare();expect(next.seed).toBe(missionSeed(45,'cargo'));expect(next.seed).not.toBe(45);expect(validPlan(next.event_plan,'cargo')).toBe(true);c.begin();expect(c.data.location_id).toBe('cargo');
- expect(c.applyResult({attempt_id:'cargo-1',mission_id:'cargo',result:'victory',reason:'',hp:4,max_hp:6,score:0,active_ms:100000,screen_ms:0,nodes:[]})).toBe(true);expect(c.data.points).toBe(3);expect(c.advance()).toBe(false);expect(c.data.stage).toBe('campaign_checkpoint');expect(validateSave(envelope(c))).toBeNull();
+ expect(c.applyResult({attempt_id:'cargo-1',mission_id:'cargo',result:'victory',reason:'',hp:4,max_hp:6,score:0,active_ms:100000,screen_ms:0,nodes:[]})).toBe(true);expect(c.data.points).toBe(3);expect(c.advance()).toBe(true);expect(c.data).toMatchObject({mission_id:'foundry',stage:'map',points:3});expect(validateSave(envelope(c))).toBeNull();
  expect(c.selectMission('airlock')).toBe(true);win(c,'airlock-replay');expect(c.data.points).toBe(3);expect(c.data.result?.reward_granted).toBe(false);expect(c.data.reward_ledger).toHaveLength(2);expect(c.applyResult(c.data.result!)).toBe(false);
 });
-test('all seven room IDs, preset bodies and mission-specific event plans are consistent',()=>{
- const ids=missionIds.filter(id=>missions[id].implemented).flatMap(id=>[...missions[id].rooms]);expect(ids).toHaveLength(7);expect(new Set(ids).size).toBe(7);
- for(const id of ids){expect(rooms[id].id).toBe(id);for(const enemy of rooms[id].enemies){expect(()=>createEnemy(enemy)).not.toThrow();expect(rooms[id].solids.some(s=>intersects(enemyRect(createEnemy(enemy)),s)),enemy.id+' spawn intersects geometry').toBe(false);}}
- for(let seed=0;seed<32;seed++){expect(validPlan(planEvents(seed),'airlock')).toBe(true);expect(validPlan(planEvents(seed,'cargo'),'cargo')).toBe(true);expect(planEvents(seed,'cargo').every(e=>e.room_id==='E')).toBe(true);expect(planEvents(seed).every(e=>e.room_id==='B')).toBe(true);}
+test('all twenty room IDs, preset bodies and mission-specific event plans are consistent',()=>{
+ const ids=missionIds.filter(id=>missions[id].implemented).flatMap(id=>[...missions[id].rooms]);expect(ids).toHaveLength(20);expect(new Set(ids).size).toBe(20);
+ const overlaps:string[]=[];for(const id of ids){expect(rooms[id].id).toBe(id);for(const enemy of rooms[id].enemies){expect(()=>createEnemy(enemy)).not.toThrow();if(rooms[id].solids.some(s=>intersects(enemyRect(createEnemy(enemy)),s)))overlaps.push(id+':'+enemy.id);}}expect(overlaps).toEqual([]);
+ for(let seed=0;seed<32;seed++){expect(validPlan(planEvents(seed),'airlock')).toBe(true);expect(validPlan(planEvents(seed,'cargo'),'cargo')).toBe(true);expect(planEvents(seed,'cargo').every(e=>e.room_id==='F')).toBe(true);expect(planEvents(seed).every(e=>e.room_id==='B')).toBe(true);}
  expect(validPlan([{event_id:'E01',definition_version:1,room_id:'B',variant:'emergency-power'}],'cargo')).toBe(false);
  expect(()=>createEnemy({...rooms.E.enemies[0],preset:'walker_security'})).toThrow('invalid_enemy_preset');
+});
+test('E01 is versioned in F while the E teaching turret remains powered in every plan',()=>{
+ const oldE01=[{event_id:'E01' as const,definition_version:1 as const,room_id:'E' as const,variant:'emergency-power' as const}];expect(validPlan(oldE01,'cargo')).toBe(true);expect(migrateEventPlan(oldE01)).toEqual([{event_id:'E01',definition_version:2,room_id:'F',variant:'emergency-power'}]);
+ const on:MissionEntry={...cargoEntry([]),event_plan:[{event_id:'E01',definition_version:2,room_id:'F',variant:'emergency-power'}]},off:MissionEntry={...cargoEntry([]),event_plan:[]};
+ for(const entry of [on,off]){const attempt=new MissionAttempt('mission',entry);attempt.current='E';expect(attempt.enemyPowered(attempt.room().enemies.find(enemy=>enemy.id==='e-turret'))).toBe(true);attempt.current='F';const late=attempt.room().enemies.find(enemy=>enemy.id==='f-event-turret');expect(attempt.enemyPowered(late)).toBe(false);if(entry===on){attempt.room().terminal=true;expect(attempt.enemyPowered(late)).toBe(true);}}
+});
+test('R01 and R02 have shielded alcoves and R02 waits for the energy cell',()=>{
+ expect(rooms.B.safeZones).toContainEqual(expect.objectContaining({slot:'R01',shielded:true}));expect(rooms.F.safeZones).toContainEqual(expect.objectContaining({slot:'R02',shielded:true}));
+ const attempt=new MissionAttempt('mission',cargoEntry([]));attempt.current='F';attempt.hp=3;expect(attempt.claimRepair('R02')).toBe(false);expect(attempt.room('F').repairUsed).toBe(false);attempt.cellCollected=true;expect(attempt.claimRepair('R02')).toBe(true);expect(attempt.hp).toBe(5);expect(attempt.claimRepair('R02')).toBe(false);attempt.current='E';attempt.current='F';expect(attempt.claimRepair('R02')).toBe(false);
+ const fresh=new MissionAttempt('mission',cargoEntry([]));fresh.current='F';fresh.cellCollected=true;expect(fresh.claimRepair('R02')).toBe(false);expect(fresh.room('F').repairUsed).toBe(false);fresh.hp=4;expect(fresh.claimRepair('R02')).toBe(true);expect(fresh.hp).toBe(6);
+});
+test('the B drone waits for walker defeat or the intended sight break, and C caps active threats at two',()=>{
+ const walker=createEnemy(rooms.B.enemies.find(enemy=>enemy.id==='b-walker')!),drone=createEnemy(rooms.B.enemies.find(enemy=>enemy.id==='b-drone')!),roster=[walker,drone];expect(roomThreatCanActivate('B',drone,roster,{x:400,y:295},rooms.B.solids)).toBe(false);expect(roomThreatCanActivate('B',drone,roster,{x:553,y:295},[...rooms.B.solids,{x:521,y:270,width:10,height:50}])).toBe(true);walker.hp=0;expect(roomThreatCanActivate('B',drone,roster,{x:400,y:295},rooms.B.solids)).toBe(true);
+ const threats=rooms.C.enemies.map(createEnemy),next=threats[2];threats[0].active=true;threats[1].active=true;expect(roomThreatCanActivate('C',next,threats,{x:600,y:295},rooms.C.solids)).toBe(false);threats[0].hp=0;expect(roomThreatCanActivate('C',next,threats,{x:600,y:295},rooms.C.solids)).toBe(true);
 });
 test('dependencies and a selectable active slot preserve the campaign budget',()=>{
  const c=new Campaign(newCampaign(7));c.selectMission('airlock');expect(c.buy('W2')).toBe(false);expect(c.data.points).toBe(1);expect(c.buy('M1')).toBe(true);expect(c.data.active).toBe('M1');expect(c.selectActive(null)).toBe(true);expect(loadout(c.data.nodes,c.data.active).dash).toBe(false);

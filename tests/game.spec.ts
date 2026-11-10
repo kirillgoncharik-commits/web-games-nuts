@@ -72,7 +72,7 @@ test('touch is cancel-safe, both layouts fit, portrait pauses',async({browser},i
   await page.waitForTimeout(200);expect(Math.abs((await snapshot(page)).player.x-x)).toBeLessThan(2);
   await expect(page.locator('.masthead')).toBeHidden();
   await page.screenshot({path:info.outputPath('mobile-dock.png')});
-  await page.locator('#settings-open').tap();await page.locator('#touch-layout').selectOption('sides');await page.getByTestId('settings-back').tap();await page.getByTestId('resume').tap();
+  await page.locator('#hud-pause').tap();await page.getByTestId('pause-settings').tap();await page.locator('#touch-layout').selectOption('sides');await page.getByTestId('settings-back').tap();await page.getByTestId('resume').tap();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await page.screenshot({path:info.outputPath('mobile-sides.png')});
   await page.setViewportSize({width:390,height:844});await expect(page.getByText(/Поверните телефон/)).toBeVisible();expect((await snapshot(page)).state).toBe('paused');

@@ -34,6 +34,38 @@ const families = [
   ['ART-21','reactor-landmark','art21_reactor_landmarks-master.png',2,2,['power-bus','cooling-manifold','beacon-mast'],'bottom'],
 ];
 
+function opaqueBounds(rgba,width,height){
+  let left=width,top=height,right=0,bottom=0;
+  for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    if(!rgba[(y*width+x)*4+3])continue;
+    left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x+1);bottom=Math.max(bottom,y+1);
+  }
+  if(left>=right||top>=bottom)throw Error('empty art frame');
+  return {x:left,y:top,width:right-left,height:bottom-top};
+}
+
+function keepMainSilhouette(rgba,width,height){
+  const seen=new Uint8Array(width*height);
+  let largest=[];
+  for(let i=0;i<seen.length;i++){
+    if(seen[i]||rgba[i*4+3]<128)continue;
+    const region=[i];
+    seen[i]=1;
+    for(let n=0;n<region.length;n++){
+      const x=region[n]%width,y=Math.floor(region[n]/width);
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+        const nx=x+dx,ny=y+dy,at=ny*width+nx;
+        if(nx<0||nx>=width||ny<0||ny>=height||seen[at]||rgba[at*4+3]<128)continue;
+        seen[at]=1;region.push(at);
+      }
+    }
+    if(region.length>largest.length)largest=region;
+  }
+  seen.fill(0);
+  for(const i of largest)seen[i]=1;
+  for(let i=0;i<seen.length;i++)if(!seen[i])rgba.fill(0,i*4,i*4+4);
+}
+
 const sha = data => createHash('sha256').update(data).digest('hex');
 const loaded = [];
 for (const [family,id,file,cols,rows,states,anchor] of families) {
@@ -47,17 +79,21 @@ for (const [family,id,file,cols,rows,states,anchor] of families) {
     const left=Math.floor(meta.width*col/cols),top=Math.floor(meta.height*row/rows);
     const right=Math.floor(meta.width*(col+1)/cols),bottom=Math.floor(meta.height*(row+1)/rows);
     const crop=await sharp(original).extract({left,top,width:right-left,height:bottom-top}).ensureAlpha().raw().toBuffer({resolveWithObject:true});
-    let minX=crop.info.width,minY=crop.info.height,maxX=-1,maxY=-1;
-    for(let y=0;y<crop.info.height;y++)for(let x=0;x<crop.info.width;x++)if(crop.data[(y*crop.info.width+x)*4+3]>0){minX=Math.min(minX,x);minY=Math.min(minY,y);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);}
-    if(maxX<minX||maxY<minY)throw Error(`empty source frame: ${id}/${states[index]}`);
-    const extracted=await sharp(original).extract({left:left+minX,top:top+minY,width:maxX-minX+1,height:maxY-minY+1}).ensureAlpha().resize({width:cellSize-16,height:cellSize-16,fit:'inside',kernel:'nearest'}).png().toBuffer();
+    const state=states[index],{width,height}=crop.info;
+    if(id==='terminal'&&state.startsWith('data-')||id==='service-cache'&&state==='archive-interact'){
+      keepMainSilhouette(crop.data,width,height);
+    }
+    const bounds=opaqueBounds(crop.data,width,height);
+    const extracted=await sharp(crop.data,{raw:{width,height,channels:4}})
+      .extract({left:bounds.x,top:bounds.y,width:bounds.width,height:bounds.height})
+      .resize({width:cellSize-16,height:cellSize-16,fit:'inside',kernel:'nearest'}).png().toBuffer();
     const em=await sharp(extracted).metadata();
     const placedX=Math.floor((cellSize-em.width)/2);
     const placedY=anchor==='center'?Math.floor((cellSize-em.height)/2):anchor==='top'?4:cellSize-em.height-4;
     const rgba=await sharp({create:{width:cellSize,height:cellSize,channels:4,background:{r:0,g:0,b:0,alpha:0}}}).composite([{input:extracted,left:placedX,top:placedY}]).raw().toBuffer();
     // Generated edge antialiasing is snapped to hard alpha; transparent RGB is cleared.
     for(let p=0;p<rgba.length;p+=4){rgba[p+3]=rgba[p+3]>=128?255:0;if(!rgba[p+3])rgba[p]=rgba[p+1]=rgba[p+2]=0;}
-    loaded.push({family,id,state:states[index],anchor,source:path,sourceSha256:sha(original),rgba,sourceCanvas:[cellSize,cellSize],pivot:anchor==='center'?[48,48]:anchor==='top'?[48,0]:[48,96]});
+    loaded.push({family,id,state:states[index],anchor,source:path,sourceSha256:sha(original),rgba,bounds:opaqueBounds(rgba,cellSize,cellSize),sourceCanvas:[cellSize,cellSize],pivot:anchor==='center'?[48,48]:anchor==='top'?[48,0]:[48,96]});
   }
 }
 
@@ -69,7 +105,7 @@ for(let i=0;i<loaded.length;i++){
  const name=`${frame.id}_${frame.state}`;
  comps.push({input:frame.rgba,raw:{width:cellSize,height:cellSize,channels:4},left:x,top:y});
  frames[name]={frame:{x,y,w:cellSize,h:cellSize},rotated:false,trimmed:false,spriteSourceSize:{x:0,y:0,w:cellSize,h:cellSize},sourceSize:{w:cellSize,h:cellSize},pivot:{x:frame.pivot[0]/cellSize,y:frame.pivot[1]/cellSize}};
- manifestFrames[name]={family:frame.family,state:frame.state,source:frame.source,source_sha256:frame.sourceSha256,source_canvas:frame.sourceCanvas,pivot:frame.pivot,anchor:frame.anchor};
+ manifestFrames[name]={family:frame.family,state:frame.state,source:frame.source,source_sha256:frame.sourceSha256,source_canvas:frame.sourceCanvas,pivot:frame.pivot,anchor:frame.anchor,opaque_bounds:frame.bounds};
 }
 await mkdir(runtimeDir,{recursive:true}); await mkdir(previewDir,{recursive:true});
 const atlasPath=`${runtimeDir}/art-refresh-v1.png`;

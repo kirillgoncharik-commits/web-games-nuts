@@ -11,6 +11,18 @@ if (process.env.SOURCE_SHA && process.env.SOURCE_SHA !== sha) throw Error('SOURC
 export default defineConfig({
   root: 'games/cinder-shift',
   base: './',
+  plugins: [{
+    name: 'cinder-channel-html',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html) {
+        if (target === 'web') return html;
+        return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
+          .replace('href="/games/"', 'href="https://nuts.bid/games/"');
+      }
+    }
+  }],
   define: { __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
   build: { outDir: '../../dist/cinder-shift', emptyOutDir: true, chunkSizeWarningLimit: 1600 },
 });
