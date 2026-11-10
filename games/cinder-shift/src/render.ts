@@ -15,12 +15,17 @@ import type {Point} from './room-data';
 import type {Player} from './player';
 import type {Projectiles} from './projectiles';
 
+declare const __SOURCE_SHA__:string;
+
 type AssetId=keyof typeof assets.frames;
 export function preloadArt(scene:Phaser.Scene){
   const base='./assets/m03/';
   for(const [name,atlas] of Object.entries(assets.atlases))scene.load.atlas('m03-'+name,base+atlas.image.file,base+atlas.json.file);
   for(const [name,file] of Object.entries(assets.backgrounds))scene.load.image('m03-bg-'+name,base+file.file);
-  scene.load.atlas('art-refresh-v1','./assets/art-refresh-v1/art-refresh-v1.png','./assets/art-refresh-v1/art-refresh-v1.json');
+  // The public atlas paths stay stable, so use the source revision as the cache key.
+  const atlas='./assets/art-refresh-v1/art-refresh-v1';
+  const version=`?v=${__SOURCE_SHA__}`;
+  scene.load.atlas('art-refresh-v1',`${atlas}.png${version}`,`${atlas}.json${version}`);
   scene.load.image('promo-loading','./assets/m06/'+promo.loading.file);scene.load.image('promo-menu','./assets/m06/'+promo.menu.file);
 }
 
