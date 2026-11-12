@@ -17,22 +17,23 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.3",
-    "stage": "foundry_regulator_and_hit_alert",
+    "build_id": "0.7.0-rework.4",
+    "stage": "foundry_safe_approach_and_hit_alert",
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "pending_rework3",
+      "typecheck": "pending_rework4",
       "i18n": "passed_640_en_ru_keys",
-      "build": "pending_rework3",
+      "build": "pending_rework4",
       "art_contracts": "pending_rework3; regulator image unchanged",
-      "model_tests": "pending_rework3; previous .2 candidate passed 57 selected model tests",
-      "browser_tests": "Rework.3 code changed: current encounter, full-route and Airlock results pending. Rework.2 passed 33 encounter/UI and 15 full Airlock executions across three browsers; full-route input exposed test-path corrections.",
+      "model_tests": "Rework.3 passed 60 selected model tests; .4 campaign record version updated, pending.",
+      "browser_tests": "Rework.3 passed 36 encounter/UI and 15 full Airlock executions across three browsers. Rework.4 expands the first-press landing pocket and adds a full machine-cycle safety check; exact-source validation pending.",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
       "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts",
       "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-      "persistence": "8 updated IndexedDB/reload/failure tests passed on .2 head 73134b062b12a9e85692b564ecbea524dc8fddf5 in run 43285443292; .3 pending."
+      "persistence": "8 migrated persistence regressions passed on .3; .4 pending.",
+      "full_foundry_routes": "Rework.3 service completed in 60.87–62.02 active seconds with 4 HP; press route exposed a real two-pixel landing gap, fixed in .4 and awaiting validation."
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -223,10 +224,15 @@
       "requirement": "Развести противников по функциям: удержание линии, вытеснение, преследование, контроль приземления, таран/открытое окно. Согласовать detection/activation/leash/return и состав комнат; проверить наложение тел и ситуации, где враги стоят и умирают до реакции.",
       "status": "OPEN",
       "implementation": [
-        "Ram armor survives the teaching charge and exposes its engine during recovery. New Foundry roster separates drone, security, ram and turret roles. Full all-room overlap/leash/reachability review remains open."
+        "Ram armor survives the teaching charge and exposes its engine during recovery. New Foundry roster separates drone, security, ram and turret roles. Full all-room overlap/leash/reachability review remains open.",
+        "Powered impacts alert enemies before proximity activation without bypassing room threat budgets, warnings or recovery. Rework.3 model and real projectile tests passed in Chromium/Firefox/WebKit; all-room AI review remains open."
       ],
-      "verification": [],
-      "evidence": [],
+      "verification": [
+        "3 alert/timing/budget models and the actual distant-shot browser scenario passed on fe4ab6c0482deea238c396b35be8806264b9c3bb (merge 8d9fb111d799cc6f2775aab5608297a32ad937be)."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43286647308"
+      ],
       "publication": "not_published",
       "implementation_status": "partial"
     },

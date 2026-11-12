@@ -74,7 +74,7 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework3');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework4');
 });
 
 

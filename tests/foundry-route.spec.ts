@@ -77,7 +77,7 @@ for(const route of ['service','press'] as const)test(`base suit completes the fu
    await jump(page,130,190);await ground(page,288);await jump(page,215,310);await ground(page,248);
    await page.keyboard.down('s');await clear(page,['m3i-drone']);await page.keyboard.up('s');
    await to(page,380);await ground(page,320);await clear(page,['m3i-security']);await next(page,'M3J',552);await mark();
-   await jump(page,130,216);await ground(page,320);await cross(page,'m3j-press-a',300);await clear(page,['m3j-ram']);await cross(page,'m3j-press-b',507);await next(page,'M3K',520);await mark();
+   await jump(page,106,200);await ground(page,320);await cross(page,'m3j-press-a',300);await clear(page,['m3j-ram']);await cross(page,'m3j-press-b',507);await next(page,'M3K',520);await mark();
   }
   await to(page,112);await ground(page,320);if((await state(page)).hp<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();}
   await jump(page,226,332);await ground(page,320);await to(page,556);await page.keyboard.press('e');await next(page,'M3D');await mark();

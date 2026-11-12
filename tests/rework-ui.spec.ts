@@ -135,3 +135,16 @@ test('a real long-range shot alerts the Archive drone before the player reaches 
  expect(s.audioStatus.played.warn_drone).toBeGreaterThan(0);expect(s.hp).toBe(6);
  await page.screenshot({path:info.outputPath('distant-hit-drone-warning.png')});
 });
+
+
+test('the first press has a base-suit landing pocket that stays safe through a complete machine cycle',async({page},info)=>{
+ await encounter(page,{mission:'foundry',room:'M3J'});
+ await page.keyboard.down('d');await x(page,106);await page.keyboard.down('Space');await x(page,200);
+ await page.keyboard.up('d');await page.keyboard.up('Space');
+ await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&Math.abs(p.vx)<1&&p.y+22>318;});
+ const start=await state(page),press=start.hazards.find((h:any)=>h.id==='m3j-press-a');
+ expect(start.player.x-11).toBeGreaterThan(176);expect(start.player.x+11).toBeLessThan(press.x);expect(start.hp).toBe(6);
+ await page.waitForFunction(before=>(window as any).__CINDER__().simMs>=before+6100,start.simMs);
+ const end=await state(page);expect(end.hp).toBe(6);expect(end.player.y+22).toBeCloseTo(320,0);
+ await page.screenshot({path:info.outputPath('first-press-safe-landing.png')});
+});
