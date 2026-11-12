@@ -35,6 +35,10 @@ for(const width of [1280,667,390])test(`facility inspection and inline module pu
  expect((await state(page)).campaign.points).toBe(0);await expect(page.getByTestId('buy-W1')).toBeDisabled();
  await page.screenshot({path:info.outputPath('workshop.png')});
  expect(await page.locator('.panel-content').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
+ await expect(page.getByTestId('workshop-menu')).toHaveCount(0);
+ const prepared=(await state(page)).campaign;await page.getByTestId('research-close').click();
+ await expect(page.getByTestId('continue')).toBeVisible();await page.getByTestId('continue').click();
+ expect((await state(page)).campaign).toEqual(prepared);await expect(page.getByTestId('briefing')).toBeVisible();
 });
 
 test('arrival is immediately skippable and the first live enemy opens the powered exit',async({page},info)=>{
@@ -50,8 +54,8 @@ async function encounter(page:import('@playwright/test').Page,input:{mission:'fo
  await page.addInitScript(()=>{
   const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
   (window as any).AudioContext=class extends Base{
-   constructor(...args:any[]){try{super(...args);}catch(error){errors.push('context:'+String(error));throw error;}}
-   resume(){return super.resume().catch((error:unknown)=>{errors.push('resume:'+String(error));throw error;});}
+   constructor(...args:any[]){try{super(...args);errors.push('created:'+this.state);this.addEventListener('statechange',()=>errors.push('state:'+this.state));}catch(error){errors.push('context:'+String(error));throw error;}}
+   resume(){errors.push('resume:'+this.state+':active='+navigator.userActivation?.isActive);return super.resume().catch((error:unknown)=>{errors.push('resume:'+String(error));throw error;});}
    decodeAudioData(bytes:ArrayBuffer){return super.decodeAudioData(bytes).catch((error:unknown)=>{errors.push('decode:'+String(error));throw error;});}
   };
  });

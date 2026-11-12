@@ -36,7 +36,7 @@ import assets from '../art/assets.generated.json' with {type:'json'};
 import promo from '../art/promo.generated.json' with {type:'json'};
 
 type Consent='granted'|'denied';
-type Screen='arrival'|'privacy'|'map'|'character'|'menu'|'challenges'|'challenge-countdown'|'relay-support'|'research'|'workshop-menu'|'briefing'|'pause'|'settings'|'result'|'event'|'fork'|'confirm-purchase'|'confirm-event'|'confirm-new'|'resume-entry'|'error';
+type Screen='arrival'|'privacy'|'map'|'character'|'menu'|'challenges'|'challenge-countdown'|'relay-support'|'research'|'briefing'|'pause'|'settings'|'result'|'event'|'fork'|'confirm-purchase'|'confirm-event'|'confirm-new'|'resume-entry'|'error';
 type State='loading'|'menu'|'research'|'briefing'|'playing'|'countdown'|'paused'|'event'|'fork'|'dying'|'complete'|'dead'|'error';
 const $=<T extends HTMLElement=HTMLElement>(id:string)=>document.getElementById(id) as T;
 const trialSeeds=new Map<PlayableMissionId,number>();
@@ -71,7 +71,7 @@ export class Application{
     $('hud-pause').addEventListener('click',()=>this.pause('manual'));
     $('mute').addEventListener('click',()=>{this.effects.muted=!this.effects.muted;this.settings.muted=this.effects.muted;this.controls.clear();void this.persistSettings();this.updateDevice();this.focusGame();});
     $('settings-open').addEventListener('click',()=>this.openSettings());
-    const gesture=(event:Event)=>{if(event.isTrusted&&!document.hidden){this.effects.foreground();void this.effects.unlock();}};document.addEventListener('pointerdown',gesture,true);document.addEventListener('keydown',gesture,true);
+    const gesture=(event:Event)=>{if(event.isTrusted&&!document.hidden){this.effects.foreground();void this.effects.unlock();}};for(const type of ['pointerdown','pointerup','click','keydown'])document.addEventListener(type,gesture,true);
     window.addEventListener('blur',()=>{this.pause('blur');this.effects.background();void this.persist();});
     window.addEventListener('focus',()=>this.effects.foreground());
     document.addEventListener('visibilitychange',()=>{if(document.hidden){this.pause('hidden');this.effects.background();void this.persist();}else this.effects.foreground();});
@@ -306,7 +306,7 @@ export class Application{
   private languageSelect(id:string){this.ui.change(id,value=>this.changeLocale(value));return `<label class="language-label">${e(this.t('settings.locale'))}<select id="${id}" data-focus="${id}" data-testid="${id}"><option value="en" ${this.i18n.locale==='en'?'selected':''}>English</option><option value="ru" ${this.i18n.locale==='ru'?'selected':''}>Русский</option></select></label>`;}
   private hintText(){return this.controls.device==='keyboard'?this.t('settings.controls.keyboard',{left:this.controls.bindingLabel('left'),right:this.controls.bindingLabel('right'),jump:this.controls.bindingLabel('jump'),crouch:this.controls.bindingLabel('crouch'),fire:this.controls.bindingLabel('fire'),interact:this.controls.bindingLabel('interact'),ability:this.controls.bindingLabel('ability'),pause:this.controls.bindingLabel('pause')}):this.t('settings.controls.'+this.controls.device);}
   private hints(){return `<p class="device-hints" data-control-hints>${e(this.hintText())}</p>`;}
-  private button(id:string,key:string,action:()=>void,primary=false,disabled=false){return this.ui.button(id,this.t(key),action,{kind:primary?'primary':'secondary',disabled:disabled||this.busy,busy:this.busy,sound:id.startsWith('cancel')||id.endsWith('-back')?'cancel':undefined});}
+  private button(id:string,key:string,action:()=>void,primary=false,disabled=false){return this.ui.button(id,this.t(key),action,{kind:primary?'primary':'secondary',disabled:disabled||this.busy,busy:this.busy,sound:id.startsWith('cancel')||id.endsWith('-back')||id.endsWith('-close')?'cancel':undefined});}
   private openPrivacy(from:'menu'|'settings'){
     this.privacyReturn=from;
     this.show('privacy');
@@ -330,7 +330,7 @@ export class Application{
     if(this.state==='loading'||!this.game)return;const t=this.t,ui=this.ui,d=this.campaign?.data,a=this.attempt;
     this.controls.setScope(this.state==='paused'?'pause':'menu');
     const active=document.activeElement as HTMLElement,focus=active?.dataset.focus||active?.id;if(this.lastRendered&&focus)this.focusHistory.set(this.lastRendered,focus);
-    const defaults:Partial<Record<Screen,string>>={arrival:'skip-arrival',privacy:'analytics-decline',map:'map-prepare',character:'choose-mira',menu:d?'continue':'new-shift',challenges:'mode-time-attack','challenge-countdown':'challenge-cancel','relay-support':'relay-support-none',research:'research-'+this.selected,'workshop-menu':'workshop-back',briefing:'start-mission',pause:'resume',settings:'locale',event:'event-salvage',result:this.challengeResult?'challenge-retry':d?.result?.result==='victory'?'result-research':'retry','confirm-purchase':'confirm-buy','confirm-event':'confirm-event','confirm-new':'cancel-new','resume-entry':'restart-entry',error:'reload'};
+    const defaults:Partial<Record<Screen,string>>={arrival:'skip-arrival',privacy:'analytics-decline',map:'map-prepare',character:'choose-mira',menu:d?'continue':'new-shift',challenges:'mode-time-attack','challenge-countdown':'challenge-cancel','relay-support':'relay-support-none',research:'briefing',briefing:'start-mission',pause:'resume',settings:'locale',event:'event-salvage',result:this.challengeResult?'challenge-retry':d?.result?.result==='victory'?'result-research':'retry','confirm-purchase':'confirm-buy','confirm-event':'confirm-event','confirm-new':'cancel-new','resume-entry':'restart-entry',error:'reload'};
     const nextFocus=this.lastRendered===this.screen?undefined:this.focusHistory.get(this.screen)||defaults[this.screen];this.lastRendered=this.screen;
     $('overlay').classList.remove('boot-loading');$('overlay').classList.toggle('promo-menu',this.screen==='menu');$('overlay').classList.toggle('workshop-overlay',this.screen==='research'||this.screen==='map');
     ui.show(()=>{
@@ -367,10 +367,9 @@ export class Application{
           ui.change('active-skill',value=>{if(this.campaign?.selectActive(value==='M1'||value==='W4'?value:null)){void this.persist();this.render();}});
           const active=d.nodes.some(id=>id==='M1'||id==='W4')?'<label class="active-picker">'+e(t('research.activeSlot'))+'<select id="active-skill" data-focus="active-skill" data-testid="active-skill"><option value="none" '+(d.active===null?'selected':'')+'>'+e(t('workshop.noActive'))+'</option>'+(['M1','W4'] as const).filter(id=>d.nodes.includes(id)).map(id=>'<option value="'+id+'" '+(d.active===id?'selected':'')+'>'+e(t('research.'+id+'.name'))+'</option>').join('')+'</select></label>':'';
           const body='<div class="mission-prep"><strong>'+e(t(mission.nameKey))+' · '+e(t(mission.goalKey))+'</strong><p class="helper">'+e(this.condition(d.mission_id))+'</p></div>'+active+workshopBody(this.i18n,ui,d,this.selected,id=>{this.selected=id;this.render();},id=>{if(this.busy)return;this.selected=id;this.show('confirm-purchase');},this.busy)+(this.portrait()?'<p class="warning">'+e(t('pause.portrait'))+'</p>':'');
-          const decision='<div class="workshop-buttons">'+this.button('briefing','research.briefing',()=>{void this.prepare();},true,this.portrait())+this.button('research-map','map.open',()=>this.openMap())+this.button('workshop-menu','workshop.menu',()=>this.show('workshop-menu'))+'</div>';
+          const decision='<div class="workshop-buttons">'+this.button('briefing','research.briefing',()=>{void this.prepare();},true,this.portrait())+this.button('research-map','map.open',()=>this.openMap())+this.button('research-close','common.close',()=>this.showMenu())+'</div>';
           return this.wrap(t('research.title'),body,decision,t('common.points',{points:d.points}),'workshop');
         }
-        case'workshop-menu':return this.wrap(t('workshop.menu'),'<p>'+e(t('workshop.nextEntry'))+'</p>',this.button('workshop-back','common.back',()=>this.show('research'),true)+this.button('research-map','map.open',()=>this.openMap())+this.button('research-settings','common.settings',()=>this.openSettings())+this.button('character-select','character.choose',()=>{this.characterInspect=true;this.show('character');})+this.button('research-menu','common.menu',()=>this.showMenu()));
         case'confirm-purchase':{
           if(!d)return'';const node=research.find(n=>n.id===this.selected)!;
           const identity='<div class="purchase-identity">'+researchIcon(node.icon)+'<div><strong>'+e(t(node.nameKey))+'</strong><p>'+e(t('research.confirmText',{node:t(node.nameKey)}))+'</p></div></div>';
@@ -417,7 +416,7 @@ export class Application{
     },()=>this.back(),nextFocus,this.screen);
     this.i18n.applyStatic();this.updateDevice();this.storageNotice();this.layout();
   }
-  private back(){if(this.busy)return;if(this.screen==='arrival'){this.finishArrival();return;}if(this.screen==='character'){if(this.characterInspect)void this.showResearch();else this.showMenu();return;}if(this.screen==='map'){this.show(this.mapReturn);return;}if(this.screen==='privacy')this.closePrivacy();else if(this.screen==='settings')this.closeSettings();else if(this.screen==='challenges')this.showMenu();else if(this.screen==='challenge-countdown')this.cancelChallenge();else if(this.screen==='relay-support')this.show('challenges');else if(this.screen==='confirm-purchase'||this.screen==='workshop-menu')this.show('research');else if(this.screen==='confirm-event')this.show('event');else if(this.screen==='event')this.leaveEvent();else if(this.screen==='pause')this.resume();else if(this.screen==='briefing')void this.showResearch();else if(this.screen==='confirm-new')this.show(this.newShiftReturn);else if(this.screen==='resume-entry')this.show('menu');else if(this.screen==='research'||this.screen==='result')this.showMenu();}
+  private back(){if(this.busy)return;if(this.screen==='arrival'){this.finishArrival();return;}if(this.screen==='character'){if(this.characterInspect)void this.showResearch();else this.showMenu();return;}if(this.screen==='map'){this.show(this.mapReturn);return;}if(this.screen==='privacy')this.closePrivacy();else if(this.screen==='settings')this.closeSettings();else if(this.screen==='challenges')this.showMenu();else if(this.screen==='challenge-countdown')this.cancelChallenge();else if(this.screen==='relay-support')this.show('challenges');else if(this.screen==='confirm-purchase')this.show('research');else if(this.screen==='confirm-event')this.show('event');else if(this.screen==='event')this.leaveEvent();else if(this.screen==='pause')this.resume();else if(this.screen==='briefing')void this.showResearch();else if(this.screen==='confirm-new')this.show(this.newShiftReturn);else if(this.screen==='resume-entry')this.show('menu');else if(this.screen==='research'||this.screen==='result')this.showMenu();}
   private storageNotice(){const notice=$('storage-notice');notice.hidden=!this.saves.issue||this.screen==='menu'&&this.ui.visible;notice.textContent=this.saves.issue?this.t('errors.save.'+this.saves.issue):'';}
   private updateDevice(){
     const playing=this.state==='playing',playInputActive=playing,active=playInputActive||this.state==='dying',touchMode=this.settings.touchMode==='on'||this.settings.touchMode==='auto'&&this.controls.device==='touch';
