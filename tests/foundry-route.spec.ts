@@ -36,7 +36,9 @@ async function drone(page:Page,id:string){
 }
 async function cross(page:Page,id:string,end?:number){
  let s=await state(page),h=s.hazards.find((h:any)=>h.id===id);if(!h)return;
- await to(page,h.x-24);await ground(page,320);
+ // Keep an already safe landing beside cover instead of backtracking into it.
+ if(s.player.x<h.x-24)await to(page,h.x-24);await ground(page,320);
+ expect((await state(page)).player.x+11,'wait outside the machine footprint').toBeLessThanOrEqual(h.x);
  const target=end??h.x+h.width+28,travel=(target-(await state(page)).player.x)/115*1000+180;
  await until(page,({id,travel})=>{const s=(window as any).__CINDER__(),h=s.hazards.find((h:any)=>h.id===id);if(!h||h.enabled===false)return true;const t=(s.simMs+(h.offset_ms||0))%h.cycle_ms;return t<h.warning_ms?h.warning_ms-t>travel:t>=h.warning_ms+h.active_ms&&h.cycle_ms-t+h.warning_ms>travel;},{id,travel},'machine window '+id,12000);
  await to(page,target);expect((await state(page)).hp).toBeGreaterThan(0);
