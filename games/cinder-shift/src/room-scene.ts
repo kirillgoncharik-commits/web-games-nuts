@@ -3,7 +3,7 @@ import config from '../game.config.json' with {type:'json'};
 import {MissionAttempt,type RoomId,type Result} from './mission';
 import {Player} from './player';
 import {Projectiles} from './projectiles';
-import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation,ramVulnerable} from './enemies';
+import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation,ramVulnerable,alertEnemyOnHit} from './enemies';
 import {clearLine,intersects,segmentRect,expand} from './geometry';
 import {terminalInReach,cacheInReach} from './interactions';
 import {SceneArt} from './render';
@@ -100,7 +100,7 @@ export class RoomScene extends Phaser.Scene{
    }
    if(def.target&&saved.targetHp>0&&!shot.hitIds.includes('target')&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){shot.hitIds.push('target');saved.targetHp-=shot.damage;this.art.cue('hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');if(shot.pierces>0){shot.pierces--;return false;}return true;}
    for(const e of saved.enemies)if(e.hp>0&&!shot.hitIds.includes(e.id)&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){
-    shot.hitIds.push(e.id);if(!ramVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
+    shot.hitIds.push(e.id);alertEnemyOnHit(e,attempt.enemyPowered(e));if(!ramVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
     e.hp-=shot.damage;this.art.cue(e.hp<=0?'shutdown':'hit',e.hp<=0?{x:e.x,y:e.y-10}:to,now,Math.sign(shot.vx));if(e.id==='e-turret'&&e.hp<4)attempt.tutorial.add('turret_hit');if(e.hp<=0){e.state='dead';e.attackPhase=null;attempt.scoreLedger?.kill(e.id,e.kind);if(e.id==='m5b-e06-ram'){attempt.scoreLedger?.goal('optional:E06');if(!attempt.e06Rewarded){attempt.e06Rewarded=true;attempt.score+=config.m05b3.e06_score;this.hooks.emit('event_choice',{event_id:'E06',choice:'defeated_patrol',score:attempt.score});}}}this.hooks.effects.play(e.hp<=0?'enemy_break':e.kind==='turret'?'hit_open':'hit_enemy');if(shot.pierces>0&&e.kind!=='turret'){shot.pierces--;return false;}return true;
    }return false;
   },solid=>{attempt.breakPanel(solid.id!);this.removeSolid(solid.id!);this.hooks.effects.play('enemy_break');this.hooks.emit('route_choice',{route:'piercing-sheet',room_id:attempt.current});},(shot,_solid,point)=>{if(shot.team==='player'){this.art.cue('wall',point,now,Math.sign(shot.vx));this.hooks.effects.play('hit_wall');}});

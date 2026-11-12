@@ -6,10 +6,17 @@ export type Behavior='passive'|'aggressive';
 export type EnemyAIState='idle'|'patrol'|'chase'|'attack'|'return'|'dead';
 export type AttackPhase='telegraph'|'fire'|'recovery';
 export const enemyPresets:Record<EnemyPreset,{kind:EnemyKind;behavior:Behavior}>={walker_service:{kind:'walker',behavior:'passive'},walker_security:{kind:'walker',behavior:'aggressive'},ram_charge:{kind:'walker',behavior:'passive'},drone_service:{kind:'drone',behavior:'passive'},turret_cycle:{kind:'turret',behavior:'passive'}};
-export type EnemyState=EnemyDefinition&{behavior:Behavior;home:Point;hp:number;state:EnemyAIState;attackPhase:AttackPhase|null;phaseMs:number;cooldown:number;direction:number;shots:number;shotFlashMs:number;aim:Point;active:boolean;warnings:number;acquireMs:number;memoryMs:number;lastSeen:Point|null;noticeMs:number;stuckMs:number};
+export type EnemyState=EnemyDefinition&{behavior:Behavior;home:Point;hp:number;state:EnemyAIState;attackPhase:AttackPhase|null;phaseMs:number;cooldown:number;direction:number;shots:number;shotFlashMs:number;aim:Point;active:boolean;provoked:boolean;warnings:number;acquireMs:number;memoryMs:number;lastSeen:Point|null;noticeMs:number;stuckMs:number};
 export function createEnemy(def:EnemyDefinition):EnemyState{
  const preset=enemyPresets[def.preset];if(!preset||preset.kind!==def.kind||def.kind==='turret'&&preset.behavior==='aggressive')throw Error('invalid_enemy_preset');
- return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0};
+ return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,provoked:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0};
+}
+// Impacts can trigger a powered encounter before its proximity threshold. The
+// next AI tick still owns room threat limits and the full warning; repeated hits
+// never restart an attack or shorten recovery.
+export function alertEnemyOnHit(enemy:EnemyState,powered:boolean){
+ if(enemy.hp<=0||!powered)return;
+ enemy.provoked=true;
 }
 export const ramVulnerable=(enemy:EnemyState)=>enemy.preset!=='ram_charge'||enemy.hp<=0||enemy.state==='attack'&&enemy.attackPhase==='recovery';
 export function enemyRect(e:EnemyState):Rect{return{x:e.x-13,y:e.y-(e.kind==='drone'?10:15),width:26,height:e.kind==='drone'?20:30};}
@@ -52,11 +59,11 @@ function returnHome(e:EnemyState){if(e.state==='attack'&&e.attackPhase!=='recove
 export function suspendEnemy(e:EnemyState){
  if(e.hp<=0)return;
  if(e.state==='attack'&&e.attackPhase!=='recovery')recovery(e);
- e.active=false;e.lastSeen=null;e.acquireMs=0;e.memoryMs=0;e.noticeMs=0;e.attackPhase=null;e.state=e.behavior==='aggressive'?'return':hasRoute(e)?'patrol':'idle';
+ e.active=false;e.provoked=false;e.lastSeen=null;e.acquireMs=0;e.memoryMs=0;e.noticeMs=0;e.attackPhase=null;e.state=e.behavior==='aggressive'?'return':hasRoute(e)?'patrol':'idle';
 }
 export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shots:Projectiles,warn:(kind:string)=>void,telegraphScale=1,canActivate=true){
  if(e.hp<=0){e.state='dead';e.attackPhase=null;return;}
- if(!e.active){if(!canActivate||player.x<e.activateX)return;e.active=true;}
+ if(!e.active){if(!canActivate||(player.x<e.activateX&&!e.provoked))return;e.active=true;}
  const cfg=config.combat[e.kind],ai=config.m05b1.ai;
  e.shotFlashMs=Math.max(0,e.shotFlashMs-ms);
  const distance=Math.hypot(e.x-player.x,e.y-player.y),visible=distance<=cfg.range&&clearLine(enemyMuzzle(e),player,solids);

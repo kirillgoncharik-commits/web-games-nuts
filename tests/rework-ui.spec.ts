@@ -50,7 +50,7 @@ test('arrival is immediately skippable and the first live enemy opens the powere
 });
 
 
-async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor';room:string;cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
+async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor'|'archive';room:string;cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
  await page.addInitScript(()=>{
   const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
   (window as any).AudioContext=class extends Base{
@@ -118,4 +118,20 @@ test('floor fire strikes the robot armor even when the chest core is open',async
  await page.keyboard.down('d');await x(page,330);await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player?.vy===0&&s.player.y+22>318;});
  await page.keyboard.down('j');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.boss.pattern.phase==='core'&&s.audioStatus.played.hit_armour>0;});
  expect((await state(page)).bossHp).toBe(32);await page.keyboard.up('j');await page.screenshot({path:info.outputPath('regulator-floor-armor-reduced.png')});
+});
+
+
+test('a real long-range shot alerts the Archive drone before the player reaches its activation line',async({page},info)=>{
+ await encounter(page,{mission:'archive',room:'M4B'});
+ await page.keyboard.down('Space');
+ await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p.vy<0&&p.y+22-28<250;});
+ await page.keyboard.down('j');const start=(await state(page)).simMs;
+ await page.waitForFunction(start=>(window as any).__CINDER__().simMs>=start+50,start);
+ await page.keyboard.up('j');await page.keyboard.up('Space');
+ await page.waitForFunction(()=>{const e=(window as any).__CINDER__().enemies[0];return e.hp===1&&e.active;});
+ const s=await state(page),e=s.enemies[0];
+ expect(s.player.x).toBeLessThan(e.activateX);expect(e.provoked).toBe(true);
+ expect(e.phase).toBe('telegraph');expect(e.remaining).toBeGreaterThan(0);expect(e.warnings).toBe(1);
+ expect(s.audioStatus.played.warn_drone).toBeGreaterThan(0);expect(s.hp).toBe(6);
+ await page.screenshot({path:info.outputPath('distant-hit-drone-warning.png')});
 });

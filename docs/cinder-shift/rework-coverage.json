@@ -17,21 +17,22 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.2",
-    "stage": "foundry_and_regulator",
+    "build_id": "0.7.0-rework.3",
+    "stage": "foundry_regulator_and_hit_alert",
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "passed",
+      "typecheck": "pending_rework3",
       "i18n": "passed_640_en_ru_keys",
-      "build": "passed",
-      "art_contracts": "passed_including_rework_robot_hash_and_fixture_isolation",
-      "model_tests": "57_passed",
-      "browser_tests": "Previous candidate: 15 full Airlock flow scenarios passed across three browsers in run 43217028352. Foundry/Regulator candidate runtime results are recorded against the exact SHA in PR #9.",
+      "build": "pending_rework3",
+      "art_contracts": "pending_rework3; regulator image unchanged",
+      "model_tests": "pending_rework3; previous .2 candidate passed 57 selected model tests",
+      "browser_tests": "Rework.3 code changed: current encounter, full-route and Airlock results pending. Rework.2 passed 33 encounter/UI and 15 full Airlock executions across three browsers; full-route input exposed test-path corrections.",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
       "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts",
-      "visual_review": "not_performed; CI screenshots stored in workflow artifact"
+      "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+      "persistence": "8 updated IndexedDB/reload/failure tests passed on .2 head 73134b062b12a9e85692b564ecbea524dc8fddf5 in run 43285443292; .3 pending."
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [

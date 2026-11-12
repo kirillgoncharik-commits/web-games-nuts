@@ -1,10 +1,13 @@
 import {test,expect} from '@playwright/test';
+import config from '../games/cinder-shift/game.config.json' with {type:'json'};
+import {rooms} from '../games/cinder-shift/src/room-data';
+import {roomThreatCanActivate} from '../games/cinder-shift/src/session/threat-activation';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 import {Campaign,newCampaign} from '../games/cinder-shift/src/session/campaign';
 import {makeChallengeSpec,challengeKey,trialContentId,trialSimulationVersion,trialRuleset} from '../games/cinder-shift/src/session/challenge-spec';
 import {RegulatorEncounter,regulatorPattern,regulatorRules,regulatorBody,regulatorHitboxes,regulatorImpact} from '../games/cinder-shift/src/boss';
 import {machineState} from '../games/cinder-shift/src/hazards';
-import {createEnemy,stepEnemy,ramVulnerable} from '../games/cinder-shift/src/enemies';
+import {createEnemy,stepEnemy,ramVulnerable,alertEnemyOnHit,suspendEnemy} from '../games/cinder-shift/src/enemies';
 import {Projectiles} from '../games/cinder-shift/src/projectiles';
 import {missions} from '../games/cinder-shift/src/session/missions';
 import {makeRelaySpec,relayStageBEntry} from '../games/cinder-shift/src/session/relay';
@@ -57,7 +60,7 @@ test('new combat rules isolate challenge records and relay keys from the audited
  const current=makeRelaySpec('none');expect(current.content_hash).toBe(trialContentId('relay-airlock-cargo'));
  const old=makeChallengeSpec({...current,ruleset_id:'relay-base-manual-v1',content_hash:'relay-airlock-cargo-release-rc1',simulation_version:'phaser-60hz-rc1'});
  expect(await challengeKey(current)).not.toBe(await challengeKey(old));
- expect(trialRuleset).toBe('combat-clear-v2');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
+ expect(trialRuleset).toBe('combat-clear-v3');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
 });
 
 test('purchase is atomic across duplicate callbacks and preserves the installed active slot',()=>{
@@ -71,7 +74,7 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework2');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework3');
 });
 
 
@@ -154,4 +157,43 @@ test('mission boundaries prevent backtracking into another sector and bypassing 
   for(const room of missions[mission].rooms){const def=a.definition(room);if(def.next)expect(missions[mission].rooms).toContain(def.next);if(def.previous)expect(missions[mission].rooms).toContain(def.previous);}
  }
  const c=new Campaign(newCampaign(4));c.data.mission_id='reactor';const a=new MissionAttempt('mission',c.prepare());expect(a.definition('M5A').previous).toBeUndefined();
+});
+
+
+test('a powered impact before the proximity threshold starts the full warning, never an instant shot',()=>{
+ const e=createEnemy(rooms.M4B.enemies[0]),shots=new Projectiles(),player={x:64,y:295},solids=[{x:0,y:320,width:640,height:40}],step=1000/60,warnings:string[]=[];
+ stepEnemy(e,step,player,solids,shots,k=>warnings.push(k));expect(e.active).toBe(false);
+ alertEnemyOnHit(e,true);stepEnemy(e,step,player,solids,shots,k=>warnings.push(k));
+ expect(player.x).toBeLessThan(e.activateX);expect(e.active).toBe(true);expect(e.attackPhase).toBe('telegraph');
+ expect(e.phaseMs).toBe(config.combat.drone.telegraph_ms);expect(warnings).toEqual(['drone']);expect(shots.shots).toHaveLength(0);
+ for(let ms=0;ms<config.combat.drone.telegraph_ms-step*2;ms+=step)stepEnemy(e,step,player,solids,shots,()=>{});
+ expect(shots.shots).toHaveLength(0);
+ for(let frame=0;frame<6;frame++)stepEnemy(e,step,player,solids,shots,()=>{});
+ expect(shots.shots.length).toBeGreaterThan(0);
+});
+
+test('provoked enemies keep the staged Airlock drone and two-threat room budget',()=>{
+ const player={x:64,y:295},shots=new Projectiles();
+ for(const id of ['B','C'] as const){
+  const roster=rooms[id].enemies.map(createEnemy),candidate=roster[id==='B'?1:2];
+  if(id==='C'){roster[0].active=true;roster[1].active=true;}
+  alertEnemyOnHit(candidate,true);
+  stepEnemy(candidate,1000/60,player,rooms[id].solids,shots,()=>{},1,roomThreatCanActivate(id,candidate,roster,player,rooms[id].solids));
+  expect(candidate.active).toBe(false);expect(candidate.provoked).toBe(true);expect(candidate.warnings).toBe(0);
+  roster[0].hp=0;
+  stepEnemy(candidate,1000/60,player,rooms[id].solids,shots,()=>{},1,roomThreatCanActivate(id,candidate,roster,player,rooms[id].solids));
+  expect(candidate.active).toBe(true);expect(candidate.attackPhase).toBe('telegraph');
+  expect(roster.filter(e=>e.active&&e.hp>0).length).toBeLessThanOrEqual(2);
+ }
+});
+
+test('hits preserve attack and recovery timing; unpowered, destroyed and suspended enemies do not retain an alert',()=>{
+ const e=createEnemy(rooms.M4B.enemies[0]);
+ alertEnemyOnHit(e,false);expect(e.provoked).toBe(false);
+ e.state='attack';e.attackPhase='telegraph';e.phaseMs=400;e.cooldown=125;
+ alertEnemyOnHit(e,true);expect(e).toMatchObject({state:'attack',attackPhase:'telegraph',phaseMs:400,cooldown:125});
+ e.attackPhase='recovery';e.phaseMs=0;e.cooldown=1600;
+ alertEnemyOnHit(e,true);expect(e).toMatchObject({attackPhase:'recovery',phaseMs:0,cooldown:1600});
+ suspendEnemy(e);expect(e.provoked).toBe(false);expect(e.active).toBe(false);
+ e.hp=0;alertEnemyOnHit(e,true);expect(e.provoked).toBe(false);
 });
