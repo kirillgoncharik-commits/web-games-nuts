@@ -24,6 +24,12 @@ export async function completeFromB(page:Page,{collectRelayIntel=false}:{collect
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-1').hp,{timeout:10000}).toBe(0);await page.keyboard.up('s');
   await jump(page,318,368);
   await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);
-  await page.keyboard.down('d');await x(page,465);await page.keyboard.up('d');
+  // Clear the landing-control drone from the raised firing line before passing it.
+  // The combat gate deliberately prevents the old route from leaving threats behind.
+  await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-drone')?.hp,{timeout:12000}).toBeLessThanOrEqual(0);
+  await page.keyboard.down('d');await x(page,408);await page.keyboard.up('d');
+  await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&p.y+22>318;});
+  await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-2')?.hp,{timeout:12000}).toBeLessThanOrEqual(0);
+  expect((await state(page)).combatRemaining).toBe(0);
   await jump(page,492,556);await page.keyboard.up('j');await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).objective).toBe(true);await page.keyboard.up('e');await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).state).toBe('complete');await page.keyboard.up('d');
 }
