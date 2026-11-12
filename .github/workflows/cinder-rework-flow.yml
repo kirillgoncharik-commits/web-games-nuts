@@ -1,7 +1,7 @@
 name: Cinder Shift rework combat flow
 on:
-  push:
-    branches: [codex/cinder-shift-m-rework]
+  pull_request:
+    types: [opened, synchronize, reopened]
 concurrency:
   group: cinder-rework-flow-${{ github.ref }}
   cancel-in-progress: true
