@@ -491,12 +491,16 @@
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
     "published": false,
     "accepted": false,
-    "verification": "Rework.4 fixes the two-pixel first-press landing pocket exposed by the full route. Exact-source CI pending. Rework.3 passed build/typecheck/640 keys/art, 60 models, 36 three-browser encounter/UI executions, 15 three-browser Airlock executions, 8 persistence checks and the complete base service route. Full press route, human duration/devices/acceptance and legacy suite migration remain open.",
+    "verification": "Exact code head 755e80882ae7e29adc59b99d9058489539438971 / tested merge db25262a4df831d2cffa512c5824da7e4a94088b: build/typecheck/640 keys/art/room registry, 60 models, 39 three-browser UI/encounter executions, 15 three-browser full Airlock executions, 8 persistence checks and both eight-room base Foundry routes PASS. Service 62.23 / press 57.97 active seconds; both finish at 4 HP after R03. Human duration/device/audio/visual acceptance and full legacy regression migration remain open.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "implementation_estimate_percent": [
       25,
       30
-    ]
+    ],
+    "validated_head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+    "tested_merge_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "local_execution_status": "unavailable; .3/.4 edits saved remotely. Preserve older local uncommitted work before resyncing this branch."
   }
 }

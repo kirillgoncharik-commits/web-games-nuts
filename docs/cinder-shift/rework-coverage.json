@@ -22,18 +22,20 @@
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "pending_rework4",
+      "typecheck": "passed",
       "i18n": "passed_640_en_ru_keys",
-      "build": "pending_rework4",
-      "art_contracts": "pending_rework3; regulator image unchanged",
-      "model_tests": "Rework.3 passed 60 selected model tests; .4 campaign record version updated, pending.",
-      "browser_tests": "Rework.3 passed 36 encounter/UI and 15 full Airlock executions across three browsers. Rework.4 expands the first-press landing pocket and adds a full machine-cycle safety check; exact-source validation pending.",
+      "build": "passed",
+      "art_contracts": "passed_including_rework_robot_hash_and_fixture_isolation",
+      "model_tests": "60_passed",
+      "browser_tests": "39 encounter/UI executions passed across Chromium/Firefox/WebKit on head 755e80882ae7e29adc59b99d9058489539438971 / tested merge db25262a4df831d2cffa512c5824da7e4a94088b",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
-      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts",
+      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
       "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-      "persistence": "8 migrated persistence regressions passed on .3; .4 pending.",
-      "full_foundry_routes": "Rework.3 service completed in 60.87–62.02 active seconds with 4 HP; press route exposed a real two-pixel landing gap, fixed in .4 and awaiting validation."
+      "persistence": "8 migrated IndexedDB/reload/invalid-save/write-failure/result-commit checks passed.",
+      "full_foundry_routes": "Both eight-room routes passed with actual keyboard/UI after one sector-entry fixture, base suit, campaign seed 4: service 62.23 active seconds, press 57.97; both finish at 4 HP after real R03 repair. Chromium only; not natural first-human timing.",
+      "airlock_flow": "15 full Airlock input executions passed across Chromium/Firefox/WebKit: base/W1/M1/D1 victory, rewards, same-entry full-HP Retry, reload deduplication and earned Cargo unlock.",
+      "room_registry": "Reproduced from source and git diff confirmed exact equality in model workflow; 27 unique campaign rooms / 24 on one selected route."
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -57,13 +59,47 @@
           "15 full Airlock flow scenarios across Chromium/Firefox/WebKit"
         ],
         "scope": "Base/W1/M1/D1 victory, first reward, Retry, full HP, frozen entry, reload and earned Cargo transition; not a Foundry/robot test."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/640 EN-RU keys/art",
+          "source-reproduced room registry matches",
+          "60 selected model tests",
+          "39 UI/encounter executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes real long-range hit-triggered drone warning and a real-input base landing pocket that remains harmless through a full first-press cycle."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock input executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, reward, full-HP same-entry Retry, reload deduplication and earned Cargo unlock."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full eight-room Foundry routes, base suit / campaign seed 4 / Chromium",
+          "8 migrated persistence regressions"
+        ],
+        "scope": "One sector-entry fixture followed only by real input. Service 62.23 active seconds and press 57.97 seconds, both finish at 4 HP after real R03 repair. No human duration/device/whole-milestone acceptance."
       }
     ],
     "known_limitations": [
       "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
       "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
     ],
-    "recovery": "Local source and both robot PNG files verified intact after connection recovery; remote QA changes from 152cbf4 restored without replacing the Foundry diff.",
+    "recovery": "Local execution disconnected during continuation. Rework.3/.4 were saved through GitHub; remote branch is authoritative. Preserve the older local working tree before any resync.",
     "implementation_estimate": {
       "range_percent": [
         25,
@@ -84,7 +120,8 @@
       "total": 80,
       "verified_whole_milestone": 0,
       "accepted_whole_milestone": false
-    }
+    },
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json"
   },
   "requirements": [
     {
@@ -225,13 +262,17 @@
       "status": "OPEN",
       "implementation": [
         "Ram armor survives the teaching charge and exposes its engine during recovery. New Foundry roster separates drone, security, ram and turret roles. Full all-room overlap/leash/reachability review remains open.",
-        "Powered impacts alert enemies before proximity activation without bypassing room threat budgets, warnings or recovery. Rework.3 model and real projectile tests passed in Chromium/Firefox/WebKit; all-room AI review remains open."
+        "Powered impacts alert enemies before proximity activation without bypassing room threat budgets, warnings or recovery. Rework.3 model and real projectile tests passed in Chromium/Firefox/WebKit; all-room AI review remains open.",
+        "M3J cover now leaves a 34px base-body stopping interval before the press instead of 2px; a real-input whole machine-cycle check and both full Foundry routes pass in .4."
       ],
       "verification": [
-        "3 alert/timing/budget models and the actual distant-shot browser scenario passed on fe4ab6c0482deea238c396b35be8806264b9c3bb (merge 8d9fb111d799cc6f2775aab5608297a32ad937be)."
+        "3 alert/timing/budget models and the actual distant-shot browser scenario passed on fe4ab6c0482deea238c396b35be8806264b9c3bb (merge 8d9fb111d799cc6f2775aab5608297a32ad937be).",
+        "Rework.4 exact-source build, 60 models, 39 three-browser encounter/UI executions and both complete base Foundry routes PASS."
       ],
       "evidence": [
-        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43286647308"
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43286647308",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+        "docs/cinder-shift/rework-foundry-input-baseline.json"
       ],
       "publication": "not_published",
       "implementation_status": "partial"
@@ -255,10 +296,12 @@
         "games/cinder-shift/src/render.ts"
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
       ],
       "publication": "not_published"
     },
@@ -273,10 +316,12 @@
         "games/cinder-shift/src/session/save.ts"
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
       ],
       "publication": "not_published"
     },
@@ -285,13 +330,15 @@
       "requirement": "Проверить базовый костюм, достижимые оружейную/мобильную/защитную сборки на одинаковом seed/ветке. Разбирать фактические причины урона и окна ответа, не включать общий множитель сложности без плейтеста.",
       "status": "OPEN",
       "implementation": [
-        "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open."
+        "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open.",
+        "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open."
       ],
       "verification": [
-        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+        "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open."
       ],
       "evidence": [
-        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "docs/cinder-shift/rework-foundry-input-baseline.json"
       ],
       "publication": "not_published",
       "implementation_status": "partial"
@@ -304,10 +351,12 @@
         "Full HP and free same-entry Retry preserved. Selected model suite plus Airlock victory→Retry→reload input checks passed; no permanent-death/revive/currency change."
       ],
       "verification": [
-        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance."
       ],
       "evidence": [
-        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
       ],
       "publication": "not_published",
       "implementation_status": "implemented"
