@@ -5,6 +5,7 @@ import {state,startMission,roomA,x} from './helpers';
 test.afterEach(async({page},info)=>{
  if(info.status===info.expectedStatus||page.isClosed())return;
  const snapshot=await state(page).catch(error=>({snapshot_error:String(error)}));
+ console.log('Encounter failure state',JSON.stringify({state:snapshot.state,room:snapshot.room,hp:snapshot.hp,player:snapshot.player,audioStatus:snapshot.audioStatus,probe:await page.evaluate(()=>(window as any).__AUDIO_PROBE__||[])}));
  await writeFile(info.outputPath('runtime-state.json'),JSON.stringify(snapshot,null,2));
  await page.screenshot({path:info.outputPath('failure.png')}).catch(()=>{});
 });
@@ -46,6 +47,14 @@ test('arrival is immediately skippable and the first live enemy opens the powere
 
 
 async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor';room:string;cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
+ await page.addInitScript(()=>{
+  const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
+  (window as any).AudioContext=class extends Base{
+   constructor(...args:any[]){try{super(...args);}catch(error){errors.push('context:'+String(error));throw error;}}
+   resume(){return super.resume().catch((error:unknown)=>{errors.push('resume:'+String(error));throw error;});}
+   decodeAudioData(bytes:ArrayBuffer){return super.decodeAudioData(bytes).catch((error:unknown)=>{errors.push('decode:'+String(error));throw error;});}
+  };
+ });
  await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();
  // Fixtures bypass normal mission buttons; retain the real gesture/decode contract.
  await page.getByTestId('menu-settings').click();
