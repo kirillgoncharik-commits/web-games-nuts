@@ -1,6 +1,6 @@
 {
   "name": "nuts-web-games",
-  "version": "0.7.0-rework.1",
+  "version": "0.7.0-rework.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,7 +16,7 @@
     "art:m06:icons": "node scripts/m06-icon-contact-sheet.mjs",
     "art:refresh": "node scripts/art-refresh-v1.mjs && node scripts/art-refresh-v1-sources.mjs && node scripts/write-art-refresh-records.mjs",
     "art:source": "node scripts/art-refresh-v1-sources.mjs",
-    "art:check": "node scripts/check-m03-contract.mjs && node scripts/check-art-refresh-v1.mjs",
+    "art:check": "node scripts/check-m03-contract.mjs && node scripts/check-art-refresh-v1.mjs && node scripts/check-rework-assets.mjs",
     "i18n:check": "node scripts/check-i18n.mjs",
     "i18n:export": "node scripts/check-i18n.mjs --export",
     "audio:export": "node scripts/m06-audio.mjs"

@@ -3,26 +3,35 @@ import config from '../game.config.json' with {type:'json'};
 import {MissionAttempt,type RoomId,type Result} from './mission';
 import {Player} from './player';
 import {Projectiles} from './projectiles';
-import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation} from './enemies';
+import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation,ramVulnerable} from './enemies';
 import {clearLine,intersects,segmentRect,expand} from './geometry';
 import {terminalInReach,cacheInReach} from './interactions';
 import {SceneArt} from './render';
 import {shotVelocities} from './session/research';
 import {hasEvent,repairPosition} from './session/events';
 import {roomThreatCanActivate} from './session/threat-activation';
-import {regulatorBody,regulatorPattern} from './boss';
+import {regulatorBody,regulatorHitboxes,regulatorImpact} from './boss';
+import {machineState} from './hazards';
+import regulatorArt from './art/regulator.generated.json' with {type:'json'};
 import {musicTheme} from './audio';
 import type {Controls,Frame,Action} from './input';
 import type {AudioService} from './audio';
 import type {EventName} from './telemetry';
 export type ServiceSlot='R01'|'R02'|'R03'|'R04'|'R05'|'S04'|'S05'|'INTEL'|'RELAY';
-export type RoomHooks={controls:Controls;effects:AudioService;emit:(name:EventName,params?:Record<string,string|number>)=>void;pause:()=>void;playAllowed:()=>boolean;ghostFrame:(room:string)=>{x:number;y:number;facing:1|-1;animation_id:'idle'|'run'|'jump'|'crouch'}|null;result:(result:Result)=>void;dying:()=>void;objective:(key:string,params?:Record<string,string|number>)=>void;hud:(attempt:MissionAttempt,player:Player,hold:number)=>void;container:(slot:ServiceSlot)=>void;fork:()=>void;autoFire:()=>boolean;debug:()=>boolean;combatAssist:()=>boolean;reducedFlashes:()=>boolean;transition:(active:boolean)=>void};
+export type RoomHooks={failure:(code:string)=>void;controls:Controls;effects:AudioService;emit:(name:EventName,params?:Record<string,string|number>)=>void;pause:()=>void;playAllowed:()=>boolean;ghostFrame:(room:string)=>{x:number;y:number;facing:1|-1;animation_id:'idle'|'run'|'jump'|'crouch'}|null;result:(result:Result)=>void;dying:()=>void;objective:(key:string,params?:Record<string,string|number>)=>void;hud:(attempt:MissionAttempt,player:Player,hold:number)=>void;container:(slot:ServiceSlot)=>void;fork:()=>void;autoFire:()=>boolean;debug:()=>boolean;combatAssist:()=>boolean;reducedFlashes:()=>boolean;transition:(active:boolean)=>void};
 export class RoomScene extends Phaser.Scene{
  attempt!:MissionAttempt;player!:Player;projectiles=new Projectiles();hold=0;transition:{to:RoomId;entry:'left'|'right';remaining:number}|null=null;
  private entry:'left'|'right'='left';private art!:SceneArt;private solidRemovers=new Map<string,()=>void>();private encountered=new Set<string>();
  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;
  constructor(readonly hooks:RoomHooks){super('Room');}
  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
+ preload(){
+  if(!this.attempt.definition().boss||this.textures.exists('regulator-rework'))return;
+  this.hooks.transition(true);this.hooks.objective('regulator.loading',{percent:0});
+  this.load.on('progress',(value:number)=>this.hooks.objective('regulator.loading',{percent:Math.round(value*100)}));
+  this.load.once('loaderror',()=>this.hooks.failure('regulator_art_load_error'));
+  this.load.image('regulator-rework','./assets/rework/'+regulatorArt.file);
+ }
  create(){
   this.readyAnnounced=false;this.hold=0;this.transition=null;this.deathMs=0;this.modalOpened=false;this.pendingPressed.clear();this.pendingReleased.clear();this.hazardCycles.clear();this.projectiles=new Projectiles();this.solidRemovers.clear();
   const a=this.attempt,id=a.current,def=a.definition(),saved=a.room();this.physics.world.setBounds(0,40,640,280);const platforms=this.physics.add.staticGroup();
@@ -44,7 +53,7 @@ export class RoomScene extends Phaser.Scene{
  private removeSolid(id:string){this.solidRemovers.get(id)?.();this.solidRemovers.delete(id);}
  private step(ms:number,frame:Frame){
   const attempt=this.attempt,now=attempt.clock.now,def=attempt.definition(),saved=attempt.room();attempt.activeMs+=ms;
-  if(def.boss)attempt.bossElapsedMs+=ms;
+
   const oldVy=this.player.body.velocity.y,wasDashing=now<this.player.dashUntil;
   this.player.step(frame,now,ms,def.solids,attempt.mode==='training'||attempt.build.active==='M1',attempt.build.airDash);
   if(attempt.build.active==='W4')attempt.abilityReadyAt=this.player.chargeReady;else attempt.abilityReadyAt=this.player.dashReady;
@@ -58,10 +67,16 @@ export class RoomScene extends Phaser.Scene{
   if(attempt.build.active==='W4'&&frame.pressed.has('ability')&&now>=this.player.chargeReady){this.projectiles.fire(muzzle,{x:this.player.facing*attempt.profile.projectileSpeed*1.2,y:0},'player','W4',0,0,config.m05b3.w4_damage);this.player.chargeReady=now+config.m05b3.w4_cooldown_ms;attempt.abilityReadyAt=this.player.chargeReady;this.hooks.effects.play('power_restore');this.hooks.emit('ability_used',{ability:'W4'});}
   const inSafePocket=Boolean(def.safeZones?.some(zone=>intersects(this.player.rect(),zone)));
   const inShield=Boolean(def.safeZones?.some(zone=>zone.shielded&&intersects(this.player.rect(),zone)));
-  const bossPattern=def.boss?regulatorPattern(attempt.bossElapsedMs,attempt.bossHp):null;
-  for(const hazard of def.hazards||[]){const cycle=Math.floor((now+(hazard.offset_ms||0))/hazard.cycle_ms),phase=(now+(hazard.offset_ms||0))%hazard.cycle_ms;if(phase<hazard.warning_ms&&this.hazardCycles.get(hazard.id)!==cycle){this.hazardCycles.set(hazard.id,cycle);this.hooks.effects.play(hazard.kind==='press'?'warn_turret':'warn_drone');}const active=phase>=hazard.warning_ms&&phase<hazard.warning_ms+hazard.active_ms;if(active&&!inSafePocket&&intersects(this.player.rect(),{x:hazard.x,y:hazard.y,width:hazard.width,height:hazard.height})){this.damage(hazard.kind==='press'?'press':'heat',Math.sign(this.player.x-hazard.x)||1);if(attempt.hp<=0)return;}}
-  if(bossPattern?.phase==='warning'){const cycle=Math.floor(attempt.bossElapsedMs/config.m05b3.boss_cycle_ms);if(this.hazardCycles.get('regulator-warning')!==cycle){this.hazardCycles.set('regulator-warning',cycle);this.hooks.effects.play('warn_turret');}}
+  if(def.boss)attempt.regulator.advance(ms,this.player.x);
+  const bossPattern=def.boss?attempt.regulator.pattern():null;
+  for(const hazard of def.hazards||[]){
+   const cycle=Math.floor((now+(hazard.offset_ms||0))/hazard.cycle_ms),phase=machineState(hazard,now);
+   if(phase==='warning'&&this.hazardCycles.get(hazard.id)!==cycle){this.hazardCycles.set(hazard.id,cycle);this.hooks.effects.play(hazard.kind==='press'?'warn_turret':'warn_drone');}
+   if(phase==='active'&&!inSafePocket&&intersects(this.player.rect(),hazard)){this.damage(hazard.kind==='press'?'press':'heat',Math.sign(this.player.x-hazard.x)||1);if(attempt.hp<=0)return;}
+  }
+  if(bossPattern?.phase==='warning'){const key='regulator:'+bossPattern.warningId;if(!this.hazardCycles.has(key)){this.hazardCycles.set(key,1);this.hooks.effects.play('warn_turret');}}
   if(bossPattern?.phase==='active'&&bossPattern.rects.some(rect=>intersects(this.player.rect(),rect))){this.damage('regulator-beam',Math.sign(this.player.x-(bossPattern.rects[0]?.x||320))||1);if(attempt.hp<=0)return;}
+  if(def.boss&&attempt.bossHp>0&&regulatorHitboxes(regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height)).armor.some(rect=>intersects(this.player.rect(),rect))){this.damage('regulator-contact',Math.sign(this.player.x-def.boss.x)||-1);if(attempt.hp<=0)return;}
   const playerPoint={x:this.player.x,y:this.player.feet-25};
   for(const enemy of saved.enemies){
    if(!attempt.enemyPowered(enemy))continue;
@@ -75,13 +90,21 @@ export class RoomScene extends Phaser.Scene{
     if(def.safeZones?.some(zone=>zone.shielded&&segmentRect(from,to,zone)))return true;
     if(segmentRect(from,to,expand(this.player.rect(),4,3))){this.damage(shot.source,Math.sign(shot.vx));return true;}return false;
    }
-   if(def.boss&&bossPattern&&attempt.bossHp>0&&!shot.hitIds.includes('regulator')&&segmentRect(from,to,expand(regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height),4,1.5))){shot.hitIds.push('regulator');if(bossPattern.phase==='core'){attempt.bossHp=Math.max(0,attempt.bossHp-shot.damage);this.art.cue(attempt.bossHp===0?'shutdown':'hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(attempt.bossHp===0?'enemy_break':'hit_enemy');if(attempt.bossHp===0)this.hooks.emit('boss_defeated',{boss_id:'regulator'});}else{this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');}return true;}
+   if(def.boss&&attempt.bossHp>0&&!shot.hitIds.includes('regulator')){
+    const impact=regulatorImpact(regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height),from,to,attempt.regulator.pattern().phase==='core');
+    if(impact){shot.hitIds.push('regulator');const accepted=impact==='core'?attempt.regulator.hit(shot.damage):0;
+     this.art.cue(accepted?(attempt.bossHp===0?'shutdown':'hit'):'armour',to,now,Math.sign(shot.vx));
+     this.hooks.effects.play(accepted?(attempt.bossHp===0?'enemy_break':'hit_enemy'):'hit_armour');
+     if(accepted&&attempt.bossHp===0){this.hooks.emit('boss_defeated',{boss_id:'regulator'});}return true;
+    }
+   }
    if(def.target&&saved.targetHp>0&&!shot.hitIds.includes('target')&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){shot.hitIds.push('target');saved.targetHp-=shot.damage;this.art.cue('hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');if(shot.pierces>0){shot.pierces--;return false;}return true;}
    for(const e of saved.enemies)if(e.hp>0&&!shot.hitIds.includes(e.id)&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){
-    shot.hitIds.push(e.id);if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
+    shot.hitIds.push(e.id);if(!ramVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
     e.hp-=shot.damage;this.art.cue(e.hp<=0?'shutdown':'hit',e.hp<=0?{x:e.x,y:e.y-10}:to,now,Math.sign(shot.vx));if(e.id==='e-turret'&&e.hp<4)attempt.tutorial.add('turret_hit');if(e.hp<=0){e.state='dead';e.attackPhase=null;attempt.scoreLedger?.kill(e.id,e.kind);if(e.id==='m5b-e06-ram'){attempt.scoreLedger?.goal('optional:E06');if(!attempt.e06Rewarded){attempt.e06Rewarded=true;attempt.score+=config.m05b3.e06_score;this.hooks.emit('event_choice',{event_id:'E06',choice:'defeated_patrol',score:attempt.score});}}}this.hooks.effects.play(e.hp<=0?'enemy_break':e.kind==='turret'?'hit_open':'hit_enemy');if(shot.pierces>0&&e.kind!=='turret'){shot.pierces--;return false;}return true;
    }return false;
   },solid=>{attempt.breakPanel(solid.id!);this.removeSolid(solid.id!);this.hooks.effects.play('enemy_break');this.hooks.emit('route_choice',{route:'piercing-sheet',room_id:attempt.current});},(shot,_solid,point)=>{if(shot.team==='player'){this.art.cue('wall',point,now,Math.sign(shot.vx));this.hooks.effects.play('hit_wall');}});
+  if(def.boss&&attempt.bossHp<=0)this.projectiles.clearTeam('enemy');
   if(def.terminal&&!saved.terminal&&!this.readyAnnounced&&this.readyTerminal()){this.readyAnnounced=true;this.hooks.effects.play('terminal_ready');}
   if(!inShield)for(const e of saved.enemies)if(e.hp>0&&attempt.enemyPowered(e)&&e.active&&intersects(this.player.rect(),enemyRect(e)))this.damage(e.kind+'-contact',Math.sign(this.player.x-e.x)||1);
   if(attempt.hp<=0)return;this.interact(ms,frame);if(this.modalOpened)return;this.tutorial();
@@ -107,6 +130,7 @@ export class RoomScene extends Phaser.Scene{
  }
  private interact(ms:number,frame:Frame){
   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;
+  if(def.powerSwitch&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleFoundryPower()){this.art.cue('charge',def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'foundry_power',choice:saved.powerCircuit});return;}
   if(def.relayIntel&&a.entry.relay_leg==='A'&&a.entry.relay_template==='relay_airlock_cargo_v1'&&!a.relayIntelCollected&&Math.abs(this.player.x-def.relayIntel.x)<repairPosition.radius&&this.player.feet>303&&frame.pressed.has('interact')){this.modalOpened=true;this.hold=0;this.hooks.container('INTEL');return;}
   if(def.relayRepairCache&&a.entry.relay_leg==='B'&&a.entry.relay_support==='repair'&&a.cellCollected&&!a.relayRepairUsed&&a.hp<a.maxHp&&Math.abs(this.player.x-def.relayRepairCache.x)<def.relayRepairCache.radius&&this.player.feet>303&&frame.pressed.has('interact')){this.modalOpened=true;this.hold=0;this.hooks.container('RELAY');return;}
   if(a.missionId==='airlock'&&a.current==='B'&&!saved.containerUsed&&Math.abs(this.player.x-repairPosition.x)<repairPosition.radius&&this.player.feet>303&&frame.pressed.has('interact')){this.modalOpened=true;this.hold=0;this.hooks.container('R01');return;}
@@ -114,7 +138,7 @@ export class RoomScene extends Phaser.Scene{
   if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)&&frame.pressed.has('interact')){if(def.cache.id==='S04'&&hasEvent(a.eventPlan,'E05')){this.modalOpened=true;this.hooks.container('S04');}else if(def.cache.id==='S05'&&hasEvent(a.eventPlan,'E06')){this.modalOpened=true;this.hooks.container('S05');}else if(a.chooseCache('salvage')){this.hooks.effects.play('cache_claim');this.hooks.emit('mission_objective',{objective:'salvage_collected',score:a.score});}return;}
   if(def.cell&&!a.cellCollected&&Math.abs(this.player.x-def.cell.x)<34&&this.player.feet>303&&frame.pressed.has('interact')){a.cellCollected=true;this.art.cue('charge',def.cell,a.clock.now);this.hooks.effects.play('cache_claim');this.hooks.emit('mission_objective',{objective:'cell_collected'});return;}
   const inRange=terminal&&terminalInReach(this.player.x,this.player.feet,terminal);if(!inRange||saved.terminal||!this.readyTerminal()){this.hold=0;return;}
-  if((def.terminalKind==='power'||def.terminalKind==='training')&&frame.pressed.has('interact')){saved.terminal=true;this.art.cue('charge',terminal!,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.effects.play('gate_open');if(a.missionId==='foundry'&&def.id==='M3A'){this.modalOpened=true;this.hooks.fork();}return;}
+  if((def.terminalKind==='power'||def.terminalKind==='training')&&frame.pressed.has('interact')){saved.terminal=true;this.art.cue('charge',terminal!,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.effects.play('gate_open');if(a.missionId==='foundry'&&def.id==='M3F'){this.modalOpened=true;this.hooks.fork();}return;}
   if(def.terminalKind==='restore'&&hasEvent(a.eventPlan,'E01')&&frame.pressed.has('interact')){saved.terminal=true;this.art.cue('charge',terminal!,a.clock.now);this.removeSolid('f-power-gate');this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'E01',choice:'restore_power'});return;}
   if((def.terminalKind==='exit'||def.terminalKind==='install'||def.terminalKind==='data')&&frame.down.has('interact')){
    this.hold+=ms;if(this.hold+1e-6>=config.combat.terminal_hold_ms){saved.terminal=true;this.art.cue('charge',terminal!,a.clock.now);a.objective=true;if(def.terminalKind==='install'){a.cellInstalled=true;this.hooks.emit('mission_objective',{objective:'cell_installed'});}if(def.terminalKind==='data'){a.dataUploaded=true;this.hooks.emit('mission_objective',{objective:'data_uploaded'});}this.hold=0;this.hooks.effects.play('power_restore');this.hooks.effects.play('gate_open');}
@@ -137,14 +161,19 @@ export class RoomScene extends Phaser.Scene{
    if(def.id==='F'&&hasEvent(a.eventPlan,'E01')&&!saved.terminal&&Math.abs(this.player.x-88)<34){key='cargo.objective.restore';params.action='interact';}
    const teachingTurret=saved.enemies.find(enemy=>enemy.id==='e-turret');if(def.id==='E'&&teachingTurret&&a.tutorial.has('turret_hint')&&!a.tutorial.has('turret_hit'))key='cargo.objective.turretHint';
   }
-  else if(a.missionId==='foundry'){if(def.id==='M3A')key=saved.terminal?'foundry.objective.route':'foundry.objective.terminal';else if(def.id==='M3B')key='foundry.objective.service';else if(def.id==='M3C')key=hasEvent(a.eventPlan,'E04')?'foundry.objective.heat':'foundry.objective.press';else if(def.id==='M3D')key=saved.terminal?'mission.objective.exit':'foundry.objective.cooling';if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='foundry.objective.salvage';params.action='interact';}}
+  else if(a.missionId==='foundry'){
+   key='foundry.objective.'+def.id;
+   if(def.id==='M3A'){const ram=saved.enemies.find(enemy=>enemy.preset==='ram_charge'&&enemy.hp>0);if(ram)key=ramVulnerable(ram)?'foundry.ramOpen':'foundry.ramArmor';}
+   if(def.powerSwitch&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)){key='foundry.powerSwitch.'+saved.powerCircuit;params={action:'interact'};}
+   if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='foundry.objective.salvage';params.action='interact';}
+  }
   else if(a.missionId==='archive'){if(def.id==='M4A')key='archive.objective.sorting';else if(def.id==='M4B')key=hasEvent(a.eventPlan,'E05')?'archive.objective.beacon':'archive.objective.cache';else if(def.id==='M4C')key=a.dataUploaded?'archive.objective.transit':a.scoutedArchive?'archive.objective.scouted':'archive.objective.upload';else key=a.dataUploaded?'archive.objective.exit':'archive.objective.data';if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key=hasEvent(a.eventPlan,'E05')?'archive.objective.beaconChoice':'archive.objective.salvage';params.action='interact';}}
-  else if(a.missionId==='reactor'){if(def.id==='M5A')key=saved.terminal?'reactor.objective.transit':'reactor.objective.blockade';else if(def.id==='M5B')key=a.s05Accepted?'reactor.objective.patrolActive':def.cache&&!saved.cacheUsed?'reactor.objective.patrol':'reactor.objective.heat';else if(def.id==='M5C')key='reactor.objective.service';else if(def.id==='M5D')key=a.bossHp<=0?'reactor.objective.bossDown':'reactor.objective.boss';else key='reactor.objective.evacuation';if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='reactor.objective.patrolChoice';params.action='interact';}if(def.boss&&a.bossHp>0)params={hp:a.bossHp};}
+  else if(a.missionId==='reactor'){if(def.id==='M5A')key=saved.terminal?'reactor.objective.transit':'reactor.objective.blockade';else if(def.id==='M5B')key=a.s05Accepted?'reactor.objective.patrolActive':def.cache&&!saved.cacheUsed?'reactor.objective.patrol':'reactor.objective.heat';else if(def.id==='M5C')key='reactor.objective.service';else if(def.id==='M5D')key=a.bossHp<=0?'reactor.objective.bossDown':'reactor.objective.boss';else key='reactor.objective.evacuation';if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='reactor.objective.patrolChoice';params.action='interact';}if(def.boss&&a.bossHp>0){const p=a.regulator.pattern();key=p.stage==='transition'?'regulator.phaseChange':p.phase==='core'?'regulator.coreOpen':p.overloaded?'regulator.overload':p.stage==='sweep'?p.phase==='warning'?'regulator.sweepWarning':'regulator.sweep':p.phase==='warning'?'regulator.laneWarning':'regulator.lanes';params={hp:a.bossHp};}}
   if(def.repair&&!saved.repairUsed&&a.hp<a.maxHp&&(!def.repair||def.repair.slot!=='R04'||a.dataUploaded)&&Math.abs(this.player.x-def.repair.x)<def.repair.radius){key='mission.objective.repairSlot';params={action:'interact',slot:def.repair.slot};}
   if(!saved.terminal&&def.terminal&&this.readyTerminal()&&(def.terminalKind==='exit'||def.terminalKind==='install'||def.terminalKind==='data')&&terminalInReach(this.player.x,this.player.feet,def.terminal)){key=def.terminalKind==='data'?'archive.objective.holdUpload':'mission.objective.hold';params={action:'interact',seconds:.6};}
   if(def.repair&&Math.abs(this.player.x-def.repair.x)<def.repair.radius&&this.player.feet>303){if(saved.repairUsed){key='rework.repairUsed';params={slot:def.repair.slot};}else if(a.hp>=a.maxHp){key='rework.repairFull';params={};}}
   const remaining=a.combatRemaining();if(remaining>0&&(this.player.x>575||this.player.x<40)){key='rework.combatLock';params={count:remaining};}
   if(this.transition){key='mission.objective.transition';params={room:this.transition.to};}this.hooks.objective(key,params);
  }
- snapshot(){return this.player?.sprite.body?{player:this.player.snapshot(),missionId:this.attempt.missionId,targetHp:this.attempt.room().targetHp,combatRemaining:this.attempt.combatRemaining(),exitOpen:this.attempt.forwardExitOpen(),powered:this.attempt.room().terminal,room:this.attempt.current,hp:this.attempt.hp,maxHp:this.attempt.maxHp,critical:this.attempt.hp>0&&this.attempt.hp/this.attempt.maxHp<=1/3,score:this.attempt.score,loadout:structuredClone(this.attempt.build),eventPlan:structuredClone(this.attempt.eventPlan),containerUsed:this.attempt.missionId==='airlock'?this.attempt.room('B').containerUsed:false,bufferUsed:this.attempt.room().bufferUsed,cellCollected:this.attempt.cellCollected,cellInstalled:this.attempt.cellInstalled,dataUploaded:this.attempt.dataUploaded,scoutedArchive:this.attempt.scoutedArchive,s05Accepted:this.attempt.s05Accepted,e06Rewarded:this.attempt.e06Rewarded,d4Used:this.attempt.d4Used,bossHp:this.attempt.bossHp,foundryRoute:this.attempt.foundryRoute,objective:this.attempt.objective,attemptId:this.attempt.id,activeSeconds:this.attempt.activeMs/1000,holdMs:this.hold,projectiles:this.projectiles.shots.map(s=>({...s})),enemies:this.attempt.room().enemies.map(e=>({...e,phase:enemyPhase(e),activated:e.active,powered:this.attempt.enemyPowered(e),turret:e.kind==='turret'?turretPresentation(e,this.attempt.enemyPowered(e)):undefined,muzzle:enemyMuzzle(e),remaining:e.state==='attack'&&e.attackPhase==='recovery'?e.cooldown:e.phaseMs})),roomStates:structuredClone(this.attempt.states),simMs:this.attempt.clock.now,transition:Boolean(this.transition)}:null;}
+ snapshot(){return this.player?.sprite.body?{player:this.player.snapshot(),missionId:this.attempt.missionId,targetHp:this.attempt.room().targetHp,combatRemaining:this.attempt.combatRemaining(),exitOpen:this.attempt.forwardExitOpen(),powered:this.attempt.room().terminal,room:this.attempt.current,hp:this.attempt.hp,maxHp:this.attempt.maxHp,critical:this.attempt.hp>0&&this.attempt.hp/this.attempt.maxHp<=1/3,score:this.attempt.score,loadout:structuredClone(this.attempt.build),eventPlan:structuredClone(this.attempt.eventPlan),containerUsed:this.attempt.missionId==='airlock'?this.attempt.room('B').containerUsed:false,bufferUsed:this.attempt.room().bufferUsed,cellCollected:this.attempt.cellCollected,cellInstalled:this.attempt.cellInstalled,dataUploaded:this.attempt.dataUploaded,scoutedArchive:this.attempt.scoutedArchive,s05Accepted:this.attempt.s05Accepted,e06Rewarded:this.attempt.e06Rewarded,d4Used:this.attempt.d4Used,bossHp:this.attempt.bossHp,boss:this.attempt.regulator.snapshot(),bossHitboxes:this.attempt.definition().boss?regulatorHitboxes(regulatorBody(this.attempt.definition().boss!.x,this.attempt.definition().boss!.y,this.attempt.definition().boss!.width,this.attempt.definition().boss!.height)):null,powerCircuit:this.attempt.room().powerCircuit,hazards:this.attempt.definition().hazards?.map(h=>({...h,phase:machineState(h,this.attempt.clock.now)}))||[],solids:this.attempt.definition().solids,foundryRoute:this.attempt.foundryRoute,objective:this.attempt.objective,attemptId:this.attempt.id,activeSeconds:this.attempt.activeMs/1000,holdMs:this.hold,projectiles:this.projectiles.shots.map(s=>({...s})),enemies:this.attempt.room().enemies.map(e=>({...e,phase:enemyPhase(e),activated:e.active,powered:this.attempt.enemyPowered(e),turret:e.kind==='turret'?turretPresentation(e,this.attempt.enemyPowered(e)):undefined,muzzle:enemyMuzzle(e),remaining:e.state==='attack'&&e.attackPhase==='recovery'?e.cooldown:e.phaseMs})),roomStates:structuredClone(this.attempt.states),simMs:this.attempt.clock.now,transition:Boolean(this.transition)}:null;}
 }

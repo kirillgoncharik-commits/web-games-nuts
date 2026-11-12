@@ -11,6 +11,7 @@ export function createEnemy(def:EnemyDefinition):EnemyState{
  const preset=enemyPresets[def.preset];if(!preset||preset.kind!==def.kind||def.kind==='turret'&&preset.behavior==='aggressive')throw Error('invalid_enemy_preset');
  return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0};
 }
+export const ramVulnerable=(enemy:EnemyState)=>enemy.preset!=='ram_charge'||enemy.hp<=0||enemy.state==='attack'&&enemy.attackPhase==='recovery';
 export function enemyRect(e:EnemyState):Rect{return{x:e.x-13,y:e.y-(e.kind==='drone'?10:15),width:26,height:e.kind==='drone'?20:30};}
 export type TurretPresentation='off'|'armored'|'warning'|'burst'|'exposed'|'destroyed';
 export function turretPresentation(e:EnemyState,powered=true):{state:TurretPresentation;damageable:boolean}{

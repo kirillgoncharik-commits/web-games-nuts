@@ -2,6 +2,11 @@ import {test,expect} from '@playwright/test';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 import {Campaign,newCampaign} from '../games/cinder-shift/src/session/campaign';
 import {makeChallengeSpec,challengeKey,trialContentId,trialSimulationVersion,trialRuleset} from '../games/cinder-shift/src/session/challenge-spec';
+import {RegulatorEncounter,regulatorPattern,regulatorRules,regulatorBody,regulatorHitboxes,regulatorImpact} from '../games/cinder-shift/src/boss';
+import {machineState} from '../games/cinder-shift/src/hazards';
+import {createEnemy,stepEnemy,ramVulnerable} from '../games/cinder-shift/src/enemies';
+import {Projectiles} from '../games/cinder-shift/src/projectiles';
+import {missions} from '../games/cinder-shift/src/session/missions';
 import {makeRelaySpec,relayStageBEntry} from '../games/cinder-shift/src/session/relay';
 
 test('live enemies lock forward exits before detection; a cleared revisit stays cleared',()=>{
@@ -20,7 +25,6 @@ test('all five sectors require a cleared encounter and preserve their own object
   expect(a.combatRemaining(),mission).toBeGreaterThan(0);expect(a.forwardExitOpen(),mission).toBe(false);
   a.room().enemies.forEach(enemy=>enemy.hp=0);
   if(mission==='airlock'||mission==='reactor'){expect(a.forwardExitOpen()).toBe(false);a.room().terminal=true;}
-  if(mission==='foundry'){expect(a.forwardExitOpen()).toBe(false);a.room().terminal=true;a.chooseFoundryRoute('service');}
   expect(a.forwardExitOpen(),mission).toBe(true);
  }
 });
@@ -67,5 +71,87 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('combat-clear-v2');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework2');
+});
+
+
+function foundry(){const c=new Campaign(newCampaign(4));c.data.mission_id='foundry';return new MissionAttempt('mission',c.prepare());}
+for(const route of ['service','press'] as const)test(`Foundry ${route} route has eight distinct encounters, a locked fork and R03 before the final fight`,()=>{
+ const a=foundry(),seen:string[]=[];
+ while(true){
+  seen.push(a.current);a.room().enemies.forEach(enemy=>enemy.hp=0);
+  if(a.current==='M3F'){expect(a.definition().next).toBeUndefined();expect(a.chooseFoundryRoute(route)).toBe(false);a.room().terminal=true;expect(a.chooseFoundryRoute(route)).toBe(true);expect(a.chooseFoundryRoute(route==='service'?'press':'service')).toBe(false);}
+  if(a.current==='M3K'){expect(a.definition().repair?.slot).toBe('R03');expect(a.forwardExitOpen()).toBe(false);a.room().terminal=true;}
+  if(a.current==='M3D')break;
+  expect(a.forwardExitOpen()).toBe(true);a.current=a.definition().next!;
+ }
+ expect(seen).toHaveLength(8);expect(new Set(seen).size).toBe(8);expect(seen.at(-2)).toBe('M3K');
+ expect(seen).toEqual(route==='service'?['M3A','M3E','M3F','M3B','M3G','M3H','M3K','M3D']:['M3A','M3E','M3F','M3C','M3I','M3J','M3K','M3D']);
+ a.current='M3K';expect(a.definition().previous).toBe(route==='service'?'M3H':'M3J');expect(missions.foundry.rooms).toContain(a.definition().previous);
+});
+
+test('power rerouting changes the actual active machine and survives revisits, while Retry resets it',()=>{
+ const a=foundry();a.current='M3E';
+ const power=()=>a.definition().hazards!.filter(h=>h.enabled).map(h=>h.kind);
+ expect(power()).toEqual(['press']);expect(a.toggleFoundryPower()).toBe(true);expect(power()).toEqual(['heat']);
+ for(const now of [0,1500,2500,9000])expect(machineState(a.definition().hazards![0],now)).toBe('off');
+ a.current='M3F';a.current='M3E';expect(power()).toEqual(['heat']);expect(a.toggleFoundryPower()).toBe(true);expect(power()).toEqual(['press']);
+ const retry=foundry();retry.current='M3E';expect(retry.room().powerCircuit).toBe('press');
+});
+
+test('R03 is a one-use repair at the cooling stop and cannot be consumed by the final room',()=>{
+ const a=foundry();a.current='M3K';expect(a.claimRepair('R03')).toBe(false);expect(a.room().repairUsed).toBe(false);
+ a.hp=3;expect(a.claimRepair('R03')).toBe(true);expect(a.hp).toBe(5);expect(a.claimRepair('R03')).toBe(false);
+ a.current='M3D';expect(a.claimRepair('R03')).toBe(false);
+});
+
+test('the ram exposes its engine only after a real charge instead of dying before the teaching pattern',()=>{
+ const a=foundry(),e=createEnemy(a.definition().enemies[0]),shots=new Projectiles();expect(ramVulnerable(e)).toBe(false);
+ let charged=false,opened=false;
+ for(let frame=0;frame<240;frame++){
+  stepEnemy(e,1000/60,{x:268,y:292},a.definition().solids,shots,()=>{});
+  if(e.attackPhase==='fire'){charged=true;expect(ramVulnerable(e)).toBe(false);}
+  if(e.attackPhase==='recovery'){opened=true;expect(ramVulnerable(e)).toBe(true);break;}
+ }
+ expect(charged&&opened).toBe(true);
+});
+
+test('Regulator locks each aimed lane during its warning and retargets the second strike',()=>{
+ const boss=new RegulatorEncounter();boss.advance(16,260);expect(boss.pattern().rects[0].x).toBe(236);
+ boss.advance(400,420);expect(boss.pattern().rects[0].x).toBe(236);
+ boss.advance(1600,420);expect(boss.pattern().phase).toBe('warning');expect(boss.pattern().rects[0].x).toBe(396);
+});
+
+for(const damage of [1,3,4,1000])test(`Regulator ${damage}-damage shots reveal both phases and require repeated attack windows without extra HP`,()=>{
+ const boss=new RegulatorEncounter();let accepted=0,phases=new Set<string>(),windows=new Set<string>(),nextShot=0;
+ for(let ms=0;ms<180000&&boss.hp>0;ms+=1000/60){
+  boss.advance(1000/60,260);const p=boss.pattern();phases.add(p.stage);
+  if(p.phase==='core'&&ms>=nextShot){windows.add(p.stage+':'+p.cycle);accepted+=boss.hit(damage);nextShot=ms+250;}
+ }
+ expect(boss.hp).toBe(0);expect(accepted).toBe(32);expect(phases.has('lanes')&&phases.has('transition')&&phases.has('sweep')).toBe(true);
+ expect(windows.size).toBeGreaterThanOrEqual(4);expect(boss.elapsedMs).toBeGreaterThan(25000);
+ expect(boss.pattern()).toMatchObject({stage:'shutdown',phase:'idle',rects:[]});expect(boss.hit(100)).toBe(0);
+});
+
+test('boss armor, chest aperture and empty leg gap agree with the collision model',()=>{
+ const body=regulatorBody(472,232,192,176),{core}=regulatorHitboxes(body),y=core.y+core.height/2;
+ expect(regulatorImpact(body,{x:300,y},{x:600,y},false)).toBe('armor');expect(regulatorImpact(body,{x:300,y},{x:600,y},true)).toBe('core');
+ expect(regulatorImpact(body,{x:body.x-1,y},{x:core.x-1,y},true)).toBeNull();
+ expect(regulatorImpact(body,{x:472,y:280},{x:472,y:320},true)).toBeNull();
+ expect(regulatorImpact(body,{x:300,y:292},{x:600,y:292},true)).toBe('armor');
+ expect(regulatorImpact(body,{x:300,y:80},{x:600,y:80},true)).toBeNull();
+});
+
+test('overload closes the core in the same simulation event; extra Splitter hits cause no phantom damage',()=>{
+ const boss=new RegulatorEncounter();boss.advance(2*(regulatorRules.laneWarningMs+regulatorRules.laneStrikeMs)+16,260);
+ expect(boss.pattern().phase).toBe('core');expect(boss.hit(8)).toBe(8);expect(boss.pattern()).toMatchObject({phase:'idle',overloaded:true});expect(boss.hit(8)).toBe(0);expect(boss.hp).toBe(24);
+});
+
+
+test('mission boundaries prevent backtracking into another sector and bypassing the Regulator',()=>{
+ for(const mission of ['airlock','cargo','foundry','archive','reactor'] as const){
+  const c=new Campaign(newCampaign(4));c.data.mission_id=mission;const a=new MissionAttempt('mission',c.prepare());
+  for(const room of missions[mission].rooms){const def=a.definition(room);if(def.next)expect(missions[mission].rooms).toContain(def.next);if(def.previous)expect(missions[mission].rooms).toContain(def.previous);}
+ }
+ const c=new Campaign(newCampaign(4));c.data.mission_id='reactor';const a=new MissionAttempt('mission',c.prepare());expect(a.definition('M5A').previous).toBeUndefined();
 });

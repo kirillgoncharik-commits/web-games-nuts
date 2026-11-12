@@ -1,0 +1,2104 @@
+{
+  "schema_version": 1,
+  "build_id": "0.7.0-rework.2",
+  "source_hash": "23f8dca58ced0ceb3887e7aaae01e651cb1b08e30291a0889a08da4f10edbc3a",
+  "status": "INCOMPLETE: source inventory; full route input, timing and human validation remain open",
+  "campaign_room_count": 27,
+  "training_room_excluded": "T",
+  "first_campaign_rooms_on_selected_route": 24,
+  "foundry_routes": {
+    "service": [
+      "M3A",
+      "M3E",
+      "M3F",
+      "M3B",
+      "M3G",
+      "M3H",
+      "M3K",
+      "M3D"
+    ],
+    "press": [
+      "M3A",
+      "M3E",
+      "M3F",
+      "M3C",
+      "M3I",
+      "M3J",
+      "M3K",
+      "M3D"
+    ]
+  },
+  "runtime_conditions": {
+    "M3F": "Next depends on a confirmed service/press choice after isolation.",
+    "M3K": "Previous follows the selected branch; cooling terminal is required.",
+    "M3E": "The saved power circuit enables exactly one machine.",
+    "F": "E01 and Relay support control shutter and turret power.",
+    "M4C": "Data upload is required before the exit.",
+    "M5D": "Core/armor and hazard phases come from the Regulator simulation."
+  },
+  "missions": [
+    {
+      "mission_id": "airlock",
+      "design_budget_ms": 240000,
+      "timing_status": "NOT_MEASURED",
+      "rooms": [
+        {
+          "room_id": "A",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 176,
+              "y": 288,
+              "width": 80,
+              "height": 32
+            },
+            {
+              "x": 324,
+              "y": 252,
+              "width": 96,
+              "height": 36
+            }
+          ],
+          "enemies": [
+            {
+              "id": "a-sentry",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 484,
+              "y": 305,
+              "end": {
+                "x": 516,
+                "y": 305
+              },
+              "activateX": 436,
+              "first": true,
+              "role_and_response": "line holder: use cover or crouch"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 564,
+            "y": 320
+          },
+          "terminal_kind": "power",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "B",
+          "base_previous": null,
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "B",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 224,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "x": 320,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 272,
+              "width": 16,
+              "height": 48
+            }
+          ],
+          "enemies": [
+            {
+              "id": "b-walker",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 368,
+              "y": 305,
+              "end": {
+                "x": 432,
+                "y": 305
+              },
+              "activateX": 112,
+              "first": true,
+              "role_and_response": "line holder: use cover or crouch"
+            },
+            {
+              "id": "b-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 432,
+              "y": 292,
+              "end": {
+                "x": 496,
+                "y": 248
+              },
+              "activateX": 300,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "id": "r01-shield",
+              "x": 536,
+              "y": 272,
+              "width": 84,
+              "height": 48,
+              "shielded": true,
+              "slot": "R01"
+            }
+          ],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "C",
+          "base_previous": "A",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "C",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 256,
+              "y": 256,
+              "width": 48,
+              "height": 16
+            },
+            {
+              "x": 352,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 432,
+              "y": 256,
+              "width": 48,
+              "height": 16
+            },
+            {
+              "x": 512,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "c-walker-1",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 256,
+              "y": 305,
+              "end": {
+                "x": 304,
+                "y": 305
+              },
+              "activateX": 80,
+              "role_and_response": "line holder: use cover or crouch"
+            },
+            {
+              "id": "c-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 416,
+              "y": 292,
+              "end": {
+                "x": 416,
+                "y": 248
+              },
+              "activateX": 288,
+              "role_and_response": "landing control: change firing height"
+            },
+            {
+              "id": "c-walker-2",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 464,
+              "y": 305,
+              "end": {
+                "x": 496,
+                "y": 305
+              },
+              "activateX": 400,
+              "role_and_response": "line holder: use cover or crouch"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 560,
+            "y": 320
+          },
+          "terminal_kind": "exit",
+          "power_switch": null,
+          "boss": null,
+          "base_next": null,
+          "base_previous": "B",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        }
+      ]
+    },
+    {
+      "mission_id": "cargo",
+      "design_budget_ms": 360000,
+      "timing_status": "NOT_MEASURED",
+      "rooms": [
+        {
+          "room_id": "D",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 224,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "d-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 416,
+              "y": 305,
+              "end": {
+                "x": 480,
+                "y": 305
+              },
+              "activateX": 180,
+              "leash": {
+                "min": 288,
+                "max": 568
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "E",
+          "base_previous": null,
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "E",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 272,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 368,
+              "y": 224,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "id": "e-sheet",
+              "material": "thin",
+              "x": 432,
+              "y": 200,
+              "width": 8,
+              "height": 72
+            }
+          ],
+          "enemies": [
+            {
+              "id": "e-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 480,
+              "y": 305,
+              "end": {
+                "x": 480,
+                "y": 305
+              },
+              "activateX": 112,
+              "first": true,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "F",
+          "base_previous": "D",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "F",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 208,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 320,
+              "y": 256,
+              "width": 80,
+              "height": 16
+            }
+          ],
+          "enemies": [
+            {
+              "id": "f-service",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 432,
+              "y": 305,
+              "end": {
+                "x": 496,
+                "y": 305
+              },
+              "activateX": 144,
+              "role_and_response": "line holder: use cover or crouch"
+            },
+            {
+              "id": "f-event-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 500,
+              "y": 305,
+              "end": {
+                "x": 500,
+                "y": 305
+              },
+              "activateX": 352,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "id": "r02-shield",
+              "x": 552,
+              "y": 272,
+              "width": 64,
+              "height": 48,
+              "shielded": true,
+              "slot": "R02"
+            }
+          ],
+          "repair": {
+            "slot": "R02",
+            "x": 584,
+            "y": 320,
+            "radius": 24
+          },
+          "cache": null,
+          "terminal": {
+            "x": 88,
+            "y": 320
+          },
+          "terminal_kind": "restore",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "G",
+          "base_previous": "E",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "G",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 320,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "g-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 384,
+              "y": 305,
+              "end": {
+                "x": 416,
+                "y": 305
+              },
+              "activateX": 144,
+              "leash": {
+                "min": 336,
+                "max": 432
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            },
+            {
+              "id": "g-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 504,
+              "y": 305,
+              "end": {
+                "x": 504,
+                "y": 305
+              },
+              "activateX": 376,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 560,
+            "y": 320
+          },
+          "terminal_kind": "install",
+          "power_switch": null,
+          "boss": null,
+          "base_next": null,
+          "base_previous": "F",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        }
+      ]
+    },
+    {
+      "mission_id": "foundry",
+      "design_budget_ms": 360000,
+      "timing_status": "NOT_MEASURED",
+      "rooms": [
+        {
+          "room_id": "M3A",
+          "episode": "F01",
+          "encounter_goal": "Dodge the first charge, then fire during the exposed engine recovery.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 176,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3a-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 352,
+              "y": 305,
+              "end": {
+                "x": 400,
+                "y": 305
+              },
+              "activateX": 248,
+              "first": true,
+              "charge": {
+                "min": 264,
+                "max": 456
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3E",
+          "base_previous": null,
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3E",
+          "episode": "F02",
+          "encounter_goal": "Choose press or furnace power at the console before combining the ram and drone.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 176,
+              "y": 288,
+              "width": 40,
+              "height": 32
+            },
+            {
+              "x": 288,
+              "y": 248,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 560,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3e-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 368,
+              "y": 305,
+              "end": {
+                "x": 408,
+                "y": 305
+              },
+              "activateX": 220,
+              "charge": {
+                "min": 240,
+                "max": 440
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            },
+            {
+              "id": "m3e-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 480,
+              "y": 248,
+              "end": {
+                "x": 528,
+                "y": 248
+              },
+              "activateX": 384,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "m3e-press",
+              "kind": "press",
+              "x": 248,
+              "y": 256,
+              "width": 40,
+              "height": 64,
+              "cycle_ms": 6000,
+              "warning_ms": 1400,
+              "active_ms": 800
+            },
+            {
+              "id": "m3e-furnace",
+              "kind": "heat",
+              "x": 464,
+              "y": 268,
+              "width": 48,
+              "height": 52,
+              "cycle_ms": 7000,
+              "warning_ms": 2200,
+              "active_ms": 1200
+            }
+          ],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": {
+            "x": 112,
+            "y": 320
+          },
+          "boss": null,
+          "base_next": "M3F",
+          "base_previous": "M3A",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3F",
+          "episode": "F03",
+          "encounter_goal": "Defeat security, isolate power, then choose one mutually exclusive route.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 192,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 328,
+              "y": 256,
+              "width": 80,
+              "height": 16
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3f-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 456,
+              "y": 305,
+              "end": {
+                "x": 504,
+                "y": 305
+              },
+              "activateX": 240,
+              "leash": {
+                "min": 420,
+                "max": 552
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "power",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3B",
+          "base_previous": "M3E",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3B",
+          "episode": "FS04",
+          "encounter_goal": "Change firing height to clear the service walker and landing-control drone.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 152,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 248,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "id": "m3b-wall",
+              "material": "wall",
+              "x": 368,
+              "y": 272,
+              "width": 16,
+              "height": 48
+            },
+            {
+              "x": 536,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3b-walker",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 280,
+              "y": 305,
+              "end": {
+                "x": 336,
+                "y": 305
+              },
+              "activateX": 128,
+              "role_and_response": "line holder: use cover or crouch"
+            },
+            {
+              "id": "m3b-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 464,
+              "y": 248,
+              "end": {
+                "x": 512,
+                "y": 248
+              },
+              "activateX": 352,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3G",
+          "base_previous": "M3F",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3G",
+          "episode": "FS05",
+          "encounter_goal": "Use the two firing platforms against drones; upper salvage is optional.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 168,
+              "y": 288,
+              "width": 40,
+              "height": 32
+            },
+            {
+              "x": 280,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 424,
+              "y": 224,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 552,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3g-drone-low",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 360,
+              "y": 276,
+              "end": {
+                "x": 408,
+                "y": 248
+              },
+              "activateX": 176,
+              "role_and_response": "landing control: change firing height"
+            },
+            {
+              "id": "m3g-drone-high",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 480,
+              "y": 196,
+              "end": {
+                "x": 520,
+                "y": 248
+              },
+              "activateX": 400,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": {
+            "id": "salvage",
+            "x": 456,
+            "y": 224,
+            "radius": 24
+          },
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3H",
+          "base_previous": "M3B",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3H",
+          "episode": "FS06",
+          "encounter_goal": "Use cover against security and the cycling turret; the thin panel is optional.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "id": "m3h-sheet",
+              "material": "thin",
+              "x": 352,
+              "y": 248,
+              "width": 8,
+              "height": 40
+            },
+            {
+              "x": 280,
+              "y": 240,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3h-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 448,
+              "y": 305,
+              "end": {
+                "x": 448,
+                "y": 305
+              },
+              "activateX": 200,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            },
+            {
+              "id": "m3h-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 272,
+              "y": 305,
+              "end": {
+                "x": 312,
+                "y": 305
+              },
+              "activateX": 120,
+              "leash": {
+                "min": 224,
+                "max": 328
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3K",
+          "base_previous": "M3G",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3C",
+          "episode": "FP04",
+          "encounter_goal": "Cross the warned press from a safe side and counter the ram in recovery.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 144,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 224,
+              "y": 248,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 552,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3c-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 376,
+              "y": 305,
+              "end": {
+                "x": 424,
+                "y": 305
+              },
+              "activateX": 248,
+              "charge": {
+                "min": 312,
+                "max": 472
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "m3c-press",
+              "kind": "press",
+              "x": 304,
+              "y": 244,
+              "width": 40,
+              "height": 76,
+              "cycle_ms": 6500,
+              "warning_ms": 1400,
+              "active_ms": 900,
+              "offset_ms": 5000
+            },
+            {
+              "id": "m3c-heat",
+              "kind": "heat",
+              "x": 472,
+              "y": 268,
+              "width": 48,
+              "height": 52,
+              "cycle_ms": 9000,
+              "warning_ms": 3000,
+              "active_ms": 3000,
+              "offset_ms": 1500
+            }
+          ],
+          "safe_zones": [],
+          "repair": null,
+          "cache": {
+            "id": "salvage",
+            "x": 528,
+            "y": 320,
+            "radius": 22
+          },
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3I",
+          "base_previous": "M3F",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3I",
+          "episode": "FP05",
+          "encounter_goal": "Cross the heat window and separate the airborne and ground firing lines.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 288,
+              "y": 248,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 552,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3i-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 392,
+              "y": 240,
+              "end": {
+                "x": 448,
+                "y": 240
+              },
+              "activateX": 232,
+              "role_and_response": "landing control: change firing height"
+            },
+            {
+              "id": "m3i-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 464,
+              "y": 305,
+              "end": {
+                "x": 512,
+                "y": 305
+              },
+              "activateX": 368,
+              "leash": {
+                "min": 424,
+                "max": 536
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "m3i-heat",
+              "kind": "heat",
+              "x": 240,
+              "y": 268,
+              "width": 40,
+              "height": 52,
+              "cycle_ms": 7200,
+              "warning_ms": 2400,
+              "active_ms": 1200
+            }
+          ],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3J",
+          "base_previous": "M3C",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3J",
+          "episode": "FP06",
+          "encounter_goal": "Use the raised platform between offset presses and counter the ram.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 288,
+              "y": 240,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3j-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 392,
+              "y": 305,
+              "end": {
+                "x": 448,
+                "y": 305
+              },
+              "activateX": 264,
+              "charge": {
+                "min": 344,
+                "max": 488
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "m3j-press-a",
+              "kind": "press",
+              "x": 232,
+              "y": 244,
+              "width": 40,
+              "height": 76,
+              "cycle_ms": 6000,
+              "warning_ms": 1600,
+              "active_ms": 800
+            },
+            {
+              "id": "m3j-press-b",
+              "kind": "press",
+              "x": 456,
+              "y": 244,
+              "width": 40,
+              "height": 76,
+              "cycle_ms": 6000,
+              "warning_ms": 1600,
+              "active_ms": 800,
+              "offset_ms": 3000
+            }
+          ],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3K",
+          "base_previous": "M3I",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3K",
+          "episode": "F07",
+          "encounter_goal": "Take the one-use R03 repair if needed; activate cooling before the exit.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 256,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            }
+          ],
+          "enemies": [],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "x": 80,
+              "y": 272,
+              "width": 80,
+              "height": 48
+            }
+          ],
+          "repair": {
+            "slot": "R03",
+            "x": 120,
+            "y": 320,
+            "radius": 24
+          },
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "power",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M3D",
+          "base_previous": "M3H",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M3D",
+          "episode": "F08",
+          "encounter_goal": "Clear the ram and drone from separate firing heights, then hold the exit terminal.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 184,
+              "y": 288,
+              "width": 40,
+              "height": 32
+            },
+            {
+              "x": 288,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m3d-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 376,
+              "y": 305,
+              "end": {
+                "x": 424,
+                "y": 305
+              },
+              "activateX": 240,
+              "charge": {
+                "min": 272,
+                "max": 480
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            },
+            {
+              "id": "m3d-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 472,
+              "y": 248,
+              "end": {
+                "x": 520,
+                "y": 248
+              },
+              "activateX": 344,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "exit",
+          "power_switch": null,
+          "boss": null,
+          "base_next": null,
+          "base_previous": "M3K",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        }
+      ]
+    },
+    {
+      "mission_id": "archive",
+      "design_budget_ms": 360000,
+      "timing_status": "NOT_MEASURED",
+      "rooms": [
+        {
+          "room_id": "M4A",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 208,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "id": "m4a-ricochet",
+              "material": "ricochet",
+              "x": 368,
+              "y": 272,
+              "width": 48,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m4a-walker",
+              "kind": "walker",
+              "preset": "walker_service",
+              "x": 392,
+              "y": 305,
+              "end": {
+                "x": 448,
+                "y": 305
+              },
+              "activateX": 144,
+              "role_and_response": "line holder: use cover or crouch"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M4B",
+          "base_previous": null,
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M4B",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 168,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 288,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 392,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "id": "m4b-cache-shelf",
+              "x": 456,
+              "y": 264,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 520,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m4b-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 368,
+              "y": 248,
+              "end": {
+                "x": 384,
+                "y": 248
+              },
+              "activateX": 176,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "x": 72,
+              "y": 272,
+              "width": 72,
+              "height": 48
+            }
+          ],
+          "repair": null,
+          "cache": {
+            "id": "S04",
+            "x": 488,
+            "y": 264,
+            "radius": 24
+          },
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M4C",
+          "base_previous": "M4A",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M4C",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 208,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 328,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "id": "m4c-wall",
+              "material": "wall",
+              "x": 440,
+              "y": 272,
+              "width": 16,
+              "height": 48
+            },
+            {
+              "x": 552,
+              "y": 272,
+              "width": 16,
+              "height": 48
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m4c-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 400,
+              "y": 305,
+              "end": {
+                "x": 424,
+                "y": 305
+              },
+              "activateX": 232,
+              "leash": {
+                "min": 384,
+                "max": 448
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            },
+            {
+              "id": "m4c-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 472,
+              "y": 305,
+              "end": {
+                "x": 472,
+                "y": 305
+              },
+              "activateX": 400,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "x": 488,
+              "y": 272,
+              "width": 64,
+              "height": 48
+            }
+          ],
+          "repair": {
+            "slot": "R04",
+            "x": 520,
+            "y": 320,
+            "radius": 22
+          },
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "data",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M4D",
+          "base_previous": "M4B",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M4D",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 280,
+              "y": 256,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "x": 416,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "x": 536,
+              "y": 288,
+              "width": 16,
+              "height": 32
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m4d-ram",
+              "kind": "walker",
+              "preset": "ram_charge",
+              "x": 336,
+              "y": 305,
+              "end": {
+                "x": 392,
+                "y": 305
+              },
+              "activateX": 216,
+              "charge": {
+                "min": 300,
+                "max": 408
+              },
+              "role_and_response": "displacement: jump the charge, then counter exposed recovery"
+            },
+            {
+              "id": "m4d-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 488,
+              "y": 248,
+              "end": {
+                "x": 536,
+                "y": 248
+              },
+              "activateX": 400,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "exit",
+          "power_switch": null,
+          "boss": null,
+          "base_next": null,
+          "base_previous": "M4C",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        }
+      ]
+    },
+    {
+      "mission_id": "reactor",
+      "design_budget_ms": 480000,
+      "timing_status": "NOT_MEASURED",
+      "rooms": [
+        {
+          "room_id": "M5A",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 160,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 256,
+              "y": 272,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "id": "m5a-phase",
+              "material": "phase",
+              "x": 368,
+              "y": 272,
+              "width": 12,
+              "height": 48
+            },
+            {
+              "x": 456,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "id": "m5a-ricochet",
+              "material": "ricochet",
+              "x": 512,
+              "y": 272,
+              "width": 48,
+              "height": 16
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m5a-security",
+              "kind": "walker",
+              "preset": "walker_security",
+              "x": 280,
+              "y": 305,
+              "end": {
+                "x": 328,
+                "y": 305
+              },
+              "activateX": 112,
+              "leash": {
+                "min": 208,
+                "max": 352
+              },
+              "role_and_response": "pursuer: break sight or move outside its leash"
+            },
+            {
+              "id": "m5a-turret",
+              "kind": "turret",
+              "preset": "turret_cycle",
+              "x": 440,
+              "y": 305,
+              "end": {
+                "x": 440,
+                "y": 305
+              },
+              "activateX": 336,
+              "role_and_response": "burst line: use cover, then fire during exposure"
+            }
+          ],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 576,
+            "y": 320
+          },
+          "terminal_kind": "power",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M5B",
+          "base_previous": null,
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M5B",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 152,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 248,
+              "y": 272,
+              "width": 64,
+              "height": 16
+            },
+            {
+              "id": "m5b-phase",
+              "material": "phase",
+              "x": 344,
+              "y": 272,
+              "width": 12,
+              "height": 48
+            },
+            {
+              "x": 416,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            },
+            {
+              "x": 536,
+              "y": 272,
+              "width": 16,
+              "height": 48
+            }
+          ],
+          "enemies": [
+            {
+              "id": "m5b-drone",
+              "kind": "drone",
+              "preset": "drone_service",
+              "x": 448,
+              "y": 244,
+              "end": {
+                "x": 480,
+                "y": 244
+              },
+              "activateX": 320,
+              "role_and_response": "landing control: change firing height"
+            }
+          ],
+          "hazards": [
+            {
+              "id": "m5b-heat",
+              "kind": "heat",
+              "x": 320,
+              "y": 244,
+              "width": 72,
+              "height": 76,
+              "cycle_ms": 9000,
+              "warning_ms": 3000,
+              "active_ms": 3000
+            }
+          ],
+          "safe_zones": [
+            {
+              "x": 264,
+              "y": 268,
+              "width": 40,
+              "height": 52
+            },
+            {
+              "x": 472,
+              "y": 268,
+              "width": 40,
+              "height": 52
+            }
+          ],
+          "repair": null,
+          "cache": {
+            "id": "S05",
+            "x": 520,
+            "y": 320,
+            "radius": 22
+          },
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M5C",
+          "base_previous": "M5A",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M5C",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 208,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 400,
+              "y": 272,
+              "width": 48,
+              "height": 48
+            }
+          ],
+          "enemies": [],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "x": 56,
+              "y": 272,
+              "width": 528,
+              "height": 48
+            }
+          ],
+          "repair": {
+            "slot": "R05",
+            "x": 120,
+            "y": 320,
+            "radius": 26
+          },
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "exit",
+          "power_switch": null,
+          "boss": null,
+          "base_next": "M5D",
+          "base_previous": "M5B",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M5D",
+          "episode": "R08/R09",
+          "encounter_goal": "Dodge locked lanes, fire into the raised chest aperture, then evade the moving sweep.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 136,
+              "y": 288,
+              "width": 40,
+              "height": 32
+            },
+            {
+              "x": 240,
+              "y": 256,
+              "width": 64,
+              "height": 64
+            }
+          ],
+          "enemies": [],
+          "hazards": [],
+          "safe_zones": [
+            {
+              "x": 56,
+              "y": 272,
+              "width": 56,
+              "height": 48
+            }
+          ],
+          "repair": null,
+          "cache": null,
+          "terminal": null,
+          "terminal_kind": null,
+          "power_switch": null,
+          "boss": {
+            "id": "regulator",
+            "x": 472,
+            "y": 232,
+            "width": 192,
+            "height": 176,
+            "hp": 32,
+            "coreWindowMs": 1800
+          },
+          "base_next": "M5E",
+          "base_previous": "M5C",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        },
+        {
+          "room_id": "M5E",
+          "episode": null,
+          "encounter_goal": "Existing encounter; expansion and detailed response review remain open.",
+          "geometry": [
+            {
+              "x": 0,
+              "y": 320,
+              "width": 640,
+              "height": 40
+            },
+            {
+              "x": 224,
+              "y": 288,
+              "width": 48,
+              "height": 32
+            },
+            {
+              "x": 384,
+              "y": 272,
+              "width": 64,
+              "height": 48
+            }
+          ],
+          "enemies": [],
+          "hazards": [],
+          "safe_zones": [],
+          "repair": null,
+          "cache": null,
+          "terminal": {
+            "x": 568,
+            "y": 320
+          },
+          "terminal_kind": "exit",
+          "power_switch": null,
+          "boss": null,
+          "base_next": null,
+          "base_previous": "M5D",
+          "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
+          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+        }
+      ]
+    }
+  ]
+}

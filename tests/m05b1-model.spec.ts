@@ -20,8 +20,8 @@ test('campaign progression freezes entries and grants each sector reward once ac
  expect(c.applyResult({attempt_id:'cargo-1',mission_id:'cargo',result:'victory',reason:'',hp:4,max_hp:6,score:0,active_ms:100000,screen_ms:0,nodes:[]})).toBe(true);expect(c.data.points).toBe(3);expect(c.advance()).toBe(true);expect(c.data).toMatchObject({mission_id:'foundry',stage:'map',points:3});expect(validateSave(envelope(c))).toBeNull();
  expect(c.selectMission('airlock')).toBe(true);win(c,'airlock-replay');expect(c.data.points).toBe(3);expect(c.data.result?.reward_granted).toBe(false);expect(c.data.reward_ledger).toHaveLength(2);expect(c.applyResult(c.data.result!)).toBe(false);
 });
-test('all twenty room IDs, preset bodies and mission-specific event plans are consistent',()=>{
- const ids=missionIds.filter(id=>missions[id].implemented).flatMap(id=>[...missions[id].rooms]);expect(ids).toHaveLength(20);expect(new Set(ids).size).toBe(20);
+test('all twenty-seven room IDs, preset bodies and mission-specific event plans are consistent',()=>{
+ const ids=missionIds.filter(id=>missions[id].implemented).flatMap(id=>[...missions[id].rooms]);expect(ids).toHaveLength(27);expect(new Set(ids).size).toBe(27);
  const overlaps:string[]=[];for(const id of ids){expect(rooms[id].id).toBe(id);for(const enemy of rooms[id].enemies){expect(()=>createEnemy(enemy)).not.toThrow();if(rooms[id].solids.some(s=>intersects(enemyRect(createEnemy(enemy)),s)))overlaps.push(id+':'+enemy.id);}}expect(overlaps).toEqual([]);
  for(let seed=0;seed<32;seed++){expect(validPlan(planEvents(seed),'airlock')).toBe(true);expect(validPlan(planEvents(seed,'cargo'),'cargo')).toBe(true);expect(planEvents(seed,'cargo').every(e=>e.room_id==='F')).toBe(true);expect(planEvents(seed).every(e=>e.room_id==='B')).toBe(true);}
  expect(validPlan([{event_id:'E01',definition_version:1,room_id:'B',variant:'emergency-power'}],'cargo')).toBe(false);

@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {state,startMission,roomA} from './helpers';
+import {state,startMission,roomA,x} from './helpers';
 
 test('menu has one action group; language and analytics remain reachable in Settings',async({page})=>{
  await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();
@@ -34,4 +34,62 @@ test('arrival is immediately skippable and the first live enemy opens the powere
  expect((await state(page)).combatRemaining).toBe(1);expect((await state(page)).exitOpen).toBe(false);
  await roomA(page);expect((await state(page)).room).toBe('B');
  await page.screenshot({path:info.outputPath('first-combat-complete.png')});expect(errors).toEqual([]);
+});
+
+
+async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor';room:string;cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
+ await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();
+ await page.evaluate(input=>(window as any).__ENCOUNTER__.start(input),input);
+ await expect.poll(async()=>(await state(page)).room).toBe(input.room);
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.simMs>0&&s.player?.vy===0;});
+}
+async function climbBossPlatform(page:import('@playwright/test').Page){
+ await page.keyboard.down('d');await x(page,108);await page.keyboard.down('Space');await x(page,168);await page.keyboard.up('d');await page.keyboard.up('Space');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player?.vy===0&&s.player.y+22<290;});
+ await page.keyboard.down('d');await page.keyboard.down('Space');await x(page,268);await page.keyboard.up('d');await page.keyboard.up('Space');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player?.vy===0&&s.player.y+22<260;});
+}
+
+test('Foundry console changes real equipment power and keeps the inactive machine harmless',async({page},info)=>{
+ await encounter(page,{mission:'foundry',room:'M3E'});
+ expect((await state(page)).hazards.filter((h:any)=>h.enabled).map((h:any)=>h.kind)).toEqual(['press']);
+ await page.keyboard.down('d');await x(page,100);await page.keyboard.up('d');await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
+ expect((await state(page)).hazards.find((h:any)=>h.kind==='press').phase).toBe('off');expect((await state(page)).hp).toBe(6);
+ await page.screenshot({path:info.outputPath('foundry-power-furnace.png')});await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).powerCircuit).toBe('press');
+ expect((await state(page)).hazards.find((h:any)=>h.kind==='heat').phase).toBe('off');
+});
+
+test('first Foundry ram requires the charge/recovery pattern and can be defeated by the base weapon',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'foundry',room:'M3A'});
+ await page.keyboard.down('d');await x(page,148);await page.keyboard.down('Space');await x(page,250);await page.keyboard.up('d');await page.keyboard.up('Space');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player?.vy===0&&s.player.y+22>318;});
+ await page.keyboard.down('j');await page.waitForFunction(()=>{const e=(window as any).__CINDER__().enemies[0];return e.phase==='telegraph'&&e.remaining<240;});
+ expect((await state(page)).enemies[0].hp).toBe(3);expect((await state(page)).audioStatus.played.hit_armour).toBeGreaterThan(0);
+ await page.keyboard.down('Space');await expect.poll(async()=>(await state(page)).combatRemaining,{timeout:12000}).toBe(0);await page.keyboard.up('Space');await page.keyboard.up('j');
+ expect((await state(page)).hp).toBeGreaterThan(0);expect((await state(page)).exitOpen).toBe(true);await page.screenshot({path:info.outputPath('foundry-ram-counterattack.png')});
+});
+
+for(const route of ['service','press'] as const)test(`Foundry ${route} selection opens the matching corridor after isolation`,async({page})=>{
+ test.setTimeout(45000);
+ // This fixture represents security already defeated; it tests the actual terminal and fork flow.
+ await encounter(page,{mission:'foundry',room:'M3F',cleared:true});expect((await state(page)).exitOpen).toBe(false);
+ await page.keyboard.down('d');await x(page,166);await page.keyboard.down('Space');await x(page,270);await page.keyboard.up('Space');await x(page,556);await page.keyboard.up('d');
+ await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await expect.poll(async()=>(await state(page)).foundryRoute).toBe(route);
+ await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).room).toBe(route==='service'?'M3B':'M3C');await page.keyboard.up('d');
+});
+
+test('robot chest core takes real base-weapon hits from the raised firing platform',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'reactor',room:'M5D',debug:true});await climbBossPlatform(page);
+ await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).bossHp,{timeout:12000}).toBeLessThan(32);await page.keyboard.up('j');
+ expect((await state(page)).boss.pattern.stage).toBe('lanes');expect((await state(page)).loadout.nodes).toEqual([]);
+ expect((await state(page)).bossHitboxes.core.y).toBeGreaterThan(200);await page.screenshot({path:info.outputPath('regulator-core-hitboxes.png')});
+});
+
+test('floor fire strikes the robot armor even when the chest core is open',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'reactor',room:'M5D',reduced:true});await climbBossPlatform(page);
+ await page.keyboard.down('d');await x(page,330);await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player?.vy===0&&s.player.y+22>318;});
+ await page.keyboard.down('j');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.boss.pattern.phase==='core'&&s.audioStatus.played.hit_armour>0;});
+ expect((await state(page)).bossHp).toBe(32);await page.keyboard.up('j');await page.screenshot({path:info.outputPath('regulator-floor-armor-reduced.png')});
 });

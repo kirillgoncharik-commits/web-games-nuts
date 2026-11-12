@@ -5,6 +5,7 @@ const root=resolve(process.env.PREVIEW_ROOT || 'dist');
 const port=Number(process.env.PORT || 4175);
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json','.png':'image/png','.webp':'image/webp','.wav':'audio/wav','.svg':'image/svg+xml'};
 const mute=process.env.CINDER_QA_MUTE==='1';
+const harnessRoot=process.env.CINDER_QA_HARNESS==='1'?resolve('qa-work/rework-harness'):null;
 const mutedAudio=`
   (() => {
     const originalConnect = AudioNode.prototype.connect;
@@ -39,8 +40,10 @@ createServer(async(req,res)=>{
     }
     let path=decodeURIComponent(url.pathname);
     // Standalone preview uses the final nested URL, exactly as site integration does.
-    if(!process.env.PREVIEW_ROOT && path.startsWith('/games/'))path=path.slice('/games'.length);
-    let file=resolve(root,'.'+path);if(file!==root && !file.startsWith(root+sep))throw Error('invalid path');
+    let activeRoot=root;
+    if(harnessRoot&&path.startsWith('/__encounter__/')){activeRoot=harnessRoot;path=path.slice('/__encounter__'.length);}
+    else if(!process.env.PREVIEW_ROOT && path.startsWith('/games/'))path=path.slice('/games'.length);
+    let file=resolve(activeRoot,'.'+path);if(file!==activeRoot && !file.startsWith(activeRoot+sep))throw Error('invalid path');
     if((await stat(file)).isDirectory())file=resolve(file,'index.html');
     const extension=extname(file);
     let body=await readFile(file);

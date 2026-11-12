@@ -17,17 +17,17 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.1",
-    "stage": "foundation",
+    "build_id": "0.7.0-rework.2",
+    "stage": "foundry_and_regulator",
     "published": false,
     "accepted": false,
     "verification": {
       "typecheck": "passed",
-      "i18n": "passed_602_en_ru_keys",
+      "i18n": "passed_640_en_ru_keys",
       "build": "passed",
-      "art_contracts": "passed",
-      "model_tests": "44_passed",
-      "browser_tests": "15_passed_on_ec52736; later defensive loading-image null guard typechecked; latest CI recorded by PR",
+      "art_contracts": "passed_including_rework_robot_hash_and_fixture_isolation",
+      "model_tests": "57_passed",
+      "browser_tests": "Previous candidate: 15 full Airlock flow scenarios passed across three browsers in run 43217028352. Foundry/Regulator candidate runtime results are recorded against the exact SHA in PR #9.",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
       "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts",
@@ -45,12 +45,44 @@
           "15 UI tests across Chromium/Firefox/WebKit"
         ],
         "scope": "foundation menu/settings, map inspection, inline purchase/cancel/installed build at three sizes, arrival skip and first real combat"
+      },
+      {
+        "source_sha": "ade4252f9048c55288055d398d6b2a082906bd32",
+        "head_sha": "152cbf4e18633cb775b89587a14307ac2e886c57",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock flow scenarios across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, first reward, Retry, full HP, frozen entry, reload and earned Cargo transition; not a Foundry/robot test."
       }
     ],
     "known_limitations": [
       "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
       "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
-    ]
+    ],
+    "recovery": "Local source and both robot PNG files verified intact after connection recovery; remote QA changes from 152cbf4 restored without replacing the Foundry diff.",
+    "implementation_estimate": {
+      "range_percent": [
+        25,
+        30
+      ],
+      "kind": "engineering_scope_estimate",
+      "method": "Estimate by remaining production volume. Requirements differ substantially in size; one UI action and two extra 20-room worlds are not equal work. Partial requirements are not counted as fully closed. This is not elapsed-time, release-readiness or a duration estimate.",
+      "major_remaining": [
+        "Expand Airlock/Cargo/Archive/Reactor and measure a natural 25–35-minute first campaign",
+        "Complete the five-sector art, animation and VFX pass",
+        "Build and integrate C02/C03, their distinct mechanics, art/music, selection and persistent unlocks",
+        "Complete 50 locales/RTL, legacy regression, physical devices, audio/visual review and independent playtests"
+      ]
+    },
+    "requirement_counts": {
+      "IMPLEMENTED": 11,
+      "OPEN": 69,
+      "total": 80,
+      "verified_whole_milestone": 0,
+      "accepted_whole_milestone": false
+    }
   },
   "requirements": [
     {
@@ -102,26 +134,8 @@
       "id": "RW-01.01",
       "requirement": "Пересобрать все пять миссий под цель около 30 минут первого естественного успешного прохождения: рабочий бюджет Airlock 4 + Cargo 6 + Foundry 6 + Archive 6 + Reactor/финал 8 минут. Это дизайн-бюджет для наполнения, а не обязательные задержки.",
       "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published"
-    },
-    {
-      "id": "RW-01.02",
-      "requirement": "У каждой комнаты определить отдельную игровую задачу, геометрию, позиции/роли угроз, телеграфы, безопасные ответы, награду/последствие и условие завершения. Разные названия и фоны не заменяют разные ситуации.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published"
-    },
-    {
-      "id": "RW-01.03",
-      "requirement": "В первой комнате добавить настоящего читаемого врага и возможность применить оружие; показать различие выстрела по цели и взаимодействия E у терминала. Сохранить безопасный старт и защиту от мгновенного необъяснимого урона.",
-      "status": "OPEN",
       "implementation": [
-        "A live first-room sentry replaces the target; E terminal is gated by victory. Runtime teaching/readability check open."
+        "Foundry expanded from four to eleven unique rooms; either chosen route visits eight. Other sectors remain at their previous room counts and the 30-minute target is not measured."
       ],
       "verification": [],
       "evidence": [],
@@ -129,31 +143,70 @@
       "implementation_status": "partial"
     },
     {
+      "id": "RW-01.02",
+      "requirement": "У каждой комнаты определить отдельную игровую задачу, геометрию, позиции/роли угроз, телеграфы, безопасные ответы, награду/последствие и условие завершения. Разные названия и фоны не заменяют разные ситуации.",
+      "status": "OPEN",
+      "implementation": [
+        "docs/cinder-shift/rework-room-registry.json inventories all 27 runtime campaign rooms, exact geometry, threat positions, hazards, services and conditional links. Full encounter-specific response/timing validation remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-01.03",
+      "requirement": "В первой комнате добавить настоящего читаемого врага и возможность применить оружие; показать различие выстрела по цели и взаимодействия E у терминала. Сохранить безопасный старт и защиту от мгновенного необъяснимого урона.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Live Airlock sentry, clear objective and E power terminal. Full keyboard input routes passed with base/W1/M1/D1 across Chromium/Firefox/WebKit in run 43217028352."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "implemented"
+    },
+    {
       "id": "RW-01.04",
       "requirement": "Добавить вертикальные пути, смену линий огня, сочетания противников и оборудования, риск ради награды, намеренные передышки и кульминации секторов. Убрать переходы без цели.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "New Foundry service platform/drone encounters, optional salvage, press/heat route and R03 cooling pause. Other sector expansion remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-01.05",
       "requirement": "Foundry: таран/уклонение/контратака → сочетание наземной и воздушной ролей → различимые service/press routes → ремонт и итоговая проверка. Оба маршрута содержательны.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "games/cinder-shift/src/room-data.ts",
+        "games/cinder-shift/src/mission.ts",
+        "tests/rework-model.spec.ts: eight rooms per route, isolated fork and R03 before the final encounter. Full-route input and timing are not yet accepted."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-01.06",
       "requirement": "Один полноценный эпизод перенаправления питания: два состояния оборудования/маршрута, видимая связь переключателя с миром и разные последствия для боя. Сначала испытать на образце, затем использовать там, где помогает дизайну.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "M3E console toggles the actual press/furnace enable state; renderer and collider share machineState. Input-driven toggle scenario awaits current-candidate browser evidence."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-01.07",
@@ -168,10 +221,13 @@
       "id": "RW-02.01",
       "requirement": "Развести противников по функциям: удержание линии, вытеснение, преследование, контроль приземления, таран/открытое окно. Согласовать detection/activation/leash/return и состав комнат; проверить наложение тел и ситуации, где враги стоят и умирают до реакции.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Ram armor survives the teaching charge and exposes its engine during recovery. New Foundry roster separates drone, security, ram and turret roles. Full all-room overlap/leash/reachability review remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-02.02",
@@ -221,19 +277,33 @@
       "id": "RW-02.05",
       "requirement": "Проверить базовый костюм, достижимые оружейную/мобильную/защитную сборки на одинаковом seed/ветке. Разбирать фактические причины урона и окна ответа, не включать общий множитель сложности без плейтеста.",
       "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published"
+      "implementation": [
+        "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-02.06",
       "requirement": "Сохранить действующее полное HP на старте миссии и бесплатный Retry той же миссии с входной сборкой/seed, пока отдельным решением не изменён контракт. Permanent death, revive за рекламу и новые валюты не вводить.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published"
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Full HP and free same-entry Retry preserved. Selected model suite plus Airlock victory→Retry→reload input checks passed; no permanent-death/revive/currency change."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "implemented"
     },
     {
       "id": "RW-03.01",
@@ -256,20 +326,30 @@
     {
       "id": "RW-03.03",
       "requirement": "Показывать куплено / пассивно действует / выбран активный слот. W4 не должен выглядеть активным заряженным выстрелом, если выбран M1; смена слота понятна.",
-      "status": "OPEN",
-      "implementation": [],
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts: installed active/equipped/idle/passive labels; active-skill selection only exposes purchased active modules."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "implemented"
     },
     {
       "id": "RW-03.04",
       "requirement": "Сохранить бюджет очков, атомарность покупки и reward ledger; повтор/reload/повторный callback не создают дубли наград. Базовая сборка проходит обязательный путь.",
       "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published"
+      "implementation": [
+        "Atomic purchase/reward model checks and full Airlock first-reward/Retry/reload regression pass. Base-suit whole-campaign traversal remains open."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-03.05",
@@ -284,37 +364,49 @@
       "id": "RW-04.01",
       "requirement": "Перерисовать Регулятора как большого промышленного робота с узнаваемым силуэтом, корпусом/ядром, анимациями и фазами. Объект не должен восприниматься обычной дверью.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Generated transparent industrial robot integrated lazily from assets/rework; simulation-driven core shutters, phase pose, hit and shutdown presentation. Full animation and visual acceptance remain open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-04.02",
       "requirement": "Перестроить бой: две различимые задачи/паттерна, честные предупреждения, доступный ответ, окно контратаки и видимый переход фаз. В обычном первом прохождении обе фазы успевают раскрыться; текущий случай полного уничтожения примерно за десять секунд разобран.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "RegulatorEncounter: two locked aimed lanes, core exposure/overload, phase transition and moving sweep. Model suite proves both phases and >=4 exposures without increasing 32 HP; real full fight remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-04.03",
       "requirement": "Совместить видимое ядро/броню с hitbox, состоянием уязвимости и фактическим уроном. Проверить выстрел с пола/в прыжке, мимо корпуса, в броню, отражённый/пробивающий выстрел; приложить разметку.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Normalized chest aperture and separate armor shapes, leg gap and segment collision; model tests plus new input scenarios for raised/floor firing. Piercing/ricochet and visual hitbox acceptance remain open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-04.04",
       "requirement": "После shutdown прекращаются атаки/телеграфы. Победа заметно меняет комплекс; короткая эвакуация завершает поставленную в интро цель.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Shutdown removes Regulator attack rectangles and opens its combat gate. Evacuation is retained; expanded world consequences remain open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-04.05",
@@ -404,14 +496,14 @@
     {
       "id": "RW-06.02",
       "requirement": "Убрать непонятную синусоиду и визуальные дубли названий/изображений. Один набор подписей и компактная информация выбранного узла; просмотр не меняет прогресс/позицию.",
-      "status": "OPEN",
+      "status": "IMPLEMENTED",
       "implementation": [
-        "Removed duplicate five-sector legend and sinusoidal connections. Map inspection retains campaign state."
+        "Orthogonal facility plan, single labels and read-only inspection; three-size browser checks passed in the foundation candidate."
       ],
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial"
+      "implementation_status": "implemented"
     },
     {
       "id": "RW-06.03",
@@ -492,19 +584,25 @@
       "id": "RW-07.04",
       "requirement": "Три ветки W/M/D, зависимости и активный слот различимы сразу. Понятны недостаток очков и причина недоступности.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "W/M/D module IDs, explicit prerequisites, funds state and installed active-slot labels are in the runtime. Full locale/RTL and active-slot UI regression remain open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-07.05",
       "requirement": "Главное действие — начать миссию, рядом ясное закрытие/возврат. Убрать непонятные Workshop menu и дубли Settings/Back внутри этого потока; проверить короткий landscape, RU/EN, 50 локалей/RTL.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Start mission remains primary. Legacy Workshop menu transition is still present and must be removed; 50-locale/RTL acceptance remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-08.01",
@@ -519,10 +617,13 @@
       "id": "RW-08.02",
       "requirement": "Обновить все пять секторов, архитектуру/фон, игровые платформы, двери/терминалы/ремонт/энергоячейку/опасные механизмы, врагов и Регулятора, меню/карту/мастерскую/HUD и иконки технологий/событий.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Robot visual integration and hazard/ram cues added; the complete five-sector/world-object/UI art pass remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-08.03",
@@ -556,7 +657,7 @@
       "requirement": "У R01–R05/S04/S05, терминалов, заслонок, ячейки и рамок: понятное назначение, действие и состояния доступно/не требуется/использовано/закрыто. При полном HP — «Ремонт не требуется».",
       "status": "OPEN",
       "implementation": [
-        "Full/used repair HUD states for R02-R05; review all stations, frames and interactions in runtime."
+        "R03 relocated to the cooling stop; repair full/used/available guards retained. Full in-camera object-state acceptance remains open."
       ],
       "verification": [],
       "evidence": [],
@@ -592,17 +693,20 @@
       "id": "RW-09.02",
       "requirement": "Развести дальний фон, средний план и игровые устройства; движение имеет источник и ритм, а не общий дрожащий overlay поверх статичной сцены.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "EnvironmentMotion draws sector-specific mechanisms at depth 1.4; landmarks and gameplay remain separate. Camera review remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-09.03",
       "requirement": "Активируемое оборудование меняет состояние после терминала/питания; опасный пресс/жар совпадает с реальной областью/фазой угрозы.",
       "status": "OPEN",
       "implementation": [
-        "Airlock and restore-terminal mechanisms use power state; hazardous machines remain tied to existing real hazard renderer."
+        "Foundry power changes which machine can warn/damage; machineState drives both rendering and collision. New browser toggle scenario awaits current evidence."
       ],
       "verification": [],
       "evidence": [],
@@ -658,10 +762,13 @@
       "id": "RW-10.02",
       "requirement": "Читаемые телеграфы и активные зоны турели/тарана/пресса/жара/босса; открытие ядра отличается от брони, shutdown очищает предупреждения.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Ram recovery cue, shared press/heat warning/active state and Regulator core/armor/attack rectangles. Shutdown model test clears hazards; runtime visual acceptance remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-10.03",
@@ -752,7 +859,7 @@
       "requirement": "Закрыть причины текущих CI failure, актуализировать устаревшие тесты по новому контракту, пройти build/typecheck/art/audio/i18n и необходимую cross-browser регрессию точного кандидата.",
       "status": "OPEN",
       "implementation": [
-        "Local build/typecheck/i18n/art and 44 model tests passed. Local preview blocked by listen EPERM. New cross-browser tests added; legacy UI tests still target old flows and require migration."
+        "Current local build/typecheck/art/640-key EN-RU check and 57 models pass. Dedicated three-browser encounter workflow added. Full legacy menu/purchase test migration remains open."
       ],
       "verification": [],
       "evidence": [],
@@ -763,10 +870,13 @@
       "id": "RW-11.06",
       "requirement": "Проверить fresh/legacy/completed/corrupt/future save, storage failure, reload, Retry, reward ledger, privacy choice и channel storage/SDK; не обнулять сохранение при ошибке чтения.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Selected model save/migration/idempotency suite and three-browser Airlock Retry/reload checks pass; the full storage/platform matrix remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-12.01",
@@ -817,10 +927,13 @@
       "id": "RW-13.01",
       "requirement": "Сдать один интегрированный RC из фиксированного SHA/build ID; актуальные PR/preview/воспроизводимая сборка и точка отката. Implemented, verified и published — разные статусы.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "Draft PR #9 receives the integrated candidate; exact source/build comes from CI build-manifest. This is not the final RC or a production deployment."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-13.02",
@@ -853,10 +966,13 @@
       "id": "RW-13.05",
       "requirement": "Передать заполненные request coverage, room/encounter registry, assets/animations/VFX matrices, timing/playtest report, device/performance report, QA с доказательствами и known issues.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "80-row request coverage and reproducible 27-room runtime inventory are tracked. Full art/VFX/timing/device/acceptance evidence remains open."
+      ],
       "verification": [],
       "evidence": [],
-      "publication": "not_published"
+      "publication": "not_published",
+      "implementation_status": "partial"
     },
     {
       "id": "RW-13.06",

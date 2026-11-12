@@ -1,7 +1,7 @@
 import {loadout,purchase,type Loadout,type NodeId,type ActiveSkill} from './research';
 import {planEvents,type EventPlan} from './events';
 import {missions,missionSeed,unlocked,type PlayableMissionId} from './missions';
-export const campaignRuleset='combat-clear-v2';
+export const campaignRuleset='campaign-rework2';
 export const contentVersion='campaign-m05b3.0';
 export type Stage='map'|'research'|'briefing'|'mission'|'result'|'campaign_checkpoint'|'campaign_complete';
 export type RelaySupport='none'|'power'|'repair';
@@ -16,7 +16,7 @@ export class Campaign{
  selectMission(id:PlayableMissionId){if(!unlocked(id,this.data.completed_missions)||this.data.stage==='mission')return false;this.data.mission_id=id;this.data.stage='research';return true;}
  selectActive(id:ActiveSkill){if(this.data.stage!=='research'||id!==null&&!this.data.nodes.includes(id))return false;this.data.active=id;return true;}
  prepare(){const d=this.data,build=loadout(d.nodes,d.active),seed=missionSeed(d.campaign_seed,d.mission_id),event_plan=d.entry?.mission_id===d.mission_id?structuredClone(d.entry.event_plan):planEvents(seed,d.mission_id);d.entry={mission_id:d.mission_id,seed,build,max_hp:build.maxHp,initial_hp:build.maxHp,initial_score:0,event_plan};d.result=null;d.stage='briefing';return structuredClone(d.entry);}
- begin(){if(!this.data.entry)return false;if(!this.data.run_stats.ruleset_id)this.data.run_stats.ruleset_id=this.data.processed_attempts.length?'mixed-legacy-rework':campaignRuleset;this.data.mission_id=this.data.entry.mission_id;this.data.location_id=this.data.mission_id;this.data.stage='mission';return true;}
+ begin(){if(!this.data.entry)return false;if(this.data.run_stats.ruleset_id!==campaignRuleset)this.data.run_stats.ruleset_id=this.data.processed_attempts.length?'mixed-legacy-rework':campaignRuleset;this.data.mission_id=this.data.entry.mission_id;this.data.location_id=this.data.mission_id;this.data.stage='mission';return true;}
  advance(){const d=this.data;if(d.result?.result!=='victory')return false;const next=missions[d.result.mission_id].next;if(next&&missions[next].implemented){d.mission_id=next as PlayableMissionId;d.stage='map';return true;}if(next){d.stage='campaign_checkpoint';return false;}d.stage='campaign_complete';return true;}
  applyResult(input:Omit<AttemptResult,'reward_granted'|'applied'>&{foundry_route?:'service'|'press'|null}){
   const d=this.data;if(d.processed_attempts.includes(input.attempt_id)||input.mission_id!==d.entry?.mission_id)return false;
