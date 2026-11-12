@@ -63,12 +63,18 @@ for(const route of ['service','press'] as const)test(`base suit completes the fu
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');await mark();
   if(route==='service'){
    await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,410);await ground(page,320);await drone(page,'m3b-drone');await next(page,'M3G',536);await mark();
-   await jump(page,140,236);await ground(page,320);await drone(page,'m3g-drone-low');
-   await jump(page,232,190);await ground(page,288);await jump(page,205,306);await ground(page,256);await jump(page,350,446);await ground(page,224);await clear(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);await mark();
+   // The lower drone is screened by the middle platform from floor fire.
+   // Climb the real cover/platform steps, then use the crouched firing line.
+   await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
+   await page.keyboard.down('s');await clear(page,['m3g-drone-low']);await page.keyboard.up('s');
+   await jump(page,350,446);await ground(page,224);await clear(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);await mark();
    await jump(page,130,216);await ground(page,320);await clear(page,['m3h-security','m3h-turret']);await next(page,'M3K',520);await mark();
   }else{
    await jump(page,114,208);await ground(page,320);await to(page,280);await clear(page,['m3c-ram']);await cross(page,'m3c-press');await cross(page,'m3c-heat');await next(page,'M3I',552);await mark();
-   await jump(page,130,220);await ground(page,320);await cross(page,'m3i-heat');await to(page,359);await drone(page,'m3i-drone');await to(page,380);await clear(page,['m3i-security']);await next(page,'M3J',552);await mark();
+   // Fire from the actual shelf: standing under its edge forces crouch and blocks jumping.
+   await jump(page,130,190);await ground(page,288);await jump(page,205,310);await ground(page,248);
+   await page.keyboard.down('s');await clear(page,['m3i-drone']);await page.keyboard.up('s');
+   await to(page,380);await ground(page,320);await clear(page,['m3i-security']);await next(page,'M3J',552);await mark();
    await jump(page,130,216);await ground(page,320);await cross(page,'m3j-press-a',300);await clear(page,['m3j-ram']);await cross(page,'m3j-press-b',507);await next(page,'M3K',520);await mark();
   }
   await to(page,112);await ground(page,320);if((await state(page)).hp<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();}
