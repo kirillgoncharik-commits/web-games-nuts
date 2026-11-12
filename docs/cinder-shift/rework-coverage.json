@@ -27,11 +27,30 @@
       "build": "passed",
       "art_contracts": "passed",
       "model_tests": "44_passed",
-      "browser_tests": "not_run_locally_listen_EPERM",
+      "browser_tests": "15_passed_on_ec52736; later defensive loading-image null guard typechecked; latest CI recorded by PR",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
-      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts"
-    }
+      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts",
+      "visual_review": "not_performed; CI screenshots stored in workflow artifact"
+    },
+    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "verification_runs": [
+      {
+        "source_sha": "ec5273650fa31234ca6265055873ff27ebfa07f7",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43198969966",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/i18n/art",
+          "44 model tests",
+          "15 UI tests across Chromium/Firefox/WebKit"
+        ],
+        "scope": "foundation menu/settings, map inspection, inline purchase/cancel/installed build at three sizes, arrival skip and first real combat"
+      }
+    ],
+    "known_limitations": [
+      "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
+      "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
+    ]
   },
   "requirements": [
     {
@@ -341,7 +360,8 @@
         "games/cinder-shift/src/ui/application.ts"
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
       ],
       "evidence": [
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
@@ -428,7 +448,8 @@
         "games/cinder-shift/src/ui/workshop.ts"
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
       ],
       "evidence": [
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
@@ -444,7 +465,8 @@
         "games/cinder-shift/src/session/campaign.ts"
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
       ],
       "evidence": [
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
