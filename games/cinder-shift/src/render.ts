@@ -10,6 +10,7 @@ import {rooms} from './room-data';
 import {cacheInReach} from './interactions';
 import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
 import {roomLighting,signals} from './art/lighting';
+import {EnvironmentMotion} from './art/environment-motion';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
 import type {Player} from './player';
@@ -22,9 +23,7 @@ export function preloadArt(scene:Phaser.Scene){
   const base='./assets/m03/';
   for(const [name,atlas] of Object.entries(assets.atlases))scene.load.atlas('m03-'+name,base+atlas.image.file,base+atlas.json.file);
   for(const [name,file] of Object.entries(assets.backgrounds))scene.load.image('m03-bg-'+name,base+file.file);
-  // The public atlas paths stay stable, so use the source revision as the cache key.
-  const atlas='./assets/art-refresh-v1/art-refresh-v1';
-  const version=`?v=${__SOURCE_SHA__}`;
+  const atlas='./assets/art-refresh-v1/art-refresh-v1',version=`?v=${__SOURCE_SHA__}`;
   scene.load.atlas('art-refresh-v1',`${atlas}.png${version}`,`${atlas}.json${version}`);
   scene.load.image('promo-loading','./assets/m06/'+promo.loading.file);scene.load.image('promo-menu','./assets/m06/'+promo.menu.file);
 }
@@ -32,6 +31,7 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
+  private environment:EnvironmentMotion;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
     const light=roomLighting(room,new URLSearchParams(location.search).get('light')==='high');
@@ -44,6 +44,7 @@ export class SceneArt{
       lamps.fillStyle(light.light,light.strength*.55).fillEllipse(x,232,154,104);
       lamps.fillStyle(light.light,light.strength).fillEllipse(x,220,84,60);
     }
+    this.environment=new EnvironmentMotion(scene);
     this.cueGraphics=scene.add.graphics().setDepth(8);
     for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
     if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
@@ -139,6 +140,7 @@ export class SceneArt{
   }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
+    this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
     this.bossHpLast=attempt.bossHp;
     this.landmarks(room);
@@ -173,9 +175,11 @@ export class SceneArt{
       this.threats.lineStyle(4,0x456171,.95).strokeRect(room.window.x,room.window.y,room.window.width,room.window.height);
       this.threats.lineStyle(2,0x91a7b0,.65).lineBetween(room.window.x+room.window.width/2,room.window.y,room.window.x+room.window.width/2,room.window.y+room.window.height);
     }
-    const exitOpen=room.next?(room.id==='A'?state.terminal:room.id==='F'?attempt.cellCollected:room.id==='M3A'?Boolean(room.next):room.id==='M4C'?attempt.dataUploaded:room.id==='M5D'?attempt.bossHp<=0:true):state.terminal;
+    const exitOpen=attempt.forwardExitOpen(),remaining=attempt.combatRemaining();
     this.art(exitOpen?'power-shutter_open':'power-shutter_closed',609,320,40,84,3);
-    this.exitMarker.setColor(exitOpen?'#76DCC8':'#FFB65B');
+    this.exitMarker.setText(remaining>0?'× '+remaining:exitOpen?'→':'◇').setColor(remaining>0?'#F36D76':exitOpen?'#76DCC8':'#FFB65B');
+    if(remaining>0){this.threats.lineStyle(3,0xf36d76,.85).lineBetween(620,240,620,320);if(room.previous)this.threats.lineBetween(20,240,20,320);}
+
     for(const panel of room.solids.filter(s=>s.id)){
       if(panel.id==='f-power-gate'){
         this.materialPlate(panel,0x7895a7,3);

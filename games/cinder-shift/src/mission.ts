@@ -28,8 +28,20 @@ export class MissionAttempt{
  chooseCache(choice:'salvage'|'scout'|'health'|'challenge'){const def=this.definition(),state=this.room();if(this.mode!=='mission'||!def.cache||state.cacheUsed)return false;const hasBeacon=def.id==='M4B'&&hasEvent(this.eventPlan,'E05'),hasPatrol=def.id==='M5B'&&hasEvent(this.eventPlan,'E06');if(choice==='salvage'){if(hasBeacon||hasPatrol)return false;this.score+=eventConfig.salvageScore;this.scoreLedger?.goal('cache:'+def.id);}else if(choice==='scout'){if(!hasBeacon)return false;this.scoutedArchive=true;}else if(choice==='health'){if(!hasBeacon||this.hp>=this.maxHp)return false;this.hp=Math.min(this.maxHp,this.hp+1);}else{if(!hasPatrol)return false;this.s05Accepted=true;state.enemies.push(createEnemy({id:'m5b-e06-ram',kind:'walker',preset:'ram_charge',x:552,y:305,end:{x:576,y:305},activateX:500,charge:{min:500,max:592}}));}state.cacheUsed=true;return true;}
  chooseFoundryRoute(route:'service'|'press'){if(this.mode!=='mission'||this.missionId!=='foundry'||this.current!=='M3A'||!this.room('M3A').terminal||this.room('M3A').route!=='ground')return false;this.room('M3A').route=route;this.foundryRoute=route;return true;}
  claimRepair(slot:'R01'|'R02'|'R03'|'R04'|'R05'){const required=this.missionId==='airlock'?'R01':this.missionId==='cargo'?'R02':this.missionId==='foundry'?'R03':this.missionId==='archive'?'R04':this.missionId==='reactor'?'R05':null;if(this.mode!=='mission'||slot!==required||this.hp>=this.maxHp||slot==='R02'&&!this.cellCollected)return false;const roomId=slot==='R01'?'B':slot==='R02'?'F':slot==='R03'?'M3D':slot==='R04'?'M4C':'M5C',state=this.room(roomId),def=rooms[roomId];if(this.current!==roomId||!def.repair&&slot!=='R01'||state.repairUsed)return false;state.repairUsed=true;state.containerUsed=true;this.hp=Math.min(this.maxHp,this.hp+eventConfig.repairHp);return true;}
- room(id=this.current):RoomState{return this.states[id]||=( {targetHp:3,terminal:false,visited:false,containerUsed:false,repairUsed:false,cacheUsed:false,bufferUsed:false,brokenPanels:[],route:'ground',enemies:rooms[id].enemies.map(createEnemy)} );}
+ room(id=this.current):RoomState{return this.states[id]||=( {targetHp:rooms[id].target?3:0,terminal:false,visited:false,containerUsed:false,repairUsed:false,cacheUsed:false,bufferUsed:false,brokenPanels:[],route:'ground',enemies:rooms[id].enemies.map(createEnemy)} );}
  enemyPowered(enemy?:EnemyState){if(this.current==='F'&&enemy?.id==='f-event-turret'){if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power')return false;return hasEvent(this.eventPlan,'E01')&&this.room().terminal;}return true;}
+ /** Every powered live enemy counts, including one that has not detected Mira yet. */
+ combatRemaining(){return this.mode==='training'?0:this.room().enemies.filter(enemy=>enemy.hp>0&&this.enemyPowered(enemy)).length+(this.definition().boss&&this.bossHp>0?1:0);}
+ forwardExitOpen(){
+  if(this.combatRemaining()>0)return false;
+  const def=this.definition(),saved=this.room();
+  if(!def.next)return saved.terminal&&(this.mode==='training'||this.objective);
+  if(def.id==='A'||def.id==='M5A')return saved.terminal;
+  if(def.id==='F')return this.cellCollected;
+  if(def.id==='M3A')return Boolean(def.next)&&saved.terminal;
+  if(def.id==='M4C')return this.dataUploaded;
+  return true;
+ }
  suspend(){for(const enemy of this.room().enemies)suspendEnemy(enemy);}
  breakPanel(id:string){const saved=this.room();if(!saved.brokenPanels.includes(id))saved.brokenPanels.push(id);}
  damage(now:number,reason:string){

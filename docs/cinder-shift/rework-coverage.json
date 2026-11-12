@@ -1,0 +1,858 @@
+{
+  "milestone": "M-REWORK",
+  "status": "IN_PROGRESS",
+  "started_at": "2026-11-12",
+  "source": "https://trello.com/c/AqZ78Mjo",
+  "requirements_source": {
+    "library_file_id": "libfile_fde3_f-c0dc36c1c5708191a4801580dc6e24ff_ae3406e10eec8191933768799a79d180",
+    "version": "2"
+  },
+  "baseline": {
+    "source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
+    "build_id": "0.6.2-rc.1",
+    "remote_head_verified": true,
+    "live_production_verification": "not_rechecked_in_this_iteration",
+    "local_release_head_before_changes": "8dde17fb2ccb8c6b3d9d770ad9111b7d77ea9de8",
+    "local_uncommitted_modes_branch": "codex/cinder-shift-new-modes-mod00 preserved unchanged",
+    "base_difference": "Only render.ts cache-version fix; retained in the rework"
+  },
+  "candidate": {
+    "build_id": "0.7.0-rework.1",
+    "stage": "foundation",
+    "published": false,
+    "accepted": false,
+    "verification": {
+      "typecheck": "passed",
+      "i18n": "passed_602_en_ru_keys",
+      "build": "passed",
+      "art_contracts": "passed",
+      "model_tests": "44_passed",
+      "browser_tests": "not_run_locally_listen_EPERM",
+      "physical_devices": "not_run",
+      "human_playtests": "not_run",
+      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts"
+    }
+  },
+  "requirements": [
+    {
+      "id": "RW-00.01",
+      "requirement": "Зафиксировать актуальные source SHA, build ID, production/preview и незавершённые ветки; 0.6.2-rc.1 / 3a85723 — исторический baseline аудита, не команда откатить более новую работу.",
+      "status": "OPEN",
+      "implementation": [
+        "Remote release head and one-file local difference verified; dirty older modes checkout preserved. Live publication not rechecked by shell."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-00.02",
+      "requirement": "Составить одну таблицу request_id → требование → реализация → файл/ассет → проверка → доказательство → статус. Включить N01–N17, VR1-01–09, этот пакет, старые QA/V и связанные C02/C03/menu tasks; совпадения объединять, источники сохранять.",
+      "status": "OPEN",
+      "implementation": [
+        "All 80 RW requirements imported verbatim from source version 2. N/VR1 links retained in the source; full QA/V evidence merge remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-00.03",
+      "requirement": "Перед массовым производством описать новый маршрут пяти секторов, комнаты/цели/врагов/переходы, условия выхода и временной бюджет. Существующие 20 комнат не являются ограничением на содержательное расширение.",
+      "status": "OPEN",
+      "implementation": [
+        "Whole campaign design draft in rework-campaign-design.ru.md; room geometry and timing validation remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-00.04",
+      "requirement": "Выполнить сравнительный разбор 2–3 коротких участков похожих игр; начать с Abuse/Hurrican и читаемых карт SuperTux. Перевести полезные решения в оригинальные схемы Cinder Shift под физику Миры. Не объявлять прямой перенос карт выполненным по одному наличию GitHub.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.01",
+      "requirement": "Пересобрать все пять миссий под цель около 30 минут первого естественного успешного прохождения: рабочий бюджет Airlock 4 + Cargo 6 + Foundry 6 + Archive 6 + Reactor/финал 8 минут. Это дизайн-бюджет для наполнения, а не обязательные задержки.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.02",
+      "requirement": "У каждой комнаты определить отдельную игровую задачу, геометрию, позиции/роли угроз, телеграфы, безопасные ответы, награду/последствие и условие завершения. Разные названия и фоны не заменяют разные ситуации.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.03",
+      "requirement": "В первой комнате добавить настоящего читаемого врага и возможность применить оружие; показать различие выстрела по цели и взаимодействия E у терминала. Сохранить безопасный старт и защиту от мгновенного необъяснимого урона.",
+      "status": "OPEN",
+      "implementation": [
+        "A live first-room sentry replaces the target; E terminal is gated by victory. Runtime teaching/readability check open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-01.04",
+      "requirement": "Добавить вертикальные пути, смену линий огня, сочетания противников и оборудования, риск ради награды, намеренные передышки и кульминации секторов. Убрать переходы без цели.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.05",
+      "requirement": "Foundry: таран/уклонение/контратака → сочетание наземной и воздушной ролей → различимые service/press routes → ремонт и итоговая проверка. Оба маршрута содержательны.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.06",
+      "requirement": "Один полноценный эпизод перенаправления питания: два состояния оборудования/маршрута, видимая связь переключателя с миром и разные последствия для боя. Сначала испытать на образце, затем использовать там, где помогает дизайну.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-01.07",
+      "requirement": "Не набирать длительность пустой ходьбой, рекламой, обязательными смертями/повторами, искусственным ожиданием дверей или общим раздуванием HP. Успешное прохождение, время обучения с поражениями и время меню учитывать отдельно.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.01",
+      "requirement": "Развести противников по функциям: удержание линии, вытеснение, преследование, контроль приземления, таран/открытое окно. Согласовать detection/activation/leash/return и состав комнат; проверить наложение тел и ситуации, где враги стоят и умирают до реакции.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.02",
+      "requirement": "Настроить кривую сложности между секторами и внутри миссии: Cargo не должен оставаться единственным резким провалом, пока Foundry/Archive мгновенно тают от оружейной сборки.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.03",
+      "requirement": "Закрывать выход боевой комнаты до уничтожения обязательных живых врагов. Показывать причину замка и ясное открытие после победы; не оставлять обязательного противника вне достижимости/застрявшим в геометрии. Для небоевых комнат использовать их собственные цели.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/mission.ts",
+        "games/cinder-shift/src/room-scene.ts",
+        "games/cinder-shift/src/render.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.04",
+      "requirement": "Новое правило боевого lock заменяет прежнее разрешение просто обходить врагов в этих комнатах. Отразить изменение в кампании, заданиях испытаний, совместимости рекордов и версии правил.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/session/challenge-spec.ts",
+        "games/cinder-shift/src/session/relay.ts",
+        "games/cinder-shift/src/session/campaign.ts",
+        "games/cinder-shift/src/session/save.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.05",
+      "requirement": "Проверить базовый костюм, достижимые оружейную/мобильную/защитную сборки на одинаковом seed/ветке. Разбирать фактические причины урона и окна ответа, не включать общий множитель сложности без плейтеста.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-02.06",
+      "requirement": "Сохранить действующее полное HP на старте миссии и бесплатный Retry той же миссии с входной сборкой/seed, пока отдельным решением не изменён контракт. Permanent death, revive за рекламу и новые валюты не вводить.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-03.01",
+      "requirement": "Принять все 12 технологий и шесть событий: эффект, ограничение, место применения, визуальное/звуковое подтверждение и различие сборок.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-03.02",
+      "requirement": "Отдельно проверить W1/Splitter, W2/Piercer и W3/Ricochet: фактический урон, повторные попадания/отражения, влияние на толпу и босса. Различать ошибку реализации и слишком сильный задуманный эффект.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-03.03",
+      "requirement": "Показывать куплено / пассивно действует / выбран активный слот. W4 не должен выглядеть активным заряженным выстрелом, если выбран M1; смена слота понятна.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-03.04",
+      "requirement": "Сохранить бюджет очков, атомарность покупки и reward ledger; повтор/reload/повторный callback не создают дубли наград. Базовая сборка проходит обязательный путь.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-03.05",
+      "requirement": "Показывать практическую пользу нового модуля в следующем подходящем эпизоде; покупка не ограничивается сменой названия в списке.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-04.01",
+      "requirement": "Перерисовать Регулятора как большого промышленного робота с узнаваемым силуэтом, корпусом/ядром, анимациями и фазами. Объект не должен восприниматься обычной дверью.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-04.02",
+      "requirement": "Перестроить бой: две различимые задачи/паттерна, честные предупреждения, доступный ответ, окно контратаки и видимый переход фаз. В обычном первом прохождении обе фазы успевают раскрыться; текущий случай полного уничтожения примерно за десять секунд разобран.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-04.03",
+      "requirement": "Совместить видимое ядро/броню с hitbox, состоянием уязвимости и фактическим уроном. Проверить выстрел с пола/в прыжке, мимо корпуса, в броню, отражённый/пробивающий выстрел; приложить разметку.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-04.04",
+      "requirement": "После shutdown прекращаются атаки/телеграфы. Победа заметно меняет комплекс; короткая эвакуация завершает поставленную в интро цель.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-04.05",
+      "requirement": "Убрать устаревшую строку Archive/checkpoint после Reactor; согласовать результат миссии, завершение кампании, сохранение факта победы и открытие миров. Один понятный поток к общему итогу.",
+      "status": "OPEN",
+      "implementation": [
+        "Reactor evacuation result has its own text and final-results action; world unlock and end-to-end acceptance remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-05.01",
+      "requirement": "Замерить холодный/тёплый вход. Понятный индикатор реальных стадий загрузки, без впечатления зависания и обязательной шестисекундной выдержки уже готового loader; ориентир старого VR1 — сократить сопоставимое ожидание примерно вдвое.",
+      "status": "OPEN",
+      "implementation": [
+        "Removed mandatory six-second loader hold; asset/storage stages retained. Cold/warm measurements remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-05.02",
+      "requirement": "Сделать 5–7-секундное оригинальное интро в игровом стиле: манёвр/подлёт челнока → прибытие/стыковка → спуск Миры → авария и цель эвакуации → управление. Пропуск доступен сразу, Retry без повторной заставки; интро и техническая загрузка различаются.",
+      "status": "OPEN",
+      "implementation": [
+        "Separate 6.5-second arrival sequence, immediately skippable; Retry bypasses it. Prototype vector visuals; runtime/human art review open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-05.03",
+      "requirement": "Собрать выразительное меню с видимым артом и одной ясной группой действий. Убрать постоянные Language/Analytics controls в Settings; сохранить доступ к настройке выбора аналитики.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-05.04",
+      "requirement": "Переупаковать Challenges и Training, объяснить их пользу; единственный доступный герой не требует фиктивного выбора. Убрать лишние служебные переходы из подготовки.",
+      "status": "OPEN",
+      "implementation": [
+        "Fresh start goes straight to campaign map; optional character inspection remains. Challenge/Training explanations still open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-05.05",
+      "requirement": "Добавить короткие сюжетные события и видимые последствия питания/аварии/восстановления между секторами. Не заменять действие длинными текстовыми модальными окнами.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-06.01",
+      "requirement": "Создать художественную карту комплекса сверху: положение Миры, реальные связи/развилка Foundry, доступность и цель. Сначала логический граф, затем оригинальный арт; принцип читаемого риска Slay the Spire использовать без копирования оформления.",
+      "status": "OPEN",
+      "implementation": [
+        "Facility plan with orthogonal transit and Foundry fork, actual mission nodes. Visual review and full internal path graph open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-06.02",
+      "requirement": "Убрать непонятную синусоиду и визуальные дубли названий/изображений. Один набор подписей и компактная информация выбранного узла; просмотр не меняет прогресс/позицию.",
+      "status": "OPEN",
+      "implementation": [
+        "Removed duplicate five-sector legend and sinusoidal connections. Map inspection retains campaign state."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-06.03",
+      "requirement": "Обеспечить понятные Play/Continue/Replay и закрытие; keyboard/touch/focus и корректные hit areas сохраняются.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-06.04",
+      "requirement": "Подключить ранее согласованный выбор первой кампании, «Маленькой смены» и «Адриатического сигнала». После первого полного финала обе новые открываются; до него видны понятные замки.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-06.05",
+      "requirement": "Profile-level completion устойчив к reload/Retry/повтору первой; отдельная победа миссии/share code не открывает миры. Раздельные progress/wallet/checkpoints и миграция старого completed save без потерь.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-07.01",
+      "requirement": "Карточка модуля содержит иконку, короткий понятный эффект, цену, состояние и собственную кнопку «Купить»; отдельный далёкий footer-purchase flow убрать.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-07.02",
+      "requirement": "Короткое подтверждение показывает эффект, стоимость и остаток после покупки. Просмотр карточки не списывает очки, двойной клик/повтор события не покупают дважды.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/campaign.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-07.03",
+      "requirement": "Установленную сборку показывать компактно и отдельно от доступных предложений; купленные модули не раздувают бесконечный прокручиваемый список.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-07.04",
+      "requirement": "Три ветки W/M/D, зависимости и активный слот различимы сразу. Понятны недостаток очков и причина недоступности.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-07.05",
+      "requirement": "Главное действие — начать миссию, рядом ясное закрытие/возврат. Убрать непонятные Workshop menu и дубли Settings/Back внутри этого потока; проверить короткий landscape, RU/EN, 50 локалей/RTL.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.01",
+      "requirement": "Собрать единое обновлённое направление: современная индустриальная пиксельная эстетика Exolon, дискретные состояния/анимации Миры, согласованные palette/scale/materials/UI. Сверить уже имеющиеся ассеты, не производить принятые повторно.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.02",
+      "requirement": "Обновить все пять секторов, архитектуру/фон, игровые платформы, двери/терминалы/ремонт/энергоячейку/опасные механизмы, врагов и Регулятора, меню/карту/мастерскую/HUD и иконки технологий/событий.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.03",
+      "requirement": "Каждому сектору дать собственный силуэт/материал/свет/опорные устройства; смена названия и recolor одного фона недостаточны.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.04",
+      "requirement": "Дальний фон, игровая геометрия, герой, снаряды и активные угрозы читаются на мобильном размере. Силуэты/форма/движение дублируют цветовые сигналы.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.05",
+      "requirement": "Исправить сжатые двери, растяжение объектов, привязки, артефакты атласов и несовпадение визуальных/игровых границ. Проверять кадр игры, а не только зелёный art:check.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-08.06",
+      "requirement": "У R01–R05/S04/S05, терминалов, заслонок, ячейки и рамок: понятное назначение, действие и состояния доступно/не требуется/использовано/закрыто. При полном HP — «Ремонт не требуется».",
+      "status": "OPEN",
+      "implementation": [
+        "Full/used repair HUD states for R02-R05; review all stations, frames and interactions in runtime."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-08.07",
+      "requirement": "Сдать asset/state inventory, contact sheets и сравнения до/после из обычной игровой камеры по каждому сектору и ключевому UI.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-09.01",
+      "requirement": "Оживить все пять секторов: для каждого предусмотреть минимум два разных видимых фоновых/окружных процесса по функции локации — вентиляторы, транспортёр, поршни/кран, пар/тепло, сканирование/серверные индикаторы, реакторное питание.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/art/environment-motion.ts",
+        "games/cinder-shift/src/render.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-09.02",
+      "requirement": "Развести дальний фон, средний план и игровые устройства; движение имеет источник и ритм, а не общий дрожащий overlay поверх статичной сцены.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-09.03",
+      "requirement": "Активируемое оборудование меняет состояние после терминала/питания; опасный пресс/жар совпадает с реальной областью/фазой угрозы.",
+      "status": "OPEN",
+      "implementation": [
+        "Airlock and restore-terminal mechanisms use power state; hazardous machines remain tied to existing real hazard renderer."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-09.04",
+      "requirement": "Для врагов читаемы idle/patrol/chase/telegraph/attack/recovery/hit/death по роли; добавить ясную гибель с завершением угрозы. Для Миры/модулей — необходимые реакция/получение урона/способность без смены согласованного резкого характера анимаций.",
+      "status": "OPEN",
+      "implementation": [
+        "Enemy death now emits shutdown debris rather than ordinary hit; full animation-state pass remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-09.05",
+      "requirement": "Предусмотреть остановку/возобновление и очистку на pause/focus/смене сцены; Reduced Motion/Effects сохраняет смысл и уменьшает декоративную нагрузку.",
+      "status": "OPEN",
+      "implementation": [
+        "Environment draws from quantized simulation time; reduced mode is static; scene-owned graphics. Runtime pause/cleanup check open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-09.06",
+      "requirement": "Сдать короткие клипы каждого сектора, циклы/состояния подключены в runtime, а не только существуют отдельными файлами.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.01",
+      "requirement": "Сделать единый набор смысловых эффектов: muzzle flash/след выстрела, попадание в стену, отражение от брони, подтверждённый урон врагу, его смерть/обломки. Разные события нельзя обозначать одним непонятным треугольником.",
+      "status": "OPEN",
+      "implementation": [
+        "Death and hit effects separated; complete event-effect-sound matrix and visual review remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-10.02",
+      "requirement": "Читаемые телеграфы и активные зоны турели/тарана/пресса/жара/босса; открытие ядра отличается от брони, shutdown очищает предупреждения.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.03",
+      "requirement": "Урон Мире, щит/буфер, ремонт, способность и cooldown различимы. Критический HP — понятная спокойная красная виньетка/статус с корректным reset на лечение/смерть/Retry.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.04",
+      "requirement": "Импульсы восстановления питания и направленная связь терминала с оборудованием/дверью; локальное освещение поддерживает роль сектора и сюжетные переходы.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.05",
+      "requirement": "Синхронизировать SFX/VFX по принятому событию симуляции; исключить ложный hit/HP feedback при поглощении щитом. Отдельно принять музыку и микс на слух с включённым звуком.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.06",
+      "requirement": "Ограничить частицы/свет/тряску, сохранить снаряды и опасные границы; Reduced Effects убирает лишние вспышки/тряску и сохраняет информацию. Проверить совокупную частоту/площадь вспышек и бюджет кадров на насыщенных сценах.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-10.07",
+      "requirement": "Сдать VFX matrix event→effect→sound→cleanup, клипы normal/reduced и одинаковые замеры frame time p50/p95/input до/после на телефонах.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-11.01",
+      "requirement": "Принять физические iPhone/Safari и Android/Chrome, обе ориентации, открытую адресную строку, safe area, фон/возврат. HUD/пауза/поле доступны; движение+огонь и движение+прыжок работают одновременно.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-11.02",
+      "requirement": "Hit areas не менее 48×48 CSS px, Fire/Jump не менее 56×56, зазоры не менее 8 px; проверить компактные меню/мастерскую/карту и экранную клавиатуру кодов.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-11.03",
+      "requirement": "Все пять испытаний сохраняются и получают новый контент/боевые правила; разные лобби, старт→результат/DNF→Retry→save/code. Разделить кампанию и challenge ledger, корректно версионировать PB/ghost/обмен; старые рекорды не выдавать за сопоставимые новым.",
+      "status": "OPEN",
+      "implementation": [
+        "Changed content/simulation/rules keys and isolated legacy/mixed campaign career records; all five mode acceptance paths remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-11.04",
+      "requirement": "Сохранить и принять EN/RU и ранее согласованные 50 локалей/RTL: новые строки, длинные подписи, переносы и состояния UI.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-11.05",
+      "requirement": "Закрыть причины текущих CI failure, актуализировать устаревшие тесты по новому контракту, пройти build/typecheck/art/audio/i18n и необходимую cross-browser регрессию точного кандидата.",
+      "status": "OPEN",
+      "implementation": [
+        "Local build/typecheck/i18n/art and 44 model tests passed. Local preview blocked by listen EPERM. New cross-browser tests added; legacy UI tests still target old flows and require migration."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial"
+    },
+    {
+      "id": "RW-11.06",
+      "requirement": "Проверить fresh/legacy/completed/corrupt/future save, storage failure, reload, Retry, reward ledger, privacy choice и channel storage/SDK; не обнулять сохранение при ошибке чтения.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-12.01",
+      "requirement": "Включить прежний согласованный объём C02 «Маленькая смена» и C03 «Адриатический сигнал» как связанные пакеты этого единого майлстоуна, используя существующие карточки/документы без дублирования производства.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-12.02",
+      "requirement": "По пять миссий/20 содержательных комнат на мир, отдельные механики carry/throw и контуры A/B; самостоятельные цель/развилки/финал и измеренные 20–25 минут первого естественного успешного прохождения каждой.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-12.03",
+      "requirement": "Подключить ранее согласованные art/music пакеты обоих миров, все состояния и необходимые анимации/VFX по общему стандарту переработки; отдельные каталоги файлов без runtime-интеграции не считаются сдачей.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-12.04",
+      "requirement": "Принять путь fresh→финал первой→открытие обоих миров→reload→Start/Continue/Replay каждого. Переключение не стирает соседний прогресс.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-12.05",
+      "requirement": "Подготовка каналов продолжается по прежнему реестру; массовый платформенный выпуск зависит от принятого общего RC. Новые backend/auth/валюты/система достижений автоматически не добавляются.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.01",
+      "requirement": "Сдать один интегрированный RC из фиксированного SHA/build ID; актуальные PR/preview/воспроизводимая сборка и точка отката. Implemented, verified и published — разные статусы.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.02",
+      "requirement": "Для первой кампании провести минимум три независимых плейтеста, включая новичка. Рабочая полоса 25–35 минут первого естественного успешного прохождения; фиксировать активное/реальное время, меню, смерти, HP, ремонты, сборку, помощь и добровольный повтор отдельно. Малая выборка не доказывает retention.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.03",
+      "requirement": "Показать реальный риск поражения и обучаемость; каждый обязательный эпизод имеет понятный ответ, а не нечитаемый неизбежный урон. Не гарантировать искусственно смерть первого игрока.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.04",
+      "requirement": "Приложить сравнения до/после одного и того же места: первая минута, карта, мастерская, по одному бою/фоновой анимации каждого из пяти секторов, обычный враг/турель/ремонт, робот-босс, эвакуация и открытие миров.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.05",
+      "requirement": "Передать заполненные request coverage, room/encounter registry, assets/animations/VFX matrices, timing/playtest report, device/performance report, QA с доказательствами и known issues.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.06",
+      "requirement": "Майлстоун завершён только после всех обязательных блоков, нуля открытых P0/P1 и подтверждённой приёмки Кириллом общей игры. Готовность одной красивой комнаты/набора PNG/зелёного build не заменяет итог.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    },
+    {
+      "id": "RW-13.07",
+      "requirement": "Если обязательные человеческие/физические проверки ещё не проведены — статус INCOMPLETE, а не выдуманные PASS/GO. Срок/оценка Work после ревизии базы; не обещать дату без подтверждения исполнителя.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published"
+    }
+  ]
+}

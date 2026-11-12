@@ -4,16 +4,16 @@ import type {NodeId} from '../games/cinder-shift/src/session/research';
 export const state=(page:Page)=>page.evaluate(()=>(window as any).__CINDER__());
 export async function x(page:Page,value:number){await page.waitForFunction(x=>(window as any).__CINDER__().player?.x>=x,value,{timeout:8000}).catch(async()=>{throw Error('Movement stopped '+JSON.stringify(await state(page)));});}
 export async function startMission(page:Page,{seed=seedsForPlans().none,node,locale='ru'}:{seed?:number;node?:NodeId;locale?:'ru'|'en'}={}){
-  await page.goto('/games/cinder-shift/?seed='+seed);await page.getByTestId('menu-locale').selectOption(locale);await page.getByTestId('new-shift').click();
-  if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();await page.getByTestId('choose-mira').click();await page.getByTestId('map-prepare').click();
+  await page.goto('/games/cinder-shift/?seed='+seed);await page.getByTestId('menu-settings').click();await page.getByTestId('locale').selectOption(locale);await page.getByTestId('settings-back').click();await page.getByTestId('new-shift').click();
+  if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();await page.getByTestId('map-prepare').click();
   await expect.poll(async()=>(await state(page)).screen).toBe('research');
-  if(node){await page.getByTestId('research-'+node).click();await page.getByTestId('purchase').click();await page.getByTestId('confirm-buy').click();await expect.poll(async()=>(await state(page)).campaign.nodes).toContain(node);}
-  await page.getByTestId('briefing').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.simMs>0&&s.player?.vy===0;});
+  if(node){await page.getByTestId('buy-'+node).click();await page.getByTestId('confirm-buy').click();await expect.poll(async()=>(await state(page)).campaign.nodes).toContain(node);}
+  await page.getByTestId('briefing').click();await page.getByTestId('skip-arrival').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.simMs>0&&s.player?.vy===0;});
 }
 export async function roomA(page:Page){
   await page.keyboard.down('d');await x(page,143);await page.keyboard.down('Space');await x(page,242);await page.keyboard.up('Space');await x(page,294);await page.keyboard.up('d');
   await page.keyboard.down('s');await page.keyboard.down('d');await x(page,442);await page.keyboard.up('d');await page.keyboard.up('s');
-  await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).targetHp).toBe(0).catch(async()=>{throw Error('Target route stalled '+JSON.stringify(await state(page)));});await page.keyboard.up('j');
+  await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).combatRemaining).toBe(0).catch(async()=>{throw Error('Target route stalled '+JSON.stringify(await state(page)));});await page.keyboard.up('j');
   await page.keyboard.down('d');await x(page,546);await page.keyboard.up('d');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);
   await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().room==='B',null,{timeout:8000});await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
 }
