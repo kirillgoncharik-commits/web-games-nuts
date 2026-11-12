@@ -1,5 +1,13 @@
 import {test,expect} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
 import {state,startMission,roomA,x} from './helpers';
+
+test.afterEach(async({page},info)=>{
+ if(info.status===info.expectedStatus||page.isClosed())return;
+ const snapshot=await state(page).catch(error=>({snapshot_error:String(error)}));
+ await writeFile(info.outputPath('runtime-state.json'),JSON.stringify(snapshot,null,2));
+ await page.screenshot({path:info.outputPath('failure.png')}).catch(()=>{});
+});
 
 test('menu has one action group; language and analytics remain reachable in Settings',async({page})=>{
  await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();
@@ -39,6 +47,11 @@ test('arrival is immediately skippable and the first live enemy opens the powere
 
 async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor';room:string;cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
  await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();
+ // Fixtures bypass normal mission buttons; retain the real gesture/decode contract.
+ await page.getByTestId('menu-settings').click();
+ await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);
+ await expect.poll(async()=>(await state(page)).audio).toBe('running');
+ await page.getByTestId('settings-back').click();
  await page.evaluate(input=>(window as any).__ENCOUNTER__.start(input),input);
  await expect.poll(async()=>(await state(page)).room).toBe(input.room);
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.simMs>0&&s.player?.vy===0;});
