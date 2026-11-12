@@ -10,5 +10,5 @@ export default defineConfig({
       {name:'webkit',testMatch:/(mission|release-readiness)\.spec\.ts$/,grep:/A to B to C|focus returns|release shell/,use:{browserName:'webkit' as const,launchOptions:{}}},
     ]:[]),
   ],
-  webServer:process.env.CINDER_BASE_URL?undefined:{command:'npm run preview',env:{CINDER_QA_MUTE:'1'},url:'http://127.0.0.1:4175/games/cinder-shift/',reuseExistingServer:false},
+  webServer:process.env.CINDER_BASE_URL?undefined:{command:'node scripts/build-rework-harness.mjs && npm run preview',env:{CINDER_QA_MUTE:'1',CINDER_QA_HARNESS:'1'},url:'http://127.0.0.1:4175/games/cinder-shift/',reuseExistingServer:false},
 });
