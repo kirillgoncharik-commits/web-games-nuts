@@ -10,6 +10,7 @@ export function roomThreatCanActivate(room:RoomId,candidate:EnemyState,roster:En
   if(walker.hp<=0)return true;
   return player.x>520&&!clearLine(enemyMuzzle(walker),player,solids);
  }
+ if(room==='M4D'&&candidate.id==='m4d-drone'&&!candidate.active)return roster.find(enemy=>enemy.id==='m4d-walker')?.hp===0;
  if(room==='C'&&!candidate.active)return roster.filter(enemy=>enemy.active&&enemy.hp>0).length<2;
  return true;
 }

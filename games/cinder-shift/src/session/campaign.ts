@@ -1,7 +1,7 @@
 import {loadout,purchase,type Loadout,type NodeId,type ActiveSkill} from './research';
 import {planEvents,type EventPlan} from './events';
 import {missions,missionSeed,unlocked,type PlayableMissionId} from './missions';
-export const campaignRuleset='campaign-rework5';
+export const campaignRuleset='campaign-rework6';
 export const contentVersion='campaign-m05b3.0';
 export type Stage='map'|'research'|'briefing'|'mission'|'result'|'campaign_checkpoint'|'campaign_complete';
 export type RelaySupport='none'|'power'|'repair';

@@ -450,8 +450,9 @@ export class Application{
     if(def.relayRepairCache&&a.entry.relay_leg==='B'&&a.entry.relay_support==='repair'&&a.cellCollected&&!a.relayRepairUsed&&a.hp<a.maxHp&&near(def.relayRepairCache.x,def.relayRepairCache.radius))return{key:'challenge.touchRelayRepair',available:true};
     if(a.missionId==='airlock'&&a.current==='B'&&!saved.containerUsed&&near(repairPosition.x,repairPosition.radius))return{key:'touch.r01',available:true};
     if(def.repair&&!saved.repairUsed&&(def.repair.slot!=='R02'||a.cellCollected)&&(!def.repair||def.repair.slot!=='R04'||a.dataUploaded)&&near(def.repair.x,def.repair.radius)){if(a.hp>=a.maxHp)return{key:'touch.repairFull',available:false};return{key:'touch.repair',available:true};}
+    if(def.dataCarrier&&!a.archiveCarrierCollected&&cacheInReach(player.x,player.feet,def.dataCarrier))return{key:'touch.carrier',available:true};
     if(def.cell&&!a.cellCollected&&near(def.cell.x,34))return{key:'touch.cell',available:true};
-    if(def.cache&&!saved.cacheUsed&&cacheInReach(player.x,player.feet,def.cache))return{key:'touch.cache',available:true};
+    if(def.cache&&!saved.cacheUsed&&cacheInReach(player.x,player.feet,def.cache))return{key:a.cacheReady()?'touch.cache':'touch.cacheBlocked',available:a.cacheReady()};
     if(def.terminal&&!saved.terminal&&terminalInReach(player.x,player.feet,def.terminal)){
       const ready=a.terminalReady();
       if(ready)return{key:def.terminalKind==='restore'?'touch.restore':def.terminalKind==='install'?'touch.install':def.terminalKind==='data'?'touch.upload':def.terminalKind==='power'?'touch.power':'touch.exit',available:true};

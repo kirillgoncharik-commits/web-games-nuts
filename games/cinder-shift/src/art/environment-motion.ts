@@ -7,7 +7,7 @@ export class EnvironmentMotion{
  constructor(scene:Phaser.Scene){this.graphics=scene.add.graphics().setDepth(1.4);}
  draw(attempt:MissionAttempt,reduced:boolean){
   const g=this.graphics;g.clear();
-  const def=attempt.definition(),powered=def.id==='A'||def.terminalKind==='restore'?attempt.room().terminal:true;
+  const def=attempt.definition(),powered=attempt.missionId==='archive'&&['M4G','M4H','M4C'].includes(def.id)?attempt.archiveUploadPowered:def.id==='A'||def.terminalKind==='restore'?attempt.room().terminal:true;
   const tick=reduced||!powered?0:Math.floor(attempt.clock.now/140),color=powered?0x76dcc8:0x72909c;
   g.lineStyle(2,0x456171,.8);
   const fan=(x:number,y:number)=>{g.strokeCircle(x,y,24);g.lineStyle(3,color,.5);for(let blade=0;blade<4;blade++){const angle=(blade+tick%8/8)*Math.PI/2;g.lineBetween(x+Math.cos(angle)*6,y+Math.sin(angle)*6,x+Math.cos(angle)*20,y+Math.sin(angle)*20);}g.fillStyle(0x30495c).fillCircle(x,y,5);};

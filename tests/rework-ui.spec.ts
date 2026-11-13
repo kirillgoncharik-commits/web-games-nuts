@@ -104,7 +104,7 @@ test('floor fire strikes the robot armor even when the chest core is open',async
 
 
 test('a real long-range shot alerts the Archive drone before the player reaches its activation line',async({page},info)=>{
- await encounter(page,{mission:'archive',room:'M4B'});
+ await encounter(page,{mission:'archive',room:'M4E'});
  await page.keyboard.down('Space');
  await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p.vy<0&&p.y+22-28<250;});
  await page.keyboard.down('j');const start=(await state(page)).simMs;

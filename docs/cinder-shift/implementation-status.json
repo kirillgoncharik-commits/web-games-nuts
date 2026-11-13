@@ -1,7 +1,7 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-12",
+  "updated_at": "2026-11-13",
   "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
   "source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -484,26 +484,47 @@
   "active_workstream": {
     "milestone": "M-REWORK",
     "status": "IN_PROGRESS",
-    "build_id": "0.7.0-rework.5",
+    "build_id": "0.7.0-rework.6",
     "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
     "branch": "codex/cinder-shift-m-rework",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
     "published": false,
     "accepted": false,
-    "verification": "Exact .5 code 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9: build/typecheck/657 keys/art/registry, 64 models, 48 three-browser UI/equipment executions, 15 three-browser Airlock executions, 8 persistence checks and both full Cargo/Foundry variants PASS. Cargo conveyor 73.47 / security+optional salvage 77.83 active seconds, both finish at 3 HP and verify same-entry Retry. Human duration/devices/visual/audio acceptance and full legacy migration remain open.",
+    "verification": "Archive candidate: nine connected rooms, physical carrier, guarded E05 choice, Scout physical screen removal and longer warnings, required upload circuit, gated R04 and staged final combat. Exact-source .6 CI pending; previous .5 evidence remains in coverage verification_runs. No acceptance or publication.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "implementation_estimate_percent": [
       25,
       30
     ],
-    "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-    "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "local_execution_status": "available; active separate worktree cinder-shift-rework-2026-11-13; older cinder-shift-release tree preserved. Native Chrome launch restricted; browser QA uses CI.",
+    "local_execution_status": "Unavailable after environment disconnect during Archive test writing; remote GitHub workflow continues. Preserve both local worktrees on recovery.",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
-    "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-rework-2026-11-13"
+    "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-rework-2026-11-13",
+    "stage": "archive_nine_episodes_carrier_scout_power_upload",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rework.5",
+      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "verification": {
+        "typecheck": "passed",
+        "i18n": "passed_657_en_ru_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "64_passed",
+        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
+        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+        "persistence": "8 migrated persistence checks passed on exact .5 source.",
+        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      }
+    }
   }
 }

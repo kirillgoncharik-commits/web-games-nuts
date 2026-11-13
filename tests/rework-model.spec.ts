@@ -1,3 +1,4 @@
+import {archiveCampaignSeed} from './archive-seeds';
 import {test,expect} from '@playwright/test';
 import config from '../games/cinder-shift/game.config.json' with {type:'json'};
 import {rooms} from '../games/cinder-shift/src/room-data';
@@ -75,7 +76,7 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework5');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework6');
 });
 
 
@@ -162,7 +163,7 @@ test('mission boundaries prevent backtracking into another sector and bypassing 
 
 
 test('a powered impact before the proximity threshold starts the full warning, never an instant shot',()=>{
- const e=createEnemy(rooms.M4B.enemies[0]),shots=new Projectiles(),player={x:64,y:295},solids=[{x:0,y:320,width:640,height:40}],step=1000/60,warnings:string[]=[];
+ const e=createEnemy(rooms.M4E.enemies[0]),shots=new Projectiles(),player={x:64,y:295},solids=[{x:0,y:320,width:640,height:40}],step=1000/60,warnings:string[]=[];
  stepEnemy(e,step,player,solids,shots,k=>warnings.push(k));expect(e.active).toBe(false);
  alertEnemyOnHit(e,true);stepEnemy(e,step,player,solids,shots,k=>warnings.push(k));
  expect(player.x).toBeLessThan(e.activateX);expect(e.active).toBe(true);expect(e.attackPhase).toBe('telegraph');
@@ -189,7 +190,7 @@ test('provoked enemies keep the staged Airlock drone and two-threat room budget'
 });
 
 test('hits preserve attack and recovery timing; unpowered, destroyed and suspended enemies do not retain an alert',()=>{
- const e=createEnemy(rooms.M4B.enemies[0]);
+ const e=createEnemy(rooms.M4E.enemies[0]);
  alertEnemyOnHit(e,false);expect(e.provoked).toBe(false);
  e.state='attack';e.attackPhase='telegraph';e.phaseMs=400;e.cooldown=125;
  alertEnemyOnHit(e,true);expect(e).toMatchObject({state:'attack',attackPhase:'telegraph',phaseMs:400,cooldown:125});
@@ -240,4 +241,73 @@ test('conveyors transport only grounded feet on the enabled surface and do not p
  expect(conveyorSurfaceSpeed(belt,body,320,true,0,true)).toBe(0);
  expect(conveyorSurfaceSpeed(belt,body,256,true,0)).toBe(0);
  expect(conveyorSurfaceSpeed(belt,{...body,x:530},320,true,0)).toBe(0);
+});
+
+function makeArchiveAttempt(beacon=true){const c=new Campaign(newCampaign(archiveCampaignSeed(beacon)));c.data.mission_id='archive';return new MissionAttempt('mission',c.prepare());}
+
+test('Archive connects nine episodes with a physical carrier, upload circuit and transmitted-data exit',()=>{
+ const a=makeArchiveAttempt(),seen:string[]=[];
+ while(true){
+  seen.push(a.current);a.room().enemies.forEach(e=>e.hp=0);
+  if(a.current==='M4E'){expect(a.forwardExitOpen()).toBe(false);expect(a.collectArchiveCarrier()).toBe(true);}
+  if(a.current==='M4G'){expect(a.forwardExitOpen()).toBe(false);expect(a.connectArchivePower()).toBe(true);}
+  if(a.current==='M4C'){expect(a.forwardExitOpen()).toBe(false);expect(a.terminalReady()).toBe(true);a.dataUploaded=true;a.room().terminal=true;a.objective=true;}
+  if(a.current==='M4D')break;
+  expect(a.forwardExitOpen(),a.current).toBe(true);a.current=a.definition().next!;
+ }
+ expect(seen).toEqual(['M4A','M4E','M4B','M4F','M4G','M4H','M4C','M4I','M4D']);
+ expect(a.forwardExitOpen()).toBe(false);a.room().terminal=true;expect(a.forwardExitOpen()).toBe(true);
+ a.dataUploaded=false;expect(a.forwardExitOpen()).toBe(false);
+});
+
+test('carrier collection and upload power cannot be acquired in the wrong room or through live guards',()=>{
+ const a=makeArchiveAttempt();expect(a.collectArchiveCarrier()).toBe(false);expect(a.connectArchivePower()).toBe(false);
+ a.current='M4G';a.room().enemies.forEach(e=>e.hp=0);expect(a.connectArchivePower()).toBe(false);
+ a.current='M4E';expect(a.collectArchiveCarrier()).toBe(true);expect(a.collectArchiveCarrier()).toBe(false);
+ a.current='M4G';expect(a.connectArchivePower()).toBe(true);expect(a.connectArchivePower()).toBe(false);
+ const b=makeArchiveAttempt();b.current='M4E';b.collectArchiveCarrier();b.current='M4G';expect(b.connectArchivePower()).toBe(false);
+ b.room().enemies.forEach(e=>e.hp=0);expect(b.connectArchivePower()).toBe(true);
+});
+
+test('E05 scout removes a real screen while the one-use health choice preserves its base route',()=>{
+ const a=makeArchiveAttempt();a.current='M4B';expect(a.cacheReady()).toBe(false);expect(a.chooseCache('scout')).toBe(false);
+ a.room().enemies.forEach(e=>e.hp=0);expect(a.chooseCache('scout')).toBe(true);expect(a.chooseCache('health')).toBe(false);
+ a.current='M4F';expect(a.definition().solids.some(s=>s.id==='archive-scout-screen')).toBe(false);expect(a.enemyTelegraphScale()).toBe(1.5);
+ const b=makeArchiveAttempt();b.current='M4B';b.hp=4;b.room().enemies.forEach(e=>e.hp=0);
+ expect(b.chooseCache('health')).toBe(true);expect(b.hp).toBe(5);b.hp=4;expect(b.chooseCache('health')).toBe(false);expect(b.chooseCache('scout')).toBe(false);
+ b.current='M4F';expect(b.definition().solids.some(s=>s.id==='archive-scout-screen')).toBe(true);expect(b.enemyTelegraphScale()).toBe(1);
+ const retry=new MissionAttempt('mission',a.entry);expect(retry.scoutedArchive||retry.archiveCarrierCollected||retry.archiveUploadPowered||retry.dataUploaded).toBe(false);
+});
+
+test('Archive without E05 retains optional salvage instead of granting the beacon choices',()=>{
+ const a=makeArchiveAttempt(false);a.current='M4B';a.room().enemies.forEach(e=>e.hp=0);a.hp=4;
+ expect(a.chooseCache('scout')).toBe(false);expect(a.chooseCache('health')).toBe(false);
+ const score=a.score;expect(a.chooseCache('salvage')).toBe(true);expect(a.score).toBeGreaterThan(score);expect(a.chooseCache('salvage')).toBe(false);
+});
+
+test('upload needs carrier and power; R04 and the final terminal stay gated until transmission',()=>{
+ const a=makeArchiveAttempt();a.current='M4C';a.hp=4;
+ expect(a.terminalReady()).toBe(false);expect(a.claimRepair('R04')).toBe(false);
+ a.archiveCarrierCollected=true;expect(a.terminalReady()).toBe(false);a.archiveUploadPowered=true;expect(a.terminalReady()).toBe(true);
+ expect(a.claimRepair('R04')).toBe(false);a.dataUploaded=true;a.room().terminal=true;expect(a.claimRepair('R04')).toBe(true);expect(a.hp).toBe(6);
+ a.hp=5;expect(a.claimRepair('R04')).toBe(false);
+ a.current='M4D';a.room().enemies.forEach(e=>e.hp=0);expect(a.terminalReady()).toBe(true);a.dataUploaded=false;a.objective=true;expect(a.terminalReady()).toBe(false);expect(a.forwardExitOpen()).toBe(false);
+});
+
+test('Archive scouting lengthens the actual ram warning without changing its HP or skipping the attack',()=>{
+ const a=makeArchiveAttempt();a.current='M4B';a.room().enemies.forEach(e=>e.hp=0);a.chooseCache('scout');
+ const e=createEnemy(rooms.M4I.enemies[0]),plain=createEnemy(rooms.M4I.enemies[0]),player={x:200,y:295};
+ stepEnemy(e,1000/60,player,rooms.M4I.solids,new Projectiles(),()=>{},a.enemyTelegraphScale());
+ stepEnemy(plain,1000/60,player,rooms.M4I.solids,new Projectiles(),()=>{});
+ expect(e.attackPhase).toBe('telegraph');expect(e.phaseMs).toBe(plain.phaseMs*1.5);expect(e.hp).toBe(plain.hp);expect(e.shots).toBe(0);
+});
+
+test('the Archive perimeter drone cannot bypass its staged guard response even when provoked',()=>{
+ const roster=rooms.M4D.enemies.map(createEnemy),drone=roster[1],player={x:64,y:295},shots=new Projectiles();
+ alertEnemyOnHit(drone,true);
+ stepEnemy(drone,1000/60,player,rooms.M4D.solids,shots,()=>{},1,roomThreatCanActivate('M4D',drone,roster,player,rooms.M4D.solids));
+ expect(drone.active).toBe(false);expect(drone.warnings).toBe(0);
+ roster[0].hp=0;
+ stepEnemy(drone,1000/60,player,rooms.M4D.solids,shots,()=>{},1,roomThreatCanActivate('M4D',drone,roster,player,rooms.M4D.solids));
+ expect(drone.active).toBe(true);expect(drone.attackPhase).toBe('telegraph');expect(shots.shots).toHaveLength(0);
 });

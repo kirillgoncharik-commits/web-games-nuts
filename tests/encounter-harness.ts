@@ -7,7 +7,7 @@ import type {NodeId} from '../games/cinder-shift/src/session/research';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
- start(input:{mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];cargoCircuit?:'conveyor'|'security';cleared?:boolean;hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
+ start(input:{mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
   app.game.scene.stop('Room');app.game.scene.stop('Backdrop');
   const campaign=new Campaign(newCampaign(input.seed??4));
   for(const id of missionIds){
@@ -19,6 +19,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
   for(const node of input.nodes||[])if(!campaign.buy(node))throw Error('Invalid fixture purchase '+node);
   const attempt=new MissionAttempt('mission',campaign.prepare());campaign.begin();
   if(input.cargoCircuit){const entry=attempt.current;attempt.current='M2C';attempt.toggleCargoPower();if(input.cargoCircuit==='security')attempt.toggleCargoPower();attempt.current=entry;}
+  if(input.archiveState){if(input.mission!=='archive')throw Error('Archive fixture used outside Archive');const v=input.archiveState;if(v.uploaded&&(!v.carrier||!v.power)||v.power&&!v.carrier)throw Error('Invalid archive entry state');attempt.archiveCarrierCollected=Boolean(v.carrier);attempt.archiveUploadPowered=Boolean(v.power);attempt.dataUploaded=Boolean(v.uploaded);attempt.objective=Boolean(v.uploaded);}
   if(input.room)attempt.current=input.room;
   if(input.cleared)attempt.room().enemies.forEach(enemy=>enemy.hp=0);
   if(input.hp!==undefined)attempt.hp=input.hp;

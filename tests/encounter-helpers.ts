@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
 import {state} from './helpers';
 
-export async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor'|'archive'|'cargo';room:string;cargoCircuit?:'conveyor'|'security';cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
+export async function encounter(page:import('@playwright/test').Page,input:{mission:'foundry'|'reactor'|'archive'|'cargo';room:string;seed?:number;hp?:number;archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cargoCircuit?:'conveyor'|'security';cleared?:boolean;debug?:boolean;reduced?:boolean;nodes?:string[]}){
  await page.addInitScript(()=>{
   const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
   (window as any).AudioContext=class extends Base{

@@ -17,26 +17,27 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.5",
-    "stage": "cargo_nine_episodes_and_power_routing",
+    "build_id": "0.7.0-rework.6",
+    "stage": "archive_nine_episodes_carrier_scout_power_upload",
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "passed",
-      "i18n": "passed_657_en_ru_keys",
-      "build": "passed_exact_source_CI",
-      "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
-      "model_tests": "64_passed",
-      "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "typecheck": "pending_exact_source_CI; preliminary local typecheck passed before environment disconnect",
+      "i18n": "682_EN_RU_keys; exact-source CI pending",
+      "build": "pending_exact_source_CI",
+      "art_contracts": "pending_exact_source_CI",
+      "model_tests": "71_selected_expected; pending_exact_source_CI",
+      "browser_tests": "60_UI_equipment_executions_expected; pending_exact_source_CI",
+      "full_archive_routes": "Three complete base-suit cases (E05 scout, E05 health, no-E05 salvage) awaiting CI; keyboard/UI only after one entry fixture.",
+      "full_cargo_routes": "Regression pending for .6; previous .5 evidence retained.",
+      "full_foundry_routes": "Regression pending for .6; previous .5 evidence retained.",
+      "airlock_flow": "Regression pending for .6; previous .5 evidence retained.",
+      "persistence": "Regression pending for .6; previous .5 evidence retained.",
+      "room_registry": "37 unique / 34 selected route; Archive 9; source regeneration match pending CI",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
-      "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
-      "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-      "persistence": "8 migrated persistence checks passed on exact .5 source.",
-      "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
-      "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
-      "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
-      "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      "visual_review": "not_performed",
+      "legacy_full_ui_suite": "known_old_menu_character_contract_failures; not_green"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -135,7 +136,7 @@
       "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
       "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
     ],
-    "recovery": "Active local worktree cinder-shift-rework-2026-11-13 starts from remote 4407268; the older cinder-shift-release working tree is preserved.",
+    "recovery": "Local environment disconnected during Archive test writing. Runtime/test source reconstructed from verified .5 remote base in GitHub. Preserve local uncommitted Archive work on recovery; do not reset either worktree.",
     "implementation_estimate": {
       "range_percent": [
         25,
@@ -144,7 +145,7 @@
       "kind": "engineering_scope_estimate",
       "method": "Estimate by remaining production volume. Requirements differ substantially in size; one UI action and two extra 20-room worlds are not equal work. Partial requirements are not counted as fully closed. This is not elapsed-time, release-readiness or a duration estimate.",
       "major_remaining": [
-        "Expand Airlock/Archive/Reactor, then tune and measure a natural 25–35-minute whole first campaign across all five sectors",
+        "Expand Airlock/Reactor; validate Archive, then tune and measure a natural 25–35-minute first campaign across five sectors",
         "Complete the five-sector art, animation and VFX pass",
         "Build and integrate C02/C03, their distinct mechanics, art/music, selection and persistent unlocks",
         "Complete 50 locales/RTL, legacy regression, physical devices, audio/visual review and independent playtests"
@@ -159,9 +160,29 @@
     },
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
-    "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-    "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json"
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rework.5",
+      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "verification": {
+        "typecheck": "passed",
+        "i18n": "passed_657_en_ru_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "64_passed",
+        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
+        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+        "persistence": "8 migrated persistence checks passed on exact .5 source.",
+        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      }
+    }
   },
   "requirements": [
     {

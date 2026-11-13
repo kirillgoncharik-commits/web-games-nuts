@@ -27,6 +27,10 @@ jobs:
   routes:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        sector: [archive, cargo, foundry]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,9 +40,9 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npx playwright install --with-deps chromium
       - run: npm run build
-      - run: npx playwright test --config=playwright.route.config.ts
+      - run: npx playwright test --config=playwright.route.config.ts tests/${{ matrix.sector }}-route.spec.ts
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cinder-sector-full-routes
+          name: cinder-${{ matrix.sector }}-full-routes
           path: test-results

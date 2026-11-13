@@ -140,6 +140,12 @@ export class SceneArt{
     if(state==='burst'&&e.shotFlashMs>0)g.fillStyle(signals.shot,.9).fillRect(muzzle.x-2,muzzle.y-2,5,5);
     if(state==='exposed')g.lineStyle(2,signals.energy,.9).lineBetween(cx-8,e.y-8,cx+8,e.y-8);
   }
+  private dataChip(x:number,feet:number,scale:number,empty:boolean){
+    const g=this.threats,c=empty?0x456171:0x76dcc8;g.lineStyle(2*scale,c,empty?.45:1);
+    g.fillStyle(0x101823,.95).fillRect(x-8*scale,feet-26*scale,16*scale,22*scale);g.strokeRect(x-8*scale,feet-26*scale,16*scale,22*scale);
+    for(let n=0;n<3;n++){const y=feet-(22-n*6)*scale;g.lineBetween(x-12*scale,y,x-8*scale,y);g.lineBetween(x+8*scale,y,x+12*scale,y);}
+    if(!empty){g.fillStyle(c,.9).fillRect(x-3*scale,feet-21*scale,6*scale,6*scale);g.lineBetween(x-3*scale,feet-10*scale,x+3*scale,feet-10*scale);}
+  }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
     this.environment.draw(attempt,reducedFlashes);
@@ -222,6 +228,8 @@ export class SceneArt{
       }
     }
     if(attempt.cellCollected&&!attempt.cellInstalled)this.art('energy-cell_carried',x+f*13,y-14,20,18,7,f,'center');
+    if(room.dataCarrier)this.dataChip(room.dataCarrier.x,room.dataCarrier.y,1,attempt.archiveCarrierCollected);
+    if(attempt.archiveCarrierCollected&&!attempt.dataUploaded)this.dataChip(x+f*14,y-12,.6,false);
     if(room.id==='M2E'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
     if(this.bufferUsedLast===null)this.bufferUsedLast=state.bufferUsed;
     else if(!this.bufferUsedLast&&state.bufferUsed)this.bufferEffectUntil=now+180;
@@ -242,7 +250,7 @@ export class SceneArt{
       this.art(`repair-station_${frame}`,room.repair.x,320,46,50,5);
     }
     if(room.cache){
-      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby?'interact':'available';
+      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby&&attempt.cacheReady()?'interact':'available';
       this.art(`service-cache_${family}-${frame}`,room.cache.x,room.cache.y,38,26,5);
     }
     if(room.powerSwitch){
