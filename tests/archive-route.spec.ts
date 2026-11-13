@@ -18,9 +18,10 @@ for(const choice of ['scout','health','salvage'] as const)test(`base suit comple
   await jump(page,326,432);await ground(page,224);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).archiveCarrierCollected).toBe(true);
   await to(page,510);await ground(page,320);await next(page,'M4B',552);await mark();
   await jump(page,114,208);await ground(page,320);
-  if(choice==='health'){
-   // Permit one actual guard hit to exercise a real repair, never a fixture HP edit.
-   const hp=(await state(page)).hp;expect(hp).toBeGreaterThan(1);
+  if(choice==='health'&&(await state(page)).hp===(await state(page)).maxHp){
+   // Earlier real damage normally supplies the repair case. If none was taken,
+   // walk into the guard's attack radius, without editing HP or the encounter.
+   await to(page,320);await ground(page,320);const hp=(await state(page)).hp;
    await until(page,hp=>(window as any).__CINDER__().hp<hp,hp,'guard hit before health choice',10000);
   }
   await page.keyboard.down('s');await clear(page,['m4b-security']);await to(page,476);await page.keyboard.up('s');
