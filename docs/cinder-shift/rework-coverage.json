@@ -22,21 +22,21 @@
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "passed_locally_657_en_ru_keys",
+      "typecheck": "passed",
       "i18n": "passed_657_en_ru_keys",
-      "build": "passed_locally; exact-source CI pending",
-      "art_contracts": "passed_locally; unchanged robot and atlases",
-      "model_tests": "64_passed_locally; exact-source CI pending",
-      "browser_tests": "pending_rework5: Cargo console/physical transport tests added; local native Chrome launch is unavailable (SIGABRT/EPERM). Prior .4 results remain in verification_runs.",
+      "build": "passed_exact_source_CI",
+      "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+      "model_tests": "64_passed",
+      "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
       "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
       "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-      "persistence": "pending_rework5; prior .4 migrated persistence checks passed",
-      "full_foundry_routes": "pending_rework5 regression; .4 results retained in the baseline JSON",
-      "airlock_flow": "pending_rework5; prior .4 full flows passed across three browsers",
-      "room_registry": "source regenerated: 32 unique campaign rooms / 29 on one selected route; Cargo has nine episodes",
-      "full_cargo_routes": "pending: two real-input nine-room base routes and same-entry Retry, no state mutation after entry"
+      "persistence": "8 migrated persistence checks passed on exact .5 source.",
+      "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+      "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+      "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+      "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -94,6 +94,41 @@
           "8 migrated persistence regressions"
         ],
         "scope": "One sector-entry fixture followed only by real input. Service 62.23 active seconds and press 57.97 seconds, both finish at 4 HP after real R03 repair. No human duration/device/whole-milestone acceptance."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321080",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/657 EN-RU keys/art",
+          "source-reproduced registry matches",
+          "64 selected models",
+          "48 UI/equipment executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes the actual Cargo power choice and physical enabled/disabled belt transport; isolated equipment fixtures do not replace the full input routes."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321222",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload and earned Cargo unlock."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full nine-room base Cargo routes, both equipment choices and Retry",
+          "2 full eight-room base Foundry routes",
+          "8 persistence checks"
+        ],
+        "scope": "One entry fixture followed only by actual keyboard/UI. Cargo seed 4 has no E01 event; optional upper salvage is taken in the security case only. Other builds/seeds, E01/Relay full combinations and human acceptance remain open."
       }
     ],
     "known_limitations": [
@@ -109,7 +144,7 @@
       "kind": "engineering_scope_estimate",
       "method": "Estimate by remaining production volume. Requirements differ substantially in size; one UI action and two extra 20-room worlds are not equal work. Partial requirements are not counted as fully closed. This is not elapsed-time, release-readiness or a duration estimate.",
       "major_remaining": [
-        "Expand Airlock/Cargo/Archive/Reactor and measure a natural 25–35-minute first campaign",
+        "Expand Airlock/Archive/Reactor, then tune and measure a natural 25–35-minute whole first campaign across all five sectors",
         "Complete the five-sector art, animation and VFX pass",
         "Build and integrate C02/C03, their distinct mechanics, art/music, selection and persistent unlocks",
         "Complete 50 locales/RTL, legacy regression, physical devices, audio/visual review and independent playtests"
@@ -123,7 +158,10 @@
       "accepted_whole_milestone": false
     },
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md"
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
+    "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+    "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json"
   },
   "requirements": [
     {
@@ -179,8 +217,12 @@
         "Foundry expanded from four to eleven unique rooms; either chosen route visits eight. Other sectors remain at their previous room counts and the 30-minute target is not measured.",
         "Cargo expanded from four to nine connected episodes, with optional upper salvage, a required power decision, a physical conveyor or turret, cell storage, separate R02/install stop and final checkpoint. Whole first-campaign duration remains open."
       ],
-      "verification": [],
-      "evidence": [],
+      "verification": [
+        "Both full .5 nine-room base Cargo power choices passed on campaign seed 4 with actual inputs, cell installation, checkpoint and Retry. Full-campaign natural duration remains open."
+      ],
+      "evidence": [
+        "docs/cinder-shift/rework-cargo-input-baseline.json"
+      ],
       "publication": "not_published",
       "implementation_status": "partial"
     },
@@ -338,11 +380,13 @@
         "Added base Cargo input routes for both equipment circuits; runtime results pending on .5."
       ],
       "verification": [
-        "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open."
+        "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open.",
+        "Both .5 base Cargo circuits passed; weapon/mobile/defense Cargo comparisons and other seeds remain open."
       ],
       "evidence": [
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
-        "docs/cinder-shift/rework-foundry-input-baseline.json"
+        "docs/cinder-shift/rework-foundry-input-baseline.json",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050"
       ],
       "publication": "not_published",
       "implementation_status": "partial"
@@ -355,12 +399,14 @@
         "Full HP and free same-entry Retry preserved. Selected model suite plus Airlock victory→Retry→reload input checks passed; no permanent-death/revive/currency change."
       ],
       "verification": [
-        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance."
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance.",
+        "Both complete .5 Cargo cases verify same-entry full-HP Retry and unchanged reward ledger."
       ],
       "evidence": [
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
-        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050"
       ],
       "publication": "not_published",
       "implementation_status": "implemented"
