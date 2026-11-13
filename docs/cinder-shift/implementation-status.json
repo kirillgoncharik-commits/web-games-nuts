@@ -491,7 +491,7 @@
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
     "published": false,
     "accepted": false,
-    "verification": "Archive candidate: nine connected rooms, physical carrier, guarded E05 choice, Scout physical screen removal and longer warnings, required upload circuit, gated R04 and staged final combat. Exact-source .6 CI pending; previous .5 evidence remains in coverage verification_runs. No acceptance or publication.",
+    "verification": "Exact .6 head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458: build/typecheck/682 keys/art/registry, 71 models, 60 three-browser UI/equipment executions, 15 three-browser Airlock executions, 8 persistence checks, all three full Archive outcomes and both Cargo/Foundry variants PASS. Archive Scout 73.73s/5HP, health 71.27s/6HP, salvage 71.28s/6HP; real acquisition/power/upload/R04 and full-HP same-entry Retry/reward deduplication. Human duration/devices/visual/audio acceptance and full legacy regression remain open.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "implementation_estimate_percent": [
@@ -525,6 +525,9 @@
         "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
         "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
       }
-    }
+    },
+    "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+    "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json"
   }
 }

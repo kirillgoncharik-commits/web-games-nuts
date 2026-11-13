@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "build_id": "0.7.0-rework.6",
+  "status": "AUTOMATED_INPUT_ONLY",
+  "recorded_at": "2026-11-13",
+  "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+  "runtime_code_head_sha": "e83a8a7c58fb7a5ba845f387c8c5b7a359e05df9",
+  "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+  "pull_request": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+  "workflow_run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228350",
+  "job_id": 131939041652,
+  "browser": "Chromium / Ubuntu CI",
+  "input_contract": "One Archive sector-entry fixture followed only by actual keyboard/UI. No HP, enemy, position, room or clock mutation after entry.",
+  "room_route": [
+    "M4A",
+    "M4E",
+    "M4B",
+    "M4F",
+    "M4G",
+    "M4H",
+    "M4C",
+    "M4I",
+    "M4D"
+  ],
+  "cases": [
+    {
+      "status": "AUTOMATED_INPUT_ONLY",
+      "build": "0.7.0-rework.6",
+      "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+      "choice": "scout",
+      "campaign_seed": 0,
+      "nodes": [],
+      "event_plan": [
+        {
+          "event_id": "E05",
+          "definition_version": 1,
+          "room_id": "M4B",
+          "variant": "scout-cache"
+        }
+      ],
+      "beacon_effect": {
+        "choice": "scout",
+        "hp_before": 5,
+        "hp_after": 5,
+        "score_before": 0,
+        "score_after": 0
+      },
+      "r04_used": true,
+      "active_seconds": 73.7333333333319,
+      "wall_seconds": 77.216,
+      "hp": 5,
+      "rooms": [
+        {
+          "room": "M4A",
+          "active_seconds": 8.983333333333357,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4E",
+          "active_seconds": 6.333333333333103,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "M4B",
+          "active_seconds": 8.900000000000553,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4F",
+          "active_seconds": 9.050000000000509,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4G",
+          "active_seconds": 9.199999999998667,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4H",
+          "active_seconds": 8.316666666665455,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4C",
+          "active_seconds": 6.816666666665675,
+          "hp_in": 5,
+          "hp_out": 6
+        },
+        {
+          "room": "M4I",
+          "active_seconds": 7.283333333332273,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4D",
+          "active_seconds": 8.666666666668974,
+          "hp_in": 6,
+          "hp_out": 5
+        }
+      ],
+      "hits": [
+        {
+          "name": "hit_received",
+          "event_id": "fba14691-ff38-4b19-9dc9-b9a43f82c389",
+          "at": 12462,
+          "params": {
+            "game_id": "r01",
+            "build_id": "0.7.0-rework.6",
+            "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+            "locale": "ru",
+            "input_method": "keyboard",
+            "campaign_id": "38f5b973-357e-4405-8ba2-35efd2397635",
+            "campaign_seed": 0,
+            "mode": "mission",
+            "mission_id": "archive",
+            "room_id": "M4E",
+            "attempt_id": "cfcf532a-9a32-40be-b081-5eaabc979385",
+            "active_duration": 11.567,
+            "reason": "drone-shot",
+            "hp": 5
+          }
+        },
+        {
+          "name": "hit_received",
+          "event_id": "35690efa-5907-48f5-a812-a84ea136a6d3",
+          "at": 70613,
+          "params": {
+            "game_id": "r01",
+            "build_id": "0.7.0-rework.6",
+            "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+            "locale": "ru",
+            "input_method": "keyboard",
+            "campaign_id": "38f5b973-357e-4405-8ba2-35efd2397635",
+            "campaign_seed": 0,
+            "mode": "mission",
+            "mission_id": "archive",
+            "room_id": "M4D",
+            "attempt_id": "cfcf532a-9a32-40be-b081-5eaabc979385",
+            "active_duration": 67.467,
+            "reason": "walker-shot",
+            "hp": 5
+          }
+        }
+      ],
+      "human_duration_target_verified": false
+    },
+    {
+      "status": "AUTOMATED_INPUT_ONLY",
+      "build": "0.7.0-rework.6",
+      "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+      "choice": "health",
+      "campaign_seed": 0,
+      "nodes": [],
+      "event_plan": [
+        {
+          "event_id": "E05",
+          "definition_version": 1,
+          "room_id": "M4B",
+          "variant": "scout-cache"
+        }
+      ],
+      "beacon_effect": {
+        "choice": "health",
+        "hp_before": 5,
+        "hp_after": 6,
+        "score_before": 0,
+        "score_after": 0
+      },
+      "r04_used": false,
+      "active_seconds": 71.26666666666452,
+      "wall_seconds": 74.149,
+      "hp": 6,
+      "rooms": [
+        {
+          "room": "M4A",
+          "active_seconds": 8.900000000000029,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4E",
+          "active_seconds": 6.349999999999769,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "M4B",
+          "active_seconds": 8.883333333333871,
+          "hp_in": 5,
+          "hp_out": 6
+        },
+        {
+          "room": "M4F",
+          "active_seconds": 7.066666666667182,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4G",
+          "active_seconds": 9.18333333333231,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4H",
+          "active_seconds": 8.266666666665465,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4C",
+          "active_seconds": 6.7999999999990095,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4I",
+          "active_seconds": 7.049999999998974,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4D",
+          "active_seconds": 8.61666666666791,
+          "hp_in": 6,
+          "hp_out": 6
+        }
+      ],
+      "hits": [
+        {
+          "name": "hit_received",
+          "event_id": "1b4ad2a5-3519-419a-aa11-68a8138ed4d8",
+          "at": 12082,
+          "params": {
+            "game_id": "r01",
+            "build_id": "0.7.0-rework.6",
+            "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+            "locale": "ru",
+            "input_method": "keyboard",
+            "campaign_id": "ef5f117b-5248-4d56-b4fe-e685af239d59",
+            "campaign_seed": 0,
+            "mode": "mission",
+            "mission_id": "archive",
+            "room_id": "M4E",
+            "attempt_id": "d9b0a7c8-2b74-425d-a726-dd27cd8622c1",
+            "active_duration": 11.333,
+            "reason": "drone-shot",
+            "hp": 5
+          }
+        }
+      ],
+      "human_duration_target_verified": false
+    },
+    {
+      "status": "AUTOMATED_INPUT_ONLY",
+      "build": "0.7.0-rework.6",
+      "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+      "choice": "salvage",
+      "campaign_seed": 3,
+      "nodes": [],
+      "event_plan": [],
+      "beacon_effect": {
+        "choice": "salvage",
+        "hp_before": 5,
+        "hp_after": 5,
+        "score_before": 0,
+        "score_after": 150
+      },
+      "r04_used": true,
+      "active_seconds": 71.28333333333119,
+      "wall_seconds": 74.33,
+      "hp": 6,
+      "rooms": [
+        {
+          "room": "M4A",
+          "active_seconds": 8.966666666666693,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4E",
+          "active_seconds": 6.249999999999773,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "M4B",
+          "active_seconds": 8.850000000000533,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4F",
+          "active_seconds": 7.016666666667177,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4G",
+          "active_seconds": 9.133333333332342,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4H",
+          "active_seconds": 8.33333333333212,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M4C",
+          "active_seconds": 6.816666666665675,
+          "hp_in": 5,
+          "hp_out": 6
+        },
+        {
+          "room": "M4I",
+          "active_seconds": 7.083333333332305,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M4D",
+          "active_seconds": 8.683333333334566,
+          "hp_in": 6,
+          "hp_out": 6
+        }
+      ],
+      "hits": [
+        {
+          "name": "hit_received",
+          "event_id": "fbf2ac26-46f0-487d-956c-facc69961993",
+          "at": 12302,
+          "params": {
+            "game_id": "r01",
+            "build_id": "0.7.0-rework.6",
+            "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+            "locale": "ru",
+            "input_method": "keyboard",
+            "campaign_id": "03be5c90-8ab4-4cb7-b318-c076129a56a2",
+            "campaign_seed": 3,
+            "mode": "mission",
+            "mission_id": "archive",
+            "room_id": "M4E",
+            "attempt_id": "06e0ad55-c07f-4146-b3b6-1a990410b658",
+            "active_duration": 11.383,
+            "reason": "drone-shot",
+            "hp": 5
+          }
+        }
+      ],
+      "human_duration_target_verified": false
+    }
+  ],
+  "retry_verified": {
+    "full_hp": 6,
+    "same_frozen_entry": true,
+    "archive_flags_reset": true,
+    "reward_ledger_unchanged": true
+  },
+  "cross_browser_interactions": {
+    "workflow_run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228871",
+    "browsers": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "cases": [
+      "Physical upper-shelf carrier collection opens M4E",
+      "Actual E05 Scout choice removes screen and lengthens real warning",
+      "Carrier without power cannot upload",
+      "Transmission gates one-use R04 repair"
+    ],
+    "execution_count": 12,
+    "fixtures": "Isolated room-entry states; full routes perform carrier and power acquisition."
+  },
+  "regression": {
+    "cargo": [
+      {
+        "circuit": "conveyor",
+        "active_seconds": 73.59999999999853,
+        "hp": 3,
+        "campaign_seed": 4
+      },
+      {
+        "circuit": "security",
+        "active_seconds": 77.99999999999982,
+        "hp": 3,
+        "campaign_seed": 4
+      }
+    ],
+    "foundry": [
+      {
+        "route": "service",
+        "active_seconds": 61.19999999999682,
+        "hp": 4,
+        "seed": 4
+      },
+      {
+        "route": "press",
+        "active_seconds": 57.53333333333069,
+        "hp": 4,
+        "seed": 4
+      }
+    ]
+  },
+  "limits": [
+    "Scripted route times are not natural first-human duration and do not verify the 25–35-minute campaign target.",
+    "Full routes use the base suit and Chromium; other builds/seeds and physical-device checks remain open.",
+    "E05 choices share campaign seed 0; no-E05 salvage uses seed 3. This is not all-seed coverage.",
+    "No human visual/audio acceptance, independent playtests or production publication.",
+    "Full legacy suite has known old menu/character contract failures; its .6 run was still in progress when this evidence was recorded. Focused passes do not establish RC readiness."
+  ]
+}
