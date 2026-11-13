@@ -7,6 +7,7 @@ import {Campaign,newCampaign} from '../games/cinder-shift/src/session/campaign';
 import {makeChallengeSpec,challengeKey,trialContentId,trialSimulationVersion,trialRuleset} from '../games/cinder-shift/src/session/challenge-spec';
 import {RegulatorEncounter,regulatorPattern,regulatorRules,regulatorBody,regulatorHitboxes,regulatorImpact} from '../games/cinder-shift/src/boss';
 import {machineState} from '../games/cinder-shift/src/hazards';
+import {conveyorSurfaceSpeed} from '../games/cinder-shift/src/cargo-equipment';
 import {createEnemy,stepEnemy,ramVulnerable,alertEnemyOnHit,suspendEnemy} from '../games/cinder-shift/src/enemies';
 import {Projectiles} from '../games/cinder-shift/src/projectiles';
 import {missions} from '../games/cinder-shift/src/session/missions';
@@ -60,7 +61,7 @@ test('new combat rules isolate challenge records and relay keys from the audited
  const current=makeRelaySpec('none');expect(current.content_hash).toBe(trialContentId('relay-airlock-cargo'));
  const old=makeChallengeSpec({...current,ruleset_id:'relay-base-manual-v1',content_hash:'relay-airlock-cargo-release-rc1',simulation_version:'phaser-60hz-rc1'});
  expect(await challengeKey(current)).not.toBe(await challengeKey(old));
- expect(trialRuleset).toBe('combat-clear-v3');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
+ expect(trialRuleset).toBe('combat-clear-v5');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
 });
 
 test('purchase is atomic across duplicate callbacks and preserves the installed active slot',()=>{
@@ -74,7 +75,7 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework4');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework5');
 });
 
 
@@ -196,4 +197,47 @@ test('hits preserve attack and recovery timing; unpowered, destroyed and suspend
  alertEnemyOnHit(e,true);expect(e).toMatchObject({attackPhase:'recovery',phaseMs:0,cooldown:1600});
  suspendEnemy(e);expect(e.provoked).toBe(false);expect(e.active).toBe(false);
  e.hp=0;alertEnemyOnHit(e,true);expect(e.provoked).toBe(false);
+});
+
+function cargo(){const c=new Campaign(newCampaign(4));c.data.mission_id='cargo';return new MissionAttempt('mission',c.prepare());}
+test('Cargo has nine connected episodes with a required power decision and installation before its checkpoint',()=>{
+ const a=cargo(),seen:string[]=[];
+ while(true){
+  seen.push(a.current);a.room().enemies.forEach(e=>e.hp=0);
+  if(a.current==='M2C'){expect(a.forwardExitOpen()).toBe(false);expect(a.toggleCargoPower()).toBe(true);}
+  if(a.current==='F'){expect(a.forwardExitOpen()).toBe(false);a.cellCollected=true;}
+  if(a.current==='M2E'){expect(a.forwardExitOpen()).toBe(false);expect(a.terminalReady()).toBe(true);a.cellInstalled=true;a.room().terminal=true;}
+  if(a.current==='G')break;
+  expect(a.forwardExitOpen(),a.current).toBe(true);a.current=a.definition().next!;
+ }
+ expect(seen).toEqual(['D','M2A','E','M2B','M2C','M2D','F','M2E','G']);
+ expect(a.forwardExitOpen()).toBe(false);a.room().terminal=true;expect(a.forwardExitOpen()).toBe(true);
+ a.cellInstalled=false;a.objective=true;expect(a.forwardExitOpen()).toBe(false);
+});
+
+test('Cargo circuit selection persists across rooms and exchanges the actual belt for the powered turret',()=>{
+ const a=cargo();expect(a.toggleCargoPower()).toBe(false);a.current='M2C';expect(a.toggleCargoPower()).toBe(true);
+ a.current='M2D';const turret=a.room().enemies.find(e=>e.id==='m2d-routed-turret')!;
+ expect(a.definition().conveyor?.enabled).toBe(true);expect(a.enemyPowered(turret)).toBe(false);expect(a.combatRemaining()).toBe(1);
+ a.current='M2C';expect(a.cargoCircuit).toBe('conveyor');a.toggleCargoPower();a.current='M2D';
+ expect(a.definition().conveyor?.enabled).toBe(false);expect(a.enemyPowered(turret)).toBe(true);expect(a.combatRemaining()).toBe(2);
+ expect(a.toggleCargoPower()).toBe(false);const retry=cargo();expect(retry.cargoRerouted).toBe(false);expect(retry.cargoCircuit).toBe('security');
+});
+
+test('R02 is now a separate post-cell service stop and cannot be consumed in the storage fight',()=>{
+ const a=cargo();a.current='F';a.hp=3;a.cellCollected=true;expect(a.claimRepair('R02')).toBe(false);
+ a.current='M2E';a.cellCollected=false;expect(a.claimRepair('R02')).toBe(false);expect(a.terminalReady()).toBe(false);
+ a.cellCollected=true;expect(a.claimRepair('R02')).toBe(true);expect(a.hp).toBe(5);expect(a.claimRepair('R02')).toBe(false);
+ a.current='G';a.room().enemies.forEach(e=>e.hp=0);expect(a.terminalReady()).toBe(false);a.cellInstalled=true;expect(a.terminalReady()).toBe(true);
+});
+
+test('conveyors transport only grounded feet on the enabled surface and do not pull jumps or dashes',()=>{
+ const belt={x:232,y:304,width:280,height:16,speed:-32,enabled:true},body={x:350,y:276,width:22,height:44};
+ expect(conveyorSurfaceSpeed(belt,body,320,true,0)).toBe(-32);
+ expect(conveyorSurfaceSpeed({...belt,enabled:false},body,320,true,0)).toBe(0);
+ expect(conveyorSurfaceSpeed(belt,body,320,false,0)).toBe(0);
+ expect(conveyorSurfaceSpeed(belt,body,320,true,-330)).toBe(0);
+ expect(conveyorSurfaceSpeed(belt,body,320,true,0,true)).toBe(0);
+ expect(conveyorSurfaceSpeed(belt,body,256,true,0)).toBe(0);
+ expect(conveyorSurfaceSpeed(belt,{...body,x:530},320,true,0)).toBe(0);
 });

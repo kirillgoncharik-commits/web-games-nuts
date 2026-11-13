@@ -445,6 +445,7 @@ export class Application{
   }
   private touchContext(a:MissionAttempt,player:Player){
     const def=a.definition(),saved=a.room(),near=(x:number,radius=36)=>Math.abs(player.x-x)<radius&&player.feet>303;
+    if(def.powerSwitch&&near(def.powerSwitch.x,34))return{key:'touch.power',available:true};
     if(def.relayIntel&&a.entry.relay_leg==='A'&&!a.relayIntelCollected&&near(def.relayIntel.x,repairPosition.radius))return{key:'challenge.touchIntel',available:true};
     if(def.relayRepairCache&&a.entry.relay_leg==='B'&&a.entry.relay_support==='repair'&&a.cellCollected&&!a.relayRepairUsed&&a.hp<a.maxHp&&near(def.relayRepairCache.x,def.relayRepairCache.radius))return{key:'challenge.touchRelayRepair',available:true};
     if(a.missionId==='airlock'&&a.current==='B'&&!saved.containerUsed&&near(repairPosition.x,repairPosition.radius))return{key:'touch.r01',available:true};
@@ -452,7 +453,7 @@ export class Application{
     if(def.cell&&!a.cellCollected&&near(def.cell.x,34))return{key:'touch.cell',available:true};
     if(def.cache&&!saved.cacheUsed&&cacheInReach(player.x,player.feet,def.cache))return{key:'touch.cache',available:true};
     if(def.terminal&&!saved.terminal&&terminalInReach(player.x,player.feet,def.terminal)){
-      const ready=def.terminalKind==='power'||def.terminalKind==='training'?saved.targetHp<=0:def.terminalKind==='install'?a.cellCollected:true;
+      const ready=a.terminalReady();
       if(ready)return{key:def.terminalKind==='restore'?'touch.restore':def.terminalKind==='install'?'touch.install':def.terminalKind==='data'?'touch.upload':def.terminalKind==='power'?'touch.power':'touch.exit',available:true};
     }
     return{key:'touch.none',available:false};

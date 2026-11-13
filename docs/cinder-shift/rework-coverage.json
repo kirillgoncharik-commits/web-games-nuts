@@ -17,25 +17,26 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.4",
-    "stage": "foundry_safe_approach_and_hit_alert",
+    "build_id": "0.7.0-rework.5",
+    "stage": "cargo_nine_episodes_and_power_routing",
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "passed",
-      "i18n": "passed_640_en_ru_keys",
-      "build": "passed",
-      "art_contracts": "passed_including_rework_robot_hash_and_fixture_isolation",
-      "model_tests": "60_passed",
-      "browser_tests": "39 encounter/UI executions passed across Chromium/Firefox/WebKit on head 755e80882ae7e29adc59b99d9058489539438971 / tested merge db25262a4df831d2cffa512c5824da7e4a94088b",
+      "typecheck": "passed_locally_657_en_ru_keys",
+      "i18n": "passed_657_en_ru_keys",
+      "build": "passed_locally; exact-source CI pending",
+      "art_contracts": "passed_locally; unchanged robot and atlases",
+      "model_tests": "64_passed_locally; exact-source CI pending",
+      "browser_tests": "pending_rework5: Cargo console/physical transport tests added; local native Chrome launch is unavailable (SIGABRT/EPERM). Prior .4 results remain in verification_runs.",
       "physical_devices": "not_run",
       "human_playtests": "not_run",
       "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
       "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-      "persistence": "8 migrated IndexedDB/reload/invalid-save/write-failure/result-commit checks passed.",
-      "full_foundry_routes": "Both eight-room routes passed with actual keyboard/UI after one sector-entry fixture, base suit, campaign seed 4: service 62.23 active seconds, press 57.97; both finish at 4 HP after real R03 repair. Chromium only; not natural first-human timing.",
-      "airlock_flow": "15 full Airlock input executions passed across Chromium/Firefox/WebKit: base/W1/M1/D1 victory, rewards, same-entry full-HP Retry, reload deduplication and earned Cargo unlock.",
-      "room_registry": "Reproduced from source and git diff confirmed exact equality in model workflow; 27 unique campaign rooms / 24 on one selected route."
+      "persistence": "pending_rework5; prior .4 migrated persistence checks passed",
+      "full_foundry_routes": "pending_rework5 regression; .4 results retained in the baseline JSON",
+      "airlock_flow": "pending_rework5; prior .4 full flows passed across three browsers",
+      "room_registry": "source regenerated: 32 unique campaign rooms / 29 on one selected route; Cargo has nine episodes",
+      "full_cargo_routes": "pending: two real-input nine-room base routes and same-entry Retry, no state mutation after entry"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -99,7 +100,7 @@
       "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
       "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
     ],
-    "recovery": "Local execution disconnected during continuation. Rework.3/.4 were saved through GitHub; remote branch is authoritative. Preserve the older local working tree before any resync.",
+    "recovery": "Active local worktree cinder-shift-rework-2026-11-13 starts from remote 4407268; the older cinder-shift-release working tree is preserved.",
     "implementation_estimate": {
       "range_percent": [
         25,
@@ -121,7 +122,8 @@
       "verified_whole_milestone": 0,
       "accepted_whole_milestone": false
     },
-    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json"
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md"
   },
   "requirements": [
     {
@@ -174,7 +176,8 @@
       "requirement": "Пересобрать все пять миссий под цель около 30 минут первого естественного успешного прохождения: рабочий бюджет Airlock 4 + Cargo 6 + Foundry 6 + Archive 6 + Reactor/финал 8 минут. Это дизайн-бюджет для наполнения, а не обязательные задержки.",
       "status": "OPEN",
       "implementation": [
-        "Foundry expanded from four to eleven unique rooms; either chosen route visits eight. Other sectors remain at their previous room counts and the 30-minute target is not measured."
+        "Foundry expanded from four to eleven unique rooms; either chosen route visits eight. Other sectors remain at their previous room counts and the 30-minute target is not measured.",
+        "Cargo expanded from four to nine connected episodes, with optional upper salvage, a required power decision, a physical conveyor or turret, cell storage, separate R02/install stop and final checkpoint. Whole first-campaign duration remains open."
       ],
       "verification": [],
       "evidence": [],
@@ -331,7 +334,8 @@
       "status": "OPEN",
       "implementation": [
         "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open.",
-        "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open."
+        "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open.",
+        "Added base Cargo input routes for both equipment circuits; runtime results pending on .5."
       ],
       "verification": [
         "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open."

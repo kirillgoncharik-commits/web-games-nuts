@@ -166,7 +166,7 @@ export class SceneArt{
     }
     if(room.terminal){
       const kind=room.terminalKind==='install'?'cell':room.terminalKind==='data'?'data':room.terminalKind==='exit'?'exit':'power';
-      const ready=(room.terminalKind==='restore'||attempt.combatRemaining()===0)&&(room.terminalKind==='install'?attempt.cellCollected:room.terminalKind==='restore'?hasEvent(attempt.eventPlan,'E01'):room.terminalKind==='power'||room.terminalKind==='training'?state.targetHp<=0:true);
+      const ready=attempt.terminalReady();
       const terminalState=state.terminal||room.terminalKind==='restore'&&!hasEvent(attempt.eventPlan,'E01')?'done':hold>0?'hold':ready?'ready':'off';
       this.art(`terminal_${kind}-${terminalState}`,room.terminal.x,320,32,54,3);
       if(hold>0)this.sprite('signal-mint',room.terminal.x-20,258,7).setDisplaySize(40*Math.min(1,hold/600),4);
@@ -222,7 +222,7 @@ export class SceneArt{
       }
     }
     if(attempt.cellCollected&&!attempt.cellInstalled)this.art('energy-cell_carried',x+f*13,y-14,20,18,7,f,'center');
-    if(room.id==='G'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
+    if(room.id==='M2E'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
     if(this.bufferUsedLast===null)this.bufferUsedLast=state.bufferUsed;
     else if(!this.bufferUsedLast&&state.bufferUsed)this.bufferEffectUntil=now+180;
     else if(this.bufferUsedLast&&!state.bufferUsed)this.bufferEffectUntil=-1;
