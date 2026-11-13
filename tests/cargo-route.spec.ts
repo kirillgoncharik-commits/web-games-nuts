@@ -20,7 +20,7 @@ for(const circuit of ['conveyor','security'] as const)test(`base suit completes 
   if(circuit==='security'){
    await ground(page,320);await jump(page,212,172);await ground(page,288);
    await jump(page,178,280);await ground(page,256);await jump(page,320,432);await ground(page,224);
-   await page.keyboard.press('e');expect((await state(page)).roomStates.M2B.cacheUsed).toBe(true);
+   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates.M2B.cacheUsed).toBe(true);
   }
   await to(page,510);await ground(page,320);await next(page,'M2C',552);await mark();
   await to(page,100);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).cargoCircuit).toBe('conveyor');
