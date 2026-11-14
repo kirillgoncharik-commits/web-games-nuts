@@ -27,6 +27,12 @@ export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security
   if(options.power){await to(page,86);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);}
   await jump(page,178,272);await ground(page,320);await page.keyboard.down('s');await clear(page,options.power?['f-service','f-event-turret']:['f-service']);await to(page,520);await page.keyboard.up('s');
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).cellCollected).toBe(true);
+  const memory=(await state(page)).roomStates.F;
+  await to(page,286);await jump(page,286,178);await ground(page,320);
+  await page.keyboard.down('a');await until(page,()=>{const s=(window as any).__CINDER__();return s.room==='M2D'&&s.state==='playing'&&s.player?.x>500;},null,'backtrack from the cell bay');await page.keyboard.up('a');
+  await page.keyboard.down('d');await until(page,()=>{const s=(window as any).__CINDER__();return s.room==='F'&&s.state==='playing'&&s.player?.x<100;},null,'return to the cell bay');await page.keyboard.up('d');await ground(page,320);
+  const revisited=await state(page);expect(revisited.cellCollected).toBe(true);expect(revisited.roomStates.F.enemies.map((e:any)=>e.hp)).toEqual(memory.enemies.map((e:any)=>e.hp));expect(revisited.roomStates.F.bufferUsed).toBe(memory.bufferUsed);expect(revisited.powered).toBe(memory.terminal);
+  await jump(page,178,272);await ground(page,320);
   await next(page,'M2E');
   await to(page,112);await ground(page,320);
   if((await state(page)).hp<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();}

@@ -1,5 +1,8 @@
 name: Cinder Shift check
-on: [push, pull_request]
+on:
+  push:
+    branches-ignore: [codex/cinder-shift-m-rework]
+  pull_request:
 concurrency:
   group: cinder-check-${{ github.ref }}-${{ github.sha }}
   cancel-in-progress: false
@@ -27,7 +30,7 @@ jobs:
           pactl set-default-sink cinder_qa
       - run: npm run build
       - run: npm run art:check
-      - run: npm test -- --shard=${{ matrix.shard }}/6 --reporter=line,json
+      - run: npm test -- --fully-parallel --shard=${{ matrix.shard }}/6 --reporter=line,json
         env:
           CROSS_BROWSER: "1"
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/regression.json

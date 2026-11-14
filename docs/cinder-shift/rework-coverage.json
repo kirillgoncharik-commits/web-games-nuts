@@ -235,11 +235,32 @@
         "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
         "models": "PASS_76_TESTS"
       },
-      "browser_verification": "PENDING_NEW_FEEDBACK_CANDIDATE",
+      "browser_verification": {
+        "source_sha": "2e58266427768261aa8aa951f19441ccc32be7df",
+        "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
+        "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
+        "persistence": "PASS_8_CHECKS",
+        "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
+        "full_regression": "IN_PROGRESS",
+        "visual_review": "PENDING_EXACT_SOURCE_CONTACT_SHEET",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842078",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842092",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842112",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842128"
+        ]
+      },
       "human_playtest": "NOT_RUN",
       "physical_devices": "NOT_RUN",
       "accepted": false,
-      "published": false
+      "published": false,
+      "baseline_full_regression": {
+        "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+        "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+        "passed": 201,
+        "failed": 33,
+        "not_run": 0
+      }
     }
   },
   "requirements": [

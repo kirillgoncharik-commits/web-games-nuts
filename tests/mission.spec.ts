@@ -51,7 +51,7 @@ test('returning to A preserves target and terminal, and removes old bullets',asy
 test('ten browser restarts keep one scene and full initial state',async({page})=>{
   await start(page);const ids=new Set<string>();
   for(let i=0;i<10;i++){
-    await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);const s=await state(page);ids.add(s.attemptId);expect(s.activeScenes).toEqual(['Room']);expect(s.hp).toBe(6);expect(s.targetHp).toBe(0);
+    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='A'&&s.simMs>0&&s.player?.x<100&&s.player.vy===0;});const s=await state(page);ids.add(s.attemptId);expect(s.activeScenes).toEqual(['Room']);expect(s.hp).toBe(6);expect(s.targetHp).toBe(0);
     await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
   }
   expect(ids.size).toBe(10);
