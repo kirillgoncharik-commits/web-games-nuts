@@ -1,7 +1,7 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-07",
+  "updated_at": "2026-11-14T08:20:26.230Z",
   "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
   "source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -83,7 +83,8 @@
     "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open.",
     "Scope 1.2 baseline: published build 0.6.0-m06.0 remains tied to source 22da406857d2b690f136880d0fd642dce196e071 and artifact SHA da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; local HEAD before this scope work was 4028405f690c8dadf322172793d589f35f253771; no new build, tests, visual review or deployment recorded yet.",
     "Scope 1.2 local production build passed on clean code commit d9088f00c771d4add647e97501010f4e7ab72e4b: i18n 478 keys/parameters and TypeScript; build_id 0.6.0-m06.0, source_dirty false, 3,933,736 raw / 2,401,599 gzip bytes, 52 manifest entries, build-manifest SHA-256 a3b868fa255f418d82f5ec9d61af5f9c48719fab43eab0495b573eb0781a1689. This local artifact is not published; no gameplay tests or acceptance were run. Local preview server failed with EPERM while binding 127.0.0.1:4175; runtime screenshots and human visual review remain open.",
-    "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending."
+    "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending.",
+    "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open."
   ],
   "blocks": [
     {
@@ -480,5 +481,88 @@
       ],
       "next_action": "Open the updated screens in a working browser preview and capture the same desktop/mobile views; obtain human visual/contrast review. Keep real-device and gameplay acceptance marked NOT RUN until performed."
     }
-  ]
+  ],
+  "active_workstream": {
+    "milestone": "M-REWORK",
+    "status": "IN_PROGRESS",
+    "build_id": "0.7.0-rw1.b4",
+    "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
+    "branch": "codex/cinder-shift-m-rework",
+    "coverage": "docs/cinder-shift/rework-coverage.json",
+    "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
+    "published": false,
+    "accepted": false,
+    "verification": "B4 build/typecheck/i18n/art/91 models/three browsers/15 Airlock/8 saves/15 sector-boss/33 upgraded routes/fresh-profile campaign PASS. General regression remains open: native touch M1A shelf timing failure; all 12 shards completed: 277 PASS / 1 FAIL / 0 NOT RUN; failed-shard rerun pending. B3 remains published, as recorded in production_preview.",
+    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "room_registry": "docs/cinder-shift/rework-room-registry.json",
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "local_execution_status": "Code source bcfa9e292277eefb063faa41089f2d3794dab96a synchronized locally; subsequent checkpoint is documentation-only. Native-touch driver issue remains open.",
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
+    "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-sprint-1",
+    "stage": "airlock_six_reactor_nine_full_campaign_and_projectile_clear",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rework.5",
+      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "verification": {
+        "typecheck": "passed",
+        "i18n": "passed_657_en_ru_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "64_passed",
+        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
+        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+        "persistence": "8 migrated persistence checks passed on exact .5 source.",
+        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      }
+    },
+    "validated_head_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+    "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
+    "active_sprint": {
+      "milestone": "M-RW1",
+      "checkpoint": "B4_BUILD_CURVE_AND_FULL_CAMPAIGN_VERIFIED_TOUCH_REGRESSION_OPEN",
+      "status": "IN_PROGRESS",
+      "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+      "report": "docs/cinder-shift/sprint-1-b4-release-notes.ru.md",
+      "proof": "docs/cinder-shift/sprint-1-b4-build-curve.json",
+      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
+      "remaining": "Stabilize native touch M1A shelf route and finish general regression; encounter difficulty/pacing; optimized mobility; independent first playtest; audiovisual/device acceptance; playable reference study."
+    },
+    "production_preview": {
+      "build_id": "0.7.0-rw1.b3",
+      "game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+      "tested_code_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+      "site_merge_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/13",
+      "cloudflare_deployment_id": "9820c610-5091-4a91-ad53-ee1742f4e61e",
+      "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "verification": {
+        "site_ci": "PASS",
+        "cloudflare_pages": "SUCCESS",
+        "live_build_label": "v0.7.0-rw1.b3 / d52853e",
+        "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
+      },
+      "acceptance_complete": false
+    },
+    "current_source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+    "current_tested_merge_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+    "full_regression_b4": {
+      "source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+      "passed": 277,
+      "failed": 1,
+      "not_run": 0,
+      "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699908",
+      "failed_case": "native touch M1A shelf route timing",
+      "failed_shard_rerun": "PENDING"
+    }
+  }
 }

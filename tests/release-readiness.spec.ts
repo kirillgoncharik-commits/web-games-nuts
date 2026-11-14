@@ -51,14 +51,14 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     await expect(button('new-shift')).toBeFocused();
     expect(await consent()).toBeNull();
     await geometry();
-    await button('menu-privacy').scrollIntoViewIfNeeded();
-    await button('menu-privacy').tap();
+    await button('menu-settings').tap();
+    await button('settings-privacy').tap();
     await expect(button('analytics-decline')).toBeFocused();
     await page.keyboard.press('Tab');
     await expect(button('analytics-accept')).toBeFocused();
     await page.keyboard.press('Shift+Tab');
     await page.keyboard.press('Enter');
-    await expect(button('menu-privacy')).toBeFocused();
+    await expect(button('settings-privacy')).toBeFocused();
     expect(await consent()).toBe('denied');
     expect(requests).toEqual([]);
     expect(await events()).toBe(0);
@@ -83,11 +83,11 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     await page.reload();
     await expect(button('new-shift')).toBeFocused();
     expect(await consent()).toBe('granted');
-    await button('menu-privacy').click();
+    await button('menu-settings').click();await button('settings-privacy').click();
     await button('analytics-decline').click();
-    const sent=await events();
+    const sent=await events();await button('settings-back').tap();
     await button('new-shift').tap();
-    await button('choose-mira').tap();
+    
     const pins=page.locator('.map-pin');
     for(const pin of await pins.all()){
       await pin.tap();

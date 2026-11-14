@@ -1,15 +1,17 @@
 import Phaser from 'phaser';
 import assets from './art/assets.generated.json' with {type:'json'};
 import promo from './art/promo.generated.json' with {type:'json'};
-import {enemyPhase,enemyRect,enemyMuzzle,turretPresentation} from './enemies';
+import {enemyPhase,enemyRect,enemyMuzzle,turretPresentation,ramVulnerable} from './enemies';
 import {miraRigPose} from './art/rig';
 import {cargoShutter,hasEvent,repairPosition,shutter,type EventPlan} from './session/events';
-import {regulatorBody,regulatorPattern} from './boss';
+import {regulatorBody,regulatorHitboxes} from './boss';
+import {machineState} from './hazards';
 import type {MissionAttempt,RoomDefinition,RoomState,Rect} from './mission';
 import {rooms} from './room-data';
 import {cacheInReach} from './interactions';
 import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
 import {roomLighting,signals} from './art/lighting';
+import {EnvironmentMotion} from './art/environment-motion';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
 import type {Player} from './player';
@@ -22,9 +24,7 @@ export function preloadArt(scene:Phaser.Scene){
   const base='./assets/m03/';
   for(const [name,atlas] of Object.entries(assets.atlases))scene.load.atlas('m03-'+name,base+atlas.image.file,base+atlas.json.file);
   for(const [name,file] of Object.entries(assets.backgrounds))scene.load.image('m03-bg-'+name,base+file.file);
-  // The public atlas paths stay stable, so use the source revision as the cache key.
-  const atlas='./assets/art-refresh-v1/art-refresh-v1';
-  const version=`?v=${__SOURCE_SHA__}`;
+  const atlas='./assets/art-refresh-v1/art-refresh-v1',version=`?v=${__SOURCE_SHA__}`;
   scene.load.atlas('art-refresh-v1',`${atlas}.png${version}`,`${atlas}.json${version}`);
   scene.load.image('promo-loading','./assets/m06/'+promo.loading.file);scene.load.image('promo-menu','./assets/m06/'+promo.menu.file);
 }
@@ -32,6 +32,9 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
+  private recoilUntil=-1;
+  private bossSprite?:Phaser.GameObjects.Image;
+  private environment:EnvironmentMotion;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
     const light=roomLighting(room,new URLSearchParams(location.search).get('light')==='high');
@@ -44,6 +47,7 @@ export class SceneArt{
       lamps.fillStyle(light.light,light.strength*.55).fillEllipse(x,232,154,104);
       lamps.fillStyle(light.light,light.strength).fillEllipse(x,220,84,60);
     }
+    this.environment=new EnvironmentMotion(scene);
     this.cueGraphics=scene.add.graphics().setDepth(8);
     for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
     if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
@@ -70,8 +74,10 @@ export class SceneArt{
     return sprite;
   }
   cue(kind:CombatCue,point:Point,now:number,direction=1){
-    this.cues.push(kind,point,now,direction);
+    this.cues.push(kind,point,now,direction);if(kind==='muzzle')this.recoilUntil=now+66;
   }
+
+  clearFeedback(){this.cues.clear();this.recoilUntil=-1;}
 
   private artImage(frame:ArtFrame,x:number,y:number,depth:number){
     let image=this.artPool[this.artUsed++];
@@ -137,15 +143,25 @@ export class SceneArt{
     if(state==='burst'&&e.shotFlashMs>0)g.fillStyle(signals.shot,.9).fillRect(muzzle.x-2,muzzle.y-2,5,5);
     if(state==='exposed')g.lineStyle(2,signals.energy,.9).lineBetween(cx-8,e.y-8,cx+8,e.y-8);
   }
+  private dataChip(x:number,feet:number,scale:number,empty:boolean){
+    const g=this.threats,c=empty?0x456171:0x76dcc8;g.lineStyle(2*scale,c,empty?.45:1);
+    g.fillStyle(0x101823,.95).fillRect(x-8*scale,feet-26*scale,16*scale,22*scale);g.strokeRect(x-8*scale,feet-26*scale,16*scale,22*scale);
+    for(let n=0;n<3;n++){const y=feet-(22-n*6)*scale;g.lineBetween(x-12*scale,y,x-8*scale,y);g.lineBetween(x+8*scale,y,x+12*scale,y);}
+    if(!empty){g.fillStyle(c,.9).fillRect(x-3*scale,feet-21*scale,6*scale,6*scale);g.lineBetween(x-3*scale,feet-10*scale,x+3*scale,feet-10*scale);}
+  }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
+    this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
     this.bossHpLast=attempt.bossHp;
     this.landmarks(room);
     const pose=miraRigPose(now,player.body.velocity.x,y,player.crouching);
     const hit=now<attempt.damageFlashUntil;
     const hero=(id:AssetId,px:number,py:number)=>{
-      const s=this.sprite(id,px,py,6,f);if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
+      const s=this.sprite(id,px,py,6,f);
+      // Recoil is a visual offset; the rig anchors and projectile muzzle stay fixed.
+      if(id==='mira-cutter'&&!reducedFlashes&&now<this.recoilUntil)s.setX(s.x-f*2);
+      if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };
     this.sprite('mira-shadow',x,y+1,3).setAlpha(.6);
     if(now<player.dashUntil)this.sprite('mira-body-stand',x-f*30,y-40,5,f).setTintFill(0x76dcc8).setAlpha(.2);
@@ -162,7 +178,7 @@ export class SceneArt{
     }
     if(room.terminal){
       const kind=room.terminalKind==='install'?'cell':room.terminalKind==='data'?'data':room.terminalKind==='exit'?'exit':'power';
-      const ready=room.terminalKind==='install'?attempt.cellCollected:room.terminalKind==='restore'?hasEvent(attempt.eventPlan,'E01'):room.terminalKind==='power'||room.terminalKind==='training'?state.targetHp<=0:true;
+      const ready=attempt.terminalReady();
       const terminalState=state.terminal||room.terminalKind==='restore'&&!hasEvent(attempt.eventPlan,'E01')?'done':hold>0?'hold':ready?'ready':'off';
       this.art(`terminal_${kind}-${terminalState}`,room.terminal.x,320,32,54,3);
       if(hold>0)this.sprite('signal-mint',room.terminal.x-20,258,7).setDisplaySize(40*Math.min(1,hold/600),4);
@@ -173,9 +189,11 @@ export class SceneArt{
       this.threats.lineStyle(4,0x456171,.95).strokeRect(room.window.x,room.window.y,room.window.width,room.window.height);
       this.threats.lineStyle(2,0x91a7b0,.65).lineBetween(room.window.x+room.window.width/2,room.window.y,room.window.x+room.window.width/2,room.window.y+room.window.height);
     }
-    const exitOpen=room.next?(room.id==='A'?state.terminal:room.id==='F'?attempt.cellCollected:room.id==='M3A'?Boolean(room.next):room.id==='M4C'?attempt.dataUploaded:room.id==='M5D'?attempt.bossHp<=0:true):state.terminal;
+    const exitOpen=attempt.forwardExitOpen(),remaining=attempt.combatRemaining();
     this.art(exitOpen?'power-shutter_open':'power-shutter_closed',609,320,40,84,3);
-    this.exitMarker.setColor(exitOpen?'#76DCC8':'#FFB65B');
+    this.exitMarker.setText(remaining>0?'× '+remaining:exitOpen?'→':'◇').setColor(remaining>0?'#F36D76':exitOpen?'#76DCC8':'#FFB65B');
+    if(remaining>0){this.threats.lineStyle(3,0xf36d76,.85).lineBetween(620,240,620,320);if(room.previous)this.threats.lineBetween(20,240,20,320);}
+
     for(const panel of room.solids.filter(s=>s.id)){
       if(panel.id==='f-power-gate'){
         this.materialPlate(panel,0x7895a7,3);
@@ -216,7 +234,9 @@ export class SceneArt{
       }
     }
     if(attempt.cellCollected&&!attempt.cellInstalled)this.art('energy-cell_carried',x+f*13,y-14,20,18,7,f,'center');
-    if(room.id==='G'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
+    if(room.dataCarrier)this.dataChip(room.dataCarrier.x,room.dataCarrier.y,1,attempt.archiveCarrierCollected);
+    if(attempt.archiveCarrierCollected&&!attempt.dataUploaded)this.dataChip(x+f*14,y-12,.6,false);
+    if(room.id==='M2E'&&attempt.cellInstalled)this.art('energy-cell_installed',room.terminal?room.terminal.x-28:528,320,30,48,4);
     if(this.bufferUsedLast===null)this.bufferUsedLast=state.bufferUsed;
     else if(!this.bufferUsedLast&&state.bufferUsed)this.bufferEffectUntil=now+180;
     else if(this.bufferUsedLast&&!state.bufferUsed)this.bufferEffectUntil=-1;
@@ -236,13 +256,15 @@ export class SceneArt{
       this.art(`repair-station_${frame}`,room.repair.x,320,46,50,5);
     }
     if(room.cache){
-      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby?'interact':'available';
+      const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby&&attempt.cacheReady()?'interact':'available';
       this.art(`service-cache_${family}-${frame}`,room.cache.x,room.cache.y,38,26,5);
     }
+    if(room.powerSwitch){
+      const p=room.powerSwitch;this.art('terminal_power-ready',p.x,320,34,46,4);
+      for(const hazard of room.hazards||[]){const live=hazard.enabled!==false;this.threats.lineStyle(live?2:1,live?signals.energy:0x456171,live?.7:.35);this.threats.beginPath();this.threats.moveTo(p.x,282);this.threats.lineTo(p.x,228);this.threats.lineTo(hazard.x+hazard.width/2,228);this.threats.lineTo(hazard.x+hazard.width/2,hazard.y);this.threats.strokePath();if(!live){this.threats.lineStyle(2,0x91a7b0,.65).lineBetween(hazard.x+8,hazard.y+18,hazard.x+hazard.width-8,hazard.y+32);}}
+    }
     for(const hazard of room.hazards||[]){
-      const phase=(now+(hazard.offset_ms||0))%hazard.cycle_ms;
-      const warning=phase<hazard.warning_ms,active=phase>=hazard.warning_ms&&phase<hazard.warning_ms+hazard.active_ms;
-      const recovering=!warning&&!active&&phase<hazard.warning_ms+hazard.active_ms+420;
+      const machine=machineState(hazard,now),warning=machine==='warning',active=machine==='active',recovering=machine==='recovery';
       const color=active?signals.damage:warning?signals.warning:0x687784;
       const frame=hazard.kind==='press'
         ?active?'press_strike':warning?'press_warning':recovering?'press_recovery':'press_safe'
@@ -257,29 +279,34 @@ export class SceneArt{
       }
     }
     if(room.boss){
-      const pattern=regulatorPattern(attempt.bossElapsedMs,attempt.bossHp),body=regulatorBody(room.boss.x,room.boss.y,room.boss.width,room.boss.height);
-      const alive=attempt.bossHp>0,open=alive&&pattern.phase==='core',phaseTwo=alive&&attempt.bossHp<=room.boss.hp/2;
+      const pattern=attempt.regulator.pattern(),body=regulatorBody(room.boss.x,room.boss.y,room.boss.width,room.boss.height),hitboxes=regulatorHitboxes(body);
+      const alive=attempt.bossHp>0,open=alive&&pattern.phase==='core',phaseTwo=pattern.stage==='sweep'||pattern.stage==='transition';
       const bossState=!alive?'shutdown':open?(now<this.bossHitUntil?'hit':'exposed'):pattern.phase==='warning'?'warning':pattern.phase==='active'?'attack':'armored';
-      this.art(`regulator_${bossState}`,room.boss.x,body.y+body.height,body.width,body.height,3);
-      if(alive){
-        const bottom=body.y+body.height,center=room.boss.x;
-        this.threats.lineStyle(2,0x7895a7,.75).strokeRect(body.x,body.y,body.width,body.height);
-        for(const side of [-1,1]){
-          const offset=open?25:0,plateX=side<0?center-23-offset:center+offset;
-          this.threats.fillStyle(0x244053).fillRect(plateX,bottom-44,23,34);
-          this.threats.lineStyle(2,0x9bb3bf).strokeRect(plateX,bottom-44,23,34);
-          if(phaseTwo)this.threats.lineStyle(2,signals.violet,.75).lineBetween(plateX+4,bottom-40,plateX+18,bottom-40);
-        }
-        if(open){
-          this.threats.fillStyle(0x101827).fillRect(center-19,bottom-43,38,31);
-          this.threats.lineStyle(2,signals.energy).strokeRect(center-19,bottom-43,38,31);
-          this.threats.fillStyle(signals.shot).fillRect(center-9,bottom-35,18,15);
-        }else{
-          this.threats.lineStyle(2,signals.warning,.65).lineBetween(center-14,bottom-17,center+14,bottom-32);
-        }
+      if(this.scene.textures.exists('regulator-rework')){
+        this.bossSprite??=this.scene.add.image(room.boss.x,320,'regulator-rework').setOrigin(.5,1).setDepth(3);
+        const texture=this.bossSprite.texture.getSourceImage();this.bossSprite.setScale(Math.min(body.width/texture.width,body.height/texture.height)).setPosition(room.boss.x,320).setAngle(0).setAlpha(alive?1:.62).clearTint();
+        if(!alive)this.bossSprite.setTint(0x687784).setAngle(6).setPosition(room.boss.x+4,324);
+        else if(pattern.stage==='transition')this.bossSprite.setTint(0xa6a0b8);
+        else if(now<this.bossHitUntil&&!reducedFlashes)this.bossSprite.setTint(0xb0e1de);
+      }else this.art(`regulator_${bossState}`,room.boss.x,body.y+body.height,body.width,body.height,3);
+      const core=hitboxes.core,cx=core.x+core.width/2,cy=core.y+core.height/2;
+      this.threats.fillStyle(0x101823,.98).fillRect(core.x,core.y,core.width,core.height);
+      if(open){
+        this.threats.lineStyle(2,signals.energy,.9).strokeRect(core.x,core.y,core.width,core.height);
+        this.threats.fillStyle(signals.energy,.5).fillRect(core.x+5,core.y+3,core.width-10,core.height-6);
+        this.threats.fillStyle(signals.shot,.9).fillRect(cx-4,cy-4,8,8);
+        for(const y of [core.y,core.y+core.height])for(let x=body.x+8;x<body.x+body.width-8;x+=12)this.threats.lineStyle(1,signals.energy,.5).lineBetween(x,y,x+5,y);
+      }else{
+        const seam=pattern.stage==='transition'?signals.violet:pattern.overloaded?signals.warning:0x7895a7;
+        this.threats.fillStyle(0x30495c).fillRect(core.x,core.y,core.width/2-1,core.height).fillRect(cx+1,core.y,core.width/2-1,core.height);
+        this.threats.lineStyle(1,seam,.9).strokeRect(core.x,core.y,core.width,core.height).lineBetween(cx,core.y,cx,core.y+core.height);
       }
-      for(const rect of pattern.rects){const color=pattern.phase==='active'?signals.damage:signals.warning;this.threats.fillStyle(color,pattern.phase==='active'?.34:.16).fillRect(rect.x,rect.y,rect.width,rect.height);this.threats.lineStyle(2,color,pattern.phase==='active'?.95:.8).strokeRect(rect.x,rect.y,rect.width,rect.height);}
-      this.threats.fillStyle(0x101823).fillRect(room.boss.x-44,body.y-14,88,8);this.threats.fillStyle(0xf36d76).fillRect(room.boss.x-42,body.y-12,84*Math.max(0,attempt.bossHp/room.boss.hp),4);this.threats.lineStyle(1,0xedf1ec,.9).strokeRect(room.boss.x-44,body.y-14,88,8);
+      if(alive){
+        const piston=reducedFlashes?0:Math.floor(now/180)%3;
+        for(const side of [-1,1]){const px=room.boss.x+side*70;this.threats.lineStyle(2,0x9bb3bf,.7).lineBetween(px,body.y+53+piston,px,body.y+73+piston);if(phaseTwo)this.threats.fillStyle(signals.violet,.75).fillRect(px-3,body.y+27,6,4);}
+      }
+      for(const rect of pattern.rects){const color=pattern.phase==='active'?signals.damage:signals.warning;this.threats.fillStyle(color,pattern.phase==='active'?.30:.10).fillRect(rect.x,rect.y,rect.width,rect.height);this.threats.lineStyle(2,color,.85).strokeRect(rect.x,rect.y,rect.width,rect.height);if(pattern.moving&&pattern.phase==='warning')for(let x=rect.x+20;x<rect.x+rect.width-10;x+=40){this.threats.lineBetween(x,270,x+10,276);this.threats.lineBetween(x+10,276,x,282);}}
+      this.threats.fillStyle(0x101823).fillRect(body.x,body.y-14,body.width,8);this.threats.fillStyle(0xf36d76).fillRect(body.x+2,body.y-12,(body.width-4)*Math.max(0,attempt.bossHp/room.boss.hp),4);this.threats.lineStyle(1,0xedf1ec,.9).strokeRect(body.x,body.y-14,body.width,8);
     }
     if(room.previous)this.sprite('gate-open',31,320,3);
     for(const e of state.enemies){
@@ -292,6 +319,7 @@ export class SceneArt{
       }else if(e.preset==='ram_charge'){
         const frame=phase==='telegraph'?'windup':phase==='attack'?'charge':phase==='recovery'?'recovery':'idle';
         this.art(`ram-charger_${frame}`,e.x,e.y+15,48,38,5,facing);
+        const exposed=ramVulnerable(e);this.threats.lineStyle(2,exposed?signals.energy:0x9bb3bf,.9).strokeRect(e.x-15,e.y-20,30,7);if(exposed)this.threats.fillStyle(signals.energy,.6).fillRect(e.x-12,e.y-18,24,3);else this.threats.lineBetween(e.x-8,e.y-20,e.x+8,e.y-13);
       }else this.sprite(e.kind,e.x,e.kind==='walker'?e.y+15:e.y,5,facing);
       if(e.behavior==='aggressive'){this.threats.lineStyle(2,0xffb65b).strokeTriangle(e.x-20,e.y-12,e.x-13,e.y-7,e.x-20,e.y-2);if(e.noticeMs>0)this.threats.lineStyle(2,0xf1d8ae).strokeCircle(e.x,e.y-38,12);}
       for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
@@ -307,6 +335,7 @@ export class SceneArt{
     for(let i=this.artUsed;i<this.artPool.length;i++)this.artPool[i].setVisible(false);
     this.debug.clear();
     if(this.debugEnabled()){
+      if(room.boss){const boxes=regulatorHitboxes(regulatorBody(room.boss.x,room.boss.y,room.boss.width,room.boss.height));this.debug.lineStyle(1,0xffb65b,.9);for(const rect of boxes.armor)this.debug.strokeRect(rect.x,rect.y,rect.width,rect.height);this.debug.lineStyle(1,signals.energy,1).strokeRect(boxes.core.x,boxes.core.y,boxes.core.width,boxes.core.height);}
       this.debug.lineStyle(1,0x76dcc8);for(const s of room.solids)this.debug.strokeRect(s.x,s.y,s.width,s.height);
       const body=player.rect();this.debug.lineStyle(1,0xffb65b).strokeRect(body.x,body.y,body.width,body.height);
       this.debug.lineStyle(1,0xf36d76);for(const e of state.enemies)if(e.hp>0){const r=enemyRect(e);this.debug.strokeRect(r.x,r.y,r.width,r.height);}

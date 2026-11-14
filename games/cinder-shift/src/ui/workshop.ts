@@ -28,16 +28,17 @@ export function stats(i:I18n,nodes:readonly NodeId[],selected?:NodeId,changesOnl
  return'<section class="stats-card"><h3>'+e(i.t('workshop.stats'))+'</h3><table class="profile-stats"><thead><tr><th scope="col">'+e(i.t('workshop.parameter'))+'</th><th scope="col">'+e(i.t('workshop.current'))+'</th>'+(selected?'<th scope="col">'+e(i.t('workshop.after',{node:selected}))+'</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>'+(next.active==='M1'&&!changesOnly?'<p class="helper">'+e(i.t('workshop.dash',{distance:next.dashDistance,seconds:next.dashSeconds,cooldown:next.dashCooldown}))+'</p>':'')+(selected==='W1'&&!changesOnly?'<p class="helper">'+e(i.t('workshop.spreadNote'))+'</p>':'')+'</section>';
 }
 
-export function workshopBody(i:I18n,ui:Panels,d:CampaignData,selected:NodeId,select:(id:NodeId)=>void){
- const cards=research.map(node=>{
-  const owned=d.nodes.includes(node.id),insufficient=d.points<node.cost,locked=!prerequisitesMet(d.nodes,node.id),equipped=(node.id==='M1'||node.id==='W4')&&d.active===node.id;
-  const visualState=equipped?'equipped':owned?'purchased':locked?'locked':insufficient?'no-points':selected===node.id?'selected':'available';
-  const textKey=equipped?'research.equipped':owned?'research.owned':locked?'research.locked':insufficient?'research.insufficient':selected===node.id?'research.selected':'research.available';
-  const stateText=locked?i.t('research.requires',{nodes:node.requires.join(', ')}):i.t(textKey);
-  const content='<span class="module-emblem">'+researchIcon(node.icon)+moduleStateMark(visualState)+'</span><span class="module-copy"><span class="module-heading"><strong>'+e(node.id+' / '+i.t(node.nameKey))+'</strong><span class="module-cost">'+e(i.t('research.cost',{cost:node.cost}))+'</span></span><span class="module-kind">'+e(i.t(node.id==='M1'||node.id==='W4'?'workshop.activeType':'workshop.passiveType'))+'</span><span class="effect">'+e(i.t(node.effectKey))+'</span><span class="node-state">'+e(stateText)+'</span></span>';
-  return ui.button('research-'+node.id,content,()=>select(node.id),{pressed:selected===node.id,sound:'silent',html:true,className:'research-card state-'+visualState});
+export function workshopBody(i:I18n,ui:Panels,d:CampaignData,selected:NodeId,select:(id:NodeId)=>void,buy:(id:NodeId)=>void,busy=false){
+ const owned=d.nodes.map(id=>{const node=research.find(node=>node.id===id)!;const active=id==='M1'||id==='W4';return'<li>'+researchIcon(id)+'<span><strong>'+e(i.t(node.nameKey))+'</strong><small>'+e(i.t(active?(d.active===id?'research.equipped':'rework.activeIdle'):'rework.passiveInstalled'))+'</small></span></li>';}).join('');
+ const cards=research.filter(node=>!d.nodes.includes(node.id)).map(node=>{
+  const insufficient=d.points<node.cost,locked=!prerequisitesMet(d.nodes,node.id);
+  const visualState=locked?'locked':insufficient?'no-points':selected===node.id?'selected':'available';
+  const stateText=locked?i.t('research.requires',{nodes:node.requires.join(', ')}):i.t(insufficient?'research.insufficient':'research.available');
+  const heading=ui.button('research-'+node.id,e(node.id+' / '+i.t(node.nameKey)),()=>select(node.id),{pressed:selected===node.id,sound:'silent',html:true,className:'module-inspect'});
+  const purchase=ui.button('buy-'+node.id,i.t('rework.buyModule',{cost:node.cost}),()=>buy(node.id),{kind:'secondary',disabled:locked||insufficient||busy,className:'module-purchase',label:i.t('rework.buyNamed',{name:i.t(node.nameKey),cost:node.cost})});
+  return'<article class="research-card state-'+visualState+'" data-module="'+node.id+'"><span class="module-emblem">'+researchIcon(node.icon)+moduleStateMark(visualState)+'</span><div class="module-copy"><div class="module-heading">'+heading+'</div><span class="module-kind">'+e(i.t(node.id==='M1'||node.id==='W4'?'workshop.activeType':'workshop.passiveType'))+'</span><span class="effect">'+e(i.t(node.effectKey))+'</span><span class="node-state">'+e(stateText)+'</span>'+purchase+'</div></article>';
  }).join('');
- return'<div class="workshop-layout">'+heroProfile(i,d.nodes,d.active)+'<section class="module-list"><h3>'+e(i.t('workshop.modules'))+'</h3><div class="research-grid">'+cards+'</div></section><details class="workshop-technical"><summary>'+e(i.t('workshop.details'))+'</summary>'+stats(i,d.nodes,selected,false,'detail-',d.active)+'</details></div>';
+ return'<div class="workshop-layout">'+heroProfile(i,d.nodes,d.active)+'<section class="module-list"><h3>'+e(i.t('workshop.modules'))+'</h3><div class="research-grid">'+cards+'</div></section><details class="installed-modules" open><summary>'+e(i.t('rework.installed',{count:d.nodes.length}))+'</summary>'+(owned?'<ul>'+owned+'</ul>':'<p class="helper">'+e(i.t('common.base'))+'</p>')+'</details><details class="workshop-technical"><summary>'+e(i.t('workshop.details'))+'</summary>'+stats(i,d.nodes,selected,false,'detail-',d.active)+'</details></div>';
 }
 
 export function characterSlots(i:I18n){

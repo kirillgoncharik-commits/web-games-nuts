@@ -1,0 +1,80 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFile,writeFile} from 'node:fs/promises';
+import {stripTypeScriptTypes} from 'node:module';
+
+const root='games/cinder-shift/';
+const configText=await readFile(root+'game.config.json','utf8'),config=JSON.parse(configText);
+const inputs=await Promise.all(['src/room-data.ts','src/session/missions.ts','src/boss.ts','src/enemies.ts','src/cargo-equipment.ts','src/mission.ts','src/session/threat-activation.ts'].map(path=>readFile(root+path,'utf8')));
+async function dataModule(source){
+ const replaced=source.replace(/^import config from .*?;\s*/m,'const config='+JSON.stringify(config)+';\n');
+ assert.notEqual(replaced,source,'Expected the explicit game config import');
+ const code=stripTypeScriptTypes(replaced,{mode:'strip'});
+ return import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
+}
+const {rooms}=await dataModule(inputs[0]),{missions}=await dataModule(inputs[1]);
+const examples={
+ A:['A01','Learn movement and clear the introductory guard before activating entry power.'],
+ B:['A02','Cross the seeded shutter and clear staged ground/air threats; R01 is optional.'],
+ M1A:['A03','Climb the firing shelf and crouch-fire at the elevated drone.'],
+ M1B:['A04','Fight security on the lower lane; climb to the optional upper salvage cache.'],
+ M1C:['A05','Clear security before the teaching turret warning and exposed recovery.'],
+ C:['A06','Clear the final mixed encounter, hold the exit console and leave Airlock.'],
+ M5A:['R01','Clear security and the turret, cross the phase barrier and connect outer power.'],
+ M5F:['R02','Climb over the cooling hazard to the drone firing shelf, then clear floor security.'],
+ M5B:['R03','Cross the heat window; optionally accept the supported E06 ram patrol.'],
+ M5G:['R04','Clear floor security before climbing to the high drone firing line.'],
+ M5H:['R05','Choose cooling or isolation at the mandatory console.'],
+ M5I:['R06','Counter the ram, then face the chosen powered turret or timed heat passage.'],
+ M5C:['R07','Take optional one-use R05 repair and activate the preboss exit.'],
+ M5E:['R10','Confirm evacuation after Regulator shutdown.'],
+ D:['C01','Clear the receiving dock security before entering the loading gallery.'],
+ M2A:['C02','Change firing height in the loading gallery.'],
+ E:['C03','Use cover during the turret warning and burst, then fire into exposure.'],
+ M2B:['C04','Clear the mandatory lower lane; upper salvage remains optional.'],
+ M2C:['C05','Choose the next bay’s conveyor or guard-turret power at the real console.'],
+ M2D:['C06','Use the chosen power: a left-pulling floor conveyor or a powered cycling turret.'],
+ F:['C07','Collect the energy cell; E01 and relay support retain their own shutter/turret rules.'],
+ M2E:['C08','Use one R02 repair if needed, then install the energy cell.'],
+ G:['C09','Clear the perimeter after installation and confirm the sector exit.'],
+ M4A:['AR01','Clear the low sorting guard.'],
+ M4E:['AR02','Climb the shelves, defeat the drone and collect the physical carrier.'],
+ M4B:['AR03','Clear the beacon guard, then choose E05 scout or health; without E05 the cache is optional salvage.'],
+ M4F:['AR04','Scout opens a real screen and extends enemy warnings; the base route can jump the screen.'],
+ M4G:['AR05','Use the direct base-weapon lane beneath the reflective panel, then connect upload power.'],
+ M4H:['AR06','Separate the floor security and upper drone lines.'],
+ M4C:['AR07','Upload with a physical carrier and connected circuit; R04 is available only afterward.'],
+ M4I:['AR08','Dodge the storage ram and counter during recovery.'],
+ M4D:['AR09','The floor guard precedes the drone. Confirm the exit only after upload and combat clear.'],
+ M3A:['F01','Dodge the first charge, then fire during the exposed engine recovery.'],
+ M3E:['F02','Choose press or furnace power at the console before combining the ram and drone.'],
+ M3F:['F03','Defeat security, isolate power, then choose one mutually exclusive route.'],
+ M3B:['FS04','Change firing height to clear the service walker and landing-control drone.'],
+ M3G:['FS05','Use the two firing platforms against drones; upper salvage is optional.'],
+ M3H:['FS06','Use cover against security and the cycling turret; the thin panel is optional.'],
+ M3C:['FP04','Cross the warned press from a safe side and counter the ram in recovery.'],
+ M3I:['FP05','Cross the heat window and separate the airborne and ground firing lines.'],
+ M3J:['FP06','Use the raised platform between offset presses and counter the ram.'],
+ M3K:['F07','Take the one-use R03 repair if needed; activate cooling before the exit.'],
+ M3D:['F08','Clear the ram and drone from separate firing heights, then hold the exit terminal.'],
+ M5D:['R08/R09','Dodge locked lanes, fire into the raised chest aperture, then evade the moving sweep.']
+};
+const roles={walker_service:'line holder: use cover or crouch',walker_security:'pursuer: break sight or move outside its leash',drone_service:'landing control: change firing height',turret_cycle:'burst line: use cover, then fire during exposure',ram_charge:'displacement: jump the charge, then counter exposed recovery'};
+const budgets={airlock:240000,cargo:360000,foundry:360000,archive:360000,reactor:480000};
+const campaignRooms=Object.values(missions).flatMap(m=>m.rooms);
+assert.equal(new Set(campaignRooms).size,config.campaign.room_count);
+const registry={
+ schema_version:1,build_id:JSON.parse(await readFile('package.json','utf8')).version,
+ source_hash:createHash('sha256').update(configText+inputs.join('\n')).digest('hex'),
+ status:'INCOMPLETE: source inventory; full route input, timing and human validation remain open',
+ campaign_room_count:campaignRooms.length,training_room_excluded:'T',
+ first_campaign_rooms_on_selected_route:campaignRooms.length-(missions.foundry.rooms.length-8),
+ foundry_routes:{service:['M3A','M3E','M3F','M3B','M3G','M3H','M3K','M3D'],press:['M3A','M3E','M3F','M3C','M3I','M3J','M3K','M3D']},
+ runtime_conditions:{M1C:'The turret waits until floor security is destroyed.',M5G:'The high drone waits for security.',M5H:'A power choice is required before leaving.',M5I:'Cooling powers the staged turret; isolation disables the turret and enables heat.',M5B:'E06 adds a ram only after an explicit optional choice.',M2C:'A confirmed power route is required before leaving.',M2D:'The chosen circuit powers either the physical conveyor or its guard turret.',M2E:'The cell must be collected before R02 or installation; installation is required before leaving.',G:'The cell must be installed and the final encounter cleared before exit confirmation.',M3F:'Next depends on a confirmed service/press choice after isolation.',M3K:'Previous follows the selected branch; cooling terminal is required.',M3E:'The saved power circuit enables exactly one machine.',F:'E01 and Relay support control shutter and turret power.',M4E:'Carrier collection is required before leaving.',M4B:'The guard must be cleared before claiming S04; E05 keeps its existing version and room.',M4F:'Scout removes archive-scout-screen from actual solids.',M4G:'The carrier and combat clear are required to connect upload power.',M4C:'Carrier plus power enable upload; upload enables R04 and the onward exit.',M4D:'The drone waits for the low guard; completed upload and terminal confirmation are required.',M5D:'Core/armor and hazard phases come from the Regulator simulation.'},
+ missions:Object.values(missions).map(m=>({mission_id:m.id,design_budget_ms:budgets[m.id],timing_status:'NOT_MEASURED',rooms:m.rooms.map(id=>{
+  const d=rooms[id];return{room_id:id,episode:examples[id]?.[0]||null,encounter_goal:examples[id]?.[1]||'Existing encounter; expansion and detailed response review remain open.',geometry:d.solids,enemies:d.enemies.map(enemy=>({...enemy,role_and_response:roles[enemy.preset]})),hazards:d.hazards||[],conveyor:d.conveyor||null,safe_zones:d.safeZones||[],repair:d.repair||null,cache:d.cache||null,terminal:d.terminal||null,terminal_kind:d.terminalKind||null,power_switch:d.powerSwitch||null,data_carrier:d.dataCarrier||null,boss:d.boss||null,base_next:m.rooms.includes(d.next)?d.next:null,base_previous:m.rooms.includes(d.previous)?d.previous:null,combat_exit:'Powered live required threats must be defeated; room objectives still apply.',verification:'See exact-source model/browser evidence in PR #9; no full-room human PASS claimed.'};
+ })}))
+};
+for(const route of Object.values(registry.foundry_routes))assert.equal(route.length,8);
+await writeFile('docs/cinder-shift/rework-room-registry.json',JSON.stringify(registry,null,2)+'\n');
+console.log(`Registry: ${campaignRooms.length} campaign rooms; ${registry.first_campaign_rooms_on_selected_route} on a selected route; Foundry 8 + 8 alternatives. Timing is not measured.`);

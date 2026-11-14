@@ -1,0 +1,34 @@
+import {test,expect} from '@playwright/test';
+import {writeFile} from 'node:fs/promises';
+import {state} from './helpers';
+import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
+const build=routeBuild('reactor');
+import {routeCapture} from './route-capture';
+import {campaignRegulator} from './campaign-gameplay';
+import {ground,to,jump,clear,counterRam,cross,next,until} from './route-helpers';
+
+for(const circuit of ['cooling','isolation'] as const)for(const acceptE06 of [false,true])test(`${build.id} suit completes all nine Reactor rooms and evacuation through ${circuit}, E06 ${acceptE06?'accepted':'declined'}`,async({page},info)=>{
+ test.setTimeout(300000);const rooms:any[]=[];let last:any;const started=Date.now();
+ async function mark(){const s=await state(page);if(last)rooms.push({room:last.room,active_seconds:s.activeSeconds-last.activeSeconds,hp_in:last.hp,hp_out:s.hp});last=s;console.log('Reactor route entry',s.room,s.hp,s.activeSeconds);if(circuit==='cooling'&&!acceptE06)await routeCapture(page,info.outputPath('rw1-'+s.room+'.png'));}
+ try{
+  await page.goto('/__encounter__/');await page.getByTestId('new-shift').waitFor();await page.getByTestId('menu-settings').click();await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);await page.getByTestId('settings-back').click();
+  await page.evaluate(build=>(window as any).__ENCOUNTER__.start({mission:'reactor',seed:4,nodes:build.nodes,active:build.active}),build);await ground(page,320);verifyRouteEntry(await state(page),build);await mark();
+  await jump(page,130,224);await ground(page,320);await clear(page,['m5a-security']);await page.keyboard.down('s');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
+  await jump(page,426,500);await ground(page,272);await to(page,580);await ground(page,320);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().roomStates.M5A.terminal,null,'outer power');await page.keyboard.up('e');await next(page,'M5F');await mark();
+  await jump(page,130,188);await ground(page,288);await jump(page,204,306);await ground(page,256);await page.keyboard.down('s');await clear(page,['m5f-drone']);await page.keyboard.up('s');await to(page,400);await ground(page,320);await page.keyboard.down('s');await clear(page,['m5f-security']);await page.keyboard.up('s');await next(page,'M5B',552);await mark();
+  await jump(page,122,180);await ground(page,288);await jump(page,204,280);await ground(page,272);await clear(page,['m5b-drone']);
+  await until(page,()=>{const s=(window as any).__CINDER__(),t=s.simMs%9000;return t>=6000&&t<6800;},null,'transit heat window',12000);await jump(page,308,400);await ground(page,320);await jump(page,386,484);await ground(page,320);await to(page,520);
+  if(acceptE06){await page.keyboard.press('e');await page.getByTestId('event-challenge').click();await page.getByTestId('confirm-event').click();await to(page,472);await ground(page,320);await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face optional patrol');await page.keyboard.up('d');await clear(page,['m5b-e06-ram']);}
+  await next(page,'M5G');await mark();
+  await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m5g-security']);await page.keyboard.up('s');await to(page,212);await jump(page,212,172);await ground(page,288);await jump(page,178,292);await ground(page,256);await jump(page,326,432);await ground(page,224);await clear(page,['m5g-drone']);await to(page,510);await ground(page,320);await next(page,'M5H',552);await mark();
+  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('cooling');if(circuit==='isolation'){await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('isolation');}if(!acceptE06)await routeCapture(page,info.outputPath('rw1-power-'+circuit+'.png'));await jump(page,242,336);await ground(page,320);await next(page,'M5I');await mark();
+  await jump(page,106,200);await ground(page,320);await to(page,244);await counterRam(page,'m5i-ram');if(circuit==='cooling'){await page.keyboard.down('s');await clear(page,['m5i-turret']);await page.keyboard.up('s');await to(page,526);}else await cross(page,'m5i-heat',526);
+  await next(page,'M5C',552);await mark();await to(page,120);await ground(page,320);const before=(await state(page)).hp;
+  if(before<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();expect((await state(page)).hp).toBe(Math.min(before+2,(await state(page)).maxHp));}
+  const preboss=await state(page);expect(preboss.hp).toBeGreaterThan(0);expect(preboss.loadout.nodes).toEqual(build.nodes);expect(preboss.s05Accepted).toBe(acceptE06);
+  await jump(page,178,272);await ground(page,320);await jump(page,370,474);await ground(page,320);await to(page,568);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'preboss terminal');await page.keyboard.up('e');await next(page,'M5D');await mark();
+  const boss=await campaignRegulator(page,mark),s=await state(page);rooms.push({room:last.room,active_seconds:s.activeSeconds-last.activeSeconds,hp_in:last.hp,hp_out:s.hp});
+  expect(s.campaign.result.result).toBe('victory');expect(s.hp).toBeGreaterThan(0);expect(Object.values(s.roomStates).filter((r:any)=>r.visited)).toHaveLength(9);
+  const report={status:'AUTOMATED_INPUT_FULL_SECTOR_AND_EVACUATION',source_sha:s.sha,build:s.build,circuit,acceptE06,seed:4,preboss_hp:preboss.hp,preboss_seconds:preboss.activeSeconds,boss,...routeBuildEvidence(s,build),active_seconds:s.activeSeconds,wall_seconds:(Date.now()-started)/1000,hp:s.hp,rooms,hits:s.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false,boss_and_evacuation_verified:true};console.log('Reactor route report',JSON.stringify(report));await writeFile(info.outputPath('reactor-route.json'),JSON.stringify(report,null,2));await page.screenshot({path:info.outputPath('reactor-evacuated.png')});
+ }catch(error){const s=await state(page);console.log('Reactor route failure',JSON.stringify({circuit,acceptE06,rooms,state:s.state,room:s.room,hp:s.hp,player:s.player,enemies:s.enemies,hazards:s.hazards,roomStates:s.roomStates}));await writeFile(info.outputPath('failure-state.json'),JSON.stringify(s,null,2));throw error;}
+});

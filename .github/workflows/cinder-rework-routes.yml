@@ -1,0 +1,51 @@
+name: Cinder Shift full routes and saves
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+concurrency:
+  group: cinder-rework-routes-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  persistence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test tests/m04-save.spec.ts --project=chromium
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-persistence
+          path: test-results
+  routes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        sector: [archive, cargo, foundry, reactor, regulator, campaign]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test --config=playwright.route.config.ts tests/${{ matrix.sector }}-route.spec.ts
+      - name: Capture RW1 rooms and boss phases
+        if: always() && (matrix.sector == 'reactor' || matrix.sector == 'regulator')
+        run: node scripts/report-rw1-evidence.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-${{ matrix.sector }}-full-routes
+          path: test-results

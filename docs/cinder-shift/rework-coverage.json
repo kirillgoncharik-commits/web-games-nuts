@@ -1,0 +1,1761 @@
+{
+  "milestone": "M-REWORK",
+  "status": "IN_PROGRESS",
+  "started_at": "2026-11-12",
+  "source": "https://trello.com/c/AqZ78Mjo",
+  "requirements_source": {
+    "library_file_id": "libfile_fde3_f-c0dc36c1c5708191a4801580dc6e24ff_ae3406e10eec8191933768799a79d180",
+    "version": "2"
+  },
+  "baseline": {
+    "source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
+    "build_id": "0.6.2-rc.1",
+    "remote_head_verified": true,
+    "live_production_verification": "not_rechecked_in_this_iteration",
+    "local_release_head_before_changes": "8dde17fb2ccb8c6b3d9d770ad9111b7d77ea9de8",
+    "local_uncommitted_modes_branch": "codex/cinder-shift-new-modes-mod00 preserved unchanged",
+    "base_difference": "Only render.ts cache-version fix; retained in the rework"
+  },
+  "candidate": {
+    "build_id": "0.7.0-rw1.b4",
+    "stage": "M_RW1_B4_build_curve_verified_full_regression_open",
+    "published": false,
+    "accepted": false,
+    "verification": {
+      "build": "PASS",
+      "typecheck": "PASS",
+      "i18n": "PASS_707_EN_RU_KEYS",
+      "art_contracts": "PASS",
+      "model_tests": "PASS_91",
+      "browser_tests": "PASS_108_UI_EQUIPMENT_FEEDBACK_THREE_BROWSERS",
+      "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
+      "persistence": "PASS_8",
+      "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
+      "reachable_build_routes": "PASS_33",
+      "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
+      "legacy_full_ui_suite": "277_PASS_1_NATIVE_TOUCH_ROUTE_FAIL_0_NOT_RUN_FAILED_SHARD_RERUN_PENDING",
+      "physical_devices": "NOT_RUN",
+      "human_playtests": "NOT_RUN"
+    },
+    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "verification_runs": [
+      {
+        "source_sha": "ec5273650fa31234ca6265055873ff27ebfa07f7",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43198969966",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/i18n/art",
+          "44 model tests",
+          "15 UI tests across Chromium/Firefox/WebKit"
+        ],
+        "scope": "foundation menu/settings, map inspection, inline purchase/cancel/installed build at three sizes, arrival skip and first real combat"
+      },
+      {
+        "source_sha": "ade4252f9048c55288055d398d6b2a082906bd32",
+        "head_sha": "152cbf4e18633cb775b89587a14307ac2e886c57",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock flow scenarios across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, first reward, Retry, full HP, frozen entry, reload and earned Cargo transition; not a Foundry/robot test."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/640 EN-RU keys/art",
+          "source-reproduced room registry matches",
+          "60 selected model tests",
+          "39 UI/encounter executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes real long-range hit-triggered drone warning and a real-input base landing pocket that remains harmless through a full first-press cycle."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock input executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, reward, full-HP same-entry Retry, reload deduplication and earned Cargo unlock."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full eight-room Foundry routes, base suit / campaign seed 4 / Chromium",
+          "8 migrated persistence regressions"
+        ],
+        "scope": "One sector-entry fixture followed only by real input. Service 62.23 active seconds and press 57.97 seconds, both finish at 4 HP after real R03 repair. No human duration/device/whole-milestone acceptance."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321080",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/657 EN-RU keys/art",
+          "source-reproduced registry matches",
+          "64 selected models",
+          "48 UI/equipment executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes the actual Cargo power choice and physical enabled/disabled belt transport; isolated equipment fixtures do not replace the full input routes."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321222",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload and earned Cargo unlock."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full nine-room base Cargo routes, both equipment choices and Retry",
+          "2 full eight-room base Foundry routes",
+          "8 persistence checks"
+        ],
+        "scope": "One entry fixture followed only by actual keyboard/UI. Cargo seed 4 has no E01 event; optional upper salvage is taken in the security case only. Other builds/seeds, E01/Relay full combinations and human acceptance remain open."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228871",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/682 EN-RU keys/art",
+          "source-regenerated 37-room registry matches",
+          "71 selected model tests",
+          "60 UI/equipment executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes actual carrier pickup, Scout screen removal and longer warning, power gate, upload and R04. Isolated interactions supplement full input routes."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228335",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock input executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload, earned Cargo transition."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228350",
+        "result": "SUCCESS",
+        "checks": [
+          "3 complete nine-room base Archive routes and Retry",
+          "2 complete nine-room base Cargo routes",
+          "2 complete eight-room base Foundry routes",
+          "8 migrated persistence checks"
+        ],
+        "scope": "One sector-entry fixture then only keyboard/UI, with real damage/repair/collection/power/terminals. Scripted durations are not human first-campaign duration."
+      },
+      {
+        "source_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+        "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+        "build_id": "0.7.0-rw1.b3",
+        "result": "SUCCESS",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013554",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013566",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013604",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013569"
+        ],
+        "full_regression": {
+          "status": "PASS",
+          "passed": 276,
+          "failed": 0,
+          "not_run": 0,
+          "run_id": 43574013569,
+          "parts": [
+            {
+              "job": "check (5)",
+              "job_id": 132384291090,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (8)",
+              "job_id": 132384291303,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (7)",
+              "job_id": 132384291324,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "job_id": 132384291350,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (12)",
+              "job_id": 132384291351,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (10)",
+              "job_id": 132384291369,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "job_id": 132384291372,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "job_id": 132384291387,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "job_id": 132384291391,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (6)",
+              "job_id": 132384291414,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (11)",
+              "job_id": 132384291431,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (9)",
+              "job_id": 132384291467,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            }
+          ]
+        },
+        "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json"
+      },
+      {
+        "head_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+        "source_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699923",
+        "result": "SUCCESS",
+        "checks": [
+          "33 reachable-build full-sector routes, including both boss phases and evacuation with original HP"
+        ],
+        "scope": "Common keyboard route, real purchase budgets. Optimized mobility and human balance/duration remain open."
+      }
+    ],
+    "known_limitations": [
+      "First natural successful 25–35-minute duration is not verified; the known scripted route takes 380.50 active seconds.",
+      "Full-sector same-seed comparisons of reachable weapon/movement/defence builds remain open; current comparisons cover Airlock/Cargo plus the boss and isolated mechanics.",
+      "Independent human art/sound/balance and physical-device acceptance remain open.",
+      "Reference study is source-level; selected reference sections were not played.",
+      "No overall milestone acceptance, further-world completion or publication claimed."
+    ],
+    "recovery": "Local cinder-shift-sprint-1 / codex/cinder-shift-sprint-1 synchronized to remote PR9 head. The host disconnected mid-turn, recovered work was committed through GitHub, then exact trees/commits were restored locally. Old checkouts and a backup of the five pending files are preserved.",
+    "requirement_counts": {
+      "OPEN": 64,
+      "IMPLEMENTED": 16,
+      "total": 80,
+      "verified_whole_milestone": 0,
+      "accepted_whole_milestone": false
+    },
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rework.5",
+      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "verification": {
+        "typecheck": "passed",
+        "i18n": "passed_657_en_ru_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "64_passed",
+        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
+        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+        "persistence": "8 migrated persistence checks passed on exact .5 source.",
+        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      }
+    },
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
+    "sprint_1": {
+      "status": "IN_PROGRESS",
+      "checkpoint": "B_GAMEPLAY_AND_C_FULL_CAMPAIGN_ENGINEERING_VERIFIED",
+      "build_id": "0.7.0-rw1.b3",
+      "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+      "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+      "local_verification": {
+        "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
+        "build": "PASS_CI",
+        "typecheck": "PASS_CI",
+        "i18n": "PASS_707",
+        "art": "PASS_CI",
+        "models": "PASS_89_CI"
+      },
+      "browser_verification": {
+        "source_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+        "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+        "typecheck": "PASS",
+        "i18n": "PASS_707_EN_RU_KEYS",
+        "build": "PASS_EXACT_CI_SOURCE",
+        "art_contracts": "PASS",
+        "model_tests": "PASS_89",
+        "browser_tests": "PASS_108_UI_EQUIPMENT_FEEDBACK_THREE_BROWSERS",
+        "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
+        "persistence": "PASS_8",
+        "sector_and_boss_routes": "PASS_15",
+        "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
+        "legacy_full_ui_suite": "PASS_276_FAILED_0_NOT_RUN_0",
+        "visual_review": "Exact-source sheets of Reactor rooms/power, boss phases and D3/E04/W4 reviewed.",
+        "physical_devices": "NOT_RUN",
+        "human_playtests": "NOT_RUN",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013554",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013566",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013604",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013569"
+        ]
+      },
+      "human_playtest": "NOT_RUN",
+      "physical_devices": "NOT_RUN",
+      "accepted": false,
+      "published": false,
+      "baseline_full_regression": {
+        "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+        "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+        "passed": 201,
+        "failed": 33,
+        "not_run": 0
+      },
+      "checkpoint_implementation": "IMPLEMENTED",
+      "checkpoint_verification": "VERIFIED",
+      "full_regression": {
+        "status": "PASS",
+        "passed": 276,
+        "failed": 0,
+        "not_run": 0,
+        "run_id": 43574013569,
+        "parts": [
+          {
+            "job": "check (5)",
+            "job_id": 132384291090,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (8)",
+            "job_id": 132384291303,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (7)",
+            "job_id": 132384291324,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (4)",
+            "job_id": 132384291350,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (12)",
+            "job_id": 132384291351,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (10)",
+            "job_id": 132384291369,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (3)",
+            "job_id": 132384291372,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (2)",
+            "job_id": 132384291387,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (1)",
+            "job_id": 132384291391,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (6)",
+            "job_id": 132384291414,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (11)",
+            "job_id": 132384291431,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (9)",
+            "job_id": 132384291467,
+            "advertised": 23,
+            "passed": 23,
+            "failed": 0,
+            "not_run": 0
+          }
+        ]
+      },
+      "checkpoint_A": {
+        "status": "IN_PROGRESS",
+        "checkpoint": "A_ENGINEERING_VERIFIED",
+        "build_id": "0.7.0-rw1.a1",
+        "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+        "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+        "local_verification": {
+          "build": "PASS",
+          "typecheck": "PASS",
+          "i18n": "PASS_683_EN_RU_KEYS",
+          "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
+          "models": "PASS_76_TESTS"
+        },
+        "browser_verification": {
+          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+          "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
+          "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
+          "persistence": "PASS_8_CHECKS",
+          "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
+          "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
+          "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
+          "runs": [
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+          ],
+          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
+        },
+        "human_playtest": "NOT_RUN",
+        "physical_devices": "NOT_RUN",
+        "accepted": false,
+        "published": false,
+        "baseline_full_regression": {
+          "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+          "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+          "passed": 201,
+          "failed": 33,
+          "not_run": 0
+        },
+        "checkpoint_implementation": "IMPLEMENTED",
+        "checkpoint_verification": "VERIFIED",
+        "full_regression": {
+          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
+          "passed": 244,
+          "failed": 0,
+          "not_run": 0,
+          "shards": [
+            {
+              "job": "check (6)",
+              "passed": 40,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (5)",
+              "passed": 40,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            }
+          ],
+          "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+        }
+      },
+      "report": "docs/cinder-shift/sprint-1-b-release-notes.ru.md",
+      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md"
+    },
+    "pre_sprint_1_baseline": {
+      "build_id": "0.7.0-rework.6",
+      "stage": "archive_nine_episodes_carrier_scout_power_upload",
+      "verification": {
+        "typecheck": "passed_exact_source_CI",
+        "i18n": "passed_682_EN_RU_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "71_passed",
+        "browser_tests": "60 UI/equipment executions passed across Chromium/Firefox/WebKit on head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458",
+        "full_archive_routes": "All three nine-room base cases PASS. E05 scout (seed 0): 73.73 active seconds / 5 HP; E05 health (seed 0): 71.27 / 6 HP, real +1 repair; no-E05 salvage (seed 3): 71.28 / 6 HP, +150 score. Carrier, power, transmission, final victory and full-HP same-entry Retry/reward deduplication verified.",
+        "full_cargo_routes": "Both nine-room base routes PASS on seed 4: conveyor 73.60 / security+optional salvage 78.00 active seconds; both 3 HP after R02 and Retry.",
+        "full_foundry_routes": "Both eight-room base alternatives PASS on seed 4: service 61.20 / press 57.53 active seconds; both 4 HP after R03.",
+        "airlock_flow": "15 complete Airlock input executions PASS across Chromium/Firefox/WebKit, base/W1/M1/D1, victory/reward/Retry/reload/earned Cargo unlock.",
+        "persistence": "8 migrated persistence checks PASS",
+        "room_registry": "Source-regenerated registry matches committed inventory: 37 unique campaign rooms / 34 selected; Archive 9.",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "visual_review": "not_performed; screenshots in workflow artifacts",
+        "legacy_full_ui_suite": "Known previous old menu/character-contract failures; .6 run 43441228441 in progress at evidence recording. Not an overall-suite PASS."
+      },
+      "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+      "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
+    },
+    "validated_head_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+    "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b4-build-curve.json",
+    "current_source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+    "current_tested_merge_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+    "report": "docs/cinder-shift/sprint-1-b4-release-notes.ru.md"
+  },
+  "requirements": [
+    {
+      "id": "RW-00.01",
+      "requirement": "Зафиксировать актуальные source SHA, build ID, production/preview и незавершённые ветки; 0.6.2-rc.1 / 3a85723 — исторический baseline аудита, не команда откатить более новую работу.",
+      "status": "OPEN",
+      "implementation": [
+        "Remote release head and one-file local difference verified; dirty older modes checkout preserved. Live publication not rechecked by shell.",
+        "M-RW1 B3 is saved in PR #9; source/merge/build and remote CI evidence are recorded in sprint-1-b-release-notes.ru.md. The local host disconnected after 98ea958; full-campaign test recovery continued through GitHub without touching old checkouts."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-00.02",
+      "requirement": "Составить одну таблицу request_id → требование → реализация → файл/ассет → проверка → доказательство → статус. Включить N01–N17, VR1-01–09, этот пакет, старые QA/V и связанные C02/C03/menu tasks; совпадения объединять, источники сохранять.",
+      "status": "OPEN",
+      "implementation": [
+        "All 80 RW requirements imported verbatim from source version 2. N/VR1 links retained in the source; full QA/V evidence merge remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-00.03",
+      "requirement": "Перед массовым производством описать новый маршрут пяти секторов, комнаты/цели/врагов/переходы, условия выхода и временной бюджет. Существующие 20 комнат не являются ограничением на содержательное расширение.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Whole-campaign design in rework-campaign-design.ru.md and source-reproducible inventory of 37 rooms; human timing and all-room response validation remain open.",
+        "Registry regenerated from runtime sources: 44 unique rooms / 41 per selected route; six Airlock episodes and nine Reactor episodes. New room goals, geometry, threats and conditional power links are inventoried."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-00.04",
+      "requirement": "Выполнить сравнительный разбор 2–3 коротких участков похожих игр; начать с Abuse/Hurrican и читаемых карт SuperTux. Перевести полезные решения в оригинальные схемы Cinder Shift под физику Миры. Не объявлять прямой перенос карт выполненным по одному наличию GitHub.",
+      "status": "OPEN",
+      "implementation": [
+        "rw1-reference-notes.ru.md records two source-level studies: SuperTux official level guidance and Hurrican turret state transitions, mapped to original Cinder Shift geometry. No reference-game playthrough or copied map is claimed."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.01",
+      "requirement": "Пересобрать все пять миссий под цель около 30 минут первого естественного успешного прохождения: рабочий бюджет Airlock 4 + Cargo 6 + Foundry 6 + Archive 6 + Reactor/финал 8 минут. Это дизайн-бюджет для наполнения, а не обязательные задержки.",
+      "status": "OPEN",
+      "implementation": [
+        "Foundry expanded from four to eleven unique rooms with eight on either route. Cargo and Archive each have nine connected rooms. Airlock and Reactor expansion and the natural 30-minute first campaign remain open.",
+        "Cargo expanded from four to nine connected episodes, with optional upper salvage, a required power decision, a physical conveyor or turret, cell storage, separate R02/install stop and final checkpoint. Whole first-campaign duration remains open.",
+        "Archive expands from four to nine episodes: sorting guard, physical carrier shelf, guarded E05 choice, Scout screen, upload-power circuit, mixed firing lines, transmission/R04, ram counter and staged final combat.",
+        "Airlock now has six connected episodes; Reactor has nine, including cooling, vertical combat and a required power choice. Natural first-success duration remains unverified."
+      ],
+      "verification": [
+        "Both full .5 nine-room base Cargo power choices passed on campaign seed 4 with actual inputs, cell installation, checkpoint and Retry. Full-campaign natural duration remains open.",
+        "Rework.6: all three full base Archive outcomes (Scout/health/no-E05 salvage), both Cargo choices, both Foundry routes, 71 models and 60 three-browser interaction/UI executions passed. Scope and exact SHA are recorded in the Archive baseline; human/all-build acceptance remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "docs/cinder-shift/rework-cargo-input-baseline.json",
+        "docs/cinder-shift/rework-archive-input-baseline.json"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.02",
+      "requirement": "У каждой комнаты определить отдельную игровую задачу, геометрию, позиции/роли угроз, телеграфы, безопасные ответы, награду/последствие и условие завершения. Разные названия и фоны не заменяют разные ситуации.",
+      "status": "OPEN",
+      "implementation": [
+        "docs/cinder-shift/rework-room-registry.json inventories all 37 unique campaign rooms (34 per selected route), geometry, threat roles/positions, hazards, services, physical data carrier and conditional links. Human per-encounter response/timing review remains open.",
+        "Registry now inventories all 44 unique rooms (41 selected). All five sectors have named gameplay episodes; new Airlock/Reactor geometry and objectives use the same runtime definitions as collision and combat gates."
+      ],
+      "verification": [
+        "Rework.6: all three full base Archive outcomes (Scout/health/no-E05 salvage), both Cargo choices, both Foundry routes, 71 models and 60 three-browser interaction/UI executions passed. Scope and exact SHA are recorded in the Archive baseline; human/all-build acceptance remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "docs/cinder-shift/rework-archive-input-baseline.json"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.03",
+      "requirement": "В первой комнате добавить настоящего читаемого врага и возможность применить оружие; показать различие выстрела по цели и взаимодействия E у терминала. Сохранить безопасный старт и защиту от мгновенного необъяснимого урона.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Live Airlock sentry, clear objective and E power terminal. Full keyboard input routes passed with base/W1/M1/D1 across Chromium/Firefox/WebKit in run 43217028352."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.04",
+      "requirement": "Добавить вертикальные пути, смену линий огня, сочетания противников и оборудования, риск ради награды, намеренные передышки и кульминации секторов. Убрать переходы без цели.",
+      "status": "OPEN",
+      "implementation": [
+        "New Foundry service platform/drone encounters, optional salvage, press/heat route and R03 cooling pause. Other sector expansion remains open.",
+        "Airlock adds an elevated drone firing shelf, optional upper salvage and staged security/turret. Reactor adds a cooling climb, vertical guard/drone encounter, quiet power junction and ram plus turret-or-heat consequence."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.05",
+      "requirement": "Foundry: таран/уклонение/контратака → сочетание наземной и воздушной ролей → различимые service/press routes → ремонт и итоговая проверка. Оба маршрута содержательны.",
+      "status": "OPEN",
+      "implementation": [
+        "games/cinder-shift/src/room-data.ts",
+        "games/cinder-shift/src/mission.ts",
+        "tests/rework-model.spec.ts: eight rooms per route, isolated fork and R03 before the final encounter. Full-route input and timing are not yet accepted."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.06",
+      "requirement": "Один полноценный эпизод перенаправления питания: два состояния оборудования/маршрута, видимая связь переключателя с миром и разные последствия для боя. Сначала испытать на образце, затем использовать там, где помогает дизайну.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "M3E console toggles the actual press/furnace enable state; renderer and collider share machineState. Input-driven toggle scenario awaits current-candidate browser evidence.",
+        "Reactor M5H console has a required choice: cooling powers the M5I turret and disables heat; isolation disables that turret and enables timed heat. Circuit wires and equipment signs share actual runtime state; choice survives room revisits and resets on Retry."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-01.07",
+      "requirement": "Не набирать длительность пустой ходьбой, рекламой, обязательными смертями/повторами, искусственным ожиданием дверей или общим раздуванием HP. Успешное прохождение, время обучения с поражениями и время меню учитывать отдельно.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "No base HP, weapon damage, new currency, forced death or extra door waiting was added. Reports separate active simulation seconds from wall time. Existing enemy warnings and boss exposure windows are gameplay states, not duration fillers."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1",
+      "implementation_status": "implemented"
+    },
+    {
+      "id": "RW-02.01",
+      "requirement": "Развести противников по функциям: удержание линии, вытеснение, преследование, контроль приземления, таран/открытое окно. Согласовать detection/activation/leash/return и состав комнат; проверить наложение тел и ситуации, где враги стоят и умирают до реакции.",
+      "status": "OPEN",
+      "implementation": [
+        "Ram armor survives the teaching charge and exposes its engine during recovery. New Foundry roster separates drone, security, ram and turret roles. Full all-room overlap/leash/reachability review remains open.",
+        "Powered impacts alert enemies before proximity activation without bypassing room threat budgets, warnings or recovery. Rework.3 model and real projectile tests passed in Chromium/Firefox/WebKit; all-room AI review remains open.",
+        "M3J cover now leaves a 34px base-body stopping interval before the press instead of 2px; a real-input whole machine-cycle check and both full Foundry routes pass in .4.",
+        "Archive final drone waits for the floor guard even after provocation. Scout lengthens actual warnings, with a jumpable screen on the non-Scout route. Seven Archive model cases and four three-browser interaction cases cover the new contracts.",
+        "Provoked security now responds within its weapon range after sight/acquisition instead of remaining inert beyond pursuit radius. Full warnings/recovery and line-of-sight cancellation remain. M1C/M5G/M5I stage the second threat. E06 spawns outside solids and has a wider retreat pocket and full first warning."
+      ],
+      "verification": [
+        "3 alert/timing/budget models and the actual distant-shot browser scenario passed on fe4ab6c0482deea238c396b35be8806264b9c3bb (merge 8d9fb111d799cc6f2775aab5608297a32ad937be).",
+        "Rework.4 exact-source build, 60 models, 39 three-browser encounter/UI executions and both complete base Foundry routes PASS.",
+        "Rework.6: all three full base Archive outcomes (Scout/health/no-E05 salvage), both Cargo choices, both Foundry routes, 71 models and 60 three-browser interaction/UI executions passed. Scope and exact SHA are recorded in the Archive baseline; human/all-build acceptance remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43286647308",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+        "docs/cinder-shift/rework-foundry-input-baseline.json",
+        "docs/cinder-shift/rework-archive-input-baseline.json"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-02.02",
+      "requirement": "Настроить кривую сложности между секторами и внутри миссии: Cargo не должен оставаться единственным резким провалом, пока Foundry/Archive мгновенно тают от оружейной сборки.",
+      "status": "OPEN",
+      "implementation": [
+        "B4 comparison records weapon time savings and full-HP defensive completions across all variants; difficulty acceptance remains OPEN pending encounter/pacing review and independent play."
+      ],
+      "verification": [],
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b4-build-curve.json"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-02.03",
+      "requirement": "Закрывать выход боевой комнаты до уничтожения обязательных живых врагов. Показывать причину замка и ясное открытие после победы; не оставлять обязательного противника вне достижимости/застрявшим в геометрии. Для небоевых комнат использовать их собственные цели.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/mission.ts",
+        "games/cinder-shift/src/room-scene.ts",
+        "games/cinder-shift/src/render.ts"
+      ],
+      "verification": [
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance.",
+        "Rework.6: all three full base Archive outcomes (Scout/health/no-E05 salvage), both Cargo choices, both Foundry routes, 71 models and 60 three-browser interaction/UI executions passed. Scope and exact SHA are recorded in the Archive baseline; human/all-build acceptance remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "docs/cinder-shift/rework-archive-input-baseline.json"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-02.04",
+      "requirement": "Новое правило боевого lock заменяет прежнее разрешение просто обходить врагов в этих комнатах. Отразить изменение в кампании, заданиях испытаний, совместимости рекордов и версии правил.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/session/challenge-spec.ts",
+        "games/cinder-shift/src/session/relay.ts",
+        "games/cinder-shift/src/session/campaign.ts",
+        "games/cinder-shift/src/session/save.ts",
+        "Campaign rules version advances to campaign-rework6 for Archive layout/objective changes. Trial/Relay retain their current keys because their Airlock/Cargo content is unchanged in .6.",
+        "Airlock route changes advance campaign to campaign-rework7 and trial/relay content and simulation to rework7. Historical records remain separated; all four legacy Airlock event seeds still plan E02/E03 identically."
+      ],
+      "verification": [
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-02.05",
+      "requirement": "Проверить базовый костюм, достижимые оружейную/мобильную/защитную сборки на одинаковом seed/ветке. Разбирать фактические причины урона и окна ответа, не включать общий множитель сложности без плейтеста.",
+      "status": "OPEN",
+      "implementation": [
+        "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open.",
+        "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open.",
+        "Added base Cargo input routes for both equipment circuits; runtime results pending on .5.",
+        "Same-seed base/W1/M1/D1 Airlock and base/full-weapon/full-movement/full-defence Regulator routes have automated input drivers. Cross-sector complete-build balance and first-player behaviour remain open.",
+        "B4 adds affordable weapon/movement/defence comparisons to all Cargo/Foundry/Archive variants and all nine Reactor rooms without resetting at the boss. Purchases use normal campaign budgets; per-room timing, damage causes, shields and abilities are recorded."
+      ],
+      "verification": [
+        "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open.",
+        "Both .5 base Cargo circuits passed; weapon/mobile/defense Cargo comparisons and other seeds remain open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
+        "Source bcfa9e292277eefb063faa41089f2d3794dab96a / merge aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c: 33 upgraded route cases PASS, plus 11 base sector routes and four standalone boss cases PASS. Mobility follows the common route without dash optimization. Human balance/duration and one flaky native-touch route remain open."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "docs/cinder-shift/rework-foundry-input-baseline.json",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
+        "docs/cinder-shift/sprint-1-b4-build-curve.json"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-02.06",
+      "requirement": "Сохранить действующее полное HP на старте миссии и бесплатный Retry той же миссии с входной сборкой/seed, пока отдельным решением не изменён контракт. Permanent death, revive за рекламу и новые валюты не вводить.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Full HP and free same-entry Retry preserved. Selected model suite plus Airlock victory→Retry→reload input checks passed; no permanent-death/revive/currency change."
+      ],
+      "verification": [
+        "Selected models and full Airlock inputs passed on the exact .4 source in Chromium/Firefox/WebKit; both base Foundry routes passed in Chromium. This does not establish all-sector, physical-device or human acceptance.",
+        "Both complete .5 Cargo cases verify same-entry full-HP Retry and unchanged reward ledger.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050"
+      ],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-03.01",
+      "requirement": "Принять все 12 технологий и шесть событий: эффект, ограничение, место применения, визуальное/звуковое подтверждение и различие сборок.",
+      "status": "OPEN",
+      "implementation": [
+        "Focused input now exercises W3 reflection, W4 four-damage/cooldown, M3/M4 barrier comparisons, D3 clearing of a real multi-shot turret burst, D4 after D2, and actual E04 on/off. All 12 technology and six event IDs have an evidence row in rw1-mechanics-matrix.ru.md; broader human audiovisual/balance acceptance remains open.",
+        "D3 projectile clearing previously changed the array inside a collision filter and could restore survivors. Team clear versions now prevent earlier and pending shots from reappearing; death clearing uses the same safeguard. Three regression models and D2/D3 real turret comparisons pass."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-03.02",
+      "requirement": "Отдельно проверить W1/Splitter, W2/Piercer и W3/Ricochet: фактический урон, повторные попадания/отражения, влияние на толпу и босса. Различать ошибку реализации и слишком сильный задуманный эффект.",
+      "status": "OPEN",
+      "implementation": [
+        "A real spread pellet reflects once from the Archive panel and retains its reflection marker; full W1-W4 boss traversal uses the selected W4 active slot. Base and upgraded boss runs still require both phases and four exposures.",
+        "A selected W4 alone applies exactly four chest-core damage; early reactivation preserves chargeReady and HP, then the next core accepts a second charged shot. This passes in Chromium/Firefox/WebKit."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-03.03",
+      "requirement": "Показывать куплено / пассивно действует / выбран активный слот. W4 не должен выглядеть активным заряженным выстрелом, если выбран M1; смена слота понятна.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts: installed active/equipped/idle/passive labels; active-skill selection only exposes purchased active modules."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-03.04",
+      "requirement": "Сохранить бюджет очков, атомарность покупки и reward ledger; повтор/reload/повторный callback не создают дубли наград. Базовая сборка проходит обязательный путь.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Atomic purchase/reward model checks and full Airlock first-reward/Retry/reload regression pass. Base-suit whole-campaign traversal remains open.",
+        "Fresh-profile five-sector trusted-input integration now checks four rewards, five unspent points, 41 visited rooms, zero deaths, final career record and idempotent reload. Final result is recorded separately from fixture-sector evidence."
+      ],
+      "verification": [
+        "Historical Airlock scope only: 15 scenarios passed; rework.2 integration is checked separately.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352"
+      ],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-03.05",
+      "requirement": "Показывать практическую пользу нового модуля в следующем подходящем эпизоде; покупка не ограничивается сменой названия в списке.",
+      "status": "OPEN",
+      "implementation": [
+        "Actual marked-wall and phase-barrier comparisons distinguish M3/M4 from their predecessor builds without removing solids; W3 reflects a real projectile rather than changing a workshop label."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-04.01",
+      "requirement": "Перерисовать Регулятора как большого промышленного робота с узнаваемым силуэтом, корпусом/ядром, анимациями и фазами. Объект не должен восприниматься обычной дверью.",
+      "status": "OPEN",
+      "implementation": [
+        "Generated transparent industrial robot integrated lazily from assets/rework; simulation-driven core shutters, phase pose, hit and shutdown presentation. Full animation and visual acceptance remain open.",
+        "Exact renderer contact sheets of the industrial robot and its lanes/core/sweep/transition states were visually inspected. Broader animation and human art acceptance remain open."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-04.02",
+      "requirement": "Перестроить бой: две различимые задачи/паттерна, честные предупреждения, доступный ответ, окно контратаки и видимый переход фаз. В обычном первом прохождении обе фазы успевают раскрыться; текущий случай полного уничтожения примерно за десять секунд разобран.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "RegulatorEncounter: two locked aimed lanes, core exposure/overload, phase transition and moving sweep. Model suite proves both phases and >=4 exposures without increasing 32 HP; real full fight remains open.",
+        "Full trusted-input boss-and-evacuation runs with base, W1-W4, M1-M4 and D1-D4 builds complete both patterns and at least four core exposures without increasing 32 HP."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-04.03",
+      "requirement": "Совместить видимое ядро/броню с hitbox, состоянием уязвимости и фактическим уроном. Проверить выстрел с пола/в прыжке, мимо корпуса, в броню, отражённый/пробивающий выстрел; приложить разметку.",
+      "status": "OPEN",
+      "implementation": [
+        "Normalized chest aperture and separate armor shapes, leg gap and segment collision; model tests plus new input scenarios for raised/floor firing. Piercing/ricochet and visual hitbox acceptance remain open.",
+        "Raised chest hits, floor armor and both complete boss phases have model and real-input checks; exact-source renderer frames were inspected. A comprehensive labelled piercing/ricochet hitbox review remains open."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-04.04",
+      "requirement": "После shutdown прекращаются атаки/телеграфы. Победа заметно меняет комплекс; короткая эвакуация завершает поставленную в интро цель.",
+      "status": "OPEN",
+      "implementation": [
+        "Shutdown removes Regulator attack rectangles and opens its combat gate. Evacuation is retained; expanded world consequences remain open.",
+        "Full input routes verify boss shutdown, removal of its attack lock and final evacuation terminal. Wider facility transformation beyond shutdown remains open."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-04.05",
+      "requirement": "Убрать устаревшую строку Archive/checkpoint после Reactor; согласовать результат миссии, завершение кампании, сохранение факта победы и открытие миров. Один понятный поток к общему итогу.",
+      "status": "OPEN",
+      "implementation": [
+        "Reactor evacuation result has its own text and final-results action; world unlock and end-to-end acceptance remain open.",
+        "Full-campaign integration confirms Reactor victory -> final campaign action -> campaign_complete -> one stored career record -> reload of that same result. Unlocking additional worlds is outside the implemented C01 campaign."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-05.01",
+      "requirement": "Замерить холодный/тёплый вход. Понятный индикатор реальных стадий загрузки, без впечатления зависания и обязательной шестисекундной выдержки уже готового loader; ориентир старого VR1 — сократить сопоставимое ожидание примерно вдвое.",
+      "status": "OPEN",
+      "implementation": [
+        "Removed mandatory six-second loader hold; asset/storage stages retained. Cold/warm measurements remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-05.02",
+      "requirement": "Сделать 5–7-секундное оригинальное интро в игровом стиле: манёвр/подлёт челнока → прибытие/стыковка → спуск Миры → авария и цель эвакуации → управление. Пропуск доступен сразу, Retry без повторной заставки; интро и техническая загрузка различаются.",
+      "status": "OPEN",
+      "implementation": [
+        "Separate 6.5-second arrival sequence, immediately skippable; Retry bypasses it. Prototype vector visuals; runtime/human art review open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-05.03",
+      "requirement": "Собрать выразительное меню с видимым артом и одной ясной группой действий. Убрать постоянные Language/Analytics controls в Settings; сохранить доступ к настройке выбора аналитики.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-05.04",
+      "requirement": "Переупаковать Challenges и Training, объяснить их пользу; единственный доступный герой не требует фиктивного выбора. Убрать лишние служебные переходы из подготовки.",
+      "status": "OPEN",
+      "implementation": [
+        "Fresh start goes straight to campaign map; optional character inspection remains. Challenge/Training explanations still open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-05.05",
+      "requirement": "Добавить короткие сюжетные события и видимые последствия питания/аварии/восстановления между секторами. Не заменять действие длинными текстовыми модальными окнами.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-06.01",
+      "requirement": "Создать художественную карту комплекса сверху: положение Миры, реальные связи/развилка Foundry, доступность и цель. Сначала логический граф, затем оригинальный арт; принцип читаемого риска Slay the Spire использовать без копирования оформления.",
+      "status": "OPEN",
+      "implementation": [
+        "Facility plan with orthogonal transit and Foundry fork, actual mission nodes. Visual review and full internal path graph open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-06.02",
+      "requirement": "Убрать непонятную синусоиду и визуальные дубли названий/изображений. Один набор подписей и компактная информация выбранного узла; просмотр не меняет прогресс/позицию.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "Orthogonal facility plan, single labels and read-only inspection; three-size browser checks passed in the foundation candidate."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "implemented",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-06.03",
+      "requirement": "Обеспечить понятные Play/Continue/Replay и закрытие; keyboard/touch/focus и корректные hit areas сохраняются.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-06.04",
+      "requirement": "Подключить ранее согласованный выбор первой кампании, «Маленькой смены» и «Адриатического сигнала». После первого полного финала обе новые открываются; до него видны понятные замки.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-06.05",
+      "requirement": "Profile-level completion устойчив к reload/Retry/повтору первой; отдельная победа миссии/share code не открывает миры. Раздельные progress/wallet/checkpoints и миграция старого completed save без потерь.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-07.01",
+      "requirement": "Карточка модуля содержит иконку, короткий понятный эффект, цену, состояние и собственную кнопку «Купить»; отдельный далёкий footer-purchase flow убрать.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-07.02",
+      "requirement": "Короткое подтверждение показывает эффект, стоимость и остаток после покупки. Просмотр карточки не списывает очки, двойной клик/повтор события не покупают дважды.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/campaign.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-07.03",
+      "requirement": "Установленную сборку показывать компактно и отдельно от доступных предложений; купленные модули не раздувают бесконечный прокручиваемый список.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/ui/workshop.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-07.04",
+      "requirement": "Три ветки W/M/D, зависимости и активный слот различимы сразу. Понятны недостаток очков и причина недоступности.",
+      "status": "OPEN",
+      "implementation": [
+        "W/M/D module IDs, explicit prerequisites, funds state and installed active-slot labels are in the runtime. Full locale/RTL and active-slot UI regression remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-07.05",
+      "requirement": "Главное действие — начать миссию, рядом ясное закрытие/возврат. Убрать непонятные Workshop menu и дубли Settings/Back внутри этого потока; проверить короткий landscape, RU/EN, 50 локалей/RTL.",
+      "status": "OPEN",
+      "implementation": [
+        "Removed the Workshop menu screen; visible Start mission, map and Close actions replace the nested flow. Primary keyboard focus is Start mission. Close/Continue purchase preservation is included at three viewport sizes. 50-locale/RTL acceptance remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.01",
+      "requirement": "Собрать единое обновлённое направление: современная индустриальная пиксельная эстетика Exolon, дискретные состояния/анимации Миры, согласованные palette/scale/materials/UI. Сверить уже имеющиеся ассеты, не производить принятые повторно.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.02",
+      "requirement": "Обновить все пять секторов, архитектуру/фон, игровые платформы, двери/терминалы/ремонт/энергоячейку/опасные механизмы, врагов и Регулятора, меню/карту/мастерскую/HUD и иконки технологий/событий.",
+      "status": "OPEN",
+      "implementation": [
+        "Robot visual integration and hazard/ram cues added; the complete five-sector/world-object/UI art pass remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.03",
+      "requirement": "Каждому сектору дать собственный силуэт/материал/свет/опорные устройства; смена названия и recolor одного фона недостаточны.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.04",
+      "requirement": "Дальний фон, игровая геометрия, герой, снаряды и активные угрозы читаются на мобильном размере. Силуэты/форма/движение дублируют цветовые сигналы.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.05",
+      "requirement": "Исправить сжатые двери, растяжение объектов, привязки, артефакты атласов и несовпадение визуальных/игровых границ. Проверять кадр игры, а не только зелёный art:check.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.06",
+      "requirement": "У R01–R05/S04/S05, терминалов, заслонок, ячейки и рамок: понятное назначение, действие и состояния доступно/не требуется/использовано/закрыто. При полном HP — «Ремонт не требуется».",
+      "status": "OPEN",
+      "implementation": [
+        "R03 relocated to the cooling stop; repair full/used/available guards retained. Full in-camera object-state acceptance remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-08.07",
+      "requirement": "Сдать asset/state inventory, contact sheets и сравнения до/после из обычной игровой камеры по каждому сектору и ключевому UI.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.01",
+      "requirement": "Оживить все пять секторов: для каждого предусмотреть минимум два разных видимых фоновых/окружных процесса по функции локации — вентиляторы, транспортёр, поршни/кран, пар/тепло, сканирование/серверные индикаторы, реакторное питание.",
+      "status": "IMPLEMENTED",
+      "implementation": [
+        "games/cinder-shift/src/art/environment-motion.ts",
+        "games/cinder-shift/src/render.ts"
+      ],
+      "verification": [
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+      ],
+      "evidence": [
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.02",
+      "requirement": "Развести дальний фон, средний план и игровые устройства; движение имеет источник и ритм, а не общий дрожащий overlay поверх статичной сцены.",
+      "status": "OPEN",
+      "implementation": [
+        "EnvironmentMotion draws sector-specific mechanisms at depth 1.4; landmarks and gameplay remain separate. Camera review remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.03",
+      "requirement": "Активируемое оборудование меняет состояние после терминала/питания; опасный пресс/жар совпадает с реальной областью/фазой угрозы.",
+      "status": "OPEN",
+      "implementation": [
+        "Foundry power changes which machine can warn/damage; machineState drives both rendering and collision. New browser toggle scenario awaits current evidence."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.04",
+      "requirement": "Для врагов читаемы idle/patrol/chase/telegraph/attack/recovery/hit/death по роли; добавить ясную гибель с завершением угрозы. Для Миры/модулей — необходимые реакция/получение урона/способность без смены согласованного резкого характера анимаций.",
+      "status": "OPEN",
+      "implementation": [
+        "Enemy death now emits shutdown debris rather than ordinary hit; full animation-state pass remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.05",
+      "requirement": "Предусмотреть остановку/возобновление и очистку на pause/focus/смене сцены; Reduced Motion/Effects сохраняет смысл и уменьшает декоративную нагрузку.",
+      "status": "OPEN",
+      "implementation": [
+        "Environment draws from quantized simulation time; reduced mode is static; scene-owned graphics. Runtime pause/cleanup check open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-09.06",
+      "requirement": "Сдать короткие клипы каждого сектора, циклы/состояния подключены в runtime, а не только существуют отдельными файлами.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-10.01",
+      "requirement": "Сделать единый набор смысловых эффектов: muzzle flash/след выстрела, попадание в стену, отражение от брони, подтверждённый урон врагу, его смерть/обломки. Разные события нельзя обозначать одним непонятным треугольником.",
+      "status": "OPEN",
+      "implementation": [
+        "Death and hit effects separated; complete event-effect-sound matrix and visual review remain open.",
+        "M-RW1 A: event-driven HP pulse and camera impulse, separate shield/repair signals, discrete weapon recoil, effect intensity and Reduced Effects. Lifetimes use simulation time and clear on pause/death/scene change. Runtime files: src/combat-feedback.ts, src/room-scene.ts, src/art/combat-effects.ts, src/render.ts, src/session/save.ts."
+      ],
+      "verification": [
+        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI.",
+        "M-RW1 A: exact candidate 80225df1 / CI merge e81a2950: 75 three-browser UI/equipment/feedback executions and 244-case full regression PASS. Real HP, shield, reduced-effects and repair/Retry paths verified; renderer frames visually inspected. Full art/effect/build matrix remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "tests/combat-feedback.spec.ts",
+        "tests/feedback-ui.spec.ts",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+        "docs/cinder-shift/sprint-1-a-release-notes.ru.md"
+      ],
+      "publication": "not_published",
+      "implementation_status": "partial_verified_checkpoint_A",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-10.02",
+      "requirement": "Читаемые телеграфы и активные зоны турели/тарана/пресса/жара/босса; открытие ядра отличается от брони, shutdown очищает предупреждения.",
+      "status": "OPEN",
+      "implementation": [
+        "Ram recovery cue, shared press/heat warning/active state and Regulator core/armor/attack rectangles. Shutdown model test clears hazards; runtime visual acceptance remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-10.03",
+      "requirement": "Урон Мире, щит/буфер, ремонт, способность и cooldown различимы. Критический HP — понятная спокойная красная виньетка/статус с корректным reset на лечение/смерть/Retry.",
+      "status": "OPEN",
+      "implementation": [
+        "M-RW1 A: event-driven HP pulse and camera impulse, separate shield/repair signals, discrete weapon recoil, effect intensity and Reduced Effects. Lifetimes use simulation time and clear on pause/death/scene change. Runtime files: src/combat-feedback.ts, src/room-scene.ts, src/art/combat-effects.ts, src/render.ts, src/session/save.ts.",
+        "D3 projectile clearing previously changed the array inside a collision filter and could restore survivors. Team clear versions now prevent earlier and pending shots from reappearing; death clearing uses the same safeguard. Three regression models and D2/D3 real turret comparisons pass."
+      ],
+      "verification": [
+        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI.",
+        "M-RW1 A: exact candidate 80225df1 / CI merge e81a2950: 75 three-browser UI/equipment/feedback executions and 244-case full regression PASS. Real HP, shield, reduced-effects and repair/Retry paths verified; renderer frames visually inspected. Full art/effect/build matrix remains open.",
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [
+        "tests/combat-feedback.spec.ts",
+        "tests/feedback-ui.spec.ts",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+        "docs/cinder-shift/sprint-1-a-release-notes.ru.md"
+      ],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1",
+      "implementation_status": "partial_verified_checkpoint_A"
+    },
+    {
+      "id": "RW-10.04",
+      "requirement": "Импульсы восстановления питания и направленная связь терминала с оборудованием/дверью; локальное освещение поддерживает роль сектора и сюжетные переходы.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-10.05",
+      "requirement": "Синхронизировать SFX/VFX по принятому событию симуляции; исключить ложный hit/HP feedback при поглощении щитом. Отдельно принять музыку и микс на слух с включённым звуком.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-10.06",
+      "requirement": "Ограничить частицы/свет/тряску, сохранить снаряды и опасные границы; Reduced Effects убирает лишние вспышки/тряску и сохраняет информацию. Проверить совокупную частоту/площадь вспышек и бюджет кадров на насыщенных сценах.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-10.07",
+      "requirement": "Сдать VFX matrix event→effect→sound→cleanup, клипы normal/reduced и одинаковые замеры frame time p50/p95/input до/после на телефонах.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-11.01",
+      "requirement": "Принять физические iPhone/Safari и Android/Chrome, обе ориентации, открытую адресную строку, safe area, фон/возврат. HUD/пауза/поле доступны; движение+огонь и движение+прыжок работают одновременно.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-11.02",
+      "requirement": "Hit areas не менее 48×48 CSS px, Fire/Jump не менее 56×56, зазоры не менее 8 px; проверить компактные меню/мастерскую/карту и экранную клавиатуру кодов.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW2"
+    },
+    {
+      "id": "RW-11.03",
+      "requirement": "Все пять испытаний сохраняются и получают новый контент/боевые правила; разные лобби, старт→результат/DNF→Retry→save/code. Разделить кампанию и challenge ledger, корректно версионировать PB/ghost/обмен; старые рекорды не выдавать за сопоставимые новым.",
+      "status": "OPEN",
+      "implementation": [
+        "Changed content/simulation/rules keys and isolated legacy/mixed campaign career records; all five mode acceptance paths remain open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-11.04",
+      "requirement": "Сохранить и принять EN/RU и ранее согласованные 50 локалей/RTL: новые строки, длинные подписи, переносы и состояния UI.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-11.05",
+      "requirement": "Закрыть причины текущих CI failure, актуализировать устаревшие тесты по новому контракту, пройти build/typecheck/art/audio/i18n и необходимую cross-browser регрессию точного кандидата.",
+      "status": "OPEN",
+      "implementation": [
+        "Current local build/typecheck/art/640-key EN-RU check and 57 models pass. Dedicated three-browser encounter workflow added. Full legacy menu/purchase test migration remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-11.06",
+      "requirement": "Проверить fresh/legacy/completed/corrupt/future save, storage failure, reload, Retry, reward ledger, privacy choice и channel storage/SDK; не обнулять сохранение при ошибке чтения.",
+      "status": "OPEN",
+      "implementation": [
+        "Selected model save/migration/idempotency suite and three-browser Airlock Retry/reload checks pass; the full storage/platform matrix remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-12.01",
+      "requirement": "Включить прежний согласованный объём C02 «Маленькая смена» и C03 «Адриатический сигнал» как связанные пакеты этого единого майлстоуна, используя существующие карточки/документы без дублирования производства.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-12.02",
+      "requirement": "По пять миссий/20 содержательных комнат на мир, отдельные механики carry/throw и контуры A/B; самостоятельные цель/развилки/финал и измеренные 20–25 минут первого естественного успешного прохождения каждой.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-12.03",
+      "requirement": "Подключить ранее согласованные art/music пакеты обоих миров, все состояния и необходимые анимации/VFX по общему стандарту переработки; отдельные каталоги файлов без runtime-интеграции не считаются сдачей.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-12.04",
+      "requirement": "Принять путь fresh→финал первой→открытие обоих миров→reload→Start/Continue/Replay каждого. Переключение не стирает соседний прогресс.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW3"
+    },
+    {
+      "id": "RW-12.05",
+      "requirement": "Подготовка каналов продолжается по прежнему реестру; массовый платформенный выпуск зависит от принятого общего RC. Новые backend/auth/валюты/система достижений автоматически не добавляются.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.01",
+      "requirement": "Сдать один интегрированный RC из фиксированного SHA/build ID; актуальные PR/preview/воспроизводимая сборка и точка отката. Implemented, verified и published — разные статусы.",
+      "status": "OPEN",
+      "implementation": [
+        "Draft PR #9 receives the integrated candidate; exact source/build comes from CI build-manifest. This is not the final RC or a production deployment."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.02",
+      "requirement": "Для первой кампании провести минимум три независимых плейтеста, включая новичка. Рабочая полоса 25–35 минут первого естественного успешного прохождения; фиксировать активное/реальное время, меню, смерти, HP, ремонты, сборку, помощь и добровольный повтор отдельно. Малая выборка не доказывает retention.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.03",
+      "requirement": "Показать реальный риск поражения и обучаемость; каждый обязательный эпизод имеет понятный ответ, а не нечитаемый неизбежный урон. Не гарантировать искусственно смерть первого игрока.",
+      "status": "OPEN",
+      "implementation": [
+        "Base Reactor input routes take actual turret/drone/walker damage and reach R05; optional E06 can be defeated through a real retreat/recovery response. Known-route boss completion without damage demonstrates an available response, not first-player difficulty."
+      ],
+      "verification": [
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+      ],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW1"
+    },
+    {
+      "id": "RW-13.04",
+      "requirement": "Приложить сравнения до/после одного и того же места: первая минута, карта, мастерская, по одному бою/фоновой анимации каждого из пяти секторов, обычный враг/турель/ремонт, робот-босс, эвакуация и открытие миров.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.05",
+      "requirement": "Передать заполненные request coverage, room/encounter registry, assets/animations/VFX matrices, timing/playtest report, device/performance report, QA с доказательствами и known issues.",
+      "status": "OPEN",
+      "implementation": [
+        "80-row request coverage and reproducible 27-room runtime inventory are tracked. Full art/VFX/timing/device/acceptance evidence remains open."
+      ],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "implementation_status": "partial",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.06",
+      "requirement": "Майлстоун завершён только после всех обязательных блоков, нуля открытых P0/P1 и подтверждённой приёмки Кириллом общей игры. Готовность одной красивой комнаты/набора PNG/зелёного build не заменяет итог.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    },
+    {
+      "id": "RW-13.07",
+      "requirement": "Если обязательные человеческие/физические проверки ещё не проведены — статус INCOMPLETE, а не выдуманные PASS/GO. Срок/оценка Work после ревизии базы; не обещать дату без подтверждения исполнителя.",
+      "status": "OPEN",
+      "implementation": [],
+      "verification": [],
+      "evidence": [],
+      "publication": "not_published",
+      "sprint_owner": "M-RW4"
+    }
+  ],
+  "production_preview": {
+    "build_id": "0.7.0-rw1.b3",
+    "game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+    "tested_code_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+    "site_merge_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
+    "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/13",
+    "cloudflare_deployment_id": "9820c610-5091-4a91-ad53-ee1742f4e61e",
+    "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "verification": {
+      "site_ci": "PASS",
+      "cloudflare_pages": "SUCCESS",
+      "live_build_label": "v0.7.0-rw1.b3 / d52853e",
+      "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
+    },
+    "acceptance_complete": false
+  }
+}
