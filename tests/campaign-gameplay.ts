@@ -104,7 +104,10 @@ export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
   for(let i=0;i<2200;i++){
    const s=await state(page),p=s.boss.pattern;phases.add(p.stage);if(s.hp<=0||s.state!=='playing')throw Error('Boss run ended before shutdown');if(s.bossHp<=0)break;
    if(p.stage==='lanes'){
-    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<272?307:237);await ground(page,256);}
+    // A real hit can knock Mira off the firing shelf. Recover with ordinary
+    // movement instead of waiting forever at a height she no longer occupies.
+    if(s.player.y+22>270){await fire(false);await ground(page);await to(page,100);await ground(page,320);await climb();lastWarning='';continue;}
+    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<272?307:237);await ground(page);}
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
     if(p.stage==='transition'||p.phase==='warning'){
