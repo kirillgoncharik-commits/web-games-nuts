@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
 import {state} from './helpers';
 
-export async function encounter(page:import('@playwright/test').Page,input:{mission:'airlock'|'foundry'|'reactor'|'archive'|'cargo';room:string;seed?:number;hp?:number;active?:'M1'|'W4'|null;reactorCircuit?:'cooling'|'isolation';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cargoCircuit?:'conveyor'|'security';cleared?:boolean;clearedEnemyIds?:string[];debug?:boolean;reduced?:boolean;nodes?:string[]}){
+export async function encounter(page:import('@playwright/test').Page,input:{mission:'airlock'|'foundry'|'reactor'|'archive'|'cargo';room:string;seed?:number;hp?:number;active?:'M1'|'W4'|null;reactorCircuit?:'cooling'|'isolation';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cargoCircuit?:'conveyor'|'security';cleared?:boolean;clearedEnemyIds?:string[];debug?:boolean;reduced?:boolean;touch?:boolean;nodes?:string[]}){
  await page.addInitScript(()=>{
   const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
   (window as any).AudioContext=class extends Base{
@@ -15,6 +15,7 @@ export async function encounter(page:import('@playwright/test').Page,input:{miss
  await page.getByTestId('menu-settings').click();
  await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);
  await expect.poll(async()=>(await state(page)).audio).toBe('running');
+ if(input.touch)await page.locator('#touch-mode').selectOption('on');
  await page.getByTestId('settings-back').click();
  await page.evaluate(input=>(window as any).__ENCOUNTER__.start(input),input);
  await expect.poll(async()=>(await state(page)).room).toBe(input.room);
