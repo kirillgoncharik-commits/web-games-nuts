@@ -17,25 +17,27 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rw1.b4",
-    "stage": "M_RW1_B4_build_curve_verified_full_regression_open",
+    "build_id": "0.7.0-rw1.b5",
+    "stage": "M_RW1_B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE",
     "published": false,
     "accepted": false,
     "verification": {
       "build": "PASS",
       "typecheck": "PASS",
-      "i18n": "PASS_707_EN_RU_KEYS",
+      "i18n": "PASS_710_EN_RU_KEYS",
       "art_contracts": "PASS",
-      "model_tests": "PASS_91",
-      "browser_tests": "PASS_108_UI_EQUIPMENT_FEEDBACK_THREE_BROWSERS",
+      "model_tests": "PASS_96",
+      "browser_tests": "PASS_123_THREE_BROWSERS",
       "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
       "persistence": "PASS_8",
       "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
       "reachable_build_routes": "PASS_33",
       "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
-      "legacy_full_ui_suite": "277_PASS_1_NATIVE_TOUCH_ROUTE_FAIL_0_NOT_RUN_FAILED_SHARD_RERUN_PENDING",
+      "legacy_full_ui_suite": "PASS_290_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
       "physical_devices": "NOT_RUN",
-      "human_playtests": "NOT_RUN"
+      "human_playtests": "NOT_RUN",
+      "native_touch": "PASS_12_EXECUTIONS; THREE_FULL_MISSIONS_SIX_DELAYED_SHELF_CLIMBS_THREE_MOVEMENT_CHECKS",
+      "visual_review": "AIMED_GUARD_LOCK_AND_COUNTER_FRAMES_REVIEWED; HUMAN_REVIEW_OPEN"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -292,14 +294,28 @@
           "33 reachable-build full-sector routes, including both boss phases and evacuation with original HP"
         ],
         "scope": "Common keyboard route, real purchase budgets. Optimized mobility and human balance/duration remain open."
+      },
+      {
+        "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+        "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118",
+        "result": "SUCCESS",
+        "checks": [
+          "290/290 general regression, 12/12 shards",
+          "96 models, 123 three-browser UI/combat executions",
+          "15 Airlock, 12 native-touch, 8 persistence",
+          "15 sector/boss, 33 affordable-build routes",
+          "41-room fresh-profile campaign and reload"
+        ],
+        "scope": "B5 engineering checkpoint; sets overlap; human/physical-device acceptance remains open"
       }
     ],
     "known_limitations": [
-      "First natural successful 25–35-minute duration is not verified; the known scripted route takes 380.50 active seconds.",
-      "Full-sector same-seed comparisons of reachable weapon/movement/defence builds remain open; current comparisons cover Airlock/Cargo plus the boss and isolated mechanics.",
-      "Independent human art/sound/balance and physical-device acceptance remain open.",
+      "First natural successful 25–35-minute duration is not verified; the known B5 scripted route takes 381.62 active seconds.",
+      "All 33 affordable-build comparisons pass; defence ends every tested route at full HP. Human balance and optimized mobility routes remain open.",
+      "Independent human art/sound review and physical-device acceptance remain open.",
       "Reference study is source-level; selected reference sections were not played.",
-      "No overall milestone acceptance, further-world completion or publication claimed."
+      "B5 is a separate development preview; production stays B3; no overall milestone acceptance claimed."
     ],
     "recovery": "Local cinder-shift-sprint-1 / codex/cinder-shift-sprint-1 synchronized to remote PR9 head. The host disconnected mid-turn, recovered work was committed through GitHub, then exact trees/commits were restored locally. Old checkouts and a backup of the five pending files are preserved.",
     "requirement_counts": {
@@ -337,40 +353,43 @@
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "sprint_1": {
       "status": "IN_PROGRESS",
-      "checkpoint": "B_GAMEPLAY_AND_C_FULL_CAMPAIGN_ENGINEERING_VERIFIED",
-      "build_id": "0.7.0-rw1.b3",
+      "checkpoint": "B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE_HUMAN_ACCEPTANCE_OPEN",
+      "build_id": "0.7.0-rw1.b5",
       "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
       "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
       "local_verification": {
         "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
         "build": "PASS_CI",
         "typecheck": "PASS_CI",
-        "i18n": "PASS_707",
+        "i18n": "PASS_710",
         "art": "PASS_CI",
-        "models": "PASS_89_CI"
+        "models": "PASS_96_CI"
       },
       "browser_verification": {
-        "source_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
-        "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+        "build": "PASS",
         "typecheck": "PASS",
-        "i18n": "PASS_707_EN_RU_KEYS",
-        "build": "PASS_EXACT_CI_SOURCE",
+        "i18n": "PASS_710_EN_RU_KEYS",
         "art_contracts": "PASS",
-        "model_tests": "PASS_89",
-        "browser_tests": "PASS_108_UI_EQUIPMENT_FEEDBACK_THREE_BROWSERS",
+        "model_tests": "PASS_96",
+        "browser_tests": "PASS_123_THREE_BROWSERS",
         "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
         "persistence": "PASS_8",
-        "sector_and_boss_routes": "PASS_15",
+        "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
+        "reachable_build_routes": "PASS_33",
         "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
-        "legacy_full_ui_suite": "PASS_276_FAILED_0_NOT_RUN_0",
-        "visual_review": "Exact-source sheets of Reactor rooms/power, boss phases and D3/E04/W4 reviewed.",
+        "legacy_full_ui_suite": "PASS_290_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
         "physical_devices": "NOT_RUN",
         "human_playtests": "NOT_RUN",
+        "native_touch": "PASS_12_EXECUTIONS; THREE_FULL_MISSIONS_SIX_DELAYED_SHELF_CLIMBS_THREE_MOVEMENT_CHECKS",
+        "visual_review": "AIMED_GUARD_LOCK_AND_COUNTER_FRAMES_REVIEWED; HUMAN_REVIEW_OPEN",
+        "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+        "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
         "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013554",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013566",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013604",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013569"
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898043",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898044",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898075",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898077",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118"
         ]
       },
       "human_playtest": "NOT_RUN",
@@ -388,104 +407,92 @@
       "checkpoint_verification": "VERIFIED",
       "full_regression": {
         "status": "PASS",
-        "passed": 276,
+        "passed": 290,
         "failed": 0,
         "not_run": 0,
-        "run_id": 43574013569,
+        "run_id": 43628898118,
         "parts": [
           {
-            "job": "check (5)",
-            "job_id": 132384291090,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (8)",
-            "job_id": 132384291303,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (7)",
-            "job_id": 132384291324,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (4)",
-            "job_id": 132384291350,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (12)",
-            "job_id": 132384291351,
-            "advertised": 23,
-            "passed": 23,
+            "job": "check (1)",
+            "job_id": 132550974438,
+            "passed": 25,
             "failed": 0,
             "not_run": 0
           },
           {
             "job": "check (10)",
-            "job_id": 132384291369,
-            "advertised": 23,
-            "passed": 23,
+            "job_id": 132550974624,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (4)",
+            "job_id": 132550974643,
+            "passed": 24,
             "failed": 0,
             "not_run": 0
           },
           {
             "job": "check (3)",
-            "job_id": 132384291372,
-            "advertised": 23,
-            "passed": 23,
+            "job_id": 132550974655,
+            "passed": 24,
             "failed": 0,
             "not_run": 0
           },
           {
-            "job": "check (2)",
-            "job_id": 132384291387,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (1)",
-            "job_id": 132384291391,
-            "advertised": 23,
-            "passed": 23,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (6)",
-            "job_id": 132384291414,
-            "advertised": 23,
-            "passed": 23,
+            "job": "check (8)",
+            "job_id": 132550974663,
+            "passed": 24,
             "failed": 0,
             "not_run": 0
           },
           {
             "job": "check (11)",
-            "job_id": 132384291431,
-            "advertised": 23,
-            "passed": 23,
+            "job_id": 132550974678,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (12)",
+            "job_id": 132550974701,
+            "passed": 24,
             "failed": 0,
             "not_run": 0
           },
           {
             "job": "check (9)",
-            "job_id": 132384291467,
-            "advertised": 23,
-            "passed": 23,
+            "job_id": 132550974748,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (5)",
+            "job_id": 132550974773,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (7)",
+            "job_id": 132550974833,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (6)",
+            "job_id": 132550974836,
+            "passed": 24,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (2)",
+            "job_id": 132550974952,
+            "passed": 25,
             "failed": 0,
             "not_run": 0
           }
@@ -580,8 +587,9 @@
           "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
         }
       },
-      "report": "docs/cinder-shift/sprint-1-b-release-notes.ru.md",
-      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md"
+      "report": "docs/cinder-shift/sprint-1-b5-release-notes.ru.md",
+      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
+      "preview_published": true
     },
     "pre_sprint_1_baseline": {
       "build_id": "0.7.0-rework.6",
@@ -607,12 +615,14 @@
       "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
       "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
     },
-    "validated_head_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
-    "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
-    "automated_current_baseline": "docs/cinder-shift/sprint-1-b4-build-curve.json",
-    "current_source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
-    "current_tested_merge_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
-    "report": "docs/cinder-shift/sprint-1-b4-release-notes.ru.md"
+    "validated_head_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+    "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b5-verification.json",
+    "current_source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+    "current_tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+    "report": "docs/cinder-shift/sprint-1-b5-release-notes.ru.md",
+    "preview_published": true,
+    "publication_status": "B5_separate_Cloudflare_preview; production_B3"
   },
   "requirements": [
     {
@@ -621,13 +631,17 @@
       "status": "OPEN",
       "implementation": [
         "Remote release head and one-file local difference verified; dirty older modes checkout preserved. Live publication not rechecked by shell.",
-        "M-RW1 B3 is saved in PR #9; source/merge/build and remote CI evidence are recorded in sprint-1-b-release-notes.ru.md. The local host disconnected after 98ea958; full-campaign test recovery continued through GitHub without touching old checkouts."
+        "M-RW1 B3 is saved in PR #9; source/merge/build and remote CI evidence are recorded in sprint-1-b-release-notes.ru.md. The local host disconnected after 98ea958; full-campaign test recovery continued through GitHub without touching old checkouts.",
+        "B5 source, tested merge, separate Cloudflare preview and unchanged B3 production are pinned in the current verification report."
       ],
       "verification": [
-        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
+        "Live B5 / 07e1868 reached map, workshop, arrival and sector 1 A at 6/6 HP; preview/site CI and all 55 resource hashes PASS."
       ],
-      "evidence": [],
-      "publication": "not_published",
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b5-verification.json"
+      ],
+      "publication": "separate_development_preview_B5; acceptance_open",
       "implementation_status": "partial",
       "sprint_owner": "M-RW1"
     },
@@ -703,16 +717,19 @@
       "status": "OPEN",
       "implementation": [
         "docs/cinder-shift/rework-room-registry.json inventories all 37 unique campaign rooms (34 per selected route), geometry, threat roles/positions, hazards, services, physical data carrier and conditional links. Human per-encounter response/timing review remains open.",
-        "Registry now inventories all 44 unique rooms (41 selected). All five sectors have named gameplay episodes; new Airlock/Reactor geometry and objectives use the same runtime definitions as collision and combat gates."
+        "Registry now inventories all 44 unique rooms (41 selected). All five sectors have named gameplay episodes; new Airlock/Reactor geometry and objectives use the same runtime definitions as collision and combat gates.",
+        "M4H now teaches an armored aimed guard before its drone activates; target tracking, locked line and a 1100 ms counter window have explicit safe responses."
       ],
       "verification": [
         "Rework.6: all three full base Archive outcomes (Scout/health/no-E05 salvage), both Cargo choices, both Foundry routes, 71 models and 60 three-browser interaction/UI executions passed. Scope and exact SHA are recorded in the Archive baseline; human/all-build acceptance remains open.",
-        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
+        "B5: 15 aimed-guard browser executions and five models PASS, including a crouched hit and full-HP jump counters for four loadouts."
       ],
       "evidence": [
-        "docs/cinder-shift/rework-archive-input-baseline.json"
+        "docs/cinder-shift/rework-archive-input-baseline.json",
+        "docs/cinder-shift/sprint-1-b5-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "separate_development_preview_B5; acceptance_open",
       "implementation_status": "partial",
       "sprint_owner": "M-RW1"
     },
@@ -827,13 +844,17 @@
       "requirement": "Настроить кривую сложности между секторами и внутри миссии: Cargo не должен оставаться единственным резким провалом, пока Foundry/Archive мгновенно тают от оружейной сборки.",
       "status": "OPEN",
       "implementation": [
-        "B4 comparison records weapon time savings and full-HP defensive completions across all variants; difficulty acceptance remains OPEN pending encounter/pacing review and independent play."
+        "B4 comparison records weapon time savings and full-HP defensive completions across all variants; difficulty acceptance remains OPEN pending encounter/pacing review and independent play.",
+        "Late Archive adds an aimed counterattack duel without increasing HP or global difficulty multipliers."
       ],
-      "verification": [],
+      "verification": [
+        "B5: all 33 upgraded route variants PASS. Defence still ends every tested route at full HP; first-player difficulty and optimized mobility comparisons remain open."
+      ],
       "evidence": [
-        "docs/cinder-shift/sprint-1-b4-build-curve.json"
+        "docs/cinder-shift/sprint-1-b4-build-curve.json",
+        "docs/cinder-shift/sprint-1-b5-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "separate_development_preview_B5; acceptance_open",
       "sprint_owner": "M-RW1"
     },
     {
@@ -892,21 +913,24 @@
         "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open.",
         "Added base Cargo input routes for both equipment circuits; runtime results pending on .5.",
         "Same-seed base/W1/M1/D1 Airlock and base/full-weapon/full-movement/full-defence Regulator routes have automated input drivers. Cross-sector complete-build balance and first-player behaviour remain open.",
-        "B4 adds affordable weapon/movement/defence comparisons to all Cargo/Foundry/Archive variants and all nine Reactor rooms without resetting at the boss. Purchases use normal campaign budgets; per-room timing, damage causes, shields and abilities are recorded."
+        "B4 adds affordable weapon/movement/defence comparisons to all Cargo/Foundry/Archive variants and all nine Reactor rooms without resetting at the boss. Purchases use normal campaign budgets; per-room timing, damage causes, shields and abilities are recorded.",
+        "B5 repeats all affordable build comparisons after the aimed-guard change."
       ],
       "verification": [
         "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open.",
         "Both .5 base Cargo circuits passed; weapon/mobile/defense Cargo comparisons and other seeds remain open.",
         "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
-        "Source bcfa9e292277eefb063faa41089f2d3794dab96a / merge aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c: 33 upgraded route cases PASS, plus 11 base sector routes and four standalone boss cases PASS. Mobility follows the common route without dash optimization. Human balance/duration and one flaky native-touch route remain open."
+        "Source bcfa9e292277eefb063faa41089f2d3794dab96a / merge aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c: 33 upgraded route cases PASS, plus 11 base sector routes and four standalone boss cases PASS. Mobility follows the common route without dash optimization. Human balance/duration and one flaky native-touch route remain open.",
+        "07e1868 / tested merge e90e5a8: 33/33 upgraded routes plus 11 base sector and four standalone boss cases PASS; identical variant seeds; mobility does not optimize dash shortcuts."
       ],
       "evidence": [
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
         "docs/cinder-shift/rework-foundry-input-baseline.json",
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
-        "docs/cinder-shift/sprint-1-b4-build-curve.json"
+        "docs/cinder-shift/sprint-1-b4-build-curve.json",
+        "docs/cinder-shift/sprint-1-b5-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "separate_development_preview_B5; acceptance_open",
       "implementation_status": "partial",
       "sprint_owner": "M-RW1"
     },
@@ -1184,10 +1208,16 @@
       "id": "RW-06.03",
       "requirement": "Обеспечить понятные Play/Continue/Replay и закрытие; keyboard/touch/focus и корректные hit areas сохраняются.",
       "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "implementation": [
+        "The native-touch route driver now batches direction/jump at a narrow ledge and reuses fixed control positions; this is test-input stabilization rather than a claim of physical-device acceptance."
+      ],
+      "verification": [
+        "B5 native touch: three full mission runs, three movement checks and six 80 ms delayed shelf climbs across portrait/landscape PASS; at most two simultaneous contacts."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b5-verification.json"
+      ],
+      "publication": "separate_development_preview_B5; acceptance_open",
       "sprint_owner": "M-RW2"
     },
     {
@@ -1411,11 +1441,16 @@
       "requirement": "Для врагов читаемы idle/patrol/chase/telegraph/attack/recovery/hit/death по роли; добавить ясную гибель с завершением угрозы. Для Миры/модулей — необходимые реакция/получение урона/способность без смены согласованного резкого характера анимаций.",
       "status": "OPEN",
       "implementation": [
-        "Enemy death now emits shutdown debris rather than ordinary hit; full animation-state pass remains open."
+        "Enemy death now emits shutdown debris rather than ordinary hit; full animation-state pass remains open.",
+        "Aimed guard armor, tracking, lock, recovery and destruction have distinct shapes, text and cues. Broader role animation acceptance remains in M-RW2."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "verification": [
+        "B5 source-exact lock and counter frames inspected; 15 aimed-guard browser executions PASS; independent human audiovisual acceptance open."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b5-verification.json"
+      ],
+      "publication": "separate_development_preview_B5; acceptance_open",
       "implementation_status": "partial",
       "sprint_owner": "M-RW2"
     },
@@ -1688,13 +1723,17 @@
       "requirement": "Показать реальный риск поражения и обучаемость; каждый обязательный эпизод имеет понятный ответ, а не нечитаемый неизбежный урон. Не гарантировать искусственно смерть первого игрока.",
       "status": "OPEN",
       "implementation": [
-        "Base Reactor input routes take actual turret/drone/walker damage and reach R05; optional E06 can be defeated through a real retreat/recovery response. Known-route boss completion without damage demonstrates an available response, not first-player difficulty."
+        "Base Reactor input routes take actual turret/drone/walker damage and reach R05; optional E06 can be defeated through a real retreat/recovery response. Known-route boss completion without damage demonstrates an available response, not first-player difficulty.",
+        "An aimed shot can hit stationary crouch on the open floor; jumping after lock or breaking sight provides an avoidable response."
       ],
       "verification": [
-        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
+        "B5 counters keep full HP without shield absorption for all four isolated loadouts in three browsers. Whole base campaign completes 41 rooms at zero deaths; this does not prove novice difficulty."
       ],
-      "evidence": [],
-      "publication": "not_published",
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b5-verification.json"
+      ],
+      "publication": "separate_development_preview_B5; acceptance_open",
       "sprint_owner": "M-RW1"
     },
     {
