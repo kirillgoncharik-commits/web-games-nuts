@@ -485,18 +485,18 @@
   "active_workstream": {
     "milestone": "M-REWORK",
     "status": "IN_PROGRESS",
-    "build_id": "0.7.0-rw1.b3",
+    "build_id": "0.7.0-rw1.b4",
     "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
     "branch": "codex/cinder-shift-m-rework",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
-    "published": true,
+    "published": false,
     "accepted": false,
-    "verification": "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open.",
+    "verification": "B4 build/typecheck/i18n/art/91 models/three browsers/15 Airlock/8 saves/15 sector-boss/33 upgraded routes/fresh-profile campaign PASS. General regression remains open: native touch M1A shelf timing failure; all 12 shards completed: 277 PASS / 1 FAIL / 0 NOT RUN; failed-shard rerun pending. B3 remains published, as recorded in production_preview.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "local_execution_status": "Exact remote curve comparison source 6a16d4e00beed5ceb766ca1ab312e0abe336da18 restored locally; tree 04c5a4d2a632068b84eaa5e6002a8ffb4449fa2e matches. Browser verification runs in CI.",
+    "local_execution_status": "Code source bcfa9e292277eefb063faa41089f2d3794dab96a synchronized locally; subsequent checkpoint is documentation-only. Native-touch driver issue remains open.",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
     "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-sprint-1",
@@ -528,13 +528,13 @@
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "active_sprint": {
       "milestone": "M-RW1",
-      "checkpoint": "B_GAMEPLAY_AND_C_FULL_CAMPAIGN_ENGINEERING_VERIFIED",
+      "checkpoint": "B4_BUILD_CURVE_AND_FULL_CAMPAIGN_VERIFIED_TOUCH_REGRESSION_OPEN",
       "status": "IN_PROGRESS",
       "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-      "report": "docs/cinder-shift/sprint-1-b-release-notes.ru.md",
-      "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json",
+      "report": "docs/cinder-shift/sprint-1-b4-release-notes.ru.md",
+      "proof": "docs/cinder-shift/sprint-1-b4-build-curve.json",
       "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
-      "remaining": "Whole-sector build comparisons, first natural successful duration, independent audiovisual/balance acceptance, physical devices and playable reference-section study."
+      "remaining": "Stabilize native touch M1A shelf route and finish general regression; encounter difficulty/pacing; optimized mobility; independent first playtest; audiovisual/device acceptance; playable reference study."
     },
     "production_preview": {
       "build_id": "0.7.0-rw1.b3",
@@ -552,6 +552,17 @@
         "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
       },
       "acceptance_complete": false
+    },
+    "current_source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+    "current_tested_merge_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+    "full_regression_b4": {
+      "source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+      "passed": 277,
+      "failed": 1,
+      "not_run": 0,
+      "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699908",
+      "failed_case": "native touch M1A shelf route timing",
+      "failed_shard_rerun": "PENDING"
     }
   }
 }

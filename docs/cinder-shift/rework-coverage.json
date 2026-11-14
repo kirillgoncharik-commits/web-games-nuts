@@ -17,23 +17,23 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rw1.b3",
-    "stage": "M-RW1_B_gameplay_C_full_campaign_engineering_verified",
+    "build_id": "0.7.0-rw1.b4",
+    "stage": "M_RW1_B4_build_curve_verified_full_regression_open",
     "published": false,
     "accepted": false,
     "verification": {
+      "build": "PASS",
       "typecheck": "PASS",
       "i18n": "PASS_707_EN_RU_KEYS",
-      "build": "PASS_EXACT_CI_SOURCE",
       "art_contracts": "PASS",
-      "model_tests": "PASS_89",
+      "model_tests": "PASS_91",
       "browser_tests": "PASS_108_UI_EQUIPMENT_FEEDBACK_THREE_BROWSERS",
       "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
       "persistence": "PASS_8",
-      "sector_and_boss_routes": "PASS_15",
+      "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
+      "reachable_build_routes": "PASS_33",
       "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
-      "legacy_full_ui_suite": "PASS_276_FAILED_0_NOT_RUN_0",
-      "visual_review": "Exact-source sheets of Reactor rooms/power, boss phases and D3/E04/W4 reviewed.",
+      "legacy_full_ui_suite": "277_PASS_1_NATIVE_TOUCH_ROUTE_FAIL_0_NOT_RUN_FAILED_SHARD_RERUN_PENDING",
       "physical_devices": "NOT_RUN",
       "human_playtests": "NOT_RUN"
     },
@@ -282,6 +282,16 @@
           ]
         },
         "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json"
+      },
+      {
+        "head_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+        "source_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699923",
+        "result": "SUCCESS",
+        "checks": [
+          "33 reachable-build full-sector routes, including both boss phases and evacuation with original HP"
+        ],
+        "scope": "Common keyboard route, real purchase budgets. Optimized mobility and human balance/duration remain open."
       }
     ],
     "known_limitations": [
@@ -599,7 +609,10 @@
     },
     "validated_head_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
     "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
-    "automated_current_baseline": "docs/cinder-shift/sprint-1-b-input-baseline.json"
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b4-build-curve.json",
+    "current_source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+    "current_tested_merge_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+    "report": "docs/cinder-shift/sprint-1-b4-release-notes.ru.md"
   },
   "requirements": [
     {
@@ -813,9 +826,13 @@
       "id": "RW-02.02",
       "requirement": "Настроить кривую сложности между секторами и внутри миссии: Cargo не должен оставаться единственным резким провалом, пока Foundry/Archive мгновенно тают от оружейной сборки.",
       "status": "OPEN",
-      "implementation": [],
+      "implementation": [
+        "B4 comparison records weapon time savings and full-HP defensive completions across all variants; difficulty acceptance remains OPEN pending encounter/pacing review and independent play."
+      ],
       "verification": [],
-      "evidence": [],
+      "evidence": [
+        "docs/cinder-shift/sprint-1-b4-build-curve.json"
+      ],
       "publication": "not_published",
       "sprint_owner": "M-RW1"
     },
@@ -874,17 +891,20 @@
         "Same-seed full Airlock routes passed for base/W1/M1/D1. Cross-sector build and damage-cause comparison remains open.",
         "Rework.4 base suit completed both full eight-room Foundry routes with damage cause/timing and real R03 repair recorded; weapon/mobile/defense comparisons across sectors remain open.",
         "Added base Cargo input routes for both equipment circuits; runtime results pending on .5.",
-        "Same-seed base/W1/M1/D1 Airlock and base/full-weapon/full-movement/full-defence Regulator routes have automated input drivers. Cross-sector complete-build balance and first-player behaviour remain open."
+        "Same-seed base/W1/M1/D1 Airlock and base/full-weapon/full-movement/full-defence Regulator routes have automated input drivers. Cross-sector complete-build balance and first-player behaviour remain open.",
+        "B4 adds affordable weapon/movement/defence comparisons to all Cargo/Foundry/Archive variants and all nine Reactor rooms without resetting at the boss. Purchases use normal campaign budgets; per-room timing, damage causes, shields and abilities are recorded."
       ],
       "verification": [
         "Current .4: 15 full Airlock executions across three browsers passed for base/W1/M1/D1; both full Foundry base routes passed in Chromium on campaign seed 4. Other Foundry builds/seeds and the all-sector curve remain open.",
         "Both .5 base Cargo circuits passed; weapon/mobile/defense Cargo comparisons and other seeds remain open.",
-        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json."
+        "M-RW1 B3 exact source 483484fbf206e5fcbf03b525ac0d9a9db3d91bf2 / CI merge 0fec14efd0836741f8b2f068f48f3f6214f12d05: 276/276 full regression, 89 selected models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence checks, 15 sector/boss routes and one fresh-profile full campaign PASS. Scope, per-case evidence and human limits: sprint-1-b-release-notes.ru.md and sprint-1-b-input-baseline.json.",
+        "Source bcfa9e292277eefb063faa41089f2d3794dab96a / merge aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c: 33 upgraded route cases PASS, plus 11 base sector routes and four standalone boss cases PASS. Mobility follows the common route without dash optimization. Human balance/duration and one flaky native-touch route remain open."
       ],
       "evidence": [
         "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
         "docs/cinder-shift/rework-foundry-input-baseline.json",
-        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050"
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
+        "docs/cinder-shift/sprint-1-b4-build-curve.json"
       ],
       "publication": "not_published",
       "implementation_status": "partial",
