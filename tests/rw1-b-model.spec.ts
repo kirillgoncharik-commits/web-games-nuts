@@ -45,6 +45,7 @@ test('E06 is optional, spawns a supported ram outside solids, and grants the ful
  const a=reactor();a.current='M5B';expect(a.eventPlan.some(e=>e.event_id==='E06')).toBe(true);a.room().enemies.forEach(e=>e.hp=0);
  expect(a.forwardExitOpen()).toBe(true);expect(a.chooseCache('challenge')).toBe(true);expect(a.chooseCache('challenge')).toBe(false);expect(a.forwardExitOpen()).toBe(false);
  const e=a.room().enemies.at(-1)!,body=enemyRect(e);expect(a.definition().solids.some(s=>intersects(body,s))).toBe(false);expect(a.definition().solids.some(s=>s.y===body.y+body.height&&s.x<=e.x&&s.x+s.width>=e.x)).toBe(true);
+ const lastCover=Math.max(...a.definition().solids.filter(s=>s.y<320&&s.x<e.charge!.min).map(s=>s.x+s.width));expect(e.charge!.min-13-lastCover,'a standing body plus retreat margin fits before the charge').toBeGreaterThanOrEqual(38);
  stepEnemy(e,1000/60,{x:520,y:298},a.definition().solids,new Projectiles(),()=>{});
  expect(e.attackPhase).toBe('telegraph');expect(e.phaseMs).toBe(config.combat.walker.first_telegraph_ms);expect(e.shots).toBe(0);
 });

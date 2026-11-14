@@ -41,6 +41,9 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build
       - run: npx playwright test --config=playwright.route.config.ts tests/${{ matrix.sector }}-route.spec.ts
+      - name: Capture RW1 rooms and boss phases
+        if: always() && (matrix.sector == 'reactor' || matrix.sector == 'regulator')
+        run: node scripts/report-rw1-evidence.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -2,19 +2,21 @@ import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {encounter} from './encounter-helpers';
 import {state} from './helpers';
+import {routeCapture} from './route-capture';
 import {ground,to,jump,next,until} from './route-helpers';
 
 const builds=[{id:'base',nodes:[],active:null},{id:'weapon',nodes:['W1','W2','W3','W4'],active:'W4'},{id:'movement',nodes:['M1','M2','M3','M4'],active:'M1'},{id:'defence',nodes:['D1','D2','D3','D4'],active:null}] as const;
 for(const build of builds)test(`Regulator ${build.id} survives both phases and confirms evacuation with trusted input`,async({page},info)=>{
- test.setTimeout(210000);const phases=new Set<string>(),windows=new Set<string>();let lastWarning='',firing=false,climbed=false;const started=Date.now();
- async function fire(on:boolean){if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
+ test.setTimeout(210000);const phases=new Set<string>(),windows=new Set<string>(),captures=new Set<string>();let lastWarning='',firing=false,climbed=false;const started=Date.now();
+ async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
  async function climb(){await jump(page,106,180);await ground(page,288);await jump(page,176,272);await ground(page,256);climbed=true;}
  try{
   await encounter(page,{mission:'reactor',room:'M5D',seed:4,nodes:[...build.nodes],active:build.active});await climb();
   for(let i=0;i<2200;i++){
    const s=await state(page),p=s.boss.pattern;phases.add(p.stage);if(s.hp<=0||s.state!=='playing')throw Error('Boss run ended before shutdown');if(s.bossHp<=0)break;
+   const frame=p.stage+'-'+p.phase;if(build.id==='base'&&!captures.has(frame)){captures.add(frame);await routeCapture(page,info.outputPath('rw1-regulator-'+frame+'.png'));}
    if(p.stage==='lanes'){
-    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<266?300:232);await ground(page,256);}
+    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<272?307:237);await ground(page,256);}
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
     if(p.stage==='transition'||p.phase==='warning'){

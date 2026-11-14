@@ -8,7 +8,7 @@ for(const node of [undefined,'W1','M1','D1'] as (NodeId|undefined)[])test(`comba
  await startMission(page,{node});
  const entry=(await state(page)).campaign.entry;
  expect((await state(page)).combatRemaining).toBe(1);
- await roomA(page);await completeFromB(page);
+ await roomA(page);await completeFromB(page,{salvage:!node});
  await expect.poll(async()=>(await state(page)).screen).toBe('result');
  const won=await state(page);
  expect(won.campaign.result).toMatchObject({result:'victory',reward_granted:true});
@@ -16,6 +16,7 @@ for(const node of [undefined,'W1','M1','D1'] as (NodeId|undefined)[])test(`comba
  expect(won.campaign.reward_ledger).toHaveLength(1);
  expect(won.campaign.points).toBe(node?1:2);
  expect(won.campaign.result.hp).toBeGreaterThan(0);
+ expect(won.roomStates.M1B.cacheUsed).toBe(!node);
  await page.screenshot({path:info.outputPath('airlock-victory.png')});
  // Retry keeps the purchased build, seed and event plan, while restoring mission HP.
  await page.getByTestId('retry').click();
