@@ -1,6 +1,6 @@
 # M-RW1 · боевой геймплей C01
 
-Статус: IN_PROGRESS. Контрольная точка A ещё не закрыта.
+Статус M-RW1: IN_PROGRESS. Контрольная точка A: IMPLEMENTED / ENGINEERING VERIFIED. Контрольные точки B/C остаются открытыми.
 
 Вход: PR №9, точный head `c1a1e7e2430bc8443ca6d41774c1a0c420c1747e`, build `0.7.0-rework.6`.
 Задание: `Cinder_Shift_Sprint_1_Gameplay.txt`, версия 0 от 14 ноября 2026.
@@ -45,3 +45,10 @@ PASS локально: build, TypeScript, 683 EN/RU ключа, art contracts (�
 Source fb3a33107ce5e9743e05ddcff7ca7c0fba50180b, CI merge 5808492ba8f0d1ddbd3eb28db70348ae191670b5: **201 PASS / 33 FAIL / 0 NOT RUN**, всего 234. Все шесть частей завершены. Группы ошибок: старый Cargo (9), старый оператор/фокус/двойной skip (9), native touch/CSP (3), повторный запуск и учебная мишень/старый проход Airlock/Privacy (12). Сценарии обновлены; race при старте повтора теперь ждёт реального первого simulation tick.
 
 На source 2e58266427768261aa8aa951f19441ccc32be7df подтверждены: 76 моделей; 75 UI/equipment/feedback executions (25 × 3 браузера); 15 полных Airlock executions; 8 проверок хранения; обе ветки Foundry и Cargo. Полная обновлённая регрессия и Archive на этом кандидате ещё выполняются. Эти результаты не закрывают расширение Airlock/Reactor и сквозной финал C01.
+
+
+## Итог контрольной точки A
+
+Source 80225df1f8f423b47f89d4f30e660aa4a81da4c3, CI merge e81a2950f90fbf8fdc7cb234571f44b30df068d0, build 0.7.0-rw1.a1: **244 PASS / 0 FAIL / 0 NOT RUN** общей регрессии. Также подтверждены 76 моделей, 75 UI/equipment/feedback executions в трёх браузерах, 15 Airlock executions, 8 persistence cases и 7 полных маршрутов Cargo/Foundry/Archive. Наборы пересекаются. Кадры HP/щит/Reduced Effects просмотрены. Сводка: sprint-1-a-release-notes.ru.md.
+
+Следующий шаг: контрольная точка B — содержательная переработка Airlock и Reactor, затем матрица сборок/событий; C — полный Регулятор, эвакуация и сквозной финал. M-RW1 не завершён по результатам A. Восстановление: checkout cinder-shift-sprint-1, локальная ветка codex/cinder-shift-sprint-1, удалённая PR9 codex/cinder-shift-m-rework. После сохранения отчёта рабочая копия должна быть чистой.

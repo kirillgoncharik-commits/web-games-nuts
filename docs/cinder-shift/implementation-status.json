@@ -484,14 +484,14 @@
   "active_workstream": {
     "milestone": "M-REWORK",
     "status": "IN_PROGRESS",
-    "build_id": "0.7.0-rework.6",
+    "build_id": "0.7.0-rw1.a1",
     "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
     "branch": "codex/cinder-shift-m-rework",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
     "published": false,
     "accepted": false,
-    "verification": "Exact .6 head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458: build/typecheck/682 keys/art/registry, 71 models, 60 three-browser UI/equipment executions, 15 three-browser Airlock executions, 8 persistence checks, all three full Archive outcomes and both Cargo/Foundry variants PASS. Archive Scout 73.73s/5HP, health 71.27s/6HP, salvage 71.28s/6HP; real acquisition/power/upload/R04 and full-HP same-entry Retry/reward deduplication. Human duration/devices/visual/audio acceptance and full legacy regression remain open.",
+    "verification": "M-RW1 A VERIFIED on source 80225df1 / CI merge e81a2950: build, 683 EN/RU keys, art/rig contracts, 76 models, 75 UI/equipment/feedback executions across three browsers, 15 full Airlock cases, 8 persistence checks, seven Archive/Cargo/Foundry routes and complete 244/244 regression PASS. Exact renderer frames visually inspected. M-RW1 B/C and human/device acceptance remain open. NOT ACCEPTED / NOT PUBLISHED.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "implementation_estimate_percent": [
@@ -499,7 +499,7 @@
       30
     ],
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "local_execution_status": "Unavailable after environment disconnect during Archive test writing; remote GitHub workflow continues. Preserve both local worktrees on recovery.",
+    "local_execution_status": "Build/typecheck/models/art available. Local server listen denied; browser verification runs in CI. Active recovered checkout cinder-shift-sprint-1; old copies preserved.",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
     "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-rework-2026-11-13",
@@ -526,8 +526,16 @@
         "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
       }
     },
-    "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-    "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
-    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json"
+    "validated_head_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+    "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
+    "active_sprint": {
+      "milestone": "M-RW1",
+      "checkpoint": "A_ENGINEERING_VERIFIED",
+      "status": "IN_PROGRESS",
+      "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+      "gameplay_remaining": "Airlock/Reactor expansion, full Regulator/evacuation input route, all 12 technologies/6 events matrix, whole-campaign balance and natural duration",
+      "report": "docs/cinder-shift/sprint-1-a-release-notes.ru.md"
+    }
   }
 }

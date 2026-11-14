@@ -17,27 +17,21 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rework.6",
-    "stage": "archive_nine_episodes_carrier_scout_power_upload",
+    "build_id": "0.7.0-rw1.a1",
+    "stage": "M-RW1_checkpoint_A_combat_feedback_and_regression",
     "published": false,
     "accepted": false,
     "verification": {
-      "typecheck": "passed_exact_source_CI",
-      "i18n": "passed_682_EN_RU_keys",
-      "build": "passed_exact_source_CI",
-      "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
-      "model_tests": "71_passed",
-      "browser_tests": "60 UI/equipment executions passed across Chromium/Firefox/WebKit on head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458",
-      "full_archive_routes": "All three nine-room base cases PASS. E05 scout (seed 0): 73.73 active seconds / 5 HP; E05 health (seed 0): 71.27 / 6 HP, real +1 repair; no-E05 salvage (seed 3): 71.28 / 6 HP, +150 score. Carrier, power, transmission, final victory and full-HP same-entry Retry/reward deduplication verified.",
-      "full_cargo_routes": "Both nine-room base routes PASS on seed 4: conveyor 73.60 / security+optional salvage 78.00 active seconds; both 3 HP after R02 and Retry.",
-      "full_foundry_routes": "Both eight-room base alternatives PASS on seed 4: service 61.20 / press 57.53 active seconds; both 4 HP after R03.",
-      "airlock_flow": "15 complete Airlock input executions PASS across Chromium/Firefox/WebKit, base/W1/M1/D1, victory/reward/Retry/reload/earned Cargo unlock.",
-      "persistence": "8 migrated persistence checks PASS",
-      "room_registry": "Source-regenerated registry matches committed inventory: 37 unique campaign rooms / 34 selected; Archive 9.",
-      "physical_devices": "not_run",
-      "human_playtests": "not_run",
-      "visual_review": "not_performed; screenshots in workflow artifacts",
-      "legacy_full_ui_suite": "Known previous old menu/character-contract failures; .6 run 43441228441 in progress at evidence recording. Not an overall-suite PASS."
+      "typecheck": "PASS",
+      "i18n": "PASS_683_EN_RU_KEYS",
+      "build": "PASS",
+      "art_contracts": "PASS",
+      "model_tests": "PASS_76",
+      "browser_tests": "PASS: 75 executions across Chromium/Firefox/WebKit; 15 full Airlock cases; 8 persistence cases; 3 Archive/2 Cargo/2 Foundry full-input routes",
+      "legacy_full_ui_suite": "PASS: 244 passed, 0 failed, 0 not run across six completed shards",
+      "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
+      "physical_devices": "NOT_RUN",
+      "human_playtests": "NOT_RUN"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -172,7 +166,7 @@
       "Full legacy UI suite still targets old menu/character/purchase contracts and is not passing; migrate it before RC.",
       "Real devices, human audio review, independent playtests, 25-35 minutes, all-sector art and C02/C03 remain open."
     ],
-    "recovery": "Local environment disconnected during Archive test writing. Runtime/test source reconstructed from verified .5 remote base in GitHub. Preserve local uncommitted Archive work on recovery; do not reset either worktree.",
+    "recovery": "Use cinder-shift-sprint-1 / local codex/cinder-shift-sprint-1; remote PR9 codex/cinder-shift-m-rework. Older copies preserved. All runtime source since 2e582664 is unchanged; subsequent commits migrate and verify tests.",
     "implementation_estimate": {
       "range_percent": [
         25,
@@ -219,12 +213,10 @@
         "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
       }
     },
-    "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-    "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "sprint_1": {
       "status": "IN_PROGRESS",
-      "checkpoint": "A",
+      "checkpoint": "A_ENGINEERING_VERIFIED",
       "build_id": "0.7.0-rw1.a1",
       "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
       "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
@@ -236,19 +228,20 @@
         "models": "PASS_76_TESTS"
       },
       "browser_verification": {
-        "source_sha": "2e58266427768261aa8aa951f19441ccc32be7df",
+        "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
         "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
         "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
         "persistence": "PASS_8_CHECKS",
         "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
-        "full_regression": "IN_PROGRESS",
-        "visual_review": "PENDING_EXACT_SOURCE_CONTACT_SHEET",
+        "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
+        "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
         "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842078",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842092",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842112",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43562842128"
-        ]
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+        ],
+        "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
       },
       "human_playtest": "NOT_RUN",
       "physical_devices": "NOT_RUN",
@@ -260,8 +253,82 @@
         "passed": 201,
         "failed": 33,
         "not_run": 0
+      },
+      "checkpoint_implementation": "IMPLEMENTED",
+      "checkpoint_verification": "VERIFIED",
+      "full_regression": {
+        "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+        "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
+        "passed": 244,
+        "failed": 0,
+        "not_run": 0,
+        "shards": [
+          {
+            "job": "check (6)",
+            "passed": 40,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (5)",
+            "passed": 40,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (1)",
+            "passed": 41,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (3)",
+            "passed": 41,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (4)",
+            "passed": 41,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (2)",
+            "passed": 41,
+            "failed": 0,
+            "not_run": 0
+          }
+        ],
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
       }
-    }
+    },
+    "pre_sprint_1_baseline": {
+      "build_id": "0.7.0-rework.6",
+      "stage": "archive_nine_episodes_carrier_scout_power_upload",
+      "verification": {
+        "typecheck": "passed_exact_source_CI",
+        "i18n": "passed_682_EN_RU_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "71_passed",
+        "browser_tests": "60 UI/equipment executions passed across Chromium/Firefox/WebKit on head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458",
+        "full_archive_routes": "All three nine-room base cases PASS. E05 scout (seed 0): 73.73 active seconds / 5 HP; E05 health (seed 0): 71.27 / 6 HP, real +1 repair; no-E05 salvage (seed 3): 71.28 / 6 HP, +150 score. Carrier, power, transmission, final victory and full-HP same-entry Retry/reward deduplication verified.",
+        "full_cargo_routes": "Both nine-room base routes PASS on seed 4: conveyor 73.60 / security+optional salvage 78.00 active seconds; both 3 HP after R02 and Retry.",
+        "full_foundry_routes": "Both eight-room base alternatives PASS on seed 4: service 61.20 / press 57.53 active seconds; both 4 HP after R03.",
+        "airlock_flow": "15 complete Airlock input executions PASS across Chromium/Firefox/WebKit, base/W1/M1/D1, victory/reward/Retry/reload/earned Cargo unlock.",
+        "persistence": "8 migrated persistence checks PASS",
+        "room_registry": "Source-regenerated registry matches committed inventory: 37 unique campaign rooms / 34 selected; Archive 9.",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "visual_review": "not_performed; screenshots in workflow artifacts",
+        "legacy_full_ui_suite": "Known previous old menu/character-contract failures; .6 run 43441228441 in progress at evidence recording. Not an overall-suite PASS."
+      },
+      "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+      "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
+    },
+    "validated_head_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+    "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
   },
   "requirements": [
     {
@@ -1029,14 +1096,17 @@
         "M-RW1 A: event-driven HP pulse and camera impulse, separate shield/repair signals, discrete weapon recoil, effect intensity and Reduced Effects. Lifetimes use simulation time and clear on pause/death/scene change. Runtime files: src/combat-feedback.ts, src/room-scene.ts, src/art/combat-effects.ts, src/render.ts, src/session/save.ts."
       ],
       "verification": [
-        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI."
+        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI.",
+        "M-RW1 A: exact candidate 80225df1 / CI merge e81a2950: 75 three-browser UI/equipment/feedback executions and 244-case full regression PASS. Real HP, shield, reduced-effects and repair/Retry paths verified; renderer frames visually inspected. Full art/effect/build matrix remains open."
       ],
       "evidence": [
         "tests/combat-feedback.spec.ts",
-        "tests/feedback-ui.spec.ts"
+        "tests/feedback-ui.spec.ts",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+        "docs/cinder-shift/sprint-1-a-release-notes.ru.md"
       ],
       "publication": "not_published",
-      "implementation_status": "partial_pending_browser_visual_validation",
+      "implementation_status": "partial_verified_checkpoint_A",
       "sprint_owner": "M-RW1"
     },
     {
@@ -1060,15 +1130,18 @@
         "M-RW1 A: event-driven HP pulse and camera impulse, separate shield/repair signals, discrete weapon recoil, effect intensity and Reduced Effects. Lifetimes use simulation time and clear on pause/death/scene change. Runtime files: src/combat-feedback.ts, src/room-scene.ts, src/art/combat-effects.ts, src/render.ts, src/session/save.ts."
       ],
       "verification": [
-        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI."
+        "Five local combat-feedback model checks PASS; browser real-ram HP/shield/reduced checks and intensity persistence pending exact-source CI.",
+        "M-RW1 A: exact candidate 80225df1 / CI merge e81a2950: 75 three-browser UI/equipment/feedback executions and 244-case full regression PASS. Real HP, shield, reduced-effects and repair/Retry paths verified; renderer frames visually inspected. Full art/effect/build matrix remains open."
       ],
       "evidence": [
         "tests/combat-feedback.spec.ts",
-        "tests/feedback-ui.spec.ts"
+        "tests/feedback-ui.spec.ts",
+        "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+        "docs/cinder-shift/sprint-1-a-release-notes.ru.md"
       ],
       "publication": "not_published",
       "sprint_owner": "M-RW1",
-      "implementation_status": "partial_pending_browser_visual_validation"
+      "implementation_status": "partial_verified_checkpoint_A"
     },
     {
       "id": "RW-10.04",
