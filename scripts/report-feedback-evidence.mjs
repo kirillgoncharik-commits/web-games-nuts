@@ -1,4 +1,4 @@
-import {readdir,writeFile} from 'node:fs/promises';
+import {readdir,readFile,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 
@@ -12,7 +12,10 @@ for(const [i,mode]of ['base','shield','reduced'].entries()){
  for(const [column,event]of ['before','impact'].entries()){
   const file=paths.find(p=>p.endsWith('/'+mode+'-'+event+'.png'));
   if(!file)throw Error('Missing real-input evidence: '+mode+' '+event);
-  layers.push({input:Buffer.from(`<svg width="480" height="24"><rect width="480" height="24" fill="#101823"/><text x="12" y="17" fill="#f1d8ae" font-family="sans-serif" font-size="14">${mode}: ${event==='before'?'before ram impact':'actual ram impact'}</text></svg>`),left:column*480,top:i*294});
+  const snapshot=JSON.parse(await readFile(file.replace('.png','.json'),'utf8'));
+  const signal=mode==='shield'?snapshot.feedback.shieldAlpha:snapshot.feedback.damageAlpha;
+  console.log('CINDER_FEEDBACK_FRAME '+JSON.stringify({mode,event,hp:snapshot.hp,signal,feedback:snapshot.feedback,sha:snapshot.sha}));
+  layers.push({input:Buffer.from(`<svg width="480" height="24"><rect width="480" height="24" fill="#101823"/><text x="12" y="17" fill="#f1d8ae" font-family="sans-serif" font-size="14">${mode}: ${event==='before'?'before':'impact'} | HP ${snapshot.hp}/${snapshot.maxHp} | signal ${signal.toFixed(2)}</text></svg>`),left:column*480,top:i*294});
   layers.push({input:await sharp(file).resize(480,270,{fit:'contain',background:'#101823'}).png().toBuffer(),left:column*480,top:i*294+24});
  }
 }

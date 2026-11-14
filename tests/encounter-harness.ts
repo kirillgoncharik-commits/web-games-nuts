@@ -7,6 +7,10 @@ import type {NodeId} from '../games/cinder-shift/src/session/research';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
+ capture(){return new Promise(resolve=>app.game.renderer.snapshot(image=>{
+  const s=(window as any).__CINDER__();
+  resolve({png:(image as HTMLImageElement).src,state:{build:s.build,sha:s.sha,hp:s.hp,maxHp:s.maxHp,feedback:s.feedback,audioStatus:s.audioStatus,settings:s.settings}});
+ }));},
  start(input:{mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
   app.game.scene.stop('Room');app.game.scene.stop('Backdrop');
   const campaign=new Campaign(newCampaign(input.seed??4));
