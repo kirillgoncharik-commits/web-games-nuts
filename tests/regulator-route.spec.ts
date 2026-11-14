@@ -8,7 +8,7 @@ const builds=[{id:'base',nodes:[],active:null},{id:'weapon',nodes:['W1','W2','W3
 for(const build of builds)test(`Regulator ${build.id} survives both phases and confirms evacuation with trusted input`,async({page},info)=>{
  test.setTimeout(210000);const phases=new Set<string>(),windows=new Set<string>();let lastWarning='',firing=false,climbed=false;const started=Date.now();
  async function fire(on:boolean){if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
- async function climb(){await jump(page,106,180);await ground(page,288);await jump(page,208,272);await ground(page,256);climbed=true;}
+ async function climb(){await jump(page,106,180);await ground(page,288);await jump(page,176,272);await ground(page,256);climbed=true;}
  try{
   await encounter(page,{mission:'reactor',room:'M5D',seed:4,nodes:[...build.nodes],active:build.active});await climb();
   for(let i=0;i<2200;i++){
