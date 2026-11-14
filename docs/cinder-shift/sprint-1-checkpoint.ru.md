@@ -135,3 +135,8 @@ B5 / a20d057 сохранена чисто. Сверка с заданием M-R
 
 
 B6 коррекция баллистики после первого CI: W3 отражался, но не давал второго core hit. В первой модели ошибочно использовалась скорость 400 вместо текущих 440. Найдена и исправлена реальная ошибка regulatorImpact: наклонный отрезок блокировался бронёй, если его предыдущая точка ещё находилась за вертикальной границей открытого проёма, хотя контакт с роботом уже приходился внутрь проёма. Теперь броня геометрически вырезается по открытому окну. Пластина смещена на 1 px; реальная скорость и шесть позиций muzzle x=291…310 покрыты девятью ballistics-моделями. Точная browser-проверка коррекции PENDING. Новые целевые случаи перенесены в начало CI, их доказательства сохраняются отдельно от общего набора.
+
+
+B6 test-driver correction after full regression: base Cargo/security reached M2B but the optional reverse-ledged jump missed the upper platform; the real player remained alive at 3 HP. The dedicated sector/build routes passed. This is a route-input timing failure, not a gameplay blocker. The Cargo driver now stops on the launch ledge, then dispatches Jump and direction together without waiting between their transport round trips. Three real-keyboard cases cover 0/150/300 ms added transport delay. No runtime geometry, HP, enemy, clock or saved state was changed by this correction.
+
+Host workspace disconnected after runtime source a390b80e4488e0cde4596ba64631098c030843d4 was synchronized. Further checkpoint preparation continues through GitHub/CI. When the host returns, compare local uncommitted documentation/export scripts with this remote branch before synchronizing; do not overwrite blindly. Gameplay source is already durable in GitHub.

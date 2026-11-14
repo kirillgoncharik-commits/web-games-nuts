@@ -48,3 +48,14 @@ export async function next(page:Page,id:string,cover?:number){
  await page.keyboard.down('d');await until(page,id=>{const s=(window as any).__CINDER__();return s.room===id&&s.state==='playing'&&s.player?.x<100;},id,'exit to '+id);await page.keyboard.up('d');await ground(page,320);
 }
 
+
+// Dispatch both trusted key events before awaiting either transport round trip.
+// Call only after stopping on the launch ledge, so delayed direction input cannot
+// walk the player off it while the jump command is still in flight.
+export async function standingJump(page:Page,toX:number){
+ const p=(await state(page)).player;expect(p.vy).toBe(0);expect(Math.abs(p.vx)).toBeLessThan(1);
+ const right=toX>p.x,key=right?'d':'a';
+ await Promise.all([page.keyboard.down('Space'),page.keyboard.down(key)]);
+ await until(page,({toX,right})=>{const p=(window as any).__CINDER__().player;return right?p.x>=toX:p.x<=toX;},{toX,right},'standing jump landing');
+ await Promise.all([page.keyboard.up(key),page.keyboard.up('Space')]);
+}

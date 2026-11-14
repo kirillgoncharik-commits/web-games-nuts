@@ -3,7 +3,7 @@ import {writeFile} from 'node:fs/promises';
 import {state} from './helpers';
 import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
 const build=routeBuild('cargo');
-import {ground,to,jump,clear,next,until} from './route-helpers';
+import {ground,to,jump,standingJump,clear,next,until} from './route-helpers';
 import {encounter} from './encounter-helpers';
 
 for(const circuit of ['conveyor','security'] as const)test(`${build.id} suit completes all nine Cargo rooms with ${circuit} power`,async({page},info)=>{
@@ -14,7 +14,7 @@ for(const circuit of ['conveyor','security'] as const)test(`${build.id} suit com
   verifyRouteEntry(await state(page),build);
   const entry=(await state(page)).campaign.entry;
   await jump(page,148,240);await ground(page,320);await page.keyboard.down('s');await clear(page,['d-security']);await next(page,'M2A');await page.keyboard.up('s');await mark();
-  await jump(page,114,172);await ground(page,288);await jump(page,178,280);await ground(page,256);
+  await jump(page,114,172);await ground(page,288);await to(page,178);await ground(page,288);await standingJump(page,280);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m2a-drone']);await to(page,490);await page.keyboard.up('s');await ground(page,320);await next(page,'E',536);await mark();
   await jump(page,130,224);await ground(page,320);await page.keyboard.down('s');await clear(page,['e-turret']);await next(page,'M2B');await page.keyboard.up('s');await mark();
   await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m2b-walker']);await page.keyboard.up('s');

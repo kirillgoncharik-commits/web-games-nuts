@@ -49,7 +49,7 @@ jobs:
           pactl set-default-sink cinder_qa
       - run: npm run build
       - name: Verify final boss ballistics and defensive limits first
-        run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/rw1-final-combat.spec.ts --output=test-results/final-combat
+        run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/cargo-jump-precision.spec.ts tests/rw1-final-combat.spec.ts --output=test-results/final-combat
       - name: Verify existing UI, equipment and combat feedback
         run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/rework-ui.spec.ts tests/cargo-equipment.spec.ts tests/archive-equipment.spec.ts tests/rw1-equipment.spec.ts tests/feedback-ui.spec.ts tests/aimed-guard.spec.ts --output=test-results/encounters
       - name: Capture exact-source combat feedback contact sheet
