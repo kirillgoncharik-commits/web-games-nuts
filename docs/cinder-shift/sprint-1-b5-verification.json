@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "build_id": "0.7.0-rw1.b5",
-  "status": "AUTOMATED_ENGINEERING_VERIFIED_HUMAN_ACCEPTANCE_OPEN",
+  "status": "AUTOMATED_ENGINEERING_VERIFIED",
   "accepted": false,
   "production_updated": false,
   "current_source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
@@ -1414,9 +1414,9 @@
     "live_ui": "v0.7.0-rw1.b5 / 07e1868; Play -> map -> workshop -> arrival -> sector 1 A; 6/6 HP"
   },
   "limits": [
-    "Scripted routes are not independent human playtests or the 25–35 minute duration target.",
-    "Defence builds finish every compared route at full HP; difficulty and risk remain open.",
-    "Physical devices and independent human audiovisual review remain NOT RUN."
+    "Scripted routes are not measurements of a natural first-play duration; this human acceptance criterion is deferred outside the current Sprint 1 gate.",
+    "Defence builds finish every compared variant at full HP; gameplay difficulty/pacing and optimized mobility comparisons remain in scope.",
+    "Human audiovisual and physical-device acceptance is deferred outside the current gate by explicit user instruction."
   ],
   "fresh_profile_campaign": {
     "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898075",
@@ -1620,5 +1620,19 @@
     "fresh_profile_campaign": 1,
     "native_touch_repeats": 12,
     "overlapping_sets": true
+  },
+  "acceptance_policy": {
+    "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+    "instruction_date": "2026-11-14",
+    "instruction": "человеческая приемка пока не учитывается",
+    "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
+    "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+  },
+  "user_play_feedback": {
+    "date": "2026-11-14",
+    "author": "Kirill",
+    "text": "я поиграл, неидеально но стало лучше",
+    "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
+    "timed_or_full_route_details_provided": false
   }
 }

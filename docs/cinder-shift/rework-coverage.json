@@ -35,7 +35,7 @@
       "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
       "legacy_full_ui_suite": "PASS_290_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
       "physical_devices": "NOT_RUN",
-      "human_playtests": "NOT_RUN",
+      "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; HUMAN_ACCEPTANCE_DEFERRED_NOT_CURRENT_GATE",
       "native_touch": "PASS_12_EXECUTIONS; THREE_FULL_MISSIONS_SIX_DELAYED_SHELF_CLIMBS_THREE_MOVEMENT_CHECKS",
       "visual_review": "AIMED_GUARD_LOCK_AND_COUNTER_FRAMES_REVIEWED; HUMAN_REVIEW_OPEN"
     },
@@ -311,11 +311,11 @@
       }
     ],
     "known_limitations": [
-      "First natural successful 25–35-minute duration is not verified; the known B5 scripted route takes 381.62 active seconds.",
-      "All 33 affordable-build comparisons pass; defence ends every tested route at full HP. Human balance and optimized mobility routes remain open.",
-      "Independent human art/sound review and physical-device acceptance remain open.",
+      "First natural 25–35-minute duration is not verified; B5 scripted input takes 381.62 active seconds. Human timing/acceptance is outside the current Sprint 1 gate per user instruction.",
+      "All 33 affordable-build comparisons pass; defence ends every tested variant at full HP. Gameplay balance/pacing and optimized mobility comparisons remain in scope.",
+      "Human audiovisual and physical-device acceptance is deferred, outside the current Sprint 1 gate.",
       "Reference study is source-level; selected reference sections were not played.",
-      "B5 is a separate development preview; production stays B3; no overall milestone acceptance claimed."
+      "B5 is a separate development preview; production stays B3; current Sprint 1 implementation remains in progress."
     ],
     "recovery": "Local cinder-shift-sprint-1 / codex/cinder-shift-sprint-1 synchronized to remote PR9 head. The host disconnected mid-turn, recovered work was committed through GitHub, then exact trees/commits were restored locally. Old checkouts and a backup of the five pending files are preserved.",
     "requirement_counts": {
@@ -353,7 +353,7 @@
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "sprint_1": {
       "status": "IN_PROGRESS",
-      "checkpoint": "B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE_HUMAN_ACCEPTANCE_OPEN",
+      "checkpoint": "B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE",
       "build_id": "0.7.0-rw1.b5",
       "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
       "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
@@ -392,7 +392,7 @@
           "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118"
         ]
       },
-      "human_playtest": "NOT_RUN",
+      "human_playtest": "QUALITATIVE_USER_FEEDBACK_RECEIVED; FORMAL_ACCEPTANCE_DEFERRED_OUTSIDE_CURRENT_GATE",
       "physical_devices": "NOT_RUN",
       "accepted": false,
       "published": false,
@@ -589,7 +589,21 @@
       },
       "report": "docs/cinder-shift/sprint-1-b5-release-notes.ru.md",
       "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
-      "preview_published": true
+      "preview_published": true,
+      "acceptance_policy": {
+        "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+        "instruction_date": "2026-11-14",
+        "instruction": "человеческая приемка пока не учитывается",
+        "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
+        "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+      },
+      "user_play_feedback": {
+        "date": "2026-11-14",
+        "author": "Kirill",
+        "text": "я поиграл, неидеально но стало лучше",
+        "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
+        "timed_or_full_route_details_provided": false
+      }
     },
     "pre_sprint_1_baseline": {
       "build_id": "0.7.0-rework.6",
@@ -622,7 +636,14 @@
     "current_tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
     "report": "docs/cinder-shift/sprint-1-b5-release-notes.ru.md",
     "preview_published": true,
-    "publication_status": "B5_separate_Cloudflare_preview; production_B3"
+    "publication_status": "B5_separate_Cloudflare_preview; production_B3",
+    "acceptance_policy": {
+      "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+      "instruction_date": "2026-11-14",
+      "instruction": "человеческая приемка пока не учитывается",
+      "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
+      "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+    }
   },
   "requirements": [
     {
