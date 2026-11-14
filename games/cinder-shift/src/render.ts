@@ -32,6 +32,7 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
+  private recoilUntil=-1;
   private bossSprite?:Phaser.GameObjects.Image;
   private environment:EnvironmentMotion;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
@@ -73,8 +74,10 @@ export class SceneArt{
     return sprite;
   }
   cue(kind:CombatCue,point:Point,now:number,direction=1){
-    this.cues.push(kind,point,now,direction);
+    this.cues.push(kind,point,now,direction);if(kind==='muzzle')this.recoilUntil=now+66;
   }
+
+  clearFeedback(){this.cues.clear();this.recoilUntil=-1;}
 
   private artImage(frame:ArtFrame,x:number,y:number,depth:number){
     let image=this.artPool[this.artUsed++];
@@ -155,7 +158,10 @@ export class SceneArt{
     const pose=miraRigPose(now,player.body.velocity.x,y,player.crouching);
     const hit=now<attempt.damageFlashUntil;
     const hero=(id:AssetId,px:number,py:number)=>{
-      const s=this.sprite(id,px,py,6,f);if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
+      const s=this.sprite(id,px,py,6,f);
+      // Recoil is a visual offset; the rig anchors and projectile muzzle stay fixed.
+      if(id==='mira-cutter'&&!reducedFlashes&&now<this.recoilUntil)s.setX(s.x-f*2);
+      if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };
     this.sprite('mira-shadow',x,y+1,3).setAlpha(.6);
     if(now<player.dashUntil)this.sprite('mira-body-stand',x-f*30,y-40,5,f).setTintFill(0x76dcc8).setAlpha(.2);

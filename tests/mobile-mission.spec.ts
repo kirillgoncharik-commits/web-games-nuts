@@ -14,13 +14,13 @@ test('complete mission with native touch input and at most two touches',async({b
   async function jump(from:number,to:number){await action('right',true);await x(from);await action('jump',true);await x(to);await action('jump',false);await action('right',false);}
   async function dead(id:string){await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===id)?.hp,{timeout:10000}).toBe(0);}
   await page.goto('/games/cinder-shift/?seed='+seedsForPlans().none);await page.getByTestId('new-shift').tap();await page.getByTestId('map-prepare').tap();await page.getByTestId('briefing').tap();if(await page.getByTestId('skip-arrival').isVisible())await page.getByTestId('skip-arrival').tap();await expect.poll(async()=>Boolean((await state(page)).player)).toBe(true);
-  await jump(143,242);await moveTo(294);await action('crouch',true);await moveTo(442);await action('crouch',false);await expect.poll(async()=>(await state(page)).targetHp).toBe(0);
+  await jump(143,242);await moveTo(294);await action('crouch',true);await moveTo(442);await action('crouch',false);await expect.poll(async()=>(await state(page)).combatRemaining).toBe(0);
   await moveTo(546);await action('interact',true);await page.waitForTimeout(80);await action('interact',false);await expect.poll(async()=>(await state(page)).powered).toBe(true);
-  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().state==='transition');await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
+  await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().transition);await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
   await jump(194,350);await dead('b-walker');await dead('b-drone');await jump(492,556);
   await action('right',true);await page.waitForFunction(()=>(window as any).__CINDER__().room==='C',null,{timeout:8000});await action('right',false);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
   await jump(130,224);await action('crouch',true);await dead('c-walker-1');await action('crouch',false);
-  await jump(318,368);await moveTo(465);
+  await jump(318,368);await dead('c-drone');await moveTo(408);await dead('c-walker-2');
   await jump(492,556);await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);await action('interact',true);await expect.poll(async()=>(await state(page)).objective).toBe(true);await action('interact',false);
   await page.screenshot({path:info.outputPath('mobile-power.png')});await action('right',true);await expect.poll(async()=>(await state(page)).state).toBe('complete');await action('right',false);
   expect(maxTouches).toBeLessThanOrEqual(2);expect((await state(page)).campaign.result).toMatchObject({result:"victory",hp:expect.any(Number)});expect((await state(page)).campaign.result.hp).toBeGreaterThan(0);await context.close();

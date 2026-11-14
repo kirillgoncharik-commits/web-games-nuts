@@ -1,8 +1,8 @@
 name: Cinder Shift check
 on: [push, pull_request]
 concurrency:
-  group: cinder-check-${{ github.ref }}
-  cancel-in-progress: true
+  group: cinder-check-${{ github.ref }}-${{ github.sha }}
+  cancel-in-progress: false
 jobs:
   check:
     runs-on: ubuntu-latest
