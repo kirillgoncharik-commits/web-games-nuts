@@ -9,7 +9,7 @@ for(const circuit of ['cooling','isolation'] as const)for(const acceptE06 of [fa
  try{
   await page.goto('/__encounter__/');await page.getByTestId('new-shift').waitFor();await page.getByTestId('menu-settings').click();await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);await page.getByTestId('settings-back').click();
   await page.evaluate(()=>(window as any).__ENCOUNTER__.start({mission:'reactor',seed:4}));await ground(page,320);await mark();
-  await jump(page,130,224);await ground(page,320);await clear(page,['m5a-security']);await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
+  await jump(page,130,224);await ground(page,320);await clear(page,['m5a-security']);await page.keyboard.down('s');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
   await jump(page,426,500);await ground(page,320);await page.keyboard.down('s');await to(page,576);await page.keyboard.up('s');await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().roomStates.M5A.terminal,null,'outer power');await page.keyboard.up('e');await next(page,'M5F');await mark();
   await jump(page,130,188);await ground(page,288);await jump(page,204,306);await ground(page,256);await page.keyboard.down('s');await clear(page,['m5f-drone']);await page.keyboard.up('s');await to(page,400);await ground(page,320);await clear(page,['m5f-security']);await next(page,'M5B',552);await mark();
   await jump(page,122,180);await ground(page,288);await jump(page,204,280);await ground(page,272);await clear(page,['m5b-drone']);

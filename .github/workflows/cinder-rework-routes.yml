@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sector: [archive, cargo, foundry, reactor]
+        sector: [archive, cargo, foundry, reactor, regulator]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

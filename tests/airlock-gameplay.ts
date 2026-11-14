@@ -25,7 +25,7 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  if(salvage){
   await move(212);await jump(212,172);await ground(288);await jump(178,292);await ground(256);await jump(326,432);await ground(224);
   await action('interact',true);await wait(()=>(window as any).__CINDER__().roomStates.M1B.cacheUsed,null,'upper salvage');await action('interact',false);
- }
+ }else{await action('crouch',true);await move(380);await action('crouch',false);}
  await move(510);await ground();await next('M1C',true);
 
  await jump(130,224);await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
