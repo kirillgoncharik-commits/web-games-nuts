@@ -20,7 +20,7 @@ for(const build of builds)test(`Regulator ${build.id} survives both phases and c
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
     if(p.stage==='transition'||p.phase==='warning'){
-     await fire(false);if(s.player.x>110){await to(page,100);await ground(page,320);}climbed=false;
+     await fire(false);if(s.player.x>110){if(s.player.x>200){await to(page,200);await ground(page,320);}await jump(page,(await state(page)).player.x,100);await ground(page,320);}climbed=false;
     }else if(p.phase==='active'){
      await fire(false);if(!climbed&&p.rects[0].x>330)await climb();
     }else if(p.phase==='core'){
