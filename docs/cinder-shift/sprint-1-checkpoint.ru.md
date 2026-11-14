@@ -1,6 +1,6 @@
 # M-RW1 · боевой геймплей C01
 
-Статус M-RW1: IN_PROGRESS. Контрольная точка A: IMPLEMENTED / ENGINEERING VERIFIED. Контрольные точки B/C остаются открытыми.
+Статус M-RW1: IN_PROGRESS. A проверена ранее; геймплей B и базовый сквозной проход C теперь ENGINEERING VERIFIED. Полная кривая сборок, естественная длительность и независимая приёмка остаются открытыми. Актуальная сборка: 0.7.0-rw1.b3; итог ниже.
 
 Вход: PR №9, точный head `c1a1e7e2430bc8443ca6d41774c1a0c420c1747e`, build `0.7.0-rework.6`.
 Задание: `Cinder_Shift_Sprint_1_Gameplay.txt`, версия 0 от 14 ноября 2026.
@@ -52,3 +52,18 @@ Source fb3a33107ce5e9743e05ddcff7ca7c0fba50180b, CI merge 5808492ba8f0d1ddbd3eb2
 Source 80225df1f8f423b47f89d4f30e660aa4a81da4c3, CI merge e81a2950f90fbf8fdc7cb234571f44b30df068d0, build 0.7.0-rw1.a1: **244 PASS / 0 FAIL / 0 NOT RUN** общей регрессии. Также подтверждены 76 моделей, 75 UI/equipment/feedback executions в трёх браузерах, 15 Airlock executions, 8 persistence cases и 7 полных маршрутов Cargo/Foundry/Archive. Наборы пересекаются. Кадры HP/щит/Reduced Effects просмотрены. Сводка: sprint-1-a-release-notes.ru.md.
 
 Следующий шаг: контрольная точка B — содержательная переработка Airlock и Reactor, затем матрица сборок/событий; C — полный Регулятор, эвакуация и сквозной финал. M-RW1 не завершён по результатам A. Восстановление: checkout cinder-shift-sprint-1, локальная ветка codex/cinder-shift-sprint-1, удалённая PR9 codex/cinder-shift-m-rework. После сохранения отчёта рабочая копия должна быть чистой.
+
+
+## Итог B и сквозной проверки C · 14 ноября 2026
+
+Source `483484fbf206e5fcbf03b525ac0d9a9db3d91bf2`, CI merge `0fec14efd0836741f8b2f068f48f3f6214f12d05`, build **0.7.0-rw1.b3**. **276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены**. Также: 89 моделей, 108 UI/equipment/feedback executions в трёх браузерах, 15 полных Airlock, 8 persistence, 15 маршрутов секторов/босса и отдельный полный проход нового профиля. Наборы пересекаются.
+
+Airlock 3 → 6, Reactor 5 → 9; 44 уникальные комнаты / 41 на выбранном пути. Исправлены события B после расширения, физическое появление/отход E06 и восстановление удалённых пуль D3/смерти внутри collision filter. Подтверждены W3, M3/M4, D4, D3 против D2, настоящий E04 on/off и W4 4 damage/cooldown. Кадры точного кандидата просмотрены.
+
+Полная кампания: base / seed 4 / service / isolation, E06 принят; 380,50 активных секунд, 398,765 wall seconds, 0 смертей, 4 награды и 5 очков, 1 сохранённая запись после reload. Это заранее известный маршрут, не естественные 25–35 минут.
+
+Отчёт: `sprint-1-b-release-notes.ru.md`; измерения: `sprint-1-b-input-baseline.json`; матрица: `rw1-mechanics-matrix.ru.md`.
+
+Среда восстановлена; локальная ветка `codex/cinder-shift-sprint-1` в `cinder-shift-sprint-1` синхронизирована с PR9 `codex/cinder-shift-m-rework`. Пять pending файлов до отключения сохранены в `../tmp/sprint-1-recovery/host-return-20261114-0810`; отличие восстановленного helper было только в пустой строке. Старые копии сохранены. Следующий коммит меняет только документы; код проверен по SHA выше.
+
+Следующая работа M-RW1: полные сравнения достижимых сборок на маршрутах секторов, кривая сложности, независимый первый плейтест, человеческая проверка audiovisual-матрицы и физические устройства. ACCEPTED / PUBLISHED не объявлены.
