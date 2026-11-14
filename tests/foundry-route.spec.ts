@@ -1,17 +1,18 @@
 import {test,expect,type Page} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {state} from './helpers';
+import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
+const build=routeBuild('foundry');
 
 import {until,ground,to,jump,clear,counterRam,drone,cross,next} from './route-helpers';
 
-for(const route of ['service','press'] as const)test(`base suit completes the full eight-room Foundry ${route} route`,async({page},info)=>{
+for(const route of ['service','press'] as const)test(`${build.id} suit completes the full eight-room Foundry ${route} route`,async({page},info)=>{
  test.setTimeout(240000);const measurements:any[]=[];let activeRoom='',roomStart=0,hpStart=6;const started=Date.now();
  async function mark(){const s=await state(page);if(activeRoom)measurements.push({room:activeRoom,active_seconds:s.activeSeconds-roomStart,hp_in:hpStart,hp_out:s.hp});activeRoom=s.room;roomStart=s.activeSeconds;hpStart=s.hp;console.log('Route entry',route,activeRoom,'HP',hpStart,'time',roomStart);}
  try{
   await page.goto('/__encounter__/');await page.getByTestId('new-shift').waitFor();
   await page.getByTestId('menu-settings').click();await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);await page.getByTestId('settings-back').click();
-  await page.evaluate(()=>(window as any).__ENCOUNTER__.start({mission:'foundry',seed:4}));await ground(page,320);await mark();
-  expect((await state(page)).loadout.nodes).toEqual([]);
+  await page.evaluate(build=>(window as any).__ENCOUNTER__.start({mission:'foundry',seed:4,nodes:build.nodes,active:build.active}),build);await ground(page,320);verifyRouteEntry(await state(page),build);await mark();
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);await mark();
   await to(page,100);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3e-ram');
@@ -40,7 +41,7 @@ for(const route of ['service','press'] as const)test(`base suit completes the fu
   await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().objective,null,'final terminal');await page.keyboard.up('e');await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().state==='complete',null,'Foundry result');await page.keyboard.up('d');
   const end=await state(page);measurements.push({room:activeRoom,active_seconds:end.activeSeconds-roomStart,hp_in:hpStart,hp_out:end.hp});
   expect(Object.values(end.roomStates).filter((r:any)=>r.visited)).toHaveLength(8);expect(end.campaign.result.result).toBe('victory');expect(end.campaign.run_stats.foundry_route).toBe(route);
-  const report={status:'AUTOMATED_INPUT_ONLY',build:end.build,source_sha:end.sha,route,nodes:[],seed:4,active_seconds:end.activeSeconds,wall_seconds:(Date.now()-started)/1000,hp:end.hp,rooms:measurements,hits:end.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
+  const report={status:'AUTOMATED_INPUT_ONLY',build:end.build,source_sha:end.sha,route,...routeBuildEvidence(end,build),seed:4,active_seconds:end.activeSeconds,wall_seconds:(Date.now()-started)/1000,hp:end.hp,rooms:measurements,hits:end.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
   console.log('Foundry route report',JSON.stringify(report));await writeFile(info.outputPath('foundry-route.json'),JSON.stringify(report,null,2));await page.screenshot({path:info.outputPath('foundry-complete.png')});
  }catch(error){const s=await state(page);console.log('Foundry route failure',JSON.stringify({route,measurements,state:s.state,room:s.room,hp:s.hp,player:s.player,enemies:s.enemies,hazards:s.hazards,roomStates:s.roomStates}));await writeFile(info.outputPath('failure-state.json'),JSON.stringify(s,null,2));throw error;}
 });

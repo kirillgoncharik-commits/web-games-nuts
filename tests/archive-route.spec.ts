@@ -1,17 +1,19 @@
 import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {state} from './helpers';
+import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
+const build=routeBuild('archive');
 import {encounter} from './encounter-helpers';
 import {ground,to,jump,clear,counterRam,next,until} from './route-helpers';
 import {archiveCampaignSeed} from './archive-seeds';
 
-for(const choice of ['scout','health','salvage'] as const)test(`base suit completes all nine Archive rooms with ${choice}`,async({page},info)=>{
+for(const choice of ['scout','health','salvage'] as const)test(`${build.id} suit completes all nine Archive rooms with ${choice}`,async({page},info)=>{
  test.setTimeout(240000);const rooms:any[]=[];let activeRoom='',roomStart=0,hpStart=6;const wallStart=Date.now();let beaconEffect:any=null;
  const campaignSeed=archiveCampaignSeed(choice!=='salvage');
  async function mark(){const s=await state(page);if(activeRoom)rooms.push({room:activeRoom,active_seconds:s.activeSeconds-roomStart,hp_in:hpStart,hp_out:s.hp});activeRoom=s.room;roomStart=s.activeSeconds;hpStart=s.hp;console.log('Archive entry',choice,s.room,'HP',s.hp,'time',s.activeSeconds);}
  try{
-  await encounter(page,{mission:'archive',room:'M4A',seed:campaignSeed});await mark();
-  expect((await state(page)).loadout.nodes).toEqual([]);const entry=(await state(page)).campaign.entry;
+  await encounter(page,{mission:'archive',room:'M4A',seed:campaignSeed,nodes:build.nodes,active:build.active});await mark();
+  verifyRouteEntry(await state(page),build);const entry=(await state(page)).campaign.entry;
   await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m4a-walker']);await to(page,510);await page.keyboard.up('s');await next(page,'M4E',552);await mark();
   await jump(page,114,172);await ground(page,288);await jump(page,178,292);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m4e-drone']);await page.keyboard.up('s');
@@ -54,9 +56,9 @@ for(const choice of ['scout','health','salvage'] as const)test(`base suit comple
   const won=await state(page);rooms.push({room:activeRoom,active_seconds:won.activeSeconds-roomStart,hp_in:hpStart,hp_out:won.hp});
   expect(won.campaign.result.result).toBe('victory');expect(won.archiveCarrierCollected&&won.archiveUploadPowered&&won.dataUploaded).toBe(true);expect(won.hp).toBeGreaterThan(0);
   expect(Object.values(won.roomStates).filter((r:any)=>r.visited)).toHaveLength(9);
-  const report={status:'AUTOMATED_INPUT_ONLY',build:won.build,source_sha:won.sha,choice,campaign_seed:campaignSeed,nodes:[],event_plan:won.eventPlan,beacon_effect:beaconEffect,r04_used:won.roomStates.M4C.repairUsed,active_seconds:won.activeSeconds,wall_seconds:(Date.now()-wallStart)/1000,hp:won.hp,rooms,hits:won.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
+  const report={status:'AUTOMATED_INPUT_ONLY',build:won.build,source_sha:won.sha,choice,campaign_seed:campaignSeed,...routeBuildEvidence(won,build),event_plan:won.eventPlan,beacon_effect:beaconEffect,r04_used:won.roomStates.M4C.repairUsed,active_seconds:won.activeSeconds,wall_seconds:(Date.now()-wallStart)/1000,hp:won.hp,rooms,hits:won.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
   console.log('Archive route report',JSON.stringify(report));await writeFile(info.outputPath('archive-route.json'),JSON.stringify(report,null,2));await page.screenshot({path:info.outputPath('archive-complete.png')});
   await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&s.room==='M4A'&&s.attemptId!==won.attemptId;}).toBe(true);
-  const retry=await state(page);expect(retry.hp).toBe(6);expect(retry.campaign.entry).toEqual(entry);expect(retry.archiveCarrierCollected||retry.archiveUploadPowered||retry.dataUploaded||retry.scoutedArchive).toBe(false);expect(retry.campaign.reward_ledger).toEqual(won.campaign.reward_ledger);
+  const retry=await state(page);expect(retry.hp).toBe(build.maxHp);expect(retry.campaign.entry).toEqual(entry);expect(retry.archiveCarrierCollected||retry.archiveUploadPowered||retry.dataUploaded||retry.scoutedArchive).toBe(false);expect(retry.campaign.reward_ledger).toEqual(won.campaign.reward_ledger);
  }catch(error){const s=await state(page);console.log('Archive route failure',JSON.stringify({choice,rooms,state:s.state,room:s.room,hp:s.hp,player:s.player,enemies:s.enemies,solids:s.solids,archiveCarrierCollected:s.archiveCarrierCollected,archiveUploadPowered:s.archiveUploadPowered,dataUploaded:s.dataUploaded,scoutedArchive:s.scoutedArchive,exitOpen:s.exitOpen}));await writeFile(info.outputPath('failure-state.json'),JSON.stringify(s,null,2));throw error;}
 });
