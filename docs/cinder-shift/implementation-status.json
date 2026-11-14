@@ -8,18 +8,18 @@
     "code_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "working_tree": "B6 engineering complete; documentation/evidence successor",
-    "published_game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+    "published_game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "test_source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
     "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28"
   },
   "production": {
-    "build_id": "0.7.0-rw1.b3",
-    "source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+    "build_id": "0.7.0-rw1.b6",
+    "source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "source_dirty": false,
     "url": "https://nuts.bid/games/cinder-shift/",
-    "site_main_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
-    "site_pr": 13,
-    "description": "Published B3 engineering preview. Completed M-RW1 B6 is a separate preview; production remains on this B3 source."
+    "site_main_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+    "site_pr": 14,
+    "description": "B6 Sprint 1 engineering preview published to production at explicit user request. Production CI and Cloudflare deployment succeeded. Post-deploy live UI check unavailable; human acceptance remains deferred."
   },
   "release_register": [
     {
@@ -65,6 +65,23 @@
       "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
       "url": "https://nuts.bid/games/cinder-shift/",
       "acceptance_complete": false
+    },
+    {
+      "channel": "nuts.bid web",
+      "build_id": "0.7.0-rw1.b6",
+      "source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "status": "published_development_preview",
+      "site_commit": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+      "site_pr": 14,
+      "source_dirty": false,
+      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "cloudflare_deployment_id": "bea206b4-3e65-4d8a-ae54-938527d733ee",
+      "deployed_at": "2026-11-14T22:39:55Z",
+      "site_ci": "PASS",
+      "cloudflare_pages": "SUCCESS",
+      "production_live_ui": "NOT RUN; browser connection and local execution environment unavailable after merge",
+      "acceptance_complete": false
     }
   ],
   "acceptance": {
@@ -102,7 +119,8 @@
     "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open.",
     "B5 build/types/710 EN-RU keys/art/96 models/123 three-browser executions/15 Airlock/12 native touch/8 persistence/15 sector-boss/33 upgraded routes/full fresh-profile campaign PASS. General regression 290 PASS / 0 FAIL / 0 NOT RUN, all 12 shards. Production remains B3; independent human duration, balance, audiovisual and physical-device acceptance OPEN.",
     "2026-11-14 user instruction: human acceptance is excluded from the current Sprint 1 completion gate; qualitative first-play feedback is recorded without counting it as acceptance.",
-    "B6 final engineering verification: docs/cinder-shift/sprint-1-b6-verification.json; 307/307 general regression and all five workflows / 42 jobs SUCCESS."
+    "B6 final engineering verification: docs/cinder-shift/sprint-1-b6-verification.json; 307/307 general regression and all five workflows / 42 jobs SUCCESS.",
+    "2026-11-14: at user request, published B6 on nuts.bid through nutsbid PR14 / main 46ee58b70b101f7f85b93594f142741fac7c5c21. GitHub Actions push run 43649233697 SUCCESS; Cloudflare Pages deployment bea206b4-3e65-4d8a-ae54-938527d733ee SUCCESS at 22:39:55Z. Runtime and 55-resource manifest are unchanged from verified B6 preview. Post-deploy production UI check NOT RUN due lost browser connection/environment."
   ],
   "blocks": [
     {
@@ -557,19 +575,20 @@
       "next_sprint": "M-RW2; separate task required"
     },
     "production_preview": {
-      "build_id": "0.7.0-rw1.b3",
-      "game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
-      "tested_code_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
-      "site_merge_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
-      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/13",
-      "cloudflare_deployment_id": "9820c610-5091-4a91-ad53-ee1742f4e61e",
-      "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+      "build_id": "0.7.0-rw1.b6",
+      "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "tested_code_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+      "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/14",
+      "cloudflare_deployment_id": "bea206b4-3e65-4d8a-ae54-938527d733ee",
+      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
       "url": "https://nuts.bid/games/cinder-shift/",
       "verification": {
         "site_ci": "PASS",
         "cloudflare_pages": "SUCCESS",
-        "live_build_label": "v0.7.0-rw1.b3 / d52853e",
-        "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
+        "deployed_at": "2026-11-14T22:39:55Z",
+        "live_build_label": "NOT RUN on production; B6 / a390b80 verified on the identical pre-merge preview",
+        "live_flow": "NOT RUN on production; browser connection unavailable"
       },
       "acceptance_complete": false
     },
