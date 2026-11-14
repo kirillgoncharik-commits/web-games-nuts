@@ -1,7 +1,7 @@
 import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {state} from './helpers';
-import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
+import {routeBuild,verifyRouteEntry,routeBuildEvidence,purposefulMobility,dashThrough} from './route-build';
 const build=routeBuild('archive');
 import {encounter} from './encounter-helpers';
 import {ground,to,jump,clear,counterRam,next,until} from './route-helpers';
@@ -35,7 +35,7 @@ for(const choice of ['scout','health','salvage'] as const)test(`${build.id} suit
   await to(page,510);await ground(page,320);await next(page,'M4F',552);await mark();
   expect((await state(page)).solids.some((s:any)=>s.id==='archive-scout-screen')).toBe(choice!=='scout');
   await jump(page,114,208);await ground(page,320);
-  if(choice!=='scout'){await jump(page,316,400);await ground(page,320);}
+  if(choice!=='scout'){if(purposefulMobility){await to(page,320);await ground(page,320);await dashThrough(page,'archive-scout-screen');}else{await jump(page,316,400);await ground(page,320);}}
   await page.keyboard.down('s');await clear(page,['m4f-security']);await to(page,510);await page.keyboard.up('s');await next(page,'M4G',552);await mark();
   await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m4g-walker']);await to(page,550);await page.keyboard.up('s');
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).archiveUploadPowered).toBe(true);await next(page,'M4H');await mark();

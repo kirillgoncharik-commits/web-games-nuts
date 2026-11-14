@@ -2,6 +2,17 @@ import {expect} from '@playwright/test';
 import {newCampaign} from '../games/cinder-shift/src/session/campaign';
 import {missionIds,missions,type PlayableMissionId} from '../games/cinder-shift/src/session/missions';
 import {loadout,type ActiveSkill,type NodeId} from '../games/cinder-shift/src/session/research';
+import {state} from './helpers';
+import {until,ground} from './route-helpers';
+import type {Page} from '@playwright/test';
+
+export const purposefulMobility=process.env.RW1_PURPOSEFUL_MOBILITY==='1';
+export async function dashThrough(page:Page,solidId:string){
+ const before=await state(page),solid=before.solids.find((s:any)=>s.id===solidId);
+ expect(before.loadout.active).toBe('M1');expect(solid).toBeTruthy();expect(before.player.dashReady).toBeLessThanOrEqual(before.simMs);
+ await page.keyboard.press('k');await until(page,t=>(window as any).__CINDER__().simMs>t+300,before.simMs,'marked obstacle dash');await ground(page,320);
+ const after=await state(page);expect(after.player.x-11).toBeGreaterThan(solid.x+solid.width);expect(after.solids.some((s:any)=>s.id===solidId)).toBe(true);
+}
 
 // Compare the same seed, route and keyboard strategy with purchases that are
 // affordable on the first visit. Later sectors must not receive free modules.
@@ -26,7 +37,7 @@ export function verifyRouteEntry(s:any,build:ReturnType<typeof routeBuild>){
 export function routeBuildEvidence(s:any,build:ReturnType<typeof routeBuild>){
  return{loadout_id:build.id,nodes:build.nodes,active:build.active,research_budget:build.budget,
   points_after_route:s.campaign.points,max_hp:s.maxHp,
-  comparison_strategy:'same geometry and keyboard route; selected W4 used in boss core windows; no movement shortcuts',
+  comparison_strategy:purposefulMobility?'same route with M3/M4 used at authored marked obstacles; not a globally fastest route':'same geometry and keyboard route; selected W4 used in boss core windows; no movement shortcuts',
   shield_absorptions:s.eventLog.filter((e:any)=>e.name==='shield_absorbed'),
   abilities:s.eventLog.filter((e:any)=>e.name==='ability_used'),
   death_preventions:s.eventLog.filter((e:any)=>e.name==='death_prevented')};

@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {state} from './helpers';
-import {routeBuild,verifyRouteEntry,routeBuildEvidence} from './route-build';
+import {routeBuild,verifyRouteEntry,routeBuildEvidence,purposefulMobility,dashThrough} from './route-build';
 const build=routeBuild('foundry');
 
 import {until,ground,to,jump,clear,counterRam,drone,cross,next} from './route-helpers';
@@ -20,7 +20,7 @@ for(const route of ['service','press'] as const)test(`${build.id} suit completes
   await jump(page,160,270);await ground(page,320);await clear(page,['m3f-security']);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');await mark();
   if(route==='service'){
-   await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,410);await ground(page,320);await drone(page,'m3b-drone');await next(page,'M3G',536);await mark();
+   await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);if(purposefulMobility){await to(page,330);await ground(page,320);await dashThrough(page,'m3b-wall');}else{await jump(page,324,410);await ground(page,320);}await drone(page,'m3b-drone');await next(page,'M3G',536);await mark();
    // The lower drone is screened by the middle platform from floor fire.
    // Climb the real cover/platform steps, then use the crouched firing line.
    await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
