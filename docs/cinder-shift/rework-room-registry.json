@@ -2,7 +2,7 @@
   "schema_version": 1,
   "build_id": "0.7.0-rw1.b6",
   "source_hash": "06722f86eef4d0828138051a9b3103ce3d9d3120a46cfcb6e2831268fdeba22f",
-  "status": "INCOMPLETE: source inventory; full route input, timing and human validation remain open",
+  "status": "SOURCE_INVENTORY; M-RW1 engineering proof in sprint-1-b6-verification.json; human acceptance deferred",
   "campaign_room_count": 44,
   "training_room_excluded": "T",
   "first_campaign_rooms_on_selected_route": 41,
@@ -55,7 +55,7 @@
     {
       "mission_id": "airlock",
       "design_budget_ms": 240000,
-      "timing_status": "NOT_MEASURED",
+      "timing_status": "AUTOMATED_INPUT_REPORT_AVAILABLE; HUMAN_DURATION_NOT_MEASURED",
       "rooms": [
         {
           "room_id": "A",
@@ -113,7 +113,7 @@
           "base_next": "B",
           "base_previous": null,
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "B",
@@ -197,7 +197,7 @@
           "base_next": "M1A",
           "base_previous": "A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M1A",
@@ -258,7 +258,7 @@
           "base_next": "M1B",
           "base_previous": "B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M1B",
@@ -341,7 +341,7 @@
           "base_next": "M1C",
           "base_previous": "M1A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M1C",
@@ -419,7 +419,7 @@
           "base_next": "C",
           "base_previous": "M1B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "C",
@@ -520,14 +520,14 @@
           "base_next": null,
           "base_previous": "M1C",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         }
       ]
     },
     {
       "mission_id": "cargo",
       "design_budget_ms": 360000,
-      "timing_status": "NOT_MEASURED",
+      "timing_status": "AUTOMATED_INPUT_REPORT_AVAILABLE; HUMAN_DURATION_NOT_MEASURED",
       "rooms": [
         {
           "room_id": "D",
@@ -579,7 +579,7 @@
           "base_next": "M2A",
           "base_previous": null,
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M2A",
@@ -639,7 +639,7 @@
           "base_next": "E",
           "base_previous": "D",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "E",
@@ -708,7 +708,7 @@
           "base_next": "M2B",
           "base_previous": "M2A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M2B",
@@ -779,7 +779,7 @@
           "base_next": "M2C",
           "base_previous": "E",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M2C",
@@ -816,7 +816,7 @@
           "base_next": "M2D",
           "base_previous": "M2B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M2D",
@@ -895,7 +895,7 @@
           "base_next": "F",
           "base_previous": "M2C",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "F",
@@ -974,7 +974,7 @@
           "base_next": "M2E",
           "base_previous": "M2D",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M2E",
@@ -1026,7 +1026,7 @@
           "base_next": "G",
           "base_previous": "F",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "G",
@@ -1106,14 +1106,14 @@
           "base_next": null,
           "base_previous": "M2E",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         }
       ]
     },
     {
       "mission_id": "foundry",
       "design_budget_ms": 360000,
-      "timing_status": "NOT_MEASURED",
+      "timing_status": "AUTOMATED_INPUT_REPORT_AVAILABLE; HUMAN_DURATION_NOT_MEASURED",
       "rooms": [
         {
           "room_id": "M3A",
@@ -1172,7 +1172,7 @@
           "base_next": "M3E",
           "base_previous": null,
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3E",
@@ -1275,7 +1275,7 @@
           "base_next": "M3F",
           "base_previous": "M3A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3F",
@@ -1336,7 +1336,7 @@
           "base_next": "M3B",
           "base_previous": "M3E",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3B",
@@ -1417,7 +1417,7 @@
           "base_next": "M3G",
           "base_previous": "M3F",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3G",
@@ -1501,7 +1501,7 @@
           "base_next": "M3H",
           "base_previous": "M3B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3H",
@@ -1586,7 +1586,7 @@
           "base_next": "M3K",
           "base_previous": "M3G",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3C",
@@ -1680,7 +1680,7 @@
           "base_next": "M3I",
           "base_previous": "M3F",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3I",
@@ -1769,7 +1769,7 @@
           "base_next": "M3J",
           "base_previous": "M3C",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3J",
@@ -1857,7 +1857,7 @@
           "base_next": "M3K",
           "base_previous": "M3I",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3K",
@@ -1906,7 +1906,7 @@
           "base_next": "M3D",
           "base_previous": "M3H",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M3D",
@@ -1986,14 +1986,14 @@
           "base_next": null,
           "base_previous": "M3K",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         }
       ]
     },
     {
       "mission_id": "archive",
       "design_budget_ms": 360000,
-      "timing_status": "NOT_MEASURED",
+      "timing_status": "AUTOMATED_INPUT_REPORT_AVAILABLE; HUMAN_DURATION_NOT_MEASURED",
       "rooms": [
         {
           "room_id": "M4A",
@@ -2055,7 +2055,7 @@
           "base_next": "M4E",
           "base_previous": null,
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4E",
@@ -2125,7 +2125,7 @@
           "base_next": "M4B",
           "base_previous": "M4A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4B",
@@ -2194,7 +2194,7 @@
           "base_next": "M4F",
           "base_previous": "M4E",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4F",
@@ -2260,7 +2260,7 @@
           "base_next": "M4G",
           "base_previous": "M4B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4G",
@@ -2319,7 +2319,7 @@
           "base_next": "M4H",
           "base_previous": "M4F",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4H",
@@ -2397,7 +2397,7 @@
           "base_next": "M4C",
           "base_previous": "M4G",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4C",
@@ -2449,7 +2449,7 @@
           "base_next": "M4I",
           "base_previous": "M4H",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4I",
@@ -2507,7 +2507,7 @@
           "base_next": "M4D",
           "base_previous": "M4C",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M4D",
@@ -2591,14 +2591,14 @@
           "base_next": null,
           "base_previous": "M4I",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         }
       ]
     },
     {
       "mission_id": "reactor",
       "design_budget_ms": 480000,
-      "timing_status": "NOT_MEASURED",
+      "timing_status": "AUTOMATED_INPUT_REPORT_AVAILABLE; HUMAN_DURATION_NOT_MEASURED",
       "rooms": [
         {
           "room_id": "M5A",
@@ -2694,7 +2694,7 @@
           "base_next": "M5F",
           "base_previous": null,
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5F",
@@ -2783,7 +2783,7 @@
           "base_next": "M5B",
           "base_previous": "M5A",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5B",
@@ -2881,7 +2881,7 @@
           "base_next": "M5G",
           "base_previous": "M5F",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5G",
@@ -2964,7 +2964,7 @@
           "base_next": "M5H",
           "base_previous": "M5B",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5H",
@@ -3001,7 +3001,7 @@
           "base_next": "M5I",
           "base_previous": "M5G",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5I",
@@ -3090,7 +3090,7 @@
           "base_next": "M5C",
           "base_previous": "M5H",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5C",
@@ -3145,12 +3145,12 @@
           "base_next": "M5D",
           "base_previous": "M5I",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5D",
           "episode": "R08/R09",
-          "encounter_goal": "Dodge locked lanes, fire into the raised chest aperture, then evade the moving sweep.",
+          "encounter_goal": "Dodge locked lanes, fire into the raised chest aperture or reflect from the authored panel, then evade the moving sweep.",
           "geometry": [
             {
               "x": 0,
@@ -3208,7 +3208,7 @@
           "base_next": "M5E",
           "base_previous": "M5C",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         },
         {
           "room_id": "M5E",
@@ -3251,7 +3251,7 @@
           "base_next": null,
           "base_previous": "M5D",
           "combat_exit": "Powered live required threats must be defeated; room objectives still apply.",
-          "verification": "See exact-source model/browser evidence in PR #9; no full-room human PASS claimed."
+          "verification": "B6 engineering evidence: docs/cinder-shift/sprint-1-b6-verification.json. Human acceptance deferred; no human PASS claimed."
         }
       ]
     }

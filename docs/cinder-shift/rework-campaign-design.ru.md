@@ -1,6 +1,14 @@
 # M-REWORK — проектирование первой кампании
 
-Актуализация 14.11.2026: инженерная сборка 0.7.0-rw1.b3 содержит 44 уникальные комнаты кампании, 41 на выбранном пути: Airlock 6, Cargo 9, Foundry 8 на каждой из двух веток, Archive 9, Reactor 9. Базовая кампания пройдена от нового профиля до сохранённого финала. Ниже сохранены дизайн-бюджеты и история расширений; текущие доказательства и ограничения — в sprint-1-b-release-notes.ru.md и rework-coverage.json.
+## B6: current engineering completion
+
+M-RW1 ENGINEERING COMPLETE / VERIFIED. All 30 owned requirements, 44 unique campaign rooms / 41 on one route, 12 technologies and 6 events have engineering evidence. The final base run takes 382.73 active seconds / 399.744 wall seconds, with no deaths, both boss phases, evacuation and a saved record after reload. This scripted route does not establish a human 25-35-minute duration; that measurement is deferred outside the current gate by user instruction.
+
+All 33 affordable loadout routes pass. Seven purposeful dash routes plus two no-dash controls verify obstacle crossing without a health penalty. Controls also vary in duration, so whole-sector speed differences are not attributed solely to dash. W3 now reflects from the authored M5D panel into the open core; closed armor and the floor firing line remain protected. Defence absorbs once and later aimed fire still reduces HP.
+
+Current proof: sprint-1-b6-verification.json. The source-regenerated room registry and mechanics matrix describe the current geometry and contracts. Subsequent sections retain earlier design budgets and dated checkpoints.
+
+Актуализация 14.11.2026: инженерная сборка 0.7.0-rw1.b6 содержит 44 уникальные комнаты кампании, 41 на выбранном пути: Airlock 6, Cargo 9, Foundry 8 на каждой из двух веток, Archive 9, Reactor 9. Базовая кампания пройдена от нового профиля до сохранённого финала. Ниже сохранены дизайн-бюджеты и история расширений; текущие доказательства и ограничения — в sprint-1-b6-release-notes.ru.md, sprint-1-b6-verification.json и rework-coverage.json.
 
 Цель: 25–35 минут первого естественного успешного прохождения. Бюджет ниже определяет количество разных ситуаций, а не таймеры дверей, обязательные смерти или множитель HP. Время меню, обучения с поражениями и успешной попытки измеряется отдельно. Увеличение числа комнат принимается только после измерения образца Foundry; если задача решается быстро, добавляется новое решение/ситуация, а не ожидание.
 

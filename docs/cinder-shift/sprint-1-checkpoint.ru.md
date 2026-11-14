@@ -1,6 +1,6 @@
 # M-RW1 · боевой геймплей C01
 
-Статус M-RW1: IN_PROGRESS. A проверена ранее; геймплей B и базовый сквозной проход C теперь ENGINEERING VERIFIED. Полная кривая сборок, естественная длительность и независимая приёмка остаются открытыми. Актуальная сборка: 0.7.0-rw1.b3; итог ниже.
+M-RW1: ENGINEERING COMPLETE / VERIFIED. Current build 0.7.0-rw1.b6; 30/30 current engineering requirements verified, 307/307 general regression PASS. Human acceptance is excluded from the current gate by user instruction. Final report: sprint-1-b6-release-notes.ru.md. Earlier entries below are historical checkpoints.
 
 Вход: PR №9, точный head `c1a1e7e2430bc8443ca6d41774c1a0c420c1747e`, build `0.7.0-rework.6`.
 Задание: `Cinder_Shift_Sprint_1_Gameplay.txt`, версия 0 от 14 ноября 2026.
@@ -140,3 +140,18 @@ B6 коррекция баллистики после первого CI: W3 от
 B6 test-driver correction after full regression: base Cargo/security reached M2B but the optional reverse-ledged jump missed the upper platform; the real player remained alive at 3 HP. The dedicated sector/build routes passed. This is a route-input timing failure, not a gameplay blocker. The Cargo driver now stops on the launch ledge, then dispatches Jump and direction together without waiting between their transport round trips. Three real-keyboard cases cover 0/150/300 ms added transport delay. No runtime geometry, HP, enemy, clock or saved state was changed by this correction.
 
 Host workspace disconnected after runtime source a390b80e4488e0cde4596ba64631098c030843d4 was synchronized. Further checkpoint preparation continues through GitHub/CI. When the host returns, compare local uncommitted documentation/export scripts with this remote branch before synchronizing; do not overwrite blindly. Gameplay source is already durable in GitHub.
+
+
+## Инженерная сдача M-RW1 · B6 · 14 ноября 2026
+
+M-RW1 ENGINEERING COMPLETE / VERIFIED по текущим критериям Кирилла. Человеческая приёмка исключена из текущего gate; формальный ACCEPTED общего M-REWORK не объявлен. Все 30 требований владельца M-RW1 имеют актуальные инженерные доказательства; общий реестр сохраняет 80 требований и владельцев следующих спринтов.
+
+Runtime a390b80e4488e0cde4596ba64631098c030843d4; тестовый коммит 252e80b0dea14df0f5dbffa728940bc4a17f4829; CI merge 7efde9319419a74b97027687fe8fa455a6188b28. Все пять workflow завершены SUCCESS. Общая регрессия 307 PASS / 0 FAIL / 0 NOT RUN; модели 105, три браузера 147, Airlock 15, native touch 12, persistence 8, сектор/босс 15, альтернативные сборки 33, целевая мобильность 9. Полная новая кампания: 41 комната, 382,73 активных секунды, 0 смертей, обе фазы/эвакуация/reload, ruleset campaign-rework9. Наборы пересекаются.
+
+W3 даёт дополнительное попадание по открытому ядру; наклонный отрезок больше не упирается в край открытого проёма. Закрытая броня и напольная линия сохраняют защиту. Полная D-ветка после щита получает HP-урон при отказе от ответа. Cargo-прыжок к optional salvage использует остановку на ступени и один chord; задержки 0/150/300 мс прошли во всех трёх браузерах.
+
+Preview https://23728b9d.nuts-games.pages.dev/games/cinder-shift/, site 686ce45b384143d401735ac013f7653402a568cd; Cloudflare + site CI SUCCESS, manifest 3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702, 55 файлов. Живой запуск B6 до сектора 1 A при 6/6 HP подтверждён. Прод B3 / d52853e остаётся опубликованным отдельно.
+
+Среда после отключения вернулась. Локальный checkout cinder-shift-sprint-1 / codex/cinder-shift-sprint-1 сверен с remote PR9 / codex/cinder-shift-m-rework и точным тестовым коммитом 252e80b. Старые незакоммиченные export-документы сохранены в ../tmp/sprint-1-recovery/host-return-b6-* перед восстановлением. Следующий коммит содержит документацию и экспорт доказательств; runtime не меняется.
+
+Отчёт sprint-1-b6-release-notes.ru.md; результаты sprint-1-b6-verification.json; единая таблица request-coverage.csv; схема regulator-hitboxes.svg. Следующий этап — M-RW2 по отдельному заданию: арт/анимации/окружение/звук на работающей C01. Незакрытого инженерного объёма M-RW1 и известных P0/P1 текущего маршрута нет.

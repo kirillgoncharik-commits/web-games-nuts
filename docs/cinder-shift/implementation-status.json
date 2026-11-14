@@ -1,14 +1,16 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-14T19:14:00Z",
+  "updated_at": "2026-11-14",
   "reference": "Cinder Shift M-RW1 / Sprint 1 gameplay; current coverage and evidence in active_workstream",
   "source_checkout": {
     "branch": "codex/cinder-shift-m-rework",
-    "code_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+    "code_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
-    "working_tree": "clean_code_and_documentation_checkpoint",
-    "published_game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa"
+    "working_tree": "B6 engineering complete; documentation/evidence successor",
+    "published_game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+    "test_source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+    "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28"
   },
   "production": {
     "build_id": "0.7.0-rw1.b3",
@@ -17,7 +19,7 @@
     "url": "https://nuts.bid/games/cinder-shift/",
     "site_main_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
     "site_pr": 13,
-    "description": "Published Sprint 1 engineering preview; M-RW1 remains IN_PROGRESS / NOT ACCEPTED."
+    "description": "Published B3 engineering preview. Completed M-RW1 B6 is a separate preview; production remains on this B3 source."
   },
   "release_register": [
     {
@@ -67,8 +69,8 @@
   ],
   "acceptance": {
     "milestone": "M-RW1",
-    "status": "IN_PROGRESS / NOT ACCEPTED",
-    "automated_checkpoint": "B5",
+    "status": "ENGINEERING_COMPLETE; HUMAN_ACCEPTANCE_DEFERRED",
+    "automated_checkpoint": "B6",
     "requirements_coverage": "docs/cinder-shift/rework-coverage.json",
     "human_duration_target_verified": false,
     "independent_audiovisual_review": "NOT_RUN",
@@ -78,9 +80,10 @@
       "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
       "instruction_date": "2026-11-14",
       "instruction": "человеческая приемка пока не учитывается",
-      "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
-      "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
-    }
+      "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+    },
+    "whole_m_rework_accepted": false
   },
   "verification_performed": [
     "npm run check passed: EN/RU keys and parameters plus TypeScript type check; this does not establish gameplay acceptance",
@@ -98,7 +101,8 @@
     "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending.",
     "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open.",
     "B5 build/types/710 EN-RU keys/art/96 models/123 three-browser executions/15 Airlock/12 native touch/8 persistence/15 sector-boss/33 upgraded routes/full fresh-profile campaign PASS. General regression 290 PASS / 0 FAIL / 0 NOT RUN, all 12 shards. Production remains B3; independent human duration, balance, audiovisual and physical-device acceptance OPEN.",
-    "2026-11-14 user instruction: human acceptance is excluded from the current Sprint 1 completion gate; qualitative first-play feedback is recorded without counting it as acceptance."
+    "2026-11-14 user instruction: human acceptance is excluded from the current Sprint 1 completion gate; qualitative first-play feedback is recorded without counting it as acceptance.",
+    "B6 final engineering verification: docs/cinder-shift/sprint-1-b6-verification.json; 307/307 general regression and all five workflows / 42 jobs SUCCESS."
   ],
   "blocks": [
     {
@@ -498,23 +502,23 @@
   ],
   "active_workstream": {
     "milestone": "M-REWORK",
-    "status": "IN_PROGRESS",
-    "build_id": "0.7.0-rw1.b5",
+    "status": "IN_PROGRESS; SPRINT_1_ENGINEERING_COMPLETE",
+    "build_id": "0.7.0-rw1.b6",
     "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
     "branch": "codex/cinder-shift-m-rework",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
     "published": false,
     "accepted": false,
-    "verification": "B5 build/types/710 EN-RU keys/art/96 models/123 three-browser executions/15 Airlock/12 native touch/8 persistence/15 sector-boss/33 upgraded routes/full fresh-profile campaign PASS. General regression 290 PASS / 0 FAIL / 0 NOT RUN, all 12 shards. Production remains B3; Gameplay balance/pacing and optimized mobility comparisons remain in scope. Human acceptance is deferred outside the current Sprint 1 gate by user instruction.",
+    "verification": "B6 all five workflows / 42 jobs SUCCESS. General regression 307 PASS, 0 FAIL, 0 NOT RUN; 105 models; 147 three-browser checks; all sector, build, mobility and fresh-profile campaign routes PASS. Sets overlap. Scope and limits: docs/cinder-shift/sprint-1-b6-verification.json",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "local_execution_status": "Code source 07e18683b664d9443d81ec07ffcec295f44d4030 verified; subsequent checkpoint changes documentation only. Local and remote synchronized.",
+    "local_execution_status": "Exact test source 252e80b restored after host recovery; current successor changes documentation/evidence only.",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
     "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-sprint-1",
-    "stage": "B5_engineering_verified_separate_preview",
+    "stage": "M_RW1_ENGINEERING_COMPLETE_B6",
     "previous_validated_candidate": {
       "build_id": "0.7.0-rework.5",
       "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
@@ -537,18 +541,20 @@
         "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
       }
     },
-    "validated_head_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
-    "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+    "validated_head_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+    "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "active_sprint": {
       "milestone": "M-RW1",
-      "checkpoint": "B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE",
-      "status": "IN_PROGRESS",
+      "checkpoint": "B6_ENGINEERING_COMPLETE_VERIFIED",
+      "status": "ENGINEERING_COMPLETE",
       "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-      "report": "docs/cinder-shift/sprint-1-b5-release-notes.ru.md",
-      "proof": "docs/cinder-shift/sprint-1-b5-verification.json",
+      "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
+      "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
       "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
-      "remaining": "Gameplay difficulty/build curve, optimized mobility comparisons and content pacing. Human acceptance is deferred and does not block current Sprint 1."
+      "remaining": "No remaining current M-RW1 engineering scope. Human acceptance deferred by user.",
+      "remaining_engineering": [],
+      "next_sprint": "M-RW2; separate task required"
     },
     "production_preview": {
       "build_id": "0.7.0-rw1.b3",
@@ -567,8 +573,8 @@
       },
       "acceptance_complete": false
     },
-    "current_source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
-    "current_tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+    "current_source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+    "current_tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
     "full_regression_b4": {
       "source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
       "passed": 278,
@@ -584,16 +590,18 @@
       }
     },
     "development_preview": {
-      "build_id": "0.7.0-rw1.b5",
-      "url": "https://6e44dd56.nuts-games.pages.dev/games/cinder-shift/",
-      "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+      "url": "https://23728b9d.nuts-games.pages.dev/games/cinder-shift/",
       "site_pr": 14,
-      "site_head_sha": "a512d773ca2a196b22945b4142950fe362179058",
-      "manifest_sha256": "98e1d94568229b92826632f304065c377f44108500db94506554a1d8ab53728c",
-      "cloudflare": "SUCCESS",
+      "site_artifact_sha": "31a9112bfd6578e28b8d1868d7754d28d94455a8",
+      "site_head_sha": "686ce45b384143d401735ac013f7653402a568cd",
+      "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
+      "manifest_files": 55,
+      "source_dirty": false,
       "site_ci": "SUCCESS",
-      "live_entry": "PASS_VERSION_MAP_WORKSHOP_ARRIVAL_SECTOR_1_A_6_OF_6_HP",
-      "production": false
+      "cloudflare": "SUCCESS",
+      "cloudflare_deployment_id": "23728b9d-b285-4197-acf2-d2966204c352",
+      "live_ui": "PASS B6 / a390b80 -> map -> workshop -> arrival -> sector 1 A at 6/6 HP"
     },
     "preview_published": true,
     "full_regression_b5": {
@@ -694,8 +702,8 @@
       "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
       "instruction_date": "2026-11-14",
       "instruction": "человеческая приемка пока не учитывается",
-      "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
-      "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+      "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
     },
     "user_play_feedback": {
       "date": "2026-11-14",
@@ -703,6 +711,103 @@
       "text": "я поиграл, неидеально но стало лучше",
       "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
       "timed_or_full_route_details_provided": false
+    },
+    "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
+    "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
+    "full_regression_b6": {
+      "run_id": 43636325727,
+      "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+      "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+      "passed": 307,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (10)",
+          "job_id": 132573806076,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132573806274,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132573806316,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132573806339,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132573806348,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132573806363,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132573806387,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (1)",
+          "job_id": 132573806404,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (8)",
+          "job_id": 132573806407,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132573806418,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132573806469,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132573806514,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
     }
   },
   "historical_source_checkout": {
