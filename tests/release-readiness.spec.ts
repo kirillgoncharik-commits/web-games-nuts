@@ -87,7 +87,7 @@ for(const width of [667,844])test(`release shell preserves focus and consent at 
     await button('analytics-decline').click();
     const sent=await events();
     await button('new-shift').tap();
-    await button('choose-mira').tap();
+    
     const pins=page.locator('.map-pin');
     for(const pin of await pins.all()){
       await pin.tap();

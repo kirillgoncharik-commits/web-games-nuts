@@ -43,7 +43,7 @@ test('first Airlock victory opens Cargo without buying a module',async({page})=>
  await expect(page.getByTestId('map-prepare')).toBeEnabled();
  await page.getByTestId('map-prepare').click();
  expect((await state(page)).campaign.mission_id).toBe('cargo');
- await page.getByTestId('briefing').click();
+ await page.getByTestId('briefing').click();if(await page.getByTestId('skip-arrival').isVisible())await page.getByTestId('skip-arrival').click();
  await expect.poll(async()=>(await state(page)).missionId).toBe('cargo');
  expect((await state(page)).hp).toBe(6);
 });
