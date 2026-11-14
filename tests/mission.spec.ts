@@ -1,6 +1,7 @@
 import {writeFile} from 'node:fs/promises';
 import {test,expect,Page} from '@playwright/test';
 import {startMission,roomA as currentRoomA,completeFromB} from './helpers';
+import {to,ground,jump as routeJump} from './route-helpers';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {Projectiles} from '../games/cinder-shift/src/projectiles';
 import {clearLine} from '../games/cinder-shift/src/geometry';
@@ -45,8 +46,8 @@ test('focus returns from page controls without Space activating two actions',asy
   await expect(page.getByTestId('resume')).toBeFocused();
   expect((await state(page)).player.y).toBeCloseTo(y,0);
 });
-test('returning to A preserves target and terminal, and removes old bullets',async({page})=>{
-  await start(page);await roomA(page);await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().transition);await page.keyboard.up('a');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='A'&&s.state==='playing'&&s.player?.x>500;});const s=await state(page);expect(s.targetHp).toBe(0);expect(s.powered).toBe(true);expect(s.projectiles).toEqual([]);expect(s.hp).toBeGreaterThan(0);expect(s.roomStates.A.enemies.every((e:any)=>e.hp<=0)).toBe(true);
+test('returning through cleared combat gates preserves enemies and power, and removes old bullets',async({page})=>{
+  test.setTimeout(60000);await start(page);await roomA(page);await page.keyboard.down('j');await forwardJump(page,194,350);await expect.poll(async()=>(await state(page)).combatRemaining).toBe(0);await page.keyboard.up('j');await to(page,294);await ground(page,320);await routeJump(page,294,194);await ground(page,320);await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().transition);await page.keyboard.up('a');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='A'&&s.state==='playing'&&s.player?.x>500;});const s=await state(page);expect(s.targetHp).toBe(0);expect(s.powered).toBe(true);expect(s.projectiles).toEqual([]);expect(s.hp).toBeGreaterThan(0);expect(s.roomStates.A.enemies.every((e:any)=>e.hp<=0)).toBe(true);
 });
 test('ten browser restarts keep one scene and full initial state',async({page})=>{
   await start(page);const ids=new Set<string>();
