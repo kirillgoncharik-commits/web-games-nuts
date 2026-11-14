@@ -8,6 +8,9 @@ test('voice saturation retains warnings over shots, result is once per attempt, 
  try{
   for(const[k,v]of Object.entries({location:{href:'http://localhost/games/cinder-shift/'},document:{hidden:false},AudioContext:Context,fetch:async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)})}))Object.defineProperty(globalThis,k,{value:v,configurable:true,writable:true});
   const audio=new AudioService();await new Promise(resolve=>setTimeout(resolve,0));await audio.unlock();audio.startWorld();expect(audio.snapshot().ready).toBe(true);expect(contexts).toBe(1);
+  // Preparation UI must not occupy every voice when live combat starts.
+  for(let i=0;i<8;i++)expect(audio.play('ui_confirm')).toBe(true);
+  audio.startWorld();expect(audio.snapshot().voices).toBe(0);expect(audio.play('shot')).toBe(true);audio.clearCombat();
   for(let i=0;i<8;i++)expect(audio.play('shot')).toBe(true);expect(audio.play('warn_walker')).toBe(true);expect(audio.play('hurt_player')).toBe(true);expect(audio.snapshot().maxVoices).toBe(8);audio.background();audio.foreground();await audio.unlock();audio.startWorld();
   for(let i=0;i<8;i++)expect(audio.play('warn_drone')).toBe(true);expect(audio.play('shot')).toBe(false);expect(audio.snapshot().dropped).toBe(1);expect(audio.play('hurt_player')).toBe(true);expect(audio.play('mission_death','attempt:one')).toBe(true);expect(audio.play('mission_death','attempt:one')).toBe(false);expect(audio.snapshot().resultVoices).toBe(1);
   audio.pauseWorld();expect(audio.play('shot')).toBe(false);expect(audio.play('ui_confirm')).toBe(true);audio.background();expect(audio.snapshot()).toMatchObject({state:'suspended',voices:0,resultVoices:0,retiring:0,music:null});audio.foreground();expect(audio.snapshot().state).toBe('suspended');expect(audio.play('shot')).toBe(false);expect(contexts).toBe(1);

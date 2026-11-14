@@ -54,7 +54,7 @@ export class AudioService{
  }
  private syncMusic(){const ctx=this.context,id=this.desiredMusic;if(this.mute||this.hidden||document.hidden||ctx?.state!=='running'||!id){this.stopMusic(this.hidden);return;}if(this.music?.id===id)return;this.stopMusic();const track=buildTrack(id),gain=ctx.createGain(),music:Music={id,track,started:ctx.currentTime+.04,next:0,cycle:0,gain,nodes:new Set(),timer:0};gain.gain.value=1;gain.connect(this.musicBus!);this.music=music;this.scheduleMusic(music);music.timer=globalThis.setInterval(()=>this.scheduleMusic(music),25);}
  menu(theme:ThemeId='menu'){this.world=false;this.stopVoices(v=>v.bus!=='ui');this.desiredMusic=theme;this.syncMusic();}
- startWorld(theme?:ThemeId){this.world=true;if(theme)this.worldTheme=theme;this.stopVoices(v=>v.bus==='result');this.desiredMusic=this.worldTheme;this.syncMusic();}
+ startWorld(theme?:ThemeId){this.world=true;if(theme)this.worldTheme=theme;this.stopVoices(v=>v.bus==='result'||v.bus==='ui');this.desiredMusic=this.worldTheme;this.syncMusic();}
  clearCombat(){this.stopVoices(v=>v.bus==='sfx');}
  pauseWorld(){this.world=false;this.stopVoices(v=>v.bus==='sfx');this.desiredMusic=null;this.stopMusic();}
  background(){this.hidden=true;this.world=false;for(const voice of [...this.voices])this.stop(voice,true);for(const voice of this.retiring){try{voice.source.stop();}catch{}voice.source.disconnect();voice.gain.disconnect();}this.retiring.clear();this.stopMusic(true);void this.context?.suspend().catch(()=>{});}
