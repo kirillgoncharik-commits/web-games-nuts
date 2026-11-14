@@ -52,6 +52,6 @@ test('the raised drone waits for marksman defeat and suspension clears its locke
 
 test('the marksman fires from its authored leash without requiring the player to provoke it',()=>{
  const e=createEnemy(rooms.M4H.enemies[0]),shots=new Projectiles();
- advanceUntil(e,shots,()=>e.attackPhase==='telegraph');
+ advanceUntil(e,shots,()=>e.attackPhase==='telegraph',{x:211,y:307});
  expect(e.provoked).toBe(false);expect(e.x).toBeGreaterThanOrEqual(e.leash!.min);expect(e.phaseMs).toBe(aimedGuardRules.warningMs);
 });

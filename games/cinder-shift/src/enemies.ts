@@ -77,7 +77,7 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
  if(e.behavior==='aggressive'){
   if(visible&&distance<=(e.provoked||e.aimed?cfg.range:ai.release_radius)){e.lastSeen={...player};e.memoryMs=ai.memory_ms;}else e.memoryMs=Math.max(0,e.memoryMs-ms);
   if(e.state==='idle'||e.state==='patrol'){
-   e.acquireMs=visible&&(distance<=ai.detection_radius||e.provoked)?e.acquireMs+ms:0;
+   e.acquireMs=visible&&(distance<=(e.aimed?cfg.range:ai.detection_radius)||e.provoked)?e.acquireMs+ms:0;
    if(e.acquireMs+1e-6>=ai.acquire_ms){e.state='chase';e.noticeMs=250;e.stuckMs=0;}
   }
   if((e.state==='chase'||e.state==='attack')&&(distance>(e.provoked||e.aimed?cfg.range:ai.release_radius)||e.memoryMs<=0)){returnHome(e);return;}
