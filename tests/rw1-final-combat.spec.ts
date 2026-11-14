@@ -14,7 +14,7 @@ for(const depth of [1,2,3])test(`W${depth} real boss volley respects armor and $
  const before=await state(page);await page.keyboard.press('j');
  if(depth===3){await until(page,()=>(window as any).__CINDER__().projectiles.some((p:any)=>p.hitIds.includes('solid:regulator-ricochet')&&p.vy>0),null,'actual reflected pellet');await routeCapture(page,info.outputPath('boss-reflected-pellet.png'));}
  await until(page,t=>(window as any).__CINDER__().simMs>t+1000,before.simMs,'volley resolves');
- const first=await state(page);expect(first.bossHp).toBe(depth===3?30:31);
+ const first=await state(page);console.log('Boss volley diagnostics',JSON.stringify({nodes,origin:before.player,boss_hp:first.bossHp,remaining:first.projectiles}));expect(first.bossHp).toBe(depth===3?30:31);
  // A second real volley against closed shutters cannot spend piercing on armor.
  await until(page,()=>(window as any).__CINDER__().boss.pattern.phase!=='core',null,'shutters close');
  const closed=await state(page);await page.keyboard.press('j');await until(page,t=>(window as any).__CINDER__().simMs>t+800,closed.simMs,'armored volley resolves');

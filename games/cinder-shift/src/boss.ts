@@ -65,7 +65,12 @@ export function regulatorHitboxes(body:Rect){
 export function regulatorImpact(body:Rect,from:Point,to:Point,open:boolean):'core'|'armor'|null{
  const hitboxes=regulatorHitboxes(body);
  if(segmentRect(from,to,hitboxes.core))return open?'core':'armor';
- // The open shutters reveal a clear horizontal firing aperture across the chest.
- if(open&&from.y>=hitboxes.core.y&&from.y<=hitboxes.core.y+hitboxes.core.height&&to.y>=hitboxes.core.y&&to.y<=hitboxes.core.y+hitboxes.core.height)return null;
- return hitboxes.armor.some(rect=>segmentRect(from,to,rect))?'armor':null;
+ // Clip armor around the visible open chest. An angled segment can enter the
+ // aperture before touching the robot even when its previous point was outside
+ // that height; testing both segment endpoints falsely blocked those ricochets.
+ const armor=open?hitboxes.armor.flatMap(rect=>{
+  const top=Math.min(rect.y+rect.height,hitboxes.core.y),bottom=Math.max(rect.y,hitboxes.core.y+hitboxes.core.height);
+  return[{...rect,height:top-rect.y},{...rect,y:bottom,height:rect.y+rect.height-bottom}].filter(r=>r.height>0);
+ }):hitboxes.armor;
+ return armor.some(rect=>segmentRect(from,to,rect))?'armor':null;
 }
