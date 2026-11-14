@@ -155,3 +155,12 @@ Preview https://23728b9d.nuts-games.pages.dev/games/cinder-shift/, site 686ce45b
 Среда после отключения вернулась. Локальный checkout cinder-shift-sprint-1 / codex/cinder-shift-sprint-1 сверен с remote PR9 / codex/cinder-shift-m-rework и точным тестовым коммитом 252e80b. Старые незакоммиченные export-документы сохранены в ../tmp/sprint-1-recovery/host-return-b6-* перед восстановлением. Следующий коммит содержит документацию и экспорт доказательств; runtime не меняется.
 
 Отчёт sprint-1-b6-release-notes.ru.md; результаты sprint-1-b6-verification.json; единая таблица request-coverage.csv; схема regulator-hitboxes.svg. Следующий этап — M-RW2 по отдельному заданию: арт/анимации/окружение/звук на работающей C01. Незакрытого инженерного объёма M-RW1 и известных P0/P1 текущего маршрута нет.
+
+
+## B6 опубликована на nuts.bid · 14 ноября 2026
+
+По прямому запросу Кирилла итоговая **0.7.0-rw1.b6** перенесена на https://nuts.bid/games/cinder-shift/ . Site PR14 слит в main: `46ee58b70b101f7f85b93594f142741fac7c5c21`. Игровой runtime `a390b80e4488e0cde4596ba64631098c030843d4` и manifest 55 ресурсов / SHA-256 `3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702` совпадают с проверенным превью B6.
+
+Production CI: https://github.com/kirillgoncharik-commits/nutsbid/actions/runs/43649233697 — SUCCESS. Cloudflare Pages: `bea206b4-3e65-4d8a-ae54-938527d733ee` — SUCCESS, 22:39:55 UTC / 23:39:55 Europe/Podgorica. Deployment URL: https://bea206b4.nuts-games.pages.dev/games/cinder-shift/ .
+
+Повторный запуск UI на production **NOT RUN**: подключение к браузеру прервалось, локальная среда стала недоступна; прямое получение публичной страницы также недоступно. Успех публикации подтверждён Cloudflare check-run на точном merge SHA; это не выдаётся за новый игровой проход. Человеческая приёмка остаётся отложенной по указанию Кирилла. Инженерная сдача M-RW1 не изменена; следующий этап M-RW2.
