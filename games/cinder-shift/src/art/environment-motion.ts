@@ -34,7 +34,9 @@ export class EnvironmentMotion{
    }
    case'foundry':for(let n=0;n<3;n++){const offset=(tick+n*3)%12;g.fillStyle(0x30495c,.85).fillRect(106+n*32,76,18,88);g.fillStyle(color,.4).fillRect(110+n*32,108+Math.abs(6-offset)*5,10,26);}g.lineStyle(2,0x456171,.7).strokeRect(438,102,108,72);bars(452,120);for(let n=0;n<3;n++)g.fillStyle(color,.13).fillRect(450+n*28,152-(tick+n*4)%20,9,8);break;
    case'archive':for(let n=0;n<5;n++){g.fillStyle(0x213747,.9).fillRect(94+n*20,88,16,72);g.fillStyle((tick+n)%7<2?color:0x456171,.55).fillRect(98+n*20,96,8,4);}g.lineStyle(1,0x456171,.8).strokeRect(394,96,170,80);g.fillStyle(color,.12).fillRect(398,100+(tick*3)%70,162,4);bars(430,158);break;
-   case'reactor':g.lineStyle(3,0x456171,.8).strokeCircle(478,124,40);g.lineStyle(2,color,.3).strokeCircle(478,124,18+(tick%8)*2);g.fillStyle(color,.25).fillCircle(478,124,9);fan(132,132);g.lineStyle(2,color,.25).lineBetween(156,132,210,132);break;
+   case'reactor':
+    if(def.id==='M5H'){for(const [circuit,y]of [['cooling',192],['isolation',242]] as const){const live=attempt.reactorRerouted&&attempt.reactorCircuit===circuit,c=live?0x76dcc8:0x456171;g.lineStyle(live?3:1,c,live?.9:.45).lineBetween(112,282,112,y).lineBetween(112,y,470,y);g.lineStyle(2,c,.9).strokeRect(430,y-16,76,32);if(circuit==='cooling'){g.strokeCircle(452,y,10);g.lineBetween(442,y,462,y);g.lineBetween(452,y-10,452,y+10);}else{g.lineBetween(441,y+9,460,y-9);g.lineBetween(460,y-9,480,y+9);}}}
+    g.lineStyle(3,0x456171,.8).strokeCircle(478,124,40);g.lineStyle(2,color,.3).strokeCircle(478,124,18+(tick%8)*2);g.fillStyle(color,.25).fillCircle(478,124,9);fan(132,132);g.lineStyle(2,color,.25).lineBetween(156,132,210,132);break;
   }
  }
 }

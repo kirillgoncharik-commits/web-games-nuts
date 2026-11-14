@@ -63,7 +63,7 @@ test('ten browser restarts keep one scene and full initial state',async({page})=
 test.describe('full mission demonstration',()=>{
 
   test('A to B to C, held terminal, victory and retry',async({page},info)=>{
-    test.setTimeout(90000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
+    test.setTimeout(180000);const errors:string[]=[];page.on('pageerror',e=>errors.push(e.message));
     await start(page);await page.screenshot({path:info.outputPath('airlock-live.png')});await roomA(page);
     await page.screenshot({path:info.outputPath('corridor-live.png')});
     await completeFromB(page,{verifyHold:true});const end=await state(page);

@@ -3,7 +3,7 @@ import {startMission,state,roomA,completeFromB} from './helpers';
 import type {NodeId} from '../games/cinder-shift/src/session/research';
 
 for(const node of [undefined,'W1','M1','D1'] as (NodeId|undefined)[])test(`combat-clear Airlock ${node||'base'} reaches reward and keeps Retry entry`,async({page},info)=>{
- test.setTimeout(120000);
+ test.setTimeout(180000);
  const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
  await startMission(page,{node});
  const entry=(await state(page)).campaign.entry;
@@ -37,7 +37,7 @@ for(const node of [undefined,'W1','M1','D1'] as (NodeId|undefined)[])test(`comba
 });
 
 test('first Airlock victory opens Cargo without buying a module',async({page})=>{
- test.setTimeout(100000);await startMission(page);await roomA(page);await completeFromB(page);
+ test.setTimeout(180000);await startMission(page);await roomA(page);await completeFromB(page);
  await page.getByTestId('result-research').click();
  await expect(page.getByTestId('map-pin-cargo')).toHaveAttribute('aria-pressed','true');
  await expect(page.getByTestId('map-prepare')).toBeEnabled();

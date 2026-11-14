@@ -4,8 +4,8 @@ on:
     branches-ignore: [codex/cinder-shift-m-rework]
   pull_request:
 concurrency:
-  group: cinder-check-${{ github.ref }}-${{ github.sha }}
-  cancel-in-progress: false
+  group: cinder-check-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -30,7 +30,7 @@ jobs:
           pactl set-default-sink cinder_qa
       - run: npm run build
       - run: npm run art:check
-      - run: npm test -- --fully-parallel --shard=${{ matrix.shard }}/6 --reporter=line,json
+      - run: npm test -- --fully-parallel --shard=${{ matrix.shard }}/12 --reporter=line,json
         env:
           CROSS_BROWSER: "1"
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/regression.json

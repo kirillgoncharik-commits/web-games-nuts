@@ -6,11 +6,11 @@ export type PlayableMissionId='airlock'|'cargo'|'foundry'|'archive'|'reactor';
 export type MissionDefinition={id:MissionId;number:number;implemented:boolean;researchReward:number;nameKey:string;goalKey:string;routeKey:string;rooms:readonly RoomId[];next:MissionId|null;events:readonly string[];map:{x:number;y:number}};
 const researchReward=(number:number)=>config.campaign.research_rewards_after_missions.includes(number)?1:0;
 export const missions:Record<MissionId,MissionDefinition>={
- airlock:{id:'airlock',number:1,implemented:true,researchReward:researchReward(1),nameKey:'mission.name',goalKey:'mission.goal',routeKey:'mission.route',rooms:['A','B','C'],next:'cargo',events:['E02','E03'],map:{x:170,y:144}},
+ airlock:{id:'airlock',number:1,implemented:true,researchReward:researchReward(1),nameKey:'mission.name',goalKey:'mission.goal',routeKey:'mission.route',rooms:['A','B','M1A','M1B','M1C','C'],next:'cargo',events:['E02','E03'],map:{x:170,y:144}},
  cargo:{id:'cargo',number:2,implemented:true,researchReward:researchReward(2),nameKey:'cargo.name',goalKey:'cargo.goal',routeKey:'cargo.route',rooms:['D','M2A','E','M2B','M2C','M2D','F','M2E','G'],next:'foundry',events:['E01'],map:{x:440,y:144}},
  foundry:{id:'foundry',number:3,implemented:true,researchReward:researchReward(3),nameKey:'map.foundry',goalKey:'map.foundryGoal',routeKey:'map.foundryRoute',rooms:['M3A','M3E','M3F','M3B','M3G','M3H','M3C','M3I','M3J','M3K','M3D'],next:'archive',events:['E04'],map:{x:710,y:144}},
  archive:{id:'archive',number:4,implemented:true,researchReward:researchReward(4),nameKey:'map.archive',goalKey:'map.archiveGoal',routeKey:'map.archiveRoute',rooms:['M4A','M4E','M4B','M4F','M4G','M4H','M4C','M4I','M4D'],next:'reactor',events:['E05'],map:{x:710,y:380}},
- reactor:{id:'reactor',number:5,implemented:true,researchReward:researchReward(5),nameKey:'map.reactor',goalKey:'map.reactorGoal',routeKey:'map.reactorRoute',rooms:['M5A','M5B','M5C','M5D','M5E'],next:null,events:['E06'],map:{x:1020,y:380}},
+ reactor:{id:'reactor',number:5,implemented:true,researchReward:researchReward(5),nameKey:'map.reactor',goalKey:'map.reactorGoal',routeKey:'map.reactorRoute',rooms:['M5A','M5F','M5B','M5G','M5H','M5I','M5C','M5D','M5E'],next:null,events:['E06'],map:{x:1020,y:380}},
 };
 export const playableMissionIds=['airlock','cargo','foundry','archive','reactor'] as const;
 export const isPlayableMission=(id:unknown):id is PlayableMissionId=>typeof id==='string'&&playableMissionIds.includes(id as PlayableMissionId);

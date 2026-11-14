@@ -1,3 +1,4 @@
+import {airlockExtension} from './airlock-gameplay';
 import {expect,type Page} from '@playwright/test';
 import {seedsForPlans} from '../games/cinder-shift/src/session/events';
 import type {NodeId} from '../games/cinder-shift/src/session/research';
@@ -18,9 +19,9 @@ export async function roomA(page:Page){
   await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().room==='B',null,{timeout:8000});await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='B'&&s.state==='playing'&&s.player?.x<100;});
 }
 export async function jump(page:Page,from:number,to:number){await page.keyboard.down('d');await x(page,from);await page.keyboard.down('Space');await x(page,to);await page.keyboard.up('Space');await page.keyboard.up('d');}
-export async function completeFromB(page:Page,{collectRelayIntel=false,verifyHold=false}:{collectRelayIntel?:boolean;verifyHold?:boolean}={}){
+export async function completeFromB(page:Page,{collectRelayIntel=false,verifyHold=false,salvage=false}:{collectRelayIntel?:boolean;verifyHold?:boolean;salvage?:boolean}={}){
   await page.keyboard.down('j');await jump(page,194,350);await expect.poll(async()=>(await state(page)).enemies.filter((e:any)=>e.hp>0).length,{timeout:12000}).toBe(0);await page.keyboard.up('j');
-  await jump(page,496,556);if(collectRelayIntel){await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&p.y+22>303;});await page.keyboard.press('e');await page.getByTestId('event-take-intel').click();await page.getByTestId('confirm-event').click();await expect.poll(async()=>(await state(page)).relayIntelCollected).toBe(true);}await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().room==='C',null,{timeout:8000});await page.keyboard.up('d');await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.room==='C'&&s.state==='playing'&&s.player?.x<100;});
+  await jump(page,496,556);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&p.y+22>303;});if(collectRelayIntel){await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return p?.vy===0&&p.y+22>303;});await page.keyboard.press('e');await page.getByTestId('event-take-intel').click();await page.getByTestId('confirm-event').click();await expect.poll(async()=>(await state(page)).relayIntelCollected).toBe(true);}if((await state(page)).hp<(await state(page)).maxHp&&!(await state(page)).containerUsed){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();}await airlockExtension(page,undefined,{salvage});
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id==='c-walker-1').hp,{timeout:10000}).toBe(0);await page.keyboard.up('s');
   await jump(page,318,368);
   await page.waitForFunction(()=>(window as any).__CINDER__().player?.vy===0);

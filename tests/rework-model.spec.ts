@@ -62,7 +62,7 @@ test('new combat rules isolate challenge records and relay keys from the audited
  const current=makeRelaySpec('none');expect(current.content_hash).toBe(trialContentId('relay-airlock-cargo'));
  const old=makeChallengeSpec({...current,ruleset_id:'relay-base-manual-v1',content_hash:'relay-airlock-cargo-release-rc1',simulation_version:'phaser-60hz-rc1'});
  expect(await challengeKey(current)).not.toBe(await challengeKey(old));
- expect(trialRuleset).toBe('combat-clear-v5');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
+ expect(trialRuleset).toBe('combat-clear-v7');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
 });
 
 test('purchase is atomic across duplicate callbacks and preserves the installed active slot',()=>{
@@ -76,7 +76,7 @@ test('continuing a legacy campaign preserves totals and separates mixed-rule car
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
  expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework6');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework7');
 });
 
 

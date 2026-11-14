@@ -7,10 +7,10 @@ export type ChallengeSpec=Readonly<{
   timing_policy:RunTimingPolicy;scoring_version:string;comparison_metric:'elapsed_ms'|'score';assist_profile:'standard-manual'|'assisted';duration_limit_ms:number;
 }>;
 export type ChallengeInput=Omit<ChallengeSpec,'game_id'>;
-export const trialRuleset='combat-clear-v5';
+export const trialRuleset='combat-clear-v7';
 export const trialMissions=['airlock','cargo'] as const;
-export const trialSimulationVersion='phaser-60hz-rework5';
-export const trialContentId=(mission:string)=>`${mission}-rework5`;
+export const trialSimulationVersion='phaser-60hz-rework7';
+export const trialContentId=(mission:string)=>`${mission}-rework7`;
 export function isTrialMission(value:unknown):value is typeof trialMissions[number] {
   return trialMissions.some(mission=>mission===value);
 }
