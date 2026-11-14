@@ -22,7 +22,7 @@ jobs:
         run: |
           node scripts/export-rework-registry.mjs
           git diff --exit-code -- docs/cinder-shift/rework-room-registry.json
-      - run: npx playwright test tests/combat-feedback.spec.ts tests/projectile-clearing.spec.ts tests/rw1-b-model.spec.ts tests/rework-model.spec.ts tests/m05b1-model.spec.ts tests/new-modes-core.spec.ts tests/session-model.spec.ts
+      - run: npx playwright test tests/combat-feedback.spec.ts tests/player-jump-model.spec.ts tests/projectile-clearing.spec.ts tests/rw1-b-model.spec.ts tests/rework-model.spec.ts tests/m05b1-model.spec.ts tests/new-modes-core.spec.ts tests/session-model.spec.ts
         env:
           CINDER_BASE_URL: http://127.0.0.1:4175
   encounters:

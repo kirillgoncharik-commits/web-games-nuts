@@ -26,7 +26,7 @@ export function verifyRouteEntry(s:any,build:ReturnType<typeof routeBuild>){
 export function routeBuildEvidence(s:any,build:ReturnType<typeof routeBuild>){
  return{loadout_id:build.id,nodes:build.nodes,active:build.active,research_budget:build.budget,
   points_after_route:s.campaign.points,max_hp:s.maxHp,
-  comparison_strategy:'same keyboard route; no build-specific shortcut or active-skill optimization',
+  comparison_strategy:'same geometry and keyboard route; selected W4 used in boss core windows; no movement shortcuts',
   shield_absorptions:s.eventLog.filter((e:any)=>e.name==='shield_absorbed'),
   abilities:s.eventLog.filter((e:any)=>e.name==='ability_used'),
   death_preventions:s.eventLog.filter((e:any)=>e.name==='death_prevented')};

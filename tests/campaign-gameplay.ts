@@ -95,8 +95,8 @@ export async function campaignReactor(page:Page){
  await jump(page,178,272);await ground(page,320);await jump(page,370,474);await ground(page,320);await to(page,568);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'preboss terminal');await page.keyboard.up('e');await next(page,'M5D');
 }
 
-export async function campaignRegulator(page:Page){
- const phases=new Set<string>(),windows=new Set<string>(),build:{active:string|null}={active:null};let lastWarning='',firing=false,climbed=false;
+export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
+ const phases=new Set<string>(),windows=new Set<string>(),build=(await state(page)).loadout;let lastWarning='',firing=false,climbed=false;
  async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
  async function climb(){await jump(page,106,180);await ground(page,288);await jump(page,176,272);await ground(page,256);climbed=true;}
 
@@ -117,7 +117,7 @@ export async function campaignRegulator(page:Page){
    }
    await page.waitForTimeout(45);
   }
-  await fire(false);const down=await state(page);expect(down.bossHp).toBe(0);expect(phases.has('lanes')&&phases.has('transition')&&phases.has('sweep')).toBe(true);expect(windows.size).toBeGreaterThanOrEqual(4);expect(down.eventLog.filter((e:any)=>e.name==='boss_defeated')).toHaveLength(1);await next(page,'M5E');
+  await fire(false);const down=await state(page);expect(down.bossHp).toBe(0);expect(phases.has('lanes')&&phases.has('transition')&&phases.has('sweep')).toBe(true);expect(windows.size).toBeGreaterThanOrEqual(4);expect(down.eventLog.filter((e:any)=>e.name==='boss_defeated')).toHaveLength(1);await next(page,'M5E');if(onRoom)await onRoom();
   await jump(page,194,300);await ground(page,320);await jump(page,354,474);await ground(page,320);await to(page,568);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'evacuation terminal');await page.keyboard.up('e');await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().state==='complete',null,'campaign result');await page.keyboard.up('d');
 
  return{phases:[...phases],windows:[...windows]};

@@ -490,13 +490,13 @@
     "branch": "codex/cinder-shift-m-rework",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
-    "published": false,
+    "published": true,
     "accepted": false,
     "verification": "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open.",
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "local_execution_status": "Host recovered and exact remote commits 02a2189/fc1de7c/483484f restored in sequence; pending files preserved and compared. Working copy synchronized. Browser runtime verification ran in CI.",
+    "local_execution_status": "Exact remote curve comparison source 6a16d4e00beed5ceb766ca1ab312e0abe336da18 restored locally; tree 04c5a4d2a632068b84eaa5e6002a8ffb4449fa2e matches. Browser verification runs in CI.",
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
     "local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-sprint-1",
@@ -535,6 +535,23 @@
       "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json",
       "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
       "remaining": "Whole-sector build comparisons, first natural successful duration, independent audiovisual/balance acceptance, physical devices and playable reference-section study."
+    },
+    "production_preview": {
+      "build_id": "0.7.0-rw1.b3",
+      "game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+      "tested_code_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+      "site_merge_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/13",
+      "cloudflare_deployment_id": "9820c610-5091-4a91-ad53-ee1742f4e61e",
+      "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "verification": {
+        "site_ci": "PASS",
+        "cloudflare_pages": "SUCCESS",
+        "live_build_label": "v0.7.0-rw1.b3 / d52853e",
+        "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
+      },
+      "acceptance_complete": false
     }
   }
 }
