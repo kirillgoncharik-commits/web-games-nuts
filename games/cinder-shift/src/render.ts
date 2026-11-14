@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import assets from './art/assets.generated.json' with {type:'json'};
 import promo from './art/promo.generated.json' with {type:'json'};
-import {enemyPhase,enemyRect,enemyMuzzle,turretPresentation,ramVulnerable} from './enemies';
+import {enemyPhase,enemyRect,enemyMuzzle,turretPresentation,ramVulnerable,guardVulnerable} from './enemies';
 import {miraRigPose} from './art/rig';
 import {cargoShutter,hasEvent,repairPosition,shutter,type EventPlan} from './session/events';
 import {regulatorBody,regulatorHitboxes} from './boss';
@@ -321,9 +321,10 @@ export class SceneArt{
         this.art(`ram-charger_${frame}`,e.x,e.y+15,48,38,5,facing);
         const exposed=ramVulnerable(e);this.threats.lineStyle(2,exposed?signals.energy:0x9bb3bf,.9).strokeRect(e.x-15,e.y-20,30,7);if(exposed)this.threats.fillStyle(signals.energy,.6).fillRect(e.x-12,e.y-18,24,3);else this.threats.lineBetween(e.x-8,e.y-20,e.x+8,e.y-13);
       }else this.sprite(e.kind,e.x,e.kind==='walker'?e.y+15:e.y,5,facing);
+      if(e.aimed){const open=guardVulnerable(e),g=this.threats;g.lineStyle(2,open?signals.energy:signals.warning,.9);if(open){g.lineBetween(e.x-20,e.y-22,e.x-20,e.y-4);g.lineBetween(e.x+20,e.y-22,e.x+20,e.y-4);}else g.strokeRoundedRect(e.x-19,e.y-24,38,28,3);g.strokeCircle(e.x,e.y-39,5);}
       if(e.behavior==='aggressive'){this.threats.lineStyle(2,0xffb65b).strokeTriangle(e.x-20,e.y-12,e.x-13,e.y-7,e.x-20,e.y-2);if(e.noticeMs>0)this.threats.lineStyle(2,0xf1d8ae).strokeCircle(e.x,e.y-38,12);}
       for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
-      if(phase==='telegraph'&&e.kind==='walker'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,muzzle.y,'signal-coral').setAlpha(.85);this.sprite('warning-triangle',e.x,e.y-43,8);}
+      if(phase==='telegraph'&&e.kind==='walker'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aimed?e.aim.y:muzzle.y,'signal-coral').setAlpha(.85);this.sprite('warning-triangle',e.x,e.y-43,8);if(e.aimed){const g=this.threats;g.lineStyle(e.aimLocked?2:1,e.aimLocked?signals.damage:signals.warning,.9).strokeCircle(e.aim.x,e.aim.y,e.aimLocked?8:12);g.lineBetween(e.aim.x-15,e.aim.y,e.aim.x+15,e.aim.y);g.lineBetween(e.aim.x,e.aim.y-15,e.aim.x,e.aim.y+15);}}
       else if(phase==='telegraph'&&e.kind==='drone'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.85);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);this.line(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y,'signal-coral');}
     }
     for(const shot of shots.shots){

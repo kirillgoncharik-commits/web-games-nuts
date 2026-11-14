@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "build_id": "0.7.0-rw1.b4",
-  "source_hash": "dba31aabd2931b8533562b9b228dcfea39b95cc7b821bce83e7f782c5070389e",
+  "build_id": "0.7.0-rw1.b5",
+  "source_hash": "37fdc1bec49a074593f9b9fbbf0d58c93348f3a46f9851a3646134ca25b252d3",
   "status": "INCOMPLETE: source inventory; full route input, timing and human validation remain open",
   "campaign_room_count": 44,
   "training_room_excluded": "T",
@@ -29,6 +29,7 @@
     ]
   },
   "runtime_conditions": {
+    "M4H": "Marksman armor opens on recovery; aim locks for 420 ms before release; the drone waits for its defeat.",
     "M1C": "The turret waits until floor security is destroyed.",
     "M5G": "The high drone waits for security.",
     "M5H": "A power choice is required before leaving.",
@@ -2323,7 +2324,7 @@
         {
           "room_id": "M4H",
           "episode": "AR06",
-          "encounter_goal": "Separate the floor security and upper drone lines.",
+          "encounter_goal": "Read the armored marksman tracking/locked aim, change position, then counter its recovery before the staged drone.",
           "geometry": [
             {
               "x": 0,
@@ -2355,6 +2356,7 @@
               "id": "m4h-security",
               "kind": "walker",
               "preset": "walker_security",
+              "aimed": true,
               "x": 432,
               "y": 305,
               "end": {
@@ -2366,7 +2368,7 @@
                 "min": 368,
                 "max": 496
               },
-              "role_and_response": "pursuer: break sight or move outside its leash"
+              "role_and_response": "armored marksman: tracking aim locks before fire; move, then counter recovery"
             },
             {
               "id": "m4h-drone",

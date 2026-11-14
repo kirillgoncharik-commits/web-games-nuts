@@ -35,3 +35,23 @@ jobs:
         with:
           name: cinder-rework-flow-${{ matrix.browser }}
           path: test-results
+
+  native-touch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Repeat native touch route and delayed shelf input
+        run: npx playwright test tests/mobile-mission.spec.ts tests/native-touch-precision.spec.ts --project=chromium --repeat-each=3
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-native-touch-precision
+          path: test-results

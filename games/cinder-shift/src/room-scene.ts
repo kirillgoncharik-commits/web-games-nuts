@@ -3,7 +3,7 @@ import config from '../game.config.json' with {type:'json'};
 import {MissionAttempt,type RoomId,type Result} from './mission';
 import {Player} from './player';
 import {Projectiles} from './projectiles';
-import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation,ramVulnerable,alertEnemyOnHit} from './enemies';
+import {stepEnemy,enemyRect,enemyPhase,suspendEnemy,enemyMuzzle,turretPresentation,ramVulnerable,guardVulnerable,alertEnemyOnHit} from './enemies';
 import {clearLine,intersects,segmentRect,expand} from './geometry';
 import {terminalInReach,cacheInReach} from './interactions';
 import {SceneArt} from './render';
@@ -90,7 +90,9 @@ export class RoomScene extends Phaser.Scene{
   for(const enemy of saved.enemies){
    if(!attempt.enemyPowered(enemy))continue;
    const canActivate=roomThreatCanActivate(attempt.current,enemy,saved.enemies,playerPoint,def.solids);
-   stepEnemy(enemy,ms,playerPoint,def.solids,this.projectiles,kind=>this.hooks.effects.play(kind==='walker'?'warn_walker':kind==='turret'?'warn_turret':'warn_drone'),Math.max(this.hooks.combatAssist()?1.5:1,attempt.enemyTelegraphScale()),canActivate);
+   const wasLocked=enemy.aimLocked,body=this.player.rect(),target=enemy.aimed?{x:this.player.x,y:body.y+body.height/2}:playerPoint;
+   stepEnemy(enemy,ms,target,def.solids,this.projectiles,kind=>this.hooks.effects.play(kind==='walker'?'warn_walker':kind==='turret'?'warn_turret':'warn_drone'),Math.max(this.hooks.combatAssist()?1.5:1,attempt.enemyTelegraphScale()),canActivate);
+   if(enemy.aimLocked&&!wasLocked)this.hooks.effects.play('warn_turret');
    const key=attempt.id+':'+enemy.id;if(enemy.active&&!this.encountered.has(key)){this.encountered.add(key);this.hooks.emit('enemy_encounter',{enemy_id:enemy.id,enemy_kind:enemy.kind,behavior:enemy.behavior});}
    if(enemy.id==='e-turret'&&enemy.first&&enemy.attackPhase==='recovery'&&!attempt.tutorial.has('turret_hint')&&enemy.hp===4){attempt.tutorial.add('turret_hint');this.hooks.emit('tutorial_step',{step:'turret_open_window'});}
   }
@@ -109,7 +111,7 @@ export class RoomScene extends Phaser.Scene{
    }
    if(def.target&&saved.targetHp>0&&!shot.hitIds.includes('target')&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){shot.hitIds.push('target');saved.targetHp-=shot.damage;this.art.cue('hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');if(shot.pierces>0){shot.pierces--;return false;}return true;}
    for(const e of saved.enemies)if(e.hp>0&&!shot.hitIds.includes(e.id)&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){
-    shot.hitIds.push(e.id);alertEnemyOnHit(e,attempt.enemyPowered(e));if(!ramVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
+    shot.hitIds.push(e.id);alertEnemyOnHit(e,attempt.enemyPowered(e));if(!ramVulnerable(e)||!guardVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
     e.hp-=shot.damage;this.art.cue(e.hp<=0?'shutdown':'hit',e.hp<=0?{x:e.x,y:e.y-10}:to,now,Math.sign(shot.vx));if(e.id==='e-turret'&&e.hp<4)attempt.tutorial.add('turret_hit');if(e.hp<=0){e.state='dead';e.attackPhase=null;attempt.scoreLedger?.kill(e.id,e.kind);if(e.id==='m5b-e06-ram'){attempt.scoreLedger?.goal('optional:E06');if(!attempt.e06Rewarded){attempt.e06Rewarded=true;attempt.score+=config.m05b3.e06_score;this.hooks.emit('event_choice',{event_id:'E06',choice:'defeated_patrol',score:attempt.score});}}}this.hooks.effects.play(e.hp<=0?'enemy_break':e.kind==='turret'?'hit_open':'hit_enemy');if(shot.pierces>0&&e.kind!=='turret'){shot.pierces--;return false;}return true;
    }return false;
   },solid=>{attempt.breakPanel(solid.id!);this.removeSolid(solid.id!);this.hooks.effects.play('enemy_break');this.hooks.emit('route_choice',{route:'piercing-sheet',room_id:attempt.current});},(shot,_solid,point)=>{if(shot.team==='player'){this.art.cue('wall',point,now,Math.sign(shot.vx));this.hooks.effects.play('hit_wall');}});
@@ -197,6 +199,7 @@ export class RoomScene extends Phaser.Scene{
   }
   else if(a.missionId==='archive'){
    key=def.id==='M4A'?'archive.objective.sorting':def.id==='M4E'?'archive.objective.carrier':def.id==='M4B'?hasEvent(a.eventPlan,'E05')?'archive.objective.beacon':'archive.objective.cache':def.id==='M4F'?a.scoutedArchive?'archive.objective.openScreen':'archive.objective.closedScreen':def.id==='M4G'?a.archiveUploadPowered?'archive.objective.powered':'archive.objective.connect':def.id==='M4H'?'archive.objective.mixed':def.id==='M4C'?a.dataUploaded?'archive.objective.transit':!a.archiveCarrierCollected?'archive.objective.carrier':!a.archiveUploadPowered?'archive.objective.needPower':'archive.objective.upload':def.id==='M4I'?'archive.objective.ram':'archive.objective.final';
+   const guard=saved.enemies.find(e=>e.aimed&&e.hp>0);if(guard)key=guardVulnerable(guard)?'archive.objective.aimedOpen':guard.aimLocked?'archive.objective.aimedLocked':'archive.objective.aimedTracking';
    if(def.id==='M4G'&&!a.archiveUploadPowered&&this.readyTerminal()&&def.terminal&&terminalInReach(this.player.x,this.player.feet,def.terminal)){key='archive.objective.connectAction';params.action='interact';}
    if(def.dataCarrier&&!a.archiveCarrierCollected&&cacheInReach(this.player.x,this.player.feet,def.dataCarrier)){key='archive.objective.takeCarrier';params.action='interact';}
    if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key=!a.cacheReady()?'archive.objective.guardCache':hasEvent(a.eventPlan,'E05')?'archive.objective.beaconChoice':'archive.objective.salvage';if(a.cacheReady())params.action='interact';}
