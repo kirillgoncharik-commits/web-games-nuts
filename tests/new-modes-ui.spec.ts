@@ -3,6 +3,7 @@ import {decodeCode,encodeCode} from '../games/cinder-shift/src/session/challenge
 import {completeFromB,roomA,state} from './helpers';
 
 async function openChallenges(page:Page){await page.goto('/games/cinder-shift/?seed=4');await page.getByTestId('menu-challenges').click();await expect.poll(async()=>(await state(page)).screen).toBe('challenges');}
+async function openCodes(page:Page){if(!await page.locator('#challenge-codes').evaluate((el:HTMLDetailsElement)=>el.open))await page.getByTestId('challenge-codes-toggle').click();}
 async function startMode(page:Page,id:'mode-time-attack'|'mode-score-attack'){await openChallenges(page);await page.getByTestId(id).click();await expect.poll(async()=>(await state(page)).state,{timeout:8_000}).toBe('playing');}
 
 test('Time Attack finishes an isolated Airlock run and records stable first-entry splits',async({page})=>{
@@ -17,7 +18,7 @@ test('Score Attack uses its own score ledger and campaign remains untouched',asy
 
 test('Daily, Duel, and Relay have explicit local entry and manual code paths',async({page})=>{
   await openChallenges(page);for(const id of ['mode-time-attack','mode-score-attack','mode-daily','mode-relay'])await expect(page.getByTestId(id)).toBeVisible();
-  await page.getByTestId('challenge-create-duel').click();const codeField=page.locator('#challenge-code');await expect.poll(()=>codeField.inputValue()).toMatch(/^CS64-C1\./);await page.getByTestId('challenge-import-code').click();await expect(page.getByTestId('challenge-accept-duel')).toBeVisible();await page.getByTestId('challenge-accept-duel').click();await expect.poll(async()=>(await state(page)).state).toBe('countdown');await page.getByTestId('challenge-cancel').click();await expect.poll(async()=>(await state(page)).screen).toBe('challenges');
+  await openCodes(page);await page.getByTestId('challenge-create-duel').click();const codeField=page.locator('#challenge-code');await expect.poll(()=>codeField.inputValue()).toMatch(/^CS64-C1\./);await page.getByTestId('challenge-import-code').click();await expect(page.getByTestId('challenge-accept-duel')).toBeVisible();await page.getByTestId('challenge-accept-duel').click();await expect.poll(async()=>(await state(page)).state).toBe('countdown');await page.getByTestId('challenge-cancel').click();await expect.poll(async()=>(await state(page)).screen).toBe('challenges');
   await page.getByTestId('mode-daily').click();await expect.poll(async()=>(await state(page)).challengeMode).toBe('daily');await expect.poll(async()=>(await state(page)).state).toBe('countdown');await page.getByTestId('challenge-cancel').click();
   await page.getByTestId('mode-relay').click();await expect.poll(async()=>(await state(page)).challengeMode).toBe('relay');await expect.poll(async()=>(await state(page)).state).toBe('countdown');await page.getByTestId('challenge-cancel').click();
 });
@@ -32,7 +33,7 @@ test('Duel imports across profiles, rejects malformed and incompatible codes, an
   try{
     const source=await author.newPage();
     await openChallenges(source);
-    await source.getByTestId('challenge-create-duel').click();
+    await openCodes(source);await source.getByTestId('challenge-create-duel').click();
     const sourceCode=source.locator('#challenge-code');
     await expect.poll(()=>sourceCode.inputValue()).toMatch(/^CS64-C1\./);
     const code=await sourceCode.inputValue(),decoded=await decodeCode(code,'challenge');
@@ -42,6 +43,7 @@ test('Duel imports across profiles, rejects malformed and incompatible codes, an
     const target=await recipient.newPage();
     await openChallenges(target);
     const importCode=async(value:string)=>{
+      await openCodes(target);
       await target.locator('#challenge-code').fill(value);
       await target.getByTestId('challenge-import-code').click();
       await expect(target.locator('[data-code-status]')).toBeVisible();
