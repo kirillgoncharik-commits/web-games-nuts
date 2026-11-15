@@ -7,10 +7,10 @@
     "branch": "codex/cinder-shift-m-rework",
     "code_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
-    "working_tree": "M-RW2 A1 remote checkpoint; host unavailable; full exact-source CI running",
+    "working_tree": "M-RW2 A1 engineering checkpoint verified; host unavailable; remote source durable",
     "published_game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "test_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
-    "tested_merge_sha": null,
+    "tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
     "test_candidate_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89"
   },
   "production": {
@@ -533,7 +533,7 @@
   ],
   "active_workstream": {
     "milestone": "M-REWORK",
-    "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_A1_ACTIVE",
+    "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_A1_VERIFIED",
     "build_id": "0.7.0-rw2.a1",
     "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
     "branch": "codex/cinder-shift-m-rework",
@@ -549,10 +549,15 @@
       "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
       "models": "PASS_105",
       "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
-      "general_regression": "RUNNING_EXACT_SOURCE",
-      "full_campaign": "RUNNING_EXACT_SOURCE",
-      "foundry_routes": "RUNNING_EXACT_SOURCE",
-      "reachable_builds": "RUNNING_EXACT_SOURCE"
+      "general_regression": "PASS_320_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+      "full_campaign": "PASS_FRESH_PROFILE_41_ROOMS_BOTH_BOSS_PHASES_EVACUATION_SAVED_RELOAD",
+      "foundry_routes": "PASS_BOTH_BRANCHES",
+      "reachable_builds": "PASS_33_SECTOR_BUILDS_PLUS_9_PURPOSEFUL_MOBILITY",
+      "three_browser_ui_combat": "PASS_147",
+      "airlock_flow": "PASS_15",
+      "native_touch": "PASS_12",
+      "persistence": "PASS_8",
+      "sector_and_boss_routes": "PASS_15"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "room_registry": "docs/cinder-shift/rework-room-registry.json",
@@ -584,12 +589,12 @@
         "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
       }
     },
-    "validated_head_sha": null,
-    "tested_merge_sha": null,
+    "validated_head_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+    "tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "active_sprint": {
       "id": "M-RW2",
-      "checkpoint": "A1",
+      "checkpoint": "A1_ENGINEERING_VERIFIED",
       "status": "IN_PROGRESS",
       "requirement_count": 31
     },
@@ -848,6 +853,16 @@
           "not_run": 0
         }
       ]
+    },
+    "sprint_2": {
+      "status": "IN_PROGRESS",
+      "checkpoint": "A1_ENGINEERING_VERIFIED",
+      "full_31_requirement_gate": "OPEN",
+      "work_order": {
+        "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
+        "revision": 2
+      },
+      "verification_report": "docs/cinder-shift/sprint-2-verification.json"
     }
   },
   "historical_source_checkout": {

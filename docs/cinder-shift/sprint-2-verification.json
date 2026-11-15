@@ -2,7 +2,7 @@
   "schema_version": 1,
   "milestone": "M-RW2",
   "checkpoint": "A1",
-  "status": "IN_PROGRESS; NOT_FULL_SPRINT_COMPLETE",
+  "status": "A1_ENGINEERING_CHECKPOINT_VERIFIED; M_RW2_IN_PROGRESS",
   "build_id": "0.7.0-rw2.a1",
   "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
   "test_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
@@ -15,23 +15,40 @@
     "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
     "models": "PASS_105",
     "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
-    "general_regression": "RUNNING_EXACT_SOURCE",
-    "full_campaign": "RUNNING_EXACT_SOURCE",
-    "foundry_routes": "RUNNING_EXACT_SOURCE",
-    "reachable_builds": "RUNNING_EXACT_SOURCE"
+    "general_regression": "PASS_320_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+    "full_campaign": "PASS_FRESH_PROFILE_41_ROOMS_BOTH_BOSS_PHASES_EVACUATION_SAVED_RELOAD",
+    "foundry_routes": "PASS_BOTH_BRANCHES",
+    "reachable_builds": "PASS_33_SECTOR_BUILDS_PLUS_9_PURPOSEFUL_MOBILITY",
+    "three_browser_ui_combat": "PASS_147",
+    "airlock_flow": "PASS_15",
+    "native_touch": "PASS_12",
+    "persistence": "PASS_8",
+    "sector_and_boss_routes": "PASS_15"
   },
   "workflows": [
     {
       "name": "Cinder Shift reachable build curve",
       "run_id": 43718801937,
       "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801937",
-      "status": "PENDING_FINAL_COLLECTION"
+      "status": "SUCCESS"
     },
     {
       "name": "Cinder Shift full routes and saves",
       "run_id": 43718801884,
       "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801884",
-      "status": "PENDING_FINAL_COLLECTION"
+      "status": "SUCCESS"
+    },
+    {
+      "name": "Cinder Shift rework combat flow",
+      "run_id": 43718801961,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801961",
+      "status": "SUCCESS"
+    },
+    {
+      "name": "Cinder Shift rework candidate",
+      "run_id": 43718802057,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718802057",
+      "status": "SUCCESS"
     },
     {
       "name": "Cinder Shift Sprint 2 presentation",
@@ -43,19 +60,7 @@
       "name": "Cinder Shift check",
       "run_id": 43718801978,
       "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801978",
-      "status": "PENDING_FINAL_COLLECTION"
-    },
-    {
-      "name": "Cinder Shift rework candidate",
-      "run_id": 43718802057,
-      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718802057",
-      "status": "PENDING_FINAL_COLLECTION"
-    },
-    {
-      "name": "Cinder Shift rework combat flow",
-      "run_id": 43718801961,
-      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801961",
-      "status": "PENDING_FINAL_COLLECTION"
+      "status": "SUCCESS"
     }
   ],
   "performance": {
@@ -311,12 +316,1923 @@
     "Complete full art/state/animation review across all 44 rooms and both Foundry paths",
     "Complete UX pass for Challenges/Training, compact map/workshop and narrative transitions",
     "Record audible runtime clips and final interaction/stress measurements",
-    "Collect final regression/routes/build-curve results before declaring this checkpoint verified"
+    "Complete the audio mixer lifecycle review, including duck-envelope cancellation when bus levels change during warnings."
   ],
   "recovery": {
     "host": "UNAVAILABLE",
     "remote_branch": "codex/cinder-shift-m-rework",
     "local_checkout_last_synced": "254b542bee1c13c491a6dbae2cc0194597c728ab; fetch and compare before resuming local edits",
     "rollback": "38468184f63637f53b14d369c5b656e9ac36ed04 / B6"
-  }
+  },
+  "runtime_identity": [
+    {
+      "path": "games",
+      "runtime_sha": "dca41b462c5dcf85f3d2842bc2832425980d0032",
+      "tested_merge_sha": "dca41b462c5dcf85f3d2842bc2832425980d0032"
+    },
+    {
+      "path": "scripts",
+      "runtime_sha": "c32d58235c0409a857a9ee54b06034eefcb741df",
+      "tested_merge_sha": "c32d58235c0409a857a9ee54b06034eefcb741df"
+    },
+    {
+      "path": "audio",
+      "runtime_sha": "a21f422b9164a1b679f0c7019cf62b025541ab37",
+      "tested_merge_sha": "a21f422b9164a1b679f0c7019cf62b025541ab37"
+    },
+    {
+      "path": "package.json",
+      "runtime_sha": "9ceb5331584e589b8151cce4770010fcbefba86e",
+      "tested_merge_sha": "9ceb5331584e589b8151cce4770010fcbefba86e"
+    },
+    {
+      "path": "package-lock.json",
+      "runtime_sha": "c4bb2c1dc0b6039b5026721c77e806c5d33e82f5",
+      "tested_merge_sha": "c4bb2c1dc0b6039b5026721c77e806c5d33e82f5"
+    },
+    {
+      "path": "vite.config.ts",
+      "runtime_sha": "b89f31de850ba9c8bf5fd8de1fd04081c7a1947e",
+      "tested_merge_sha": "b89f31de850ba9c8bf5fd8de1fd04081c7a1947e"
+    }
+  ],
+  "general_regression": {
+    "passed": 320,
+    "failed": 0,
+    "not_run": 0,
+    "shards": [
+      {
+        "job": "check (5)",
+        "id": 132826148662,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (3)",
+        "id": 132826148786,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (6)",
+        "id": 132826148839,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (4)",
+        "id": 132826148871,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (12)",
+        "id": 132826148882,
+        "passed": 26,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (7)",
+        "id": 132826148892,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (8)",
+        "id": 132826148907,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (9)",
+        "id": 132826148915,
+        "passed": 26,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (10)",
+        "id": 132826148921,
+        "passed": 26,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (1)",
+        "id": 132826148973,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (2)",
+        "id": 132826149101,
+        "passed": 27,
+        "failed": 0,
+        "status": "SUCCESS"
+      },
+      {
+        "job": "check (11)",
+        "id": 132826148875,
+        "passed": 26,
+        "failed": 0,
+        "status": "SUCCESS"
+      }
+    ]
+  },
+  "suites": {
+    "models": 105,
+    "three_browser_ui_combat": 147,
+    "airlock_flow": 15,
+    "native_touch": 12,
+    "persistence": 8,
+    "sector_and_boss_routes": 15,
+    "affordable_build_routes": 33,
+    "purposeful_mobility": 9,
+    "fresh_profile_campaign": 1,
+    "presentation_candidate": 13,
+    "presentation_baseline": 13,
+    "overlapping_sets": true,
+    "workflow_count": 6,
+    "job_count": 43
+  },
+  "fresh_profile_campaign": {
+    "status": "FRESH_PROFILE_FULL_CAMPAIGN_TRUSTED_INPUT",
+    "build": "0.7.0-rw2.a1",
+    "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+    "seed": 4,
+    "nodes": [],
+    "sectors": [
+      {
+        "mission": "airlock",
+        "hp": 2,
+        "max_hp": 6,
+        "active_seconds": 49.24999999999856,
+        "score": 0,
+        "visited": 6,
+        "repair": [
+          "B"
+        ],
+        "events": [
+          {
+            "event_id": "E03",
+            "definition_version": 2,
+            "room_id": "B",
+            "variant": "repair-cache"
+          }
+        ],
+        "damage": [
+          {
+            "name": "hit_received",
+            "event_id": "e30488a4-ac60-4b45-819e-74ea7168dc6e",
+            "at": 11307,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "B",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 10.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "c175a8c8-3bd9-4ec7-9f20-81ff4db38486",
+            "at": 18140,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1A",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 16.667,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "d3de3391-310f-4302-81eb-979355b188ed",
+            "at": 36072,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 34.2,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "253d6010-4000-43a9-a9fe-6eda95457dba",
+            "at": 43989,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 41.917,
+              "reason": "drone-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "8e5448e2-b9b4-4b07-96bb-210b152e1a9d",
+            "at": 47772,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 45.7,
+              "reason": "walker-shot",
+              "hp": 2
+            }
+          }
+        ]
+      },
+      {
+        "mission": "cargo",
+        "hp": 3,
+        "max_hp": 6,
+        "active_seconds": 81.46666666666749,
+        "score": 0,
+        "visited": 9,
+        "repair": [
+          "M2E"
+        ],
+        "events": [],
+        "damage": [
+          {
+            "name": "hit_received",
+            "event_id": "e30488a4-ac60-4b45-819e-74ea7168dc6e",
+            "at": 11307,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "B",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 10.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "c175a8c8-3bd9-4ec7-9f20-81ff4db38486",
+            "at": 18140,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1A",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 16.667,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "d3de3391-310f-4302-81eb-979355b188ed",
+            "at": 36072,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 34.2,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "253d6010-4000-43a9-a9fe-6eda95457dba",
+            "at": 43989,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 41.917,
+              "reason": "drone-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "8e5448e2-b9b4-4b07-96bb-210b152e1a9d",
+            "at": 47772,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 45.7,
+              "reason": "walker-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "4f6e7d63-f529-43ae-bb66-d7651dc47c4e",
+            "at": 63671,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2A",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 11.4,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "6f35159b-23f2-4df7-9db5-12ec2b5b1bae",
+            "at": 75471,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "E",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 23,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "dbb5f0a0-d676-4b2d-ab1e-05a11e3fa822",
+            "at": 85204,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2B",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 32.533,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "86894315-8b9c-4005-abf0-4b8f683500f2",
+            "at": 97753,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2D",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 44.683,
+              "reason": "drone-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "cb6bd7ed-c944-4707-81fc-f0a89e31fb90",
+            "at": 131519,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "G",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 77.3,
+              "reason": "turret-shot",
+              "hp": 3
+            }
+          }
+        ]
+      },
+      {
+        "mission": "foundry",
+        "hp": 4,
+        "max_hp": 6,
+        "active_seconds": 61.23333333333015,
+        "score": 0,
+        "visited": 8,
+        "repair": [
+          "M3K"
+        ],
+        "events": [],
+        "damage": [
+          {
+            "name": "hit_received",
+            "event_id": "e30488a4-ac60-4b45-819e-74ea7168dc6e",
+            "at": 11307,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "B",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 10.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "c175a8c8-3bd9-4ec7-9f20-81ff4db38486",
+            "at": 18140,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1A",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 16.667,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "d3de3391-310f-4302-81eb-979355b188ed",
+            "at": 36072,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 34.2,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "253d6010-4000-43a9-a9fe-6eda95457dba",
+            "at": 43989,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 41.917,
+              "reason": "drone-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "8e5448e2-b9b4-4b07-96bb-210b152e1a9d",
+            "at": 47772,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 45.7,
+              "reason": "walker-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "4f6e7d63-f529-43ae-bb66-d7651dc47c4e",
+            "at": 63671,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2A",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 11.4,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "6f35159b-23f2-4df7-9db5-12ec2b5b1bae",
+            "at": 75471,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "E",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 23,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "dbb5f0a0-d676-4b2d-ab1e-05a11e3fa822",
+            "at": 85204,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2B",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 32.533,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "86894315-8b9c-4005-abf0-4b8f683500f2",
+            "at": 97753,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2D",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 44.683,
+              "reason": "drone-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "cb6bd7ed-c944-4707-81fc-f0a89e31fb90",
+            "at": 131519,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "G",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 77.3,
+              "reason": "turret-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "458d2767-964d-4dc0-b0db-9ff8bb288e90",
+            "at": 139235,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3A",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 3.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9b512280-fee2-4435-9941-938fd54de961",
+            "at": 162117,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3B",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 25.367,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9461ce90-2d8d-45ca-a1af-304163570784",
+            "at": 176650,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3H",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 39.5,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "0482fbe0-084f-4af1-b2e1-990c00f031cd",
+            "at": 195450,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3D",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 57.767,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          }
+        ]
+      },
+      {
+        "mission": "archive",
+        "hp": 5,
+        "max_hp": 6,
+        "active_seconds": 74.28333333333207,
+        "score": 0,
+        "visited": 9,
+        "repair": [
+          "M4C"
+        ],
+        "events": [
+          {
+            "event_id": "E05",
+            "definition_version": 1,
+            "room_id": "M4B",
+            "variant": "scout-cache"
+          }
+        ],
+        "damage": [
+          {
+            "name": "hit_received",
+            "event_id": "e30488a4-ac60-4b45-819e-74ea7168dc6e",
+            "at": 11307,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "B",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 10.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "c175a8c8-3bd9-4ec7-9f20-81ff4db38486",
+            "at": 18140,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1A",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 16.667,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "d3de3391-310f-4302-81eb-979355b188ed",
+            "at": 36072,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 34.2,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "253d6010-4000-43a9-a9fe-6eda95457dba",
+            "at": 43989,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 41.917,
+              "reason": "drone-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "8e5448e2-b9b4-4b07-96bb-210b152e1a9d",
+            "at": 47772,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 45.7,
+              "reason": "walker-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "4f6e7d63-f529-43ae-bb66-d7651dc47c4e",
+            "at": 63671,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2A",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 11.4,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "6f35159b-23f2-4df7-9db5-12ec2b5b1bae",
+            "at": 75471,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "E",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 23,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "dbb5f0a0-d676-4b2d-ab1e-05a11e3fa822",
+            "at": 85204,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2B",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 32.533,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "86894315-8b9c-4005-abf0-4b8f683500f2",
+            "at": 97753,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2D",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 44.683,
+              "reason": "drone-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "cb6bd7ed-c944-4707-81fc-f0a89e31fb90",
+            "at": 131519,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "G",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 77.3,
+              "reason": "turret-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "458d2767-964d-4dc0-b0db-9ff8bb288e90",
+            "at": 139235,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3A",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 3.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9b512280-fee2-4435-9941-938fd54de961",
+            "at": 162117,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3B",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 25.367,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9461ce90-2d8d-45ca-a1af-304163570784",
+            "at": 176650,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3H",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 39.5,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "0482fbe0-084f-4af1-b2e1-990c00f031cd",
+            "at": 195450,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3D",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 57.767,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "5ec4f399-2df9-4453-a2e2-9fb19b2b1c97",
+            "at": 210732,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "archive",
+              "room_id": "M4E",
+              "attempt_id": "7ad1811b-2c8e-4bd0-aa9d-dfb716161678",
+              "active_duration": 11.2,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "31aa0377-1072-4894-87d9-0246caa4612e",
+            "at": 269346,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "archive",
+              "room_id": "M4D",
+              "attempt_id": "7ad1811b-2c8e-4bd0-aa9d-dfb716161678",
+              "active_duration": 68.183,
+              "reason": "walker-shot",
+              "hp": 5
+            }
+          }
+        ]
+      },
+      {
+        "mission": "reactor",
+        "hp": 4,
+        "max_hp": 6,
+        "active_seconds": 99.21666666667265,
+        "score": 250,
+        "visited": 9,
+        "repair": [
+          "M5C"
+        ],
+        "events": [
+          {
+            "event_id": "E06",
+            "definition_version": 1,
+            "room_id": "M5B",
+            "variant": "ram-patrol"
+          }
+        ],
+        "damage": [
+          {
+            "name": "hit_received",
+            "event_id": "e30488a4-ac60-4b45-819e-74ea7168dc6e",
+            "at": 11307,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "B",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 10.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "c175a8c8-3bd9-4ec7-9f20-81ff4db38486",
+            "at": 18140,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1A",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 16.667,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "d3de3391-310f-4302-81eb-979355b188ed",
+            "at": 36072,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "M1C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 34.2,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "253d6010-4000-43a9-a9fe-6eda95457dba",
+            "at": 43989,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 41.917,
+              "reason": "drone-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "8e5448e2-b9b4-4b07-96bb-210b152e1a9d",
+            "at": 47772,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "airlock",
+              "room_id": "C",
+              "attempt_id": "fb64b33d-d17b-4f4e-9e7b-089728caa48a",
+              "active_duration": 45.7,
+              "reason": "walker-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "4f6e7d63-f529-43ae-bb66-d7651dc47c4e",
+            "at": 63671,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2A",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 11.4,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "6f35159b-23f2-4df7-9db5-12ec2b5b1bae",
+            "at": 75471,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "E",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 23,
+              "reason": "turret-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "dbb5f0a0-d676-4b2d-ab1e-05a11e3fa822",
+            "at": 85204,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2B",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 32.533,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "86894315-8b9c-4005-abf0-4b8f683500f2",
+            "at": 97753,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "M2D",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 44.683,
+              "reason": "drone-shot",
+              "hp": 2
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "cb6bd7ed-c944-4707-81fc-f0a89e31fb90",
+            "at": 131519,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "cargo",
+              "room_id": "G",
+              "attempt_id": "695359a2-dab1-4be2-8f76-b31761cda289",
+              "active_duration": 77.3,
+              "reason": "turret-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "458d2767-964d-4dc0-b0db-9ff8bb288e90",
+            "at": 139235,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3A",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 3.15,
+              "reason": "walker-contact",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9b512280-fee2-4435-9941-938fd54de961",
+            "at": 162117,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3B",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 25.367,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "9461ce90-2d8d-45ca-a1af-304163570784",
+            "at": 176650,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3H",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 39.5,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "0482fbe0-084f-4af1-b2e1-990c00f031cd",
+            "at": 195450,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "foundry",
+              "room_id": "M3D",
+              "attempt_id": "cc5affde-5d09-4642-b4ed-8b3b3aad6e5d",
+              "active_duration": 57.767,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "5ec4f399-2df9-4453-a2e2-9fb19b2b1c97",
+            "at": 210732,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "archive",
+              "room_id": "M4E",
+              "attempt_id": "7ad1811b-2c8e-4bd0-aa9d-dfb716161678",
+              "active_duration": 11.2,
+              "reason": "drone-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "31aa0377-1072-4894-87d9-0246caa4612e",
+            "at": 269346,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "archive",
+              "room_id": "M4D",
+              "attempt_id": "7ad1811b-2c8e-4bd0-aa9d-dfb716161678",
+              "active_duration": 68.183,
+              "reason": "walker-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "e68df7a9-f3ac-4054-b411-3a44aeaee561",
+            "at": 281129,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "reactor",
+              "room_id": "M5A",
+              "attempt_id": "9033792a-6263-4d65-8cdb-32ee8400dda4",
+              "active_duration": 5.333,
+              "reason": "turret-shot",
+              "hp": 5
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "74d83fcd-45dd-4ae6-b7db-ee32c8da4073",
+            "at": 288096,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "reactor",
+              "room_id": "M5F",
+              "attempt_id": "9033792a-6263-4d65-8cdb-32ee8400dda4",
+              "active_duration": 12.1,
+              "reason": "drone-shot",
+              "hp": 4
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "4097b4a0-b002-45ab-a059-b4b1d2c200db",
+            "at": 289907,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "reactor",
+              "room_id": "M5F",
+              "attempt_id": "9033792a-6263-4d65-8cdb-32ee8400dda4",
+              "active_duration": 13.9,
+              "reason": "walker-shot",
+              "hp": 3
+            }
+          },
+          {
+            "name": "hit_received",
+            "event_id": "f369f2e3-c05e-4983-b603-e683f1526212",
+            "at": 312245,
+            "params": {
+              "game_id": "r01",
+              "build_id": "0.7.0-rw2.a1",
+              "source_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+              "locale": "ru",
+              "input_method": "keyboard",
+              "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+              "campaign_seed": 4,
+              "mode": "mission",
+              "mission_id": "reactor",
+              "room_id": "M5G",
+              "attempt_id": "9033792a-6263-4d65-8cdb-32ee8400dda4",
+              "active_duration": 35.717,
+              "reason": "drone-shot",
+              "hp": 2
+            }
+          }
+        ]
+      }
+    ],
+    "boss": {
+      "phases": [
+        "lanes",
+        "transition",
+        "sweep",
+        "shutdown"
+      ],
+      "windows": [
+        "lanes:0",
+        "lanes:1",
+        "sweep:0",
+        "sweep:1"
+      ]
+    },
+    "career_record": {
+      "ruleset_id": "campaign-rework9",
+      "campaign_id": "ce098b17-ea2a-4f70-930a-7fcbb9bd9a8d",
+      "content_version": "campaign-m05b3.0",
+      "completed_at": "2026-11-15T13:36:17.211Z",
+      "active_ms": 365450.00000000093,
+      "deaths": 0,
+      "score": 250,
+      "foundry_route": "service",
+      "nodes": [],
+      "difficulty": "standard",
+      "assistance": "standard",
+      "history_complete": true
+    },
+    "wall_seconds": 378.027,
+    "human_duration_target_verified": false,
+    "physical_device_verified": false,
+    "qualification": "Scripted known route; no human duration or balance acceptance is inferred"
+  },
+  "exact_source_reports": [
+    {
+      "workflow": 43718802057,
+      "job": "encounters (webkit)",
+      "id": 132826137086,
+      "passed_per_step": [
+        8,
+        41
+      ],
+      "total": 49
+    },
+    {
+      "workflow": 43718802057,
+      "job": "models",
+      "id": 132826137313,
+      "passed_per_step": [
+        105
+      ],
+      "total": 105
+    },
+    {
+      "workflow": 43718802057,
+      "job": "encounters (chromium)",
+      "id": 132826137372,
+      "passed_per_step": [
+        8,
+        41
+      ],
+      "total": 49
+    },
+    {
+      "workflow": 43718802057,
+      "job": "encounters (firefox)",
+      "id": 132826137507,
+      "passed_per_step": [
+        8,
+        41
+      ],
+      "total": 49
+    },
+    {
+      "workflow": 43718801961,
+      "job": "combat-flow (firefox)",
+      "id": 132826135411,
+      "passed_per_step": [
+        5
+      ],
+      "total": 5
+    },
+    {
+      "workflow": 43718801961,
+      "job": "native-touch",
+      "id": 132826135606,
+      "passed_per_step": [
+        12
+      ],
+      "total": 12
+    },
+    {
+      "workflow": 43718801961,
+      "job": "combat-flow (chromium)",
+      "id": 132826135608,
+      "passed_per_step": [
+        5
+      ],
+      "total": 5
+    },
+    {
+      "workflow": 43718801961,
+      "job": "combat-flow (webkit)",
+      "id": 132826135625,
+      "passed_per_step": [
+        5
+      ],
+      "total": 5
+    },
+    {
+      "workflow": 43718801937,
+      "job": "purposeful-mobility (foundry)",
+      "id": 132826136805,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (foundry, weapon)",
+      "id": 132826136970,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "purposeful-mobility (archive)",
+      "id": 132826137033,
+      "passed_per_step": [
+        3
+      ],
+      "total": 3
+    },
+    {
+      "workflow": 43718801937,
+      "job": "purposeful-mobility (reactor)",
+      "id": 132826137034,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (reactor, defence)",
+      "id": 132826137052,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (reactor, movement)",
+      "id": 132826137057,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (cargo, movement)",
+      "id": 132826137075,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (foundry, defence)",
+      "id": 132826137083,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (archive, defence)",
+      "id": 132826137156,
+      "passed_per_step": [
+        3
+      ],
+      "total": 3
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (foundry, movement)",
+      "id": 132826137158,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (archive, weapon)",
+      "id": 132826137166,
+      "passed_per_step": [
+        3
+      ],
+      "total": 3
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (archive, movement)",
+      "id": 132826137181,
+      "passed_per_step": [
+        3
+      ],
+      "total": 3
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (cargo, weapon)",
+      "id": 132826137199,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (cargo, defence)",
+      "id": 132826137211,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801937,
+      "job": "sector-build (reactor, weapon)",
+      "id": 132826137249,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    },
+    {
+      "workflow": 43718801884,
+      "job": "persistence",
+      "id": 132826139648,
+      "passed_per_step": [
+        8
+      ],
+      "total": 8
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (archive)",
+      "id": 132826139843,
+      "passed_per_step": [
+        3
+      ],
+      "total": 3
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (foundry)",
+      "id": 132826139979,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (regulator)",
+      "id": 132826140019,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (cargo)",
+      "id": 132826140042,
+      "passed_per_step": [
+        2
+      ],
+      "total": 2
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (campaign)",
+      "id": 132826140399,
+      "passed_per_step": [
+        1
+      ],
+      "total": 1
+    },
+    {
+      "workflow": 43718801884,
+      "job": "routes (reactor)",
+      "id": 132826140021,
+      "passed_per_step": [
+        4
+      ],
+      "total": 4
+    }
+  ]
 }

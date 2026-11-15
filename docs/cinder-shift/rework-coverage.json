@@ -18,7 +18,7 @@
   },
   "candidate": {
     "build_id": "0.7.0-rw2.a1",
-    "stage": "M_RW2_A1_IN_PROGRESS",
+    "stage": "M_RW2_A1_VERIFIED; M_RW2_IN_PROGRESS",
     "published": false,
     "accepted": false,
     "verification": {
@@ -29,10 +29,15 @@
       "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
       "models": "PASS_105",
       "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
-      "general_regression": "RUNNING_EXACT_SOURCE",
-      "full_campaign": "RUNNING_EXACT_SOURCE",
-      "foundry_routes": "RUNNING_EXACT_SOURCE",
-      "reachable_builds": "RUNNING_EXACT_SOURCE"
+      "general_regression": "PASS_320_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+      "full_campaign": "PASS_FRESH_PROFILE_41_ROOMS_BOTH_BOSS_PHASES_EVACUATION_SAVED_RELOAD",
+      "foundry_routes": "PASS_BOTH_BRANCHES",
+      "reachable_builds": "PASS_33_SECTOR_BUILDS_PLUS_9_PURPOSEFUL_MOBILITY",
+      "three_browser_ui_combat": "PASS_147",
+      "airlock_flow": "PASS_15",
+      "native_touch": "PASS_12",
+      "persistence": "PASS_8",
+      "sector_and_boss_routes": "PASS_15"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -734,8 +739,8 @@
       "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
       "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
     },
-    "validated_head_sha": null,
-    "tested_merge_sha": null,
+    "validated_head_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+    "tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
     "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
     "current_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
     "current_tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
@@ -1073,7 +1078,17 @@
       "cloudflare_pages": "SUCCESS"
     },
     "previous_verified_candidate": "0.7.0-rw1.b6 / a390b80",
-    "test_candidate_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89"
+    "test_candidate_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+    "sprint_2": {
+      "status": "IN_PROGRESS",
+      "checkpoint": "A1_ENGINEERING_VERIFIED",
+      "full_31_requirement_gate": "OPEN",
+      "work_order": {
+        "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
+        "revision": 2
+      },
+      "verification_report": "docs/cinder-shift/sprint-2-verification.json"
+    }
   },
   "requirements": [
     {
