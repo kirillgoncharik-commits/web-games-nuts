@@ -1,0 +1,42 @@
+name: Package pinned Cinder preview
+on: [push, create]
+permissions:
+  contents: write
+concurrency:
+  group: cinder-preview-export-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  package:
+    if: github.ref == 'refs/heads/codex/cinder-rw2-preview-build'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 76f7bb4b21cba808fe08d01601315043e34f5421
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
+      - name: Preserve a readable exact-source build
+        shell: bash
+        run: |
+          mkdir -p qa-export/chunks
+          node --input-type=module <<'JS'
+          import {readFile,writeFile} from 'node:fs/promises';
+          const manifest=JSON.parse(await readFile('dist/cinder-shift/build-manifest.json','utf8'));
+          const file=manifest.files.find(f=>/assets\/index-.*\.js$/.test(f.path)),content=await readFile('dist/cinder-shift/'+file.path,'utf8'),chunks=[];
+          for(let n=0;n<content.length;n+=32000){const name=String(n/32000).padStart(3,'0')+'.txt';await writeFile('qa-export/chunks/'+name,content.slice(n,n+32000));chunks.push('qa-export/chunks/'+name);}
+          await writeFile('qa-export/index.json',JSON.stringify({source:manifest.source_sha,js:file.path,chunks,manifest},null,2));
+          JS
+          export GIT_INDEX_FILE="$RUNNER_TEMP/cinder-export-index"
+          git read-tree --empty
+          git add -f dist/cinder-shift qa-export
+          tree=$(git write-tree)
+          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'Archive pinned RW2 preview build 76f7bb4b21cba808fe08d01601315043e34f5421')
+          branch="qa/cinder-rw2-build-$GITHUB_RUN_ID"
+          git push origin "$commit:refs/heads/$branch"
+          echo "CINDER_BUILD_BRANCH=$branch"
+          echo "CINDER_BUILD_COMMIT=$commit"

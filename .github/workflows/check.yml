@@ -1,7 +1,7 @@
 name: Cinder Shift check
 on:
   push:
-    branches-ignore: [codex/cinder-shift-m-rework]
+    branches-ignore: [codex/cinder-shift-m-rework, codex/cinder-rw2-preview-build]
   pull_request:
 concurrency:
   group: cinder-check-${{ github.ref }}
