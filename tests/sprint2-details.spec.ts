@@ -51,6 +51,7 @@ for(const width of [1280,667,390])test('RW2 challenge choices precede code tools
  const boxes=await Promise.all(ids.map(id=>page.getByTestId(id).boundingBox()));expect(boxes.every(b=>b&&b.width>=48&&b.height>=48)).toBe(true);
  expect(boxes.every(b=>b!.y>=0&&b!.y+b!.height<=page.viewportSize()!.height)).toBe(true);
  await expect(page.locator('#challenge-code')).toBeHidden();await page.getByTestId('challenge-codes-toggle').focus();await page.keyboard.press('Enter');await expect(page.locator('#challenge-code')).toBeVisible();await page.keyboard.press('Enter');await expect(page.locator('#challenge-code')).toBeHidden();
+ await expect.poll(async()=>{const boxes=await Promise.all(ids.map(id=>page.getByTestId(id).boundingBox()));return boxes.every(b=>b&&b.y>=0&&b.y+b.height<=page.viewportSize()!.height);}).toBe(true);
  for(const id of ids)await expect(page.getByTestId(id).locator('small')).not.toBeEmpty();
  expect(await page.locator('.panel-content').evaluate(el=>el.scrollWidth<=el.clientWidth+1)).toBe(true);
  await page.screenshot({path:info.outputPath('challenges.png')});
