@@ -82,3 +82,6 @@
 .panel .challenge-choice{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;text-align:start;min-height:88px;min-width:48px;padding:12px}
 .challenge-choice strong{font-size:16px}.challenge-choice small{font-size:12px;line-height:1.35;font-weight:normal;color:inherit;opacity:.9}
 @media(orientation:landscape) and (max-height:500px){.panel .challenge-choice{min-height:72px;padding:8px}.challenge-choice small{font-size:11px}.challenge-catalog{gap:8px;margin:8px 0 12px}}
+
+.sector-consequence{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:12px;padding:10px 12px;margin:12px 0;background:#122a32;border-left:3px solid #76dcc8}.sector-consequence p{margin:0;line-height:1.45}.sector-power{display:flex;gap:4px}.sector-power i{display:block;width:6px;height:18px;border:1px solid #456171;background:#16212b}.sector-power i.live{background:#76dcc8;border-color:#b1eee0}@media(prefers-reduced-motion:no-preference){.sector-consequence{animation:sector-signal .18s steps(3,end)}}@keyframes sector-signal{from{opacity:.5}to{opacity:1}}
+.reduced-motion .sector-consequence,.reduced-flashes .sector-consequence{animation:none}

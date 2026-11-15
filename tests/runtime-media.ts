@@ -34,7 +34,7 @@ export async function startMedia(page:Page){
   w.__GAME_RECORDING__={stop:()=>new Promise<any>((resolve,reject)=>{
    recorder.onerror=event=>reject(new Error(String(event)));
    recorder.onstop=()=>{active=false;cancelAnimationFrame(frame);for(const track of video.getTracks())track.stop();
-    const reader=new FileReader();reader.onerror=()=>reject(reader.error);reader.onload=()=>resolve({base64:String(reader.result).split(',')[1],mimeType,peakRms,samples,audioTracks:stream.getAudioTracks().length,width:canvas.width,height:canvas.height});reader.readAsDataURL(new Blob(chunks,{type:mimeType}));
+    const reader=new FileReader();reader.onerror=()=>reject(reader.error);reader.onload=()=>resolve({base64:String(reader.result).split(';base64,')[1],mimeType,peakRms,samples,audioTracks:stream.getAudioTracks().length,width:canvas.width,height:canvas.height});reader.readAsDataURL(new Blob(chunks,{type:mimeType}));
    };recorder.stop();
   })};
  });
@@ -43,6 +43,6 @@ export async function finishMedia(page:Page,info:TestInfo,name:string){
  const capture=await page.evaluate(()=>(window as any).__GAME_RECORDING__.stop());
  const bytes=Buffer.from(capture.base64,'base64');delete capture.base64;
  await writeFile(info.outputPath(name+'.webm'),bytes);await writeFile(info.outputPath(name+'-audio.json'),JSON.stringify({...capture,bytes:bytes.length},null,2));
- expect(capture.audioTracks).toBe(1);expect(capture.peakRms).toBeGreaterThan(.0001);expect(bytes.length).toBeGreaterThan(1000);
+ expect(bytes.subarray(0,4).toString('hex')).toBe('1a45dfa3');expect(capture.audioTracks).toBe(1);expect(capture.peakRms).toBeGreaterThan(.0001);expect(bytes.length).toBeGreaterThan(1000);
  return {...capture,bytes:bytes.length};
 }

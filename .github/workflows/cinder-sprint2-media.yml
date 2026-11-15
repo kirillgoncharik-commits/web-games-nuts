@@ -37,7 +37,7 @@ jobs:
         working-directory: game
         run: |
           npm ci --ignore-scripts
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium || (sudo apt-get update && npx playwright install --with-deps chromium)
           npm run build
           if [ '${{ matrix.variant }}' = candidate-c01 ]; then
             npx playwright test --config=playwright.media.config.ts --grep='audible fresh-profile' --output=test-results/media --reporter=line,json
