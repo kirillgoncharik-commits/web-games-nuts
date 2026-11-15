@@ -1,6 +1,6 @@
 {
   "milestone": "M-REWORK",
-  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_ACTIVE",
+  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_C3_ENGINEERING_VERIFIED_WITH_M_RW4_SUBSCOPES",
   "started_at": "2026-11-12",
   "source": "https://trello.com/c/AqZ78Mjo",
   "requirements_source": {
@@ -17,27 +17,30 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rw2.a1",
-    "stage": "M_RW2_A1_VERIFIED; M_RW2_IN_PROGRESS",
+    "build_id": "0.7.0-rw2.c3",
+    "stage": "M_RW2_C3_ENGINEERING_CHECKPOINT_VERIFIED",
     "published": false,
     "accepted": false,
     "verification": {
-      "build": "PASS",
-      "typescript": "PASS",
-      "i18n": "PASS_720_EN_RU_KEYS",
-      "art_contracts": "PASS",
-      "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
+      "build": "PASS_EXACT_SOURCE_CI",
+      "typescript": "PASS_EXACT_SOURCE_CI",
+      "i18n": "PASS_735_MATCHED_EN_RU_KEYS",
+      "art_contracts": "PASS_EXACT_SOURCE_CI",
+      "room_registry": "PASS_44_REPRODUCIBLE_ROOMS",
       "models": "PASS_105",
-      "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
-      "general_regression": "PASS_320_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
-      "full_campaign": "PASS_FRESH_PROFILE_41_ROOMS_BOTH_BOSS_PHASES_EVACUATION_SAVED_RELOAD",
-      "foundry_routes": "PASS_BOTH_BRANCHES",
-      "reachable_builds": "PASS_33_SECTOR_BUILDS_PLUS_9_PURPOSEFUL_MOBILITY",
-      "three_browser_ui_combat": "PASS_147",
-      "airlock_flow": "PASS_15",
-      "native_touch": "PASS_12",
+      "presentation": "PASS_17_CANDIDATE_AND17_BASELINE",
+      "three_browser_ui_combat": "PASS_147_EXECUTIONS",
+      "airlock_flow": "PASS_15_EXECUTIONS",
+      "native_touch": "PASS_12_EXECUTIONS",
       "persistence": "PASS_8",
-      "sector_and_boss_routes": "PASS_15"
+      "sector_and_boss_routes": "PASS_15_PLUS_FULL_C01",
+      "reachable_builds": "PASS_33_SECTOR_BUILDS",
+      "purposeful_mobility": "PASS_9",
+      "room_media": "PASS_44_CANDIDATE_PLUS44_BASELINE_WITH_AUDIO",
+      "full_campaign": "PASS_TWO_FRESH_PROFILE_C01_ROUTES_ONE_AUDIBLE",
+      "interaction_details": "PASS_7_INCLUDING_TOUCH_AVAILABILITY_AND_COLLAPSE_SCROLL",
+      "public_cdn": "PASS_PINNED_PRODUCTION_AND_C3_SOURCES_COLD_AND_WARM",
+      "general_regression": "PASS_331_FAILED_0_NOT_RUN_0_ALL12SHARDS"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -418,22 +421,41 @@
         },
         "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
         "scope": "All 30 current M-RW1 engineering requirements. Human acceptance deferred by user; M-REWORK as a whole remains in progress."
+      },
+      {
+        "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+        "build_id": "0.7.0-rw2.c3",
+        "result": "SUCCESS",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786394",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786484",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786352",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786381",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786418",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786386",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786597"
+        ],
+        "proof": "docs/cinder-shift/sprint-2-verification.json",
+        "scope": "331 general regression;105 models;147 three-browser UI/combat; full C01 twice including one audible;44 current clips and44 B6 references;17+17 presentations. Sets overlap; formal human acceptance excluded."
       }
     ],
     "known_limitations": [
-      "Human first-play duration target 25–35 minutes is not measured and is outside the current Sprint 1 gate by user instruction.",
-      "Complete art/audio/world animation polish, wider UX, C02/C03, 50 locales/RTL and final device/channel acceptance remain with Sprints 2–4.",
-      "Reference study uses pinned source-level map/state fragments; selected reference games were not played.",
-      "Whole-sector mobility timing includes input and phase variation; controls also vary, so it does not prove all gain is caused by dash."
+      "50 locales/RTL, physical phones, physical soft keyboard and final combined-flash audit remain M-RW4.",
+      "Human first-play duration and subjective art/music acceptance are not claimed.",
+      "CDN measurements are one unthrottled Ubuntu browser run per origin; baseline and candidate origins differ."
     ],
-    "recovery": "Host recovered. Exact test source 252e80b restored locally; pending evidence exports backed up before restoration. Final successor contains documentation/evidence only.",
+    "recovery": "Host unavailable; exact C3 source, build and evidence saved through GitHub. Compare remote before using stale local checkout.",
     "requirement_counts": {
-      "VERIFIED": 30,
-      "OPEN": 44,
-      "IMPLEMENTED": 6,
+      "VERIFIED": 59,
+      "PARTIAL": 2,
+      "OPEN": 19,
       "total": 80,
       "sprint_1_total": 30,
       "sprint_1_engineering_verified": 30,
+      "sprint_2_total": 31,
+      "sprint_2_engineering_verified": 29,
+      "sprint_2_partial": 2,
       "accepted_whole_milestone": false
     },
     "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
@@ -739,14 +761,14 @@
       "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
       "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
     },
-    "validated_head_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
-    "tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+    "validated_head_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
     "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
-    "current_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
-    "current_tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
-    "report": "docs/cinder-shift/sprint-2-release-notes.ru.md",
+    "current_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "current_tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "report": "docs/cinder-shift/sprint-2-verification.json",
     "preview_published": true,
-    "publication_status": "A1_DEVELOPMENT_PREVIEW_ONLY",
+    "publication_status": "SEPARATE_C3_DEVELOPMENT_PREVIEW; PRODUCTION_B6",
     "acceptance_policy": {
       "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
       "instruction_date": "2026-11-14",
@@ -1060,34 +1082,128 @@
         }
       }
     },
-    "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+    "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
     "development_preview": {
-      "status": "PASS_CLOUDFLARE_AND_SITE_CI",
-      "source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
-      "site_commit": "06a0d29e91174f495ac19bc4ceb44a1e2eb0fecb",
-      "site_pr": 15,
-      "source_pr": 9,
-      "production_unchanged": "0.7.0-rw1.b6 / nutsbid main 46ee58b70b101f7f85b93594f142741fac7c5c21",
-      "artifact_branch": "qa/cinder-rw2-build-43718799326",
-      "artifact_commit": "c60b7f46e789d0538e953f905951616bda867616",
-      "js_blob_sha": "f5e5fdc3dc19708082f11cffa7ecf8f5e1bd046a",
-      "js_copy": "Verified identical Git blob SHA before site update",
-      "url": "https://ab2511d6.nuts-games.pages.dev/games/cinder-shift/",
-      "cloudflare_deployment_id": "ab2511d6-77f6-4f58-a07d-116e1b02539b",
+      "url": "https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/",
+      "cloudflare_deployment_id": "6f6fa95d-34cb-4473-8274-4e8254c587b5",
+      "site_commit": "658c1e7dc8a5f42c5028999ebf1d2cd25f479f2f",
+      "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
       "site_ci": "PASS",
-      "cloudflare_pages": "SUCCESS"
+      "cloudflare": "SUCCESS",
+      "files_equal": 60
     },
-    "previous_verified_candidate": "0.7.0-rw1.b6 / a390b80",
-    "test_candidate_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+    "previous_verified_candidate": {
+      "build_id": "0.7.0-rw2.a1",
+      "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+      "documentation_head": "a90728a93b1269759865333bc3390262847842ba",
+      "report": "https://github.com/kirillgoncharik-commits/web-games-nuts/blob/a90728a93b1269759865333bc3390262847842ba/docs/cinder-shift/sprint-2-verification.json"
+    },
+    "test_candidate_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
     "sprint_2": {
-      "status": "IN_PROGRESS",
-      "checkpoint": "A1_ENGINEERING_VERIFIED",
-      "full_31_requirement_gate": "OPEN",
+      "status": "C3_ENGINEERING_CHECKPOINT_VERIFIED; TWO_M_RW4_SUBSCOPES_OPEN",
+      "checkpoint": "C3",
+      "full_31_requirement_gate": "29 engineering-verified; 2 cross-sprint subscopes remain with M-RW4",
       "work_order": {
         "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
         "revision": 2
       },
+      "requirement_review": "docs/cinder-shift/sprint-2-requirement-review.json",
       "verification_report": "docs/cinder-shift/sprint-2-verification.json"
+    },
+    "general_regression": {
+      "status": "PASS",
+      "run_id": 43725786597,
+      "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+      "passed": 331,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (8)",
+          "job_id": 132847378378,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132847378468,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132847378555,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132847378583,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132847378593,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132847378645,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132847378502,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132847378544,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (10)",
+          "job_id": 132847378741,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (1)",
+          "job_id": 132847378654,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132847378534,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132847378566,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
     }
   },
   "requirements": [
@@ -1112,7 +1228,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1129,6 +1245,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1149,7 +1269,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1168,6 +1288,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1188,7 +1312,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1205,6 +1329,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1223,7 +1351,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1239,6 +1367,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1266,7 +1398,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1284,6 +1416,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1309,7 +1445,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1326,6 +1462,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1347,7 +1487,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1365,6 +1505,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1385,7 +1529,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1402,6 +1546,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1422,7 +1570,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1439,6 +1587,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1460,7 +1612,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1478,6 +1630,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1498,7 +1654,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1516,6 +1672,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1547,7 +1707,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1565,6 +1725,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1588,7 +1752,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1606,6 +1770,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1634,7 +1802,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1652,6 +1820,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1681,7 +1853,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1699,6 +1871,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1734,7 +1910,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1753,6 +1929,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1779,7 +1959,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1797,6 +1977,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1818,7 +2002,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1836,6 +2020,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1858,7 +2046,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1877,6 +2065,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1896,7 +2088,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1914,6 +2106,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1937,7 +2133,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1955,6 +2151,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -1975,7 +2175,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1993,6 +2193,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -2013,7 +2217,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2030,6 +2234,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -2050,7 +2258,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2067,6 +2275,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -2089,7 +2301,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2108,6 +2320,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -2129,7 +2345,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2147,6 +2363,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -2168,7 +2388,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2186,19 +2406,29 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
       "id": "RW-05.01",
       "requirement": "Замерить холодный/тёплый вход. Понятный индикатор реальных стадий загрузки, без впечатления зависания и обязательной шестисекундной выдержки уже готового loader; ориентир старого VR1 — сократить сопоставимое ожидание примерно вдвое.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Removed mandatory six-second loader hold; asset/storage stages retained. Cold/warm measurements remain open."
+        "Removed mandatory six-second loader hold; asset/storage stages retained. Cold/warm measurements remain open.",
+        "Public CDN measured with ordinary navigation from a fresh browser context and same-context reload; B6 and C3 on one Ubuntu runner. C3 wall-to-menu 1407/627 ms, technical readiness283/244ms, all50 observed assets reused without transfer on reload. Origins differ; no universal device claim or quantitative comparison with historical VR1."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2206,31 +2436,40 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/application.ts",
-          "games/cinder-shift/src/ui/arrival.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "tests/sprint2-details.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Public CDN measured with ordinary navigation from a fresh browser context and same-context reload; B6 and C3 on one Ubuntu runner. C3 wall-to-menu 1407/627 ms, technical readiness283/244ms, all50 observed assets reused without transfer on reload. Origins differ; no universal device claim or quantitative comparison with historical VR1.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-05.02",
       "requirement": "Сделать 5–7-секундное оригинальное интро в игровом стиле: манёвр/подлёт челнока → прибытие/стыковка → спуск Миры → авария и цель эвакуации → управление. Пропуск доступен сразу, Retry без повторной заставки; интро и техническая загрузка различаются.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Separate 6.5-second arrival sequence, immediately skippable; Retry bypasses it. Prototype vector visuals; runtime/human art review open."
+        "Separate 6.5-second arrival sequence, immediately skippable; Retry bypasses it. Prototype vector visuals; runtime/human art review open.",
+        "Existing original 5–7 second arrival retained, immediate skip, no Retry replay; technical readiness does not wait for arrival."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2238,35 +2477,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/ui/application.ts",
           "games/cinder-shift/src/ui/arrival.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "tests/rework-flow.spec.ts",
+          "tests/rework-ui.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Existing original 5–7 second arrival retained, immediate skip, no Retry replay; technical readiness does not wait for arrival.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-05.03",
       "requirement": "Собрать выразительное меню с видимым артом и одной ясной группой действий. Убрать постоянные Language/Analytics controls в Settings; сохранить доступ к настройке выбора аналитики.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
-        "games/cinder-shift/src/ui/application.ts"
+        "games/cinder-shift/src/ui/application.ts",
+        "Main menu art retained and actions grouped; language and analytics remain in Settings."
       ],
       "verification": [
         "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
-        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance.",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "not_published",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2274,32 +2521,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/application.ts",
-          "games/cinder-shift/src/ui/arrival.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "games/cinder-shift/src/ui/sprint2.css",
+          "tests/rework-ui.spec.ts",
+          "tests/release-readiness.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Main menu art retained and actions grouped; language and analytics remain in Settings.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-05.04",
       "requirement": "Переупаковать Challenges и Training, объяснить их пользу; единственный доступный герой не требует фиктивного выбора. Убрать лишние служебные переходы из подготовки.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Fresh start goes straight to campaign map; optional character inspection remains. Challenge/Training explanations still open."
+        "Fresh start goes straight to campaign map; optional character inspection remains. Challenge/Training explanations still open.",
+        "Four mode cards first; run settings and friend-code tools collapsed; Training explanation; one playable Mira. Closing either advanced group returns the compact panel to the mode cards; all four choices are rechecked after closing."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2307,28 +2565,40 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/application.ts",
-          "games/cinder-shift/src/ui/arrival.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "games/cinder-shift/src/ui/sprint2.css",
+          "tests/sprint2-details.spec.ts",
+          "tests/new-modes-ui.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Four mode cards first; run settings and friend-code tools collapsed; Training explanation; one playable Mira. Closing either advanced group returns the compact panel to the mode cards; all four choices are rechecked after closing.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-05.05",
       "requirement": "Добавить короткие сюжетные события и видимые последствия питания/аварии/восстановления между секторами. Не заменять действие длинными текстовыми модальными окнами.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Accepted sector victory produces a short consequence strip; actual equipment power/upload/shutdown remains visible in the world."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2336,32 +2606,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/application.ts",
-          "games/cinder-shift/src/ui/arrival.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "tests/campaign-journey.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Accepted sector victory produces a short consequence strip; actual equipment power/upload/shutdown remains visible in the world.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-06.01",
       "requirement": "Создать художественную карту комплекса сверху: положение Миры, реальные связи/развилка Foundry, доступность и цель. Сначала логический граф, затем оригинальный арт; принцип читаемого риска Slay the Spire использовать без копирования оформления.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Facility plan with orthogonal transit and Foundry fork, actual mission nodes. Visual review and full internal path graph open."
+        "Facility plan with orthogonal transit and Foundry fork, actual mission nodes. Visual review and full internal path graph open.",
+        "Original top-down industrial map, five real sectors, actual Foundry route highlight, Mira position, C02/C03 explicitly unavailable."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2369,30 +2650,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/world-map.ts",
-          "games/cinder-shift/src/ui/caldera-complex.svg"
+          "games/cinder-shift/src/ui/caldera-complex.svg",
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Original top-down industrial map, five real sectors, actual Foundry route highlight, Mira position, C02/C03 explicitly unavailable.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-06.02",
       "requirement": "Убрать непонятную синусоиду и визуальные дубли названий/изображений. Один набор подписей и компактная информация выбранного узла; просмотр не меняет прогресс/позицию.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
-        "Orthogonal facility plan, single labels and read-only inspection; three-size browser checks passed in the foundation candidate."
+        "Orthogonal facility plan, single labels and read-only inspection; three-size browser checks passed in the foundation candidate.",
+        "Single node labels and selected-node summary; inspection leaves campaign data untouched."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2400,33 +2693,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/world-map.ts",
-          "games/cinder-shift/src/ui/caldera-complex.svg"
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Single node labels and selected-node summary; inspection leaves campaign data untouched.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-06.03",
       "requirement": "Обеспечить понятные Play/Continue/Replay и закрытие; keyboard/touch/focus и корректные hit areas сохраняются.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "The native-touch route driver now batches direction/jump at a narrow ledge and reuses fixed control positions; this is test-input stabilization rather than a claim of physical-device acceptance."
+        "The native-touch route driver now batches direction/jump at a narrow ledge and reuses fixed control positions; this is test-input stabilization rather than a claim of physical-device acceptance.",
+        "Play/Continue/Replay derives from node progress and prepared entry; close, keyboard focus and 48px targets retained."
       ],
       "verification": [
-        "B5 native touch: three full mission runs, three movement checks and six 80 ms delayed shelf climbs across portrait/landscape PASS; at most two simultaneous contacts."
+        "B5 native touch: three full mission runs, three movement checks and six 80 ms delayed shelf climbs across portrait/landscape PASS; at most two simultaneous contacts.",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-1-b5-verification.json"
+        "docs/cinder-shift/sprint-1-b5-verification.json",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "separate_development_preview_B5; acceptance_open",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2434,18 +2736,23 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/ui/world-map.ts",
-          "games/cinder-shift/src/ui/caldera-complex.svg"
+          "games/cinder-shift/src/ui/application.ts",
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Play/Continue/Replay derives from node progress and prepared entry; close, keyboard focus and 48px targets retained.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
@@ -2471,18 +2778,22 @@
     {
       "id": "RW-07.01",
       "requirement": "Карточка модуля содержит иконку, короткий понятный эффект, цену, состояние и собственную кнопку «Купить»; отдельный далёкий footer-purchase flow убрать.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
-        "games/cinder-shift/src/ui/workshop.ts"
+        "games/cinder-shift/src/ui/workshop.ts",
+        "Inline icon/effect/cost/state/purchase for each offered module."
       ],
       "verification": [
         "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
-        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance.",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "not_published",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2490,37 +2801,46 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/workshop.ts",
           "games/cinder-shift/src/ui/research-icons.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Inline icon/effect/cost/state/purchase for each offered module.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-07.02",
       "requirement": "Короткое подтверждение показывает эффект, стоимость и остаток после покупки. Просмотр карточки не списывает очки, двойной клик/повтор события не покупают дважды.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
         "games/cinder-shift/src/ui/application.ts",
-        "games/cinder-shift/src/session/campaign.ts"
+        "games/cinder-shift/src/session/campaign.ts",
+        "Cost and remaining balance confirmed; inspect/cancel do not spend; double-click purchase is idempotent."
       ],
       "verification": [
         "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
-        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance."
+        "Foundation UI evidence: 15 scenarios passed on ec52736 in run 43198969966; this is not whole-milestone acceptance.",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "not_published",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2528,35 +2848,45 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/ui/workshop.ts",
-          "games/cinder-shift/src/ui/research-icons.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/campaign.ts",
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts",
+          "tests/m04-save.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Cost and remaining balance confirmed; inspect/cancel do not spend; double-click purchase is idempotent.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-07.03",
       "requirement": "Установленную сборку показывать компактно и отдельно от доступных предложений; купленные модули не раздувают бесконечный прокручиваемый список.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
-        "games/cinder-shift/src/ui/workshop.ts"
+        "games/cinder-shift/src/ui/workshop.ts",
+        "Installed build stays separate and compact; purchased modules leave the offers."
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "not_published",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2564,32 +2894,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/workshop.ts",
-          "games/cinder-shift/src/ui/research-icons.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Installed build stays separate and compact; purchased modules leave the offers.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-07.04",
       "requirement": "Три ветки W/M/D, зависимости и активный слот различимы сразу. Понятны недостаток очков и причина недоступности.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "W/M/D module IDs, explicit prerequisites, funds state and installed active-slot labels are in the runtime. Full locale/RTL and active-slot UI regression remain open."
+        "W/M/D module IDs, explicit prerequisites, funds state and installed active-slot labels are in the runtime. Full locale/RTL and active-slot UI regression remain open.",
+        "Three W/M/D branches, dependency/progress chain, active slot and unavailable explanations."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2597,31 +2937,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/workshop.ts",
-          "games/cinder-shift/src/ui/research-icons.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "games/cinder-shift/src/ui/sprint2.css",
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Three W/M/D branches, dependency/progress chain, active slot and unavailable explanations.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-07.05",
       "requirement": "Главное действие — начать миссию, рядом ясное закрытие/возврат. Убрать непонятные Workshop menu и дубли Settings/Back внутри этого потока; проверить короткий landscape, RU/EN, 50 локалей/RTL.",
-      "status": "OPEN",
+      "status": "PARTIAL",
       "implementation": [
-        "Removed the Workshop menu screen; visible Start mission, map and Close actions replace the nested flow. Primary keyboard focus is Start mission. Close/Continue purchase preservation is included at three viewport sizes. 50-locale/RTL acceptance remains open."
+        "Removed the Workshop menu screen; visible Start mission, map and Close actions replace the nested flow. Primary keyboard focus is Start mission. Close/Continue purchase preservation is included at three viewport sizes. 50-locale/RTL acceptance remains open.",
+        "Primary Play with map/close; redundant inner settings removed. EN/RU exercised; 50 locales and RTL are not implemented by this checkpoint."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "CURRENT_UX_IMPLEMENTED; 50_LOCALES_RTL_OPEN_M_RW4",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2629,28 +2980,40 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
+          "games/cinder-shift/src/ui/application.ts",
           "games/cinder-shift/src/ui/workshop.ts",
-          "games/cinder-shift/src/ui/research-icons.ts",
-          "games/cinder-shift/src/ui/sprint2.css"
+          "tests/rework-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Primary Play with map/close; redundant inner settings removed. EN/RU exercised; 50 locales and RTL are not implemented by this checkpoint.",
+        "verification": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4"
       }
     },
     {
       "id": "RW-08.01",
       "requirement": "Собрать единое обновлённое направление: современная индустриальная пиксельная эстетика Exolon, дискретные состояния/анимации Миры, согласованные palette/scale/materials/UI. Сверить уже имеющиеся ассеты, не производить принятые повторно.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Accepted Mira rig/atlas reused; original sector architecture and discrete actor responses integrated. Subjective art acceptance deferred."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2658,32 +3021,44 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
+          "games/cinder-shift/src/art/rig.ts",
           "games/cinder-shift/src/art/sector-design.ts",
-          "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "games/cinder-shift/src/ui/sprint2.css",
+          "tests/art.spec.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Accepted Mira rig/atlas reused; original sector architecture and discrete actor responses integrated. Subjective art acceptance deferred.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.02",
       "requirement": "Обновить все пять секторов, архитектуру/фон, игровые платформы, двери/терминалы/ремонт/энергоячейку/опасные механизмы, врагов и Регулятора, меню/карту/мастерскую/HUD и иконки технологий/событий.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Robot visual integration and hazard/ram cues added; the complete five-sector/world-object/UI art pass remains open."
+        "Robot visual integration and hazard/ram cues added; the complete five-sector/world-object/UI art pass remains open.",
+        "Five sectors, all 44 rooms, equipment, hazards, actors/Regulator and all W/M/D + E01–E06 icons."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2691,28 +3066,41 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/sector-design.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "tests/sprint2-media.spec.ts",
+          "tests/rw1-equipment.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Five sectors, all 44 rooms, equipment, hazards, actors/Regulator and all W/M/D + E01–E06 icons.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.03",
       "requirement": "Каждому сектору дать собственный силуэт/материал/свет/опорные устройства; смена названия и recolor одного фона недостаточны.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Bulkheads, freight trusses/containers, foundry pipes/furnaces, archive racks and reactor containment use separate silhouettes, materials and mechanisms."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2720,29 +3108,40 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/art/sector-design.ts",
-          "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Bulkheads, freight trusses/containers, foundry pipes/furnaces, archive racks and reactor containment use separate silhouettes, materials and mechanisms.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.04",
       "requirement": "Дальний фон, игровая геометрия, герой, снаряды и активные угрозы читаются на мобильном размере. Силуэты/форма/движение дублируют цветовые сигналы.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Layer separation and shape-based warnings; rendered mobile layouts and emulated touch. Physical phones remain untested."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2750,29 +3149,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/art/lighting.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "games/cinder-shift/src/ui/mobile-layout.ts",
+          "tests/native-touch-precision.spec.ts",
+          "tests/sprint2-presentation.spec.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Layer separation and shape-based warnings; rendered mobile layouts and emulated touch. Physical phones remain untested.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.05",
       "requirement": "Исправить сжатые двери, растяжение объектов, привязки, артефакты атласов и несовпадение визуальных/игровых границ. Проверять кадр игры, а не только зелёный art:check.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Existing fit/cover anchors and hit geometry retained; runtime room sheets supplement art contract checks."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2780,32 +3193,44 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/art/placement.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "tests/art.spec.ts",
+          "tests/rw1-final-combat.spec.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Existing fit/cover anchors and hit geometry retained; runtime room sheets supplement art contract checks.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.06",
       "requirement": "У R01–R05/S04/S05, терминалов, заслонок, ячейки и рамок: понятное назначение, действие и состояния доступно/не требуется/использовано/закрыто. При полном HP — «Ремонт не требуется».",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "R03 relocated to the cooling stop; repair full/used/available guards retained. Full in-camera object-state acceptance remains open."
+        "R03 relocated to the cooling stop; repair full/used/available guards retained. Full in-camera object-state acceptance remains open.",
+        "Repair full/ready/used/protected, salvage available/blocked/used, terminal and cell states. Full-HP R01 stays usable only when E03 offers salvage. Context availability is now preserved by the device-refresh loop through the HUD-owned available flag."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2813,28 +3238,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/sector-design.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "games/cinder-shift/src/room-scene.ts",
+          "games/cinder-shift/src/ui/application.ts",
+          "tests/sprint2-details.spec.ts",
+          "tests/rw1-equipment.spec.ts",
+          "tests/archive-equipment.spec.ts",
+          "tests/cargo-equipment.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Repair full/ready/used/protected, salvage available/blocked/used, terminal and cell states. Full-HP R01 stays usable only when E03 offers salvage. Context availability is now preserved by the device-refresh loop through the HUD-owned available flag.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-08.07",
       "requirement": "Сдать asset/state inventory, contact sheets и сравнения до/после из обычной игровой камеры по каждому сектору и ключевому UI.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "B6/candidate room sheets, five sector and map/workshop before/after captures; asset/state inventory."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2842,36 +3282,45 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/sector-design.ts",
-          "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/art/assets.generated.json"
+          "docs/cinder-shift/sprint-2-asset-inventory.json",
+          "tests/sprint2-media.spec.ts",
+          "scripts/report-sprint2-media.mjs",
+          "scripts/report-sprint2-evidence.mjs"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "B6/candidate room sheets, five sector and map/workshop before/after captures; asset/state inventory.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.01",
       "requirement": "Оживить все пять секторов: для каждого предусмотреть минимум два разных видимых фоновых/окружных процесса по функции локации — вентиляторы, транспортёр, поршни/кран, пар/тепло, сканирование/серверные индикаторы, реакторное питание.",
-      "status": "IMPLEMENTED",
+      "status": "VERIFIED",
       "implementation": [
         "games/cinder-shift/src/art/environment-motion.ts",
-        "games/cinder-shift/src/render.ts"
+        "games/cinder-shift/src/render.ts",
+        "Ten functional background processes, two per sector; quantized 140ms simulation clock."
       ],
       "verification": [
-        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending"
+        "Model coverage where applicable: tests/rework-model.spec.ts; browser/device/human checks pending",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
+        "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "not_published",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2879,32 +3328,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/art/environment-motion.ts",
-          "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "tests/sprint2-media.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Ten functional background processes, two per sector; quantized 140ms simulation clock.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.02",
       "requirement": "Развести дальний фон, средний план и игровые устройства; движение имеет источник и ритм, а не общий дрожащий overlay поверх статичной сцены.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "EnvironmentMotion draws sector-specific mechanisms at depth 1.4; landmarks and gameplay remain separate. Camera review remains open."
+        "EnvironmentMotion draws sector-specific mechanisms at depth 1.4; landmarks and gameplay remain separate. Camera review remains open.",
+        "One static background texture at depth1.05, local moving equipment at1.4, playable geometry/actors and cues above it."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2912,31 +3371,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/environment-motion.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "tests/sprint2-media.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "One static background texture at depth1.05, local moving equipment at1.4, playable geometry/actors and cues above it.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.03",
       "requirement": "Активируемое оборудование меняет состояние после терминала/питания; опасный пресс/жар совпадает с реальной областью/фазой угрозы.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Foundry power changes which machine can warn/damage; machineState drives both rendering and collision. New browser toggle scenario awaits current evidence."
+        "Foundry power changes which machine can warn/damage; machineState drives both rendering and collision. New browser toggle scenario awaits current evidence.",
+        "Actual circuit/upload/shutdown state drives machines; hazard warning/active rectangles follow model bounds and phase."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2944,36 +3414,46 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/art/environment-motion.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "tests/cargo-equipment.spec.ts",
+          "tests/archive-equipment.spec.ts",
+          "tests/rw1-equipment.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Actual circuit/upload/shutdown state drives machines; hazard warning/active rectangles follow model bounds and phase.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.04",
       "requirement": "Для врагов читаемы idle/patrol/chase/telegraph/attack/recovery/hit/death по роли; добавить ясную гибель с завершением угрозы. Для Миры/модулей — необходимые реакция/получение урона/способность без смены согласованного резкого характера анимаций.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
         "Enemy death now emits shutdown debris rather than ordinary hit; full animation-state pass remains open.",
-        "Aimed guard armor, tracking, lock, recovery and destruction have distinct shapes, text and cues. Broader role animation acceptance remains in M-RW2."
+        "Aimed guard armor, tracking, lock, recovery and destruction have distinct shapes, text and cues. Broader role animation acceptance remains in M-RW2.",
+        "Role-specific telegraph/fire/recovery/death; simulation-timed boot marks, actual muzzle flashes and accepted-HP 130ms actor hit tint."
       ],
       "verification": [
-        "B5 source-exact lock and counter frames inspected; 15 aimed-guard browser executions PASS; independent human audiovisual acceptance open."
+        "B5 source-exact lock and counter frames inspected; 15 aimed-guard browser executions PASS; independent human audiovisual acceptance open.",
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-1-b5-verification.json"
+        "docs/cinder-shift/sprint-1-b5-verification.json",
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "separate_development_preview_B5; acceptance_open",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2981,31 +3461,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/environment-motion.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "games/cinder-shift/src/room-scene.ts",
+          "tests/aimed-guard.spec.ts",
+          "tests/rw1-final-combat.spec.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Role-specific telegraph/fire/recovery/death; simulation-timed boot marks, actual muzzle flashes and accepted-HP 130ms actor hit tint.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.05",
       "requirement": "Предусмотреть остановку/возобновление и очистку на pause/focus/смене сцены; Reduced Motion/Effects сохраняет смысл и уменьшает декоративную нагрузку.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Environment draws from quantized simulation time; reduced mode is static; scene-owned graphics. Runtime pause/cleanup check open."
+        "Environment draws from quantized simulation time; reduced mode is static; scene-owned graphics. Runtime pause/cleanup check open.",
+        "Pause/focus/scene cleanup and Reduced Motion retain essential shapes; all transient actor/boss/buffer effects now clear together."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3013,28 +3505,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/environment-motion.ts",
           "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/room-scene.ts",
+          "tests/combat-feedback.spec.ts",
+          "tests/feedback-ui.spec.ts",
+          "tests/sprint2-presentation.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Pause/focus/scene cleanup and Reduced Motion retain essential shapes; all transient actor/boss/buffer effects now clear together.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-09.06",
       "requirement": "Сдать короткие клипы каждого сектора, циклы/состояния подключены в runtime, а не только существуют отдельными файлами.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "44 room-entry clips plus a fresh-profile whole-C01 clip, game-generated Web Audio only. Codec header, audio track and nonzero RMS checked."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3042,19 +3548,22 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/environment-motion.ts",
-          "games/cinder-shift/src/render.ts",
-          "games/cinder-shift/src/room-scene.ts"
+          "tests/runtime-media.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "44 room-entry clips plus a fresh-profile whole-C01 clip, game-generated Web Audio only. Codec header, audio track and nonzero RMS checked.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
@@ -3081,7 +3590,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -3099,19 +3608,29 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
       "id": "RW-10.02",
       "requirement": "Читаемые телеграфы и активные зоны турели/тарана/пресса/жара/босса; открытие ядра отличается от брони, shutdown очищает предупреждения.",
-      "status": "OPEN",
+      "status": "VERIFIED",
       "implementation": [
-        "Ram recovery cue, shared press/heat warning/active state and Regulator core/armor/attack rectangles. Shutdown model test clears hazards; runtime visual acceptance remains open."
+        "Ram recovery cue, shared press/heat warning/active state and Regulator core/armor/attack rectangles. Shutdown model test clears hazards; runtime visual acceptance remains open.",
+        "Warning vs active geometry, turret/ram/press/heat and regulator core/armor/shutdown."
       ],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3119,20 +3638,25 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/combat-effects.ts",
-          "games/cinder-shift/src/audio.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/boss.ts",
           "games/cinder-shift/src/room-scene.ts",
-          "audio/m06/effects.mjs",
-          "audio/m06/synth.mjs"
+          "tests/rw1-final-combat.spec.ts",
+          "tests/aimed-guard.spec.ts",
+          "tests/rw1-equipment.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Warning vs active geometry, turret/ram/press/heat and regulator core/armor/shutdown.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
@@ -3159,7 +3683,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -3177,16 +3701,27 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
       "id": "RW-10.04",
       "requirement": "Импульсы восстановления питания и направленная связь терминала с оборудованием/дверью; локальное освещение поддерживает роль сектора и сюжетные переходы.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "At most three directed terminal links; simulation event accepted before effect; power controls actual local mechanisms."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3194,31 +3729,42 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
+          "games/cinder-shift/src/render.ts",
           "games/cinder-shift/src/art/combat-effects.ts",
-          "games/cinder-shift/src/audio.ts",
-          "games/cinder-shift/src/room-scene.ts",
-          "audio/m06/effects.mjs",
-          "audio/m06/synth.mjs"
+          "tests/cargo-equipment.spec.ts",
+          "tests/archive-equipment.spec.ts",
+          "tests/rw1-equipment.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "At most three directed terminal links; simulation event accepted before effect; power controls actual local mechanisms.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-10.05",
       "requirement": "Синхронизировать SFX/VFX по принятому событию симуляции; исключить ложный hit/HP feedback при поглощении щитом. Отдельно принять музыку и микс на слух с включённым звуком.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "Distinct shield/repair/ability-ready/shutdown SFX, event-driven VFX, no shield HP cue; mixer cancels stale duck restoration. Subjective listening remains deferred by prior instruction."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3226,31 +3772,43 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
-          "games/cinder-shift/src/art/combat-effects.ts",
           "games/cinder-shift/src/audio.ts",
           "games/cinder-shift/src/room-scene.ts",
           "audio/m06/effects.mjs",
-          "audio/m06/synth.mjs"
+          "tests/sprint2-details.spec.ts",
+          "tests/rw1-equipment.spec.ts",
+          "tests/sprint2-media.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "Distinct shield/repair/ability-ready/shutdown SFX, event-driven VFX, no shield HP cue; mixer cancels stale duck restoration. Subjective listening remains deferred by prior instruction.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
       "id": "RW-10.06",
       "requirement": "Ограничить частицы/свет/тряску, сохранить снаряды и опасные границы; Reduced Effects убирает лишние вспышки/тряску и сохраняет информацию. Проверить совокупную частоту/площадь вспышек и бюджет кадров на насыщенных сценах.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "PARTIAL",
+      "implementation": [
+        "12 priority cues, three power links, eight ordinary voices; no normal-shot shake; same-runner baseline and loaded-scene timing. Formal combined flash/physical audit remains M-RW4."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3258,21 +3816,25 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "IMPLEMENTED; FINAL_COMBINED_AUDIT_OPEN_M_RW4",
+      "verification_status": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/combat-feedback.ts",
           "games/cinder-shift/src/audio.ts",
-          "games/cinder-shift/src/room-scene.ts",
-          "audio/m06/effects.mjs",
-          "audio/m06/synth.mjs"
+          "tests/sprint2-presentation.spec.ts",
+          "tests/combat-feedback.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "12 priority cues, three power links, eight ordinary voices; no normal-shot shake; same-runner baseline and loaded-scene timing. Formal combined flash/physical audit remains M-RW4.",
+        "verification": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4"
       }
     },
     {
@@ -3298,11 +3860,18 @@
     {
       "id": "RW-11.02",
       "requirement": "Hit areas не менее 48×48 CSS px, Fire/Jump не менее 56×56, зазоры не менее 8 px; проверить компактные меню/мастерскую/карту и экранную клавиатуру кодов.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
+      "status": "VERIFIED",
+      "implementation": [
+        "48px UI/summary targets, existing56px fire/jump and8px gaps; compact menus, collapsed code entry and keyboard handling. Physical soft keyboard excluded."
+      ],
+      "verification": [
+        "C3 exact-source engineering evidence: runtime c7a4b1cd519bd917bc738b581c1ce485dcd1c650, test merge 53a9e1074fe2eec6b9d419ed2c9834442adc2667; see sprint-2-verification.json and sprint-2-requirement-review.json. Human acceptance excluded."
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-2-verification.json",
+        "docs/cinder-shift/sprint-2-requirement-review.json"
+      ],
+      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3310,18 +3879,25 @@
         "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
         "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
       },
-      "implementation_status": "PARTIAL_IMPLEMENTATION",
-      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "implementation_status": "complete",
+      "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
         "files": [
           "games/cinder-shift/src/ui/sprint2.css",
-          "games/cinder-shift/src/ui/mobile-layout.ts"
+          "games/cinder-shift/src/ui/mobile-layout.ts",
+          "tests/native-touch-precision.spec.ts",
+          "tests/sprint2-presentation.spec.ts",
+          "tests/sprint2-details.spec.ts"
         ],
         "reports": [
-          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
-          "docs/cinder-shift/sprint-2-verification.json"
+          "docs/cinder-shift/sprint-2-verification.json",
+          "docs/cinder-shift/sprint-2-requirement-review.json"
         ],
-        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
+        "acceptance_scope": "48px UI/summary targets, existing56px fire/jump and8px gaps; compact menus, collapsed code entry and keyboard handling. Physical soft keyboard excluded.",
+        "verification": "VERIFIED_ENGINEERING_C3"
       }
     },
     {
@@ -3467,7 +4043,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "B6_separate_development_preview; production_B3",
+      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -3485,6 +4061,10 @@
           "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
         ],
         "acceptance_scope": "Engineering verified; human acceptance excluded from current gate by user."
+      },
+      "current_runtime_regression": {
+        "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "report": "docs/cinder-shift/sprint-2-verification.json"
       }
     },
     {
@@ -3538,6 +4118,6 @@
     "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/14",
     "url": "https://nuts.bid/games/cinder-shift/",
     "acceptance_complete": false,
-    "verification": "Existing B6 publication record preserved; no production replacement in M-RW2 A1"
+    "verification": "B6 production remains unchanged. Production source asserted by the C3 public CDN comparison."
   }
 }

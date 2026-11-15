@@ -1,0 +1,470 @@
+{
+  "milestone": "M-RW2",
+  "candidate": "0.7.0-rw2.c3",
+  "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+  "status": "C3_ENGINEERING_REVIEW_VERIFIED; 29_ENGINEERING_2_PARTIAL_CROSS_SPRINT",
+  "human_acceptance": "DEFERRED_BY_PRIOR_USER_INSTRUCTION",
+  "requirements": [
+    {
+      "id": "RW-05.01",
+      "requirement": "Замерить холодный/тёплый вход. Понятный индикатор реальных стадий загрузки, без впечатления зависания и обязательной шестисекундной выдержки уже готового loader; ориентир старого VR1 — сократить сопоставимое ожидание примерно вдвое.",
+      "code": [
+        "src/ui/application.ts"
+      ],
+      "tests": [
+        "sprint2-details.spec.ts: technical readiness",
+        "helper tests/cdn-entry-review.spec.ts: real public source assertion"
+      ],
+      "scope": "Public CDN measured with ordinary navigation from a fresh browser context and same-context reload; B6 and C3 on one Ubuntu runner. C3 wall-to-menu 1407/627 ms, technical readiness283/244ms, all50 observed assets reused without transfer on reload. Origins differ; no universal device claim or quantitative comparison with historical VR1.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-05.02",
+      "requirement": "Сделать 5–7-секундное оригинальное интро в игровом стиле: манёвр/подлёт челнока → прибытие/стыковка → спуск Миры → авария и цель эвакуации → управление. Пропуск доступен сразу, Retry без повторной заставки; интро и техническая загрузка различаются.",
+      "code": [
+        "src/ui/arrival.ts"
+      ],
+      "tests": [
+        "rework-flow.spec.ts",
+        "rework-ui.spec.ts"
+      ],
+      "scope": "Existing original 5–7 second arrival retained, immediate skip, no Retry replay; technical readiness does not wait for arrival.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-05.03",
+      "requirement": "Собрать выразительное меню с видимым артом и одной ясной группой действий. Убрать постоянные Language/Analytics controls в Settings; сохранить доступ к настройке выбора аналитики.",
+      "code": [
+        "src/ui/application.ts",
+        "src/ui/sprint2.css"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "release-readiness.spec.ts"
+      ],
+      "scope": "Main menu art retained and actions grouped; language and analytics remain in Settings.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-05.04",
+      "requirement": "Переупаковать Challenges и Training, объяснить их пользу; единственный доступный герой не требует фиктивного выбора. Убрать лишние служебные переходы из подготовки.",
+      "code": [
+        "src/ui/application.ts",
+        "src/ui/sprint2.css"
+      ],
+      "tests": [
+        "sprint2-details.spec.ts: challenge choices",
+        "new-modes-ui.spec.ts"
+      ],
+      "scope": "Four mode cards first; run settings and friend-code tools collapsed; Training explanation; one playable Mira. Closing either advanced group returns the compact panel to the mode cards; all four choices are rechecked after closing.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-05.05",
+      "requirement": "Добавить короткие сюжетные события и видимые последствия питания/аварии/восстановления между секторами. Не заменять действие длинными текстовыми модальными окнами.",
+      "code": [
+        "src/ui/application.ts",
+        "src/art/environment-motion.ts"
+      ],
+      "tests": [
+        "campaign-journey.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Accepted sector victory produces a short consequence strip; actual equipment power/upload/shutdown remains visible in the world.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-06.01",
+      "requirement": "Создать художественную карту комплекса сверху: положение Миры, реальные связи/развилка Foundry, доступность и цель. Сначала логический граф, затем оригинальный арт; принцип читаемого риска Slay the Spire использовать без копирования оформления.",
+      "code": [
+        "src/ui/world-map.ts",
+        "src/ui/caldera-complex.svg"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Original top-down industrial map, five real sectors, actual Foundry route highlight, Mira position, C02/C03 explicitly unavailable.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-06.02",
+      "requirement": "Убрать непонятную синусоиду и визуальные дубли названий/изображений. Один набор подписей и компактная информация выбранного узла; просмотр не меняет прогресс/позицию.",
+      "code": [
+        "src/ui/world-map.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Single node labels and selected-node summary; inspection leaves campaign data untouched.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-06.03",
+      "requirement": "Обеспечить понятные Play/Continue/Replay и закрытие; keyboard/touch/focus и корректные hit areas сохраняются.",
+      "code": [
+        "src/ui/application.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Play/Continue/Replay derives from node progress and prepared entry; close, keyboard focus and 48px targets retained.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-07.01",
+      "requirement": "Карточка модуля содержит иконку, короткий понятный эффект, цену, состояние и собственную кнопку «Купить»; отдельный далёкий footer-purchase flow убрать.",
+      "code": [
+        "src/ui/workshop.ts",
+        "src/ui/research-icons.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Inline icon/effect/cost/state/purchase for each offered module.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-07.02",
+      "requirement": "Короткое подтверждение показывает эффект, стоимость и остаток после покупки. Просмотр карточки не списывает очки, двойной клик/повтор события не покупают дважды.",
+      "code": [
+        "src/ui/application.ts",
+        "src/session/campaign.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts",
+        "m04-save.spec.ts"
+      ],
+      "scope": "Cost and remaining balance confirmed; inspect/cancel do not spend; double-click purchase is idempotent.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-07.03",
+      "requirement": "Установленную сборку показывать компактно и отдельно от доступных предложений; купленные модули не раздувают бесконечный прокручиваемый список.",
+      "code": [
+        "src/ui/workshop.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Installed build stays separate and compact; purchased modules leave the offers.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-07.04",
+      "requirement": "Три ветки W/M/D, зависимости и активный слот различимы сразу. Понятны недостаток очков и причина недоступности.",
+      "code": [
+        "src/ui/workshop.ts",
+        "src/ui/sprint2.css"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Three W/M/D branches, dependency/progress chain, active slot and unavailable explanations.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-07.05",
+      "requirement": "Главное действие — начать миссию, рядом ясное закрытие/возврат. Убрать непонятные Workshop menu и дубли Settings/Back внутри этого потока; проверить короткий landscape, RU/EN, 50 локалей/RTL.",
+      "code": [
+        "src/ui/application.ts",
+        "src/ui/workshop.ts"
+      ],
+      "tests": [
+        "rework-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Primary Play with map/close; redundant inner settings removed. EN/RU exercised; 50 locales and RTL are not implemented by this checkpoint.",
+      "status": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4",
+      "verification": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4"
+    },
+    {
+      "id": "RW-08.01",
+      "requirement": "Собрать единое обновлённое направление: современная индустриальная пиксельная эстетика Exolon, дискретные состояния/анимации Миры, согласованные palette/scale/materials/UI. Сверить уже имеющиеся ассеты, не производить принятые повторно.",
+      "code": [
+        "src/art/rig.ts",
+        "src/art/sector-design.ts",
+        "src/ui/sprint2.css"
+      ],
+      "tests": [
+        "art.spec.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Accepted Mira rig/atlas reused; original sector architecture and discrete actor responses integrated. Subjective art acceptance deferred.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.02",
+      "requirement": "Обновить все пять секторов, архитектуру/фон, игровые платформы, двери/терминалы/ремонт/энергоячейку/опасные механизмы, врагов и Регулятора, меню/карту/мастерскую/HUD и иконки технологий/событий.",
+      "code": [
+        "src/render.ts",
+        "src/art/sector-design.ts",
+        "src/ui/research-icons.ts"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts",
+        "rw1-equipment.spec.ts"
+      ],
+      "scope": "Five sectors, all 44 rooms, equipment, hazards, actors/Regulator and all W/M/D + E01–E06 icons.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.03",
+      "requirement": "Каждому сектору дать собственный силуэт/материал/свет/опорные устройства; смена названия и recolor одного фона недостаточны.",
+      "code": [
+        "src/art/sector-design.ts",
+        "src/art/environment-motion.ts"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Bulkheads, freight trusses/containers, foundry pipes/furnaces, archive racks and reactor containment use separate silhouettes, materials and mechanisms.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.04",
+      "requirement": "Дальний фон, игровая геометрия, герой, снаряды и активные угрозы читаются на мобильном размере. Силуэты/форма/движение дублируют цветовые сигналы.",
+      "code": [
+        "src/art/lighting.ts",
+        "src/render.ts",
+        "src/ui/mobile-layout.ts"
+      ],
+      "tests": [
+        "native-touch-precision.spec.ts",
+        "sprint2-presentation.spec.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Layer separation and shape-based warnings; rendered mobile layouts and emulated touch. Physical phones remain untested.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.05",
+      "requirement": "Исправить сжатые двери, растяжение объектов, привязки, артефакты атласов и несовпадение визуальных/игровых границ. Проверять кадр игры, а не только зелёный art:check.",
+      "code": [
+        "src/art/placement.ts",
+        "src/render.ts"
+      ],
+      "tests": [
+        "art.spec.ts",
+        "rw1-final-combat.spec.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Existing fit/cover anchors and hit geometry retained; runtime room sheets supplement art contract checks.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.06",
+      "requirement": "У R01–R05/S04/S05, терминалов, заслонок, ячейки и рамок: понятное назначение, действие и состояния доступно/не требуется/использовано/закрыто. При полном HP — «Ремонт не требуется».",
+      "code": [
+        "src/render.ts",
+        "src/room-scene.ts",
+        "src/ui/application.ts"
+      ],
+      "tests": [
+        "sprint2-details.spec.ts: full-HP R01",
+        "rw1-equipment.spec.ts",
+        "archive-equipment.spec.ts",
+        "cargo-equipment.spec.ts"
+      ],
+      "scope": "Repair full/ready/used/protected, salvage available/blocked/used, terminal and cell states. Full-HP R01 stays usable only when E03 offers salvage. Context availability is now preserved by the device-refresh loop through the HUD-owned available flag.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-08.07",
+      "requirement": "Сдать asset/state inventory, contact sheets и сравнения до/после из обычной игровой камеры по каждому сектору и ключевому UI.",
+      "code": [
+        "docs/cinder-shift/sprint-2-asset-inventory.json"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts",
+        "scripts/report-sprint2-media.mjs",
+        "scripts/report-sprint2-evidence.mjs"
+      ],
+      "scope": "B6/candidate room sheets, five sector and map/workshop before/after captures; asset/state inventory.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.01",
+      "requirement": "Оживить все пять секторов: для каждого предусмотреть минимум два разных видимых фоновых/окружных процесса по функции локации — вентиляторы, транспортёр, поршни/кран, пар/тепло, сканирование/серверные индикаторы, реакторное питание.",
+      "code": [
+        "src/art/environment-motion.ts"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Ten functional background processes, two per sector; quantized 140ms simulation clock.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.02",
+      "requirement": "Развести дальний фон, средний план и игровые устройства; движение имеет источник и ритм, а не общий дрожащий overlay поверх статичной сцены.",
+      "code": [
+        "src/render.ts",
+        "src/art/environment-motion.ts"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "One static background texture at depth1.05, local moving equipment at1.4, playable geometry/actors and cues above it.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.03",
+      "requirement": "Активируемое оборудование меняет состояние после терминала/питания; опасный пресс/жар совпадает с реальной областью/фазой угрозы.",
+      "code": [
+        "src/art/environment-motion.ts",
+        "src/render.ts"
+      ],
+      "tests": [
+        "cargo-equipment.spec.ts",
+        "archive-equipment.spec.ts",
+        "rw1-equipment.spec.ts"
+      ],
+      "scope": "Actual circuit/upload/shutdown state drives machines; hazard warning/active rectangles follow model bounds and phase.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.04",
+      "requirement": "Для врагов читаемы idle/patrol/chase/telegraph/attack/recovery/hit/death по роли; добавить ясную гибель с завершением угрозы. Для Миры/модулей — необходимые реакция/получение урона/способность без смены согласованного резкого характера анимаций.",
+      "code": [
+        "src/render.ts",
+        "src/room-scene.ts"
+      ],
+      "tests": [
+        "aimed-guard.spec.ts",
+        "rw1-final-combat.spec.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Role-specific telegraph/fire/recovery/death; simulation-timed boot marks, actual muzzle flashes and accepted-HP 130ms actor hit tint.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.05",
+      "requirement": "Предусмотреть остановку/возобновление и очистку на pause/focus/смене сцены; Reduced Motion/Effects сохраняет смысл и уменьшает декоративную нагрузку.",
+      "code": [
+        "src/render.ts",
+        "src/art/combat-effects.ts",
+        "src/room-scene.ts"
+      ],
+      "tests": [
+        "combat-feedback.spec.ts",
+        "feedback-ui.spec.ts",
+        "sprint2-presentation.spec.ts"
+      ],
+      "scope": "Pause/focus/scene cleanup and Reduced Motion retain essential shapes; all transient actor/boss/buffer effects now clear together.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-09.06",
+      "requirement": "Сдать короткие клипы каждого сектора, циклы/состояния подключены в runtime, а не только существуют отдельными файлами.",
+      "code": [
+        "tests/runtime-media.ts"
+      ],
+      "tests": [
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "44 room-entry clips plus a fresh-profile whole-C01 clip, game-generated Web Audio only. Codec header, audio track and nonzero RMS checked.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-10.02",
+      "requirement": "Читаемые телеграфы и активные зоны турели/тарана/пресса/жара/босса; открытие ядра отличается от брони, shutdown очищает предупреждения.",
+      "code": [
+        "src/render.ts",
+        "src/boss.ts",
+        "src/room-scene.ts"
+      ],
+      "tests": [
+        "rw1-final-combat.spec.ts",
+        "aimed-guard.spec.ts",
+        "rw1-equipment.spec.ts"
+      ],
+      "scope": "Warning vs active geometry, turret/ram/press/heat and regulator core/armor/shutdown.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-10.04",
+      "requirement": "Импульсы восстановления питания и направленная связь терминала с оборудованием/дверью; локальное освещение поддерживает роль сектора и сюжетные переходы.",
+      "code": [
+        "src/render.ts",
+        "src/art/combat-effects.ts"
+      ],
+      "tests": [
+        "cargo-equipment.spec.ts",
+        "archive-equipment.spec.ts",
+        "rw1-equipment.spec.ts"
+      ],
+      "scope": "At most three directed terminal links; simulation event accepted before effect; power controls actual local mechanisms.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-10.05",
+      "requirement": "Синхронизировать SFX/VFX по принятому событию симуляции; исключить ложный hit/HP feedback при поглощении щитом. Отдельно принять музыку и микс на слух с включённым звуком.",
+      "code": [
+        "src/audio.ts",
+        "src/room-scene.ts",
+        "audio/m06/effects.mjs"
+      ],
+      "tests": [
+        "sprint2-details.spec.ts: pending warning restore",
+        "rw1-equipment.spec.ts",
+        "sprint2-media.spec.ts"
+      ],
+      "scope": "Distinct shield/repair/ability-ready/shutdown SFX, event-driven VFX, no shield HP cue; mixer cancels stale duck restoration. Subjective listening remains deferred by prior instruction.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    },
+    {
+      "id": "RW-10.06",
+      "requirement": "Ограничить частицы/свет/тряску, сохранить снаряды и опасные границы; Reduced Effects убирает лишние вспышки/тряску и сохраняет информацию. Проверить совокупную частоту/площадь вспышек и бюджет кадров на насыщенных сценах.",
+      "code": [
+        "src/art/combat-effects.ts",
+        "src/combat-feedback.ts",
+        "src/audio.ts"
+      ],
+      "tests": [
+        "sprint2-presentation.spec.ts: loaded combat",
+        "combat-feedback.spec.ts"
+      ],
+      "scope": "12 priority cues, three power links, eight ordinary voices; no normal-shot shake; same-runner baseline and loaded-scene timing. Formal combined flash/physical audit remains M-RW4.",
+      "status": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4",
+      "verification": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4"
+    },
+    {
+      "id": "RW-11.02",
+      "requirement": "Hit areas не менее 48×48 CSS px, Fire/Jump не менее 56×56, зазоры не менее 8 px; проверить компактные меню/мастерскую/карту и экранную клавиатуру кодов.",
+      "code": [
+        "src/ui/sprint2.css",
+        "src/ui/mobile-layout.ts"
+      ],
+      "tests": [
+        "native-touch-precision.spec.ts",
+        "sprint2-presentation.spec.ts",
+        "sprint2-details.spec.ts"
+      ],
+      "scope": "48px UI/summary targets, existing56px fire/jump and8px gaps; compact menus, collapsed code entry and keyboard handling. Physical soft keyboard excluded.",
+      "verification": "VERIFIED_ENGINEERING_C3"
+    }
+  ],
+  "code_root": "games/cinder-shift",
+  "public_entry_evidence": {
+    "run_id": 43725833097,
+    "job_id": 132848833562,
+    "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650"
+  },
+  "summary": {
+    "engineering_verified": 29,
+    "partially_verified": 2,
+    "total": 31
+  },
+  "current_runtime": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+  "tested_merge": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+  "report": "docs/cinder-shift/sprint-2-verification.json"
+}
