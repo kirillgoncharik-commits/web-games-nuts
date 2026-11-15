@@ -1,7 +1,8 @@
-import {readFile,readdir,writeFile} from 'node:fs/promises';
+import {readFile,readdir,writeFile,mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 async function files(root){try{return(await Promise.all((await readdir(root,{withFileTypes:true})).map(e=>e.isDirectory()?files(path.join(root,e.name)):[path.join(root,e.name)]))).flat();}catch{return[];}}
+await mkdir('test-results',{recursive:true});
 const paths=await files('test-results/media'),rooms=[];
 for(const file of paths.filter(p=>p.endsWith('/room.json'))){const r=JSON.parse(await readFile(file,'utf8'));rooms.push({mission:r.mission,room:r.room,hp:r.snapshot.hp,audio:r.audio,sha:r.snapshot.sha,build:r.snapshot.build,fixture:r.fixture,image:path.join(path.dirname(file),'room.png'),clip:path.join(path.dirname(file),'runtime.webm')});}
 for(const mission of ['airlock','cargo','foundry','archive','reactor']){

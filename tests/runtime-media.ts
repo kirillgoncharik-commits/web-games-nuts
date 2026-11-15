@@ -6,7 +6,7 @@ export async function installMediaCapture(page:Page){
  await page.addInitScript(()=>{
   const w=window as any,original=AudioNode.prototype.connect;
   w.__GAME_AUDIO_CAPTURE__=null;
-  AudioNode.prototype.connect=function(...args:any[]){
+  AudioNode.prototype.connect=function(this:AudioNode,...args:any[]){
    const result=(original as any).apply(this,args);
    if(args[0]===this.context.destination&&!w.__GAME_AUDIO_CAPTURE__){
     const context=this.context as AudioContext,destination=context.createMediaStreamDestination(),analyser=context.createAnalyser();
