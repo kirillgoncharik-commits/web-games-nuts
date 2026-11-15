@@ -32,7 +32,7 @@ import {routeCapture} from './route-capture';
 
 for(const shieldClear of [false,true])test(`D${shieldClear?3:2} ${shieldClear?'clears':'preserves'} other in-flight turret shots after absorption`,async({page},info)=>{
  await encounter(page,{mission:'reactor',room:'M5I',reactorCircuit:'cooling',clearedEnemyIds:['m5i-ram'],nodes:shieldClear?['D1','D2','D3']:['D1','D2']});await jump(page,106,200);await ground(page,320);await to(page,368);await ground(page,320);
- await until(page,()=>{const s=(window as any).__CINDER__();return s.bufferUsed&&s.feedback.shieldAlpha>0;},null,'turret shield absorption');const s=await state(page);expect(s.hp).toBe(8);const remaining=s.projectiles.filter((p:any)=>p.team==='enemy');expect(remaining.length)[shieldClear?'toBe':'toBeGreaterThan'](0);expect(s.audioStatus.played.power_restore||0).toBeGreaterThan(0);if(shieldClear)await routeCapture(page,info.outputPath('rw1-D3-absorption.png'));
+ await until(page,()=>{const s=(window as any).__CINDER__();return s.bufferUsed&&s.feedback.shieldAlpha>0;},null,'turret shield absorption');const s=await state(page);expect(s.hp).toBe(8);const remaining=s.projectiles.filter((p:any)=>p.team==='enemy');expect(remaining.length)[shieldClear?'toBe':'toBeGreaterThan'](0);expect(s.audioStatus.played.shield_absorb||0).toBeGreaterThan(0);expect(s.audioStatus.played.power_restore||0).toBe(0);if(shieldClear)await routeCapture(page,info.outputPath('rw1-D3-absorption.png'));
 });
 
 for(const enabled of [false,true])test(`E04 ${enabled?'enables':'omits'} the real Foundry heat cycle`,async({page},info)=>{

@@ -1,5 +1,7 @@
 import type {RoomDefinition} from '../room-data';
 
+import {roomSector} from './sector-design';
+
 export const signals={
   shot:0xfff0c9,energy:0x43deff,warning:0xffbc52,damage:0xff6374,repair:0x6fe7b3,violet:0xad8fff
 } as const;
@@ -13,6 +15,6 @@ const sectors={
 } as const;
 
 export function roomLighting(room:RoomDefinition,intense:boolean){
-  const sector=room.sector||(room.id==='D'||room.id==='E'||room.id==='F'||room.id==='G'?'cargo':'airlock');
+  const sector=roomSector(room);
   return {...sectors[sector],strength:intense?.14:.07,foreground:intense?0x91a9b8:0x7895a7};
 }

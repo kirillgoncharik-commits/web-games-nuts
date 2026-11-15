@@ -12,7 +12,7 @@ import {cacheInReach} from './interactions';
 import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
 import {roomLighting,signals} from './art/lighting';
 import {EnvironmentMotion} from './art/environment-motion';
-import {drawSectorArchitecture} from './art/sector-design';
+import {drawSectorArchitecture,roomSector} from './art/sector-design';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
 import type {Player} from './player';
@@ -137,7 +137,7 @@ export class SceneArt{
       M5D:[['reactor-landmark_cooling-manifold',132,236,144,70],['reactor-landmark_power-bus',456,204,152,64]],
       M5E:[['reactor-landmark_beacon-mast',184,216,76,82],['reactor-landmark_power-bus',440,202,156,66]],
     };
-    const family=room.sector||(['D','E','F','G'].includes(room.id)?'cargo':'airlock');
+    const family=roomSector(room);
     const fallback=family==='foundry'?'M3B':family==='archive'?'M4B':family==='reactor'?'M5C':family==='cargo'?'D':'';
     for(const [frame,x,y,w,h] of groups[room.id]||groups[fallback]||[])this.art(frame,x,y,w,h,1.3,1,'bottom',.55);
   }

@@ -9,15 +9,16 @@ export const sectorDesign={
  archive:{accent:0xb6a2e3,metal:0x4e4b69,shadow:0x1b1b2d,material:'data-vault',processes:['rack-transfer','optical-scan']},
  reactor:{accent:0x89b3e0,metal:0x465b70,shadow:0x131d2e,material:'power-containment',processes:['cooling-impeller','power-circulation']}
 } as const;
-export function roomDesign(room:RoomDefinition){return sectorDesign[room.sector||(['D','E','F','G'].includes(room.id)?'cargo':'airlock')];}
+export function roomSector(room:RoomDefinition){return room.sector||(['D','E','F','G'].includes(room.id)||room.id.startsWith('M2')?'cargo':'airlock');}
+export function roomDesign(room:RoomDefinition){return sectorDesign[roomSector(room)];}
 
 /** Static architecture is drawn once per scene, below all collision surfaces. */
 export function drawSectorArchitecture(scene:Phaser.Scene,room:RoomDefinition){
- const g=scene.add.graphics().setDepth(1.05),d=roomDesign(room),sector=room.sector||(['D','E','F','G'].includes(room.id)?'cargo':'airlock');
+ const g=scene.add.graphics().setDepth(1.05),d=roomDesign(room),sector=roomSector(room);
  const variant=[...room.id].reduce((sum,c)=>sum+c.charCodeAt(0),0)%3;
- g.fillStyle(d.shadow,.86).fillRect(0,40,640,280);
+ g.fillStyle(d.shadow,.14).fillRect(0,40,640,280);
  const plate=(x:number,y:number,w:number,h:number)=>{
-  g.fillStyle(d.metal,.25).fillRect(x,y,w,h);g.lineStyle(1,d.metal,.65).strokeRect(x,y,w,h);
+  g.fillStyle(d.metal,.12).fillRect(x,y,w,h);g.lineStyle(1,d.metal,.65).strokeRect(x,y,w,h);
   for(const xx of [x+4,x+w-5])for(const yy of [y+4,y+h-5])g.fillStyle(d.accent,.26).fillRect(xx,yy,2,2);
  };
  if(sector==='airlock'){
@@ -49,6 +50,14 @@ export function drawSectorArchitecture(scene:Phaser.Scene,room:RoomDefinition){
  for(const x of [6,626]){g.fillStyle(d.metal,.8).fillRect(x,238,8,82);g.fillStyle(d.accent,.4).fillRect(x+2,244,4,7);}
  const floor=scene.add.graphics().setDepth(2.1);
  for(const solid of room.solids)if(!solid.id)drawPlatformEdge(floor,solid,d.accent,d.metal);
+ bakeLayer(scene,g,'rw2-architecture-'+room.id,1.05);
+ bakeLayer(scene,floor,'rw2-surfaces-'+room.id,2.1);
+}
+
+function bakeLayer(scene:Phaser.Scene,graphics:Phaser.GameObjects.Graphics,key:string,depth:number){
+ graphics.generateTexture(key,640,360);graphics.destroy();
+ scene.add.image(0,0,key).setOrigin(0).setDepth(depth);
+ scene.events.once('shutdown',()=>scene.textures.remove(key));
 }
 
 function drawPlatformEdge(g:Phaser.GameObjects.Graphics,s:Rect,accent:number,metal:number){
