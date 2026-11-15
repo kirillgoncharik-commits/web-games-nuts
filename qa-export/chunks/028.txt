@@ -1,0 +1,441 @@
+(0,0,n.width,n.height),n.restoreStencilMask(),this.flush(),this.tempSprite=null},onDraw:function(e){this.drawToGame(e)},setUVs:function(e,t,n,r,i,a,o,s){var c=this.quadVertexViewF32;c[2]=e,c[3]=t,c[9]=n,c[10]=r,c[16]=i,c[17]=a,c[23]=e,c[24]=t,c[30]=i,c[31]=a,c[37]=o,c[38]=s},setTargetUVs:function(e,t){var n=t.height/e.height;n=n>.5?.5-(n-.5):.5+(.5-n),this.setUVs(0,n,0,1+n,1,1+n,1,n)},resetUVs:function(){this.setUVs(0,0,0,1,1,1,1,0)},destroy:function(){return this.renderer.deleteBuffer(this.quadVertexBuffer),this.drawSpriteShader=null,this.copyShader=null,this.gameShader=null,this.colorMatrixShader=null,this.quadVertexData=null,this.quadVertexBuffer=null,this.quadVertexViewF32=null,this.fsTarget=null,this.tempSprite=null,c.prototype.destroy.call(this),this}})}),81041:((e,t,n)=>{var r=n(83419),i=n(95540),a=n(57516);e.exports=new r({Extends:a,initialize:function(e){e.topology=5,e.batchSize=i(e,`batchSize`,256),a.call(this,e)}})}),12385:((e,t,n)=>{var r=n(83419),i=n(95540),a=n(57516),o=n(45561),s=n(60722),c=n(29100);e.exports=new r({Extends:a,initialize:function(e){e.fragShader=i(e,`fragShader`,o),e.vertShader=i(e,`vertShader`,s),e.forceZero=!0,a.call(this,e)},boot:function(){c.prototype.boot.call(this);var e=this.renderer;this.set1i(`uMainSampler`,0),this.set2f(`uResolution`,e.width,e.height)}})}),7589:((e,t,n)=>{var r=n(35407),i=n(10312),a=n(83419),o=n(89422),s=n(96293),c=n(36682),l=n(95540),u=n(48247),d=n(49627),f=n(29100);e.exports=new a({Extends:f,initialize:function(e){e.renderTarget=l(e,`renderTarget`,[{scale:1,autoResize:!0},{scale:1,autoResize:!0},{scale:.5,autoResize:!0},{scale:.5,autoResize:!0}]),e.vertShader=l(e,`vertShader`,d),e.shaders=l(e,`shaders`,[{name:`Copy`,fragShader:c},{name:`AddBlend`,fragShader:r},{name:`LinearBlend`,fragShader:u},{name:`ColorMatrix`,fragShader:s}]),e.attributes=l(e,`attributes`,[{name:`inPosition`,size:2},{name:`inTexCoord`,size:2}]),e.vertices=[-1,-1,0,0,-1,1,0,1,1,1,1,1,-1,-1,0,0,1,1,1,1,1,-1,1,0],e.batchSize=1,f.call(this,e),this.colorMatrix=new o,this.copyShader,this.addShader,this.linearShader,this.colorMatrixShader,this.fullFrame1,this.fullFrame2,this.halfFrame1,this.halfFrame2},boot:function(){f.prototype.boot.call(this);var e=this.shaders,t=this.renderTargets;this.copyShader=e[0],this.addShader=e[1],this.linearShader=e[2],this.colorMatrixShader=e[3],this.fullFrame1=t[0],this.fullFrame2=t[1],this.halfFrame1=t[2],this.halfFrame2=t[3]},copyFrame:function(e,t,n,r,i){n===void 0&&(n=1),r===void 0&&(r=!0),i===void 0&&(i=!0);var a=this.gl;this.setShader(this.copyShader),this.set1i(`uMainSampler`,0),this.set1f(`uBrightness`,n),a.activeTexture(a.TEXTURE0),a.bindTexture(a.TEXTURE_2D,e.texture.webGLTexture),t?(a.viewport(0,0,t.width,t.height),a.bindFramebuffer(a.FRAMEBUFFER,t.framebuffer.webGLFramebuffer),a.framebufferTexture2D(a.FRAMEBUFFER,a.COLOR_ATTACHMENT0,a.TEXTURE_2D,t.texture.webGLTexture,0)):a.viewport(0,0,e.width,e.height),r&&(i?a.clearColor(0,0,0,0):a.clearColor(0,0,0,1),a.clear(a.COLOR_BUFFER_BIT)),a.bufferData(a.ARRAY_BUFFER,this.vertexData,a.STATIC_DRAW),a.drawArrays(a.TRIANGLES,0,6),a.bindFramebuffer(a.FRAMEBUFFER,null),a.bindTexture(a.TEXTURE_2D,null)},blitFrame:function(e,t,n,r,a,o,s){n===void 0&&(n=1),r===void 0&&(r=!0),a===void 0&&(a=!0),o===void 0&&(o=!1),s===void 0&&(s=!1);var c=this.gl;if(this.setShader(this.copyShader),this.set1i(`uMainSampler`,0),this.set1f(`uBrightness`,n),c.activeTexture(c.TEXTURE0),c.bindTexture(c.TEXTURE_2D,e.texture.webGLTexture),e.height>t.height)c.viewport(0,0,e.width,e.height),this.setTargetUVs(e,t);else{var l=t.height-e.height;c.viewport(0,l,e.width,e.height)}if(c.bindFramebuffer(c.FRAMEBUFFER,t.framebuffer.webGLFramebuffer),c.framebufferTexture2D(c.FRAMEBUFFER,c.COLOR_ATTACHMENT0,c.TEXTURE_2D,t.texture.webGLTexture,0),r&&(a?c.clearColor(0,0,0,0):c.clearColor(0,0,0,1),c.clear(c.COLOR_BUFFER_BIT)),o){var u=this.renderer.currentBlendMode;this.renderer.setBlendMode(i.ERASE)}s&&this.flipY(),c.bufferData(c.ARRAY_BUFFER,this.vertexData,c.STATIC_DRAW),c.drawArrays(c.TRIANGLES,0,6),o&&this.renderer.setBlendMode(u),c.bindFramebuffer(c.FRAMEBUFFER,null),c.bindTexture(c.TEXTURE_2D,null),this.resetUVs()},copyFrameRect:function(e,t,n,r,i,a,o,s){o===void 0&&(o=!0),s===void 0&&(s=!0);var c=this.gl;c.bindFramebuffer(c.FRAMEBUFFER,e.framebuffer.webGLFramebuffer),c.framebufferTexture2D(c.FRAMEBUFFER,c.COLOR_ATTACHMENT0,c.TEXTURE_2D,e.texture.webGLTexture,0),o&&(s?c.clearColor(0,0,0,0):c.clearColor(0,0,0,1),c.clear(c.COLOR_BUFFER_BIT)),c.activeTexture(c.TEXTURE0),c.bindTexture(c.TEXTURE_2D,t.texture.webGLTexture),c.copyTexSubImage2D(c.TEXTURE_2D,0,0,0,n,r,i,a),c.bindFramebuffer(c.FRAMEBUFFER,null),c.bindTexture(c.TEXTURE_2D,null)},copyToGame:function(e){var t=this.gl;this.setShader(this.copyShader),this.set1i(`uMainSampler`,0),this.set1f(`uBrightness`,1),this.renderer.popFramebuffer(),t.activeTexture(t.TEXTURE0),t.bindTexture(t.TEXTURE_2D,e.texture.webGLTexture),t.bufferData(t.ARRAY_BUFFER,this.vertexData,t.STATIC_DRAW),t.drawArrays(t.TRIANGLES,0,6)},drawFrame:function(e,t,n,r){n===void 0&&(n=!0),r===void 0&&(r=this.colorMatrix);var i=this.gl;this.setShader(this.colorMatrixShader),this.set1i(`uMainSampler`,0),this.set1fv(`uColorMatrix`,r.getData()),this.set1f(`uAlpha`,r.alpha),i.activeTexture(i.TEXTURE0),i.bindTexture(i.TEXTURE_2D,e.texture.webGLTexture),t?(i.viewport(0,0,t.width,t.height),i.bindFramebuffer(i.FRAMEBUFFER,t.framebuffer.webGLFramebuffer),i.framebufferTexture2D(i.FRAMEBUFFER,i.COLOR_ATTACHMENT0,i.TEXTURE_2D,t.texture.webGLTexture,0)):i.viewport(0,0,e.width,e.height),n?i.clearColor(0,0,0,0):i.clearColor(0,0,0,1),i.clear(i.COLOR_BUFFER_BIT),i.bufferData(i.ARRAY_BUFFER,this.vertexData,i.STATIC_DRAW),i.drawArrays(i.TRIANGLES,0,6),i.bindFramebuffer(i.FRAMEBUFFER,null),i.bindTexture(i.TEXTURE_2D,null)},blendFrames:function(e,t,n,r,i,a){r===void 0&&(r=1),i===void 0&&(i=!0),a===void 0&&(a=this.linearShader);var o=this.gl;this.setShader(a),this.set1i(`uMainSampler1`,0),this.set1i(`uMainSampler2`,1),this.set1f(`uStrength`,r),o.activeTexture(o.TEXTURE0),o.bindTexture(o.TEXTURE_2D,e.texture.webGLTexture),o.activeTexture(o.TEXTURE1),o.bindTexture(o.TEXTURE_2D,t.texture.webGLTexture),n?(o.bindFramebuffer(o.FRAMEBUFFER,n.framebuffer.webGLFramebuffer),o.framebufferTexture2D(o.FRAMEBUFFER,o.COLOR_ATTACHMENT0,o.TEXTURE_2D,n.texture.webGLTexture,0),o.viewport(0,0,n.width,n.height)):o.viewport(0,0,e.width,e.height),i?o.clearColor(0,0,0,0):o.clearColor(0,0,0,1),o.clear(o.COLOR_BUFFER_BIT),o.bufferData(o.ARRAY_BUFFER,this.vertexData,o.STATIC_DRAW),o.drawArrays(o.TRIANGLES,0,6),o.bindFramebuffer(o.FRAMEBUFFER,null),o.bindTexture(o.TEXTURE_2D,null)},blendFramesAdditive:function(e,t,n,r,i){this.blendFrames(e,t,n,r,i,this.addShader)},clearFrame:function(e,t){t===void 0&&(t=!0);var n=this.gl;n.viewport(0,0,e.width,e.height),n.bindFramebuffer(n.FRAMEBUFFER,e.framebuffer.webGLFramebuffer),t?n.clearColor(0,0,0,0):n.clearColor(0,0,0,1),n.clear(n.COLOR_BUFFER_BIT);var r=this.renderer.currentFramebuffer;n.bindFramebuffer(n.FRAMEBUFFER,r.webGLFramebuffer)},setUVs:function(e,t,n,r,i,a,o,s){var c=this.vertexViewF32;c[2]=e,c[3]=t,c[6]=n,c[7]=r,c[10]=i,c[11]=a,c[14]=e,c[15]=t,c[18]=i,c[19]=a,c[22]=o,c[23]=s},setTargetUVs:function(e,t){var n=t.height/e.height;n=n>.5?.5-(n-.5):.5+(.5-n),this.setUVs(0,n,0,1+n,1,1+n,1,n)},flipX:function(){this.setUVs(1,0,1,1,0,1,0,0)},flipY:function(){this.setUVs(0,1,0,0,1,0,1,1)},resetUVs:function(){this.setUVs(0,0,0,1,1,1,1,0)}})}),36060:(e=>{e.exports={BITMAPMASK_PIPELINE:`BitmapMaskPipeline`,LIGHT_PIPELINE:`Light2D`,POINTLIGHT_PIPELINE:`PointLightPipeline`,SINGLE_PIPELINE:`SinglePipeline`,MULTI_PIPELINE:`MultiPipeline`,ROPE_PIPELINE:`RopePipeline`,GRAPHICS_PIPELINE:`GraphicsPipeline`,POSTFX_PIPELINE:`PostFXPipeline`,UTILITY_PIPELINE:`UtilityPipeline`,MOBILE_PIPELINE:`MobilePipeline`,FX_PIPELINE:`FxPipeline`}}),84817:(e=>{e.exports=`pipelineafterflush`}),36712:(e=>{e.exports=`pipelinebeforeflush`}),40285:(e=>{e.exports=`pipelinebind`}),65918:(e=>{e.exports=`pipelineboot`}),92852:(e=>{e.exports=`pipelinedestroy`}),56072:(e=>{e.exports=`pipelinerebind`}),57566:(e=>{e.exports=`pipelineresize`}),77085:((e,t,n)=>{e.exports={AFTER_FLUSH:n(84817),BEFORE_FLUSH:n(36712),BIND:n(40285),BOOT:n(65918),DESTROY:n(92852),REBIND:n(56072),RESIZE:n(57566)}}),54812:((e,t,n)=>{var r=n(83419),i=n(99155),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.amount=1},onPreRender:function(e,t){e=this.getController(e),this.set1f(`amount`,e.amount,t)}})}),67329:((e,t,n)=>{var r=n(83419),i=n(24400),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.steps=4,this.offsetX=1,this.offsetY=1,this.blurStrength=1,this.strength=1,this.glcolor=[1,1,1]},onPreRender:function(e){e=this.getController(e),this.set1f(`strength`,e.blurStrength),this.set3fv(`color`,e.glcolor)},onDraw:function(e){var t=this.getController(),n=this.fullFrame1,r=this.fullFrame2;this.copyFrame(e,r);for(var i=2/e.width*t.offsetX,a=2/e.height*t.offsetY,o=0;o<t.steps;o++)this.set2f(`offset`,i,0),this.copySprite(e,n),this.set2f(`offset`,0,a),this.copySprite(n,e);this.blendFrames(r,e,n,t.strength),this.copyToGame(n)}})}),8861:((e,t,n)=>{var r=n(83419),i=n(41514),a=n(51078),o=n(94328),s=n(84057);e.exports=new r({Extends:s,initialize:function(e){s.call(this,{game:e,shaders:[{name:`Gaussian5`,fragShader:i},{name:`Gaussian9`,fragShader:a},{name:`Gaussian13`,fragShader:o}]}),this.activeShader=this.shaders[0],this.x=2,this.y=2,this.steps=4,this.strength=1,this.glcolor=[1,1,1]},setQualityLow:function(){return this.activeShader=this.shaders[0],this},setQualityMedium:function(){return this.activeShader=this.shaders[1],this},setQualityHigh:function(){return this.activeShader=this.shaders[2],this},onDraw:function(e){var t=this.getController(),n=this.gl,r=this.fullFrame1,i=n.getParameter(n.FRAMEBUFFER_BINDING);this.bind(this.shaders[t.quality]),n.activeTexture(n.TEXTURE0),n.viewport(0,0,e.width,e.height),this.set1i(`uMainSampler`,0),this.set2f(`resolution`,e.width,e.height),this.set1f(`strength`,t.strength),this.set3fv(`color`,t.glcolor);for(var a=0;a<t.steps;a++)this.set2f(`offset`,t.x,0),this.copySprite(e,r),this.set2f(`offset`,0,t.y),this.copySprite(r,e);n.bindFramebuffer(n.FRAMEBUFFER,i),n.bindTexture(n.TEXTURE_2D,null),this.copyToGame(e)}})}),51051:((e,t,n)=>{var r=n(83419),i=n(90610),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.isTiltShift=!1,this.strength=1,this.blurX=1,this.blurY=1,this.radius=.5,this.amount=1,this.contrast=.2},onPreRender:function(e,t,n,r){e=this.getController(e),this.set1f(`radius`,e.radius,t),this.set1f(`amount`,e.amount,t),this.set1f(`contrast`,e.contrast,t),this.set1f(`strength`,e.strength,t),this.set2f(`blur`,e.blurX,e.blurY,t),this.setBoolean(`isTiltShift`,e.isTiltShift,t),n&&r&&this.set2f(`resolution`,n,r,t)},onDraw:function(e){this.set2f(`resolution`,e.width,e.height),this.bindAndDraw(e)}})}),89428:((e,t,n)=>{var r=n(83419),i=n(91899),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.scale=1,this.feather=.005,this.thickness=8,this.glcolor=[1,.2,.7],this.glcolor2=[1,0,0,.4]},onPreRender:function(e,t,n,r){e=this.getController(e),this.set1f(`scale`,e.scale,t),this.set1f(`feather`,e.feather,t),this.set1f(`thickness`,e.thickness,t),this.set3fv(`color`,e.glcolor,t),this.set4fv(`backgroundColor`,e.glcolor2,t),n&&r&&this.set2f(`resolution`,n,r,t)},onDraw:function(e){this.set2f(`resolution`,e.width,e.height),this.bindAndDraw(e)}})}),88904:((e,t,n)=>{var r=n(83419),i=n(84057);e.exports=new r({Extends:i,initialize:function(e){i.call(this,{game:e})},onDraw:function(e){var t=this.fullFrame1;this.controller?this.manager.drawFrame(e,t,!0,this.controller):this.drawFrame(e,t),this.copyToGame(t)}})}),63563:((e,t,n)=>{var r=n(83419),i=n(47838),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.x=.005,this.y=.005,this.glTexture},onBoot:function(){this.setTexture(`__WHITE`)},setTexture:function(e){var t=this.game.textures.getFrame(e);t&&(this.glTexture=t.glTexture)},onDraw:function(e){var t=this.getController(),n=this.fullFrame1;this.bind(),this.set1i(`uMainSampler`,0),this.set1i(`uDisplacementSampler`,1),this.set2f(`amount`,t.x,t.y),this.bindTexture(t.glTexture,1),this.copySprite(e,n),this.copyToGame(n)}})}),94045:((e,t,n)=>{var r=n(83419),i=n(95540),a=n(98656),o=n(84057),s=n(70554);e.exports=new r({Extends:o,initialize:function(e,t){var n=i(t,`quality`,.1),r=i(t,`distance`,10);o.call(this,{game:e,fragShader:s.setGlowQuality(a,e,n,r)}),this.outerStrength=4,this.innerStrength=0,this.knockout=!1,this.glcolor=[1,1,1,1]},onPreRender:function(e,t,n,r){e=this.getController(e),this.set1f(`outerStrength`,e.outerStrength,t),this.set1f(`innerStrength`,e.innerStrength,t),this.set4fv(`glowColor`,e.glcolor,t),this.setBoolean(`knockout`,e.knockout,t),n&&r&&this.set2f(`resolution`,n,r,t)},onDraw:function(e){this.set2f(`resolution`,e.width,e.height),this.bindAndDraw(e)}})}),74088:((e,t,n)=>{var r=n(83419),i=n(70463),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.alpha=.2,this.size=0,this.fromX=0,this.fromY=0,this.toX=0,this.toY=1,this.glcolor1=[255,0,0],this.glcolor2=[0,255,0]},onPreRender:function(e,t){e=this.getController(e),this.set1f(`alpha`,e.alpha,t),this.set1i(`size`,e.size,t),this.set3fv(`color1`,e.glcolor1,t),this.set3fv(`color2`,e.glcolor2,t),this.set2f(`positionFrom`,e.fromX,e.fromY,t),this.set2f(`positionTo`,e.toX,e.toY,t)}})}),99636:((e,t,n)=>{var r=n(83419),i=n(50831),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.amount=1},onPreRender:function(e,t,n,r){e=this.getController(e),this.set1f(`amount`,e.amount,t),n&&r&&this.set2f(`resolution`,n,r,t)},onDraw:function(e){this.set2f(`resolution`,e.width,e.height),this.bindAndDraw(e)}})}),34700:((e,t,n)=>{var r=n(83419),i=n(92595),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.x=0,this.y=0,this.decay=.1,this.power=1,this.glcolor=[0,0,0,1],this.samples=6,this.intensity=1},onPreRender:function(e,t){e=this.getController(e);var n=e.samples;this.set1i(`samples`,n,t),this.set1f(`intensity`,e.intensity,t),this.set1f(`decay`,e.decay,t),this.set1f(`power`,e.power/n,t),this.set2f(`lightPosition`,e.x,e.y,t),this.set4fv(`color`,e.glcolor,t)}})}),91157:((e,t,n)=>{var r=n(83419),i=n(72464),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.speed=.5,this.lineWidth=.5,this.gradient=3,this.reveal=!1},onPreRender:function(e,t,n,r){e=this.getController(e),this.setTime(`time`,t),this.set1f(`speed`,e.speed,t),this.set1f(`lineWidth`,e.lineWidth,t),this.set1f(`gradient`,e.gradient,t),this.setBoolean(`reveal`,e.reveal,t),n&&r&&this.set2f(`resolution`,n,r,t)},onDraw:function(e){this.set2f(`resolution`,e.width,e.height),this.bindAndDraw(e)}})}),27797:((e,t,n)=>{var r=n(83419),i=n(39249),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.x=.5,this.y=.5,this.radius=.5,this.strength=.5},onPreRender:function(e,t){e=this.getController(e),this.set1f(`radius`,e.radius,t),this.set1f(`strength`,e.strength,t),this.set2f(`position`,e.x,e.y,t)}})}),67603:((e,t,n)=>{var r=n(83419),i=n(2878),a=n(84057);e.exports=new r({Extends:a,initialize:function(e){a.call(this,{game:e,fragShader:i}),this.progress=0,this.wipeWidth=.1,this.direction=0,this.axis=0,this.reveal=!1},onPreRender:function(e,t){e=this.getController(e);var n=e.progress,r=e.wipeWidth,i=e.direction,a=e.axis;this.set4f(`config`,n,r,i,a,t),this.setBoolean(`reveal`,e.reveal,t)}})}),58918:((e,t,n)=>{e.exports={Barrel:n(54812),Bloom:n(67329),Blur:n(8861),Bokeh:n(51051),Circle:n(89428),ColorMatrix:n(88904),Displacement:n(63563),Glow:n(94045),Gradient:n(74088),Pixelate:n(99636),Shadow:n(34700),Shine:n(91157),Vignette:n(27797),Wipe:n(67603)}}),96615:((e,t,n)=>{var r=n(36060),i=n(79291),a={FX:n(58918),BitmapMaskPipeline:n(31302),Events:n(77085),FXPipeline:n(92651),LightPipeline:n(96569),MobilePipeline:n(56527),MultiPipeline:n(57516),PointLightPipeline:n(43439),PostFXPipeline:n(84057),PreFXPipeline:n(43558),RopePipeline:n(81041),SinglePipeline:n(12385),UtilityPipeline:n(7589)};a=i(!1,a,r),e.exports=a}),35407:(e=>{e.exports=`#define SHADER_NAME PHASER_ADD_BLEND_FS
+precision mediump float;
+uniform sampler2D uMainSampler1;
+uniform sampler2D uMainSampler2;
+uniform float uStrength;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 frame1 = texture2D(uMainSampler1, outTexCoord);
+    vec4 frame2 = texture2D(uMainSampler2, outTexCoord);
+    gl_FragColor = frame1 + frame2 * uStrength;
+}`}),78908:(e=>{e.exports=`#define SHADER_NAME PHASER_BITMAP_MASK_FS
+precision mediump float;
+uniform vec2 uResolution;
+uniform sampler2D uMainSampler;
+uniform sampler2D uMaskSampler;
+uniform bool uInvertMaskAlpha;
+void main ()
+{
+    vec2 uv = gl_FragCoord.xy / uResolution;
+    vec4 mainColor = texture2D(uMainSampler, uv);
+    vec4 maskColor = texture2D(uMaskSampler, uv);
+    if (!uInvertMaskAlpha)
+    {
+        mainColor *= maskColor.a;
+    }
+    else
+    {
+        mainColor *= (1.0 - maskColor.a);
+    }
+    gl_FragColor = mainColor;
+}`}),85191:(e=>{e.exports=`#define SHADER_NAME PHASER_BITMAP_MASK_VS
+precision mediump float;
+attribute vec2 inPosition;
+void main ()
+{
+    gl_Position = vec4(inPosition, 0.0, 1.0);
+}`}),96293:(e=>{e.exports=`#define SHADER_NAME PHASER_COLORMATRIX_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform float uColorMatrix[20];
+uniform float uAlpha;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 c = texture2D(uMainSampler, outTexCoord);
+    if (uAlpha == 0.0)
+    {
+        gl_FragColor = c;
+        return;
+    }
+    if (c.a > 0.0)
+    {
+        c.rgb /= c.a;
+    }
+    vec4 result;
+    result.r = (uColorMatrix[0] * c.r) + (uColorMatrix[1] * c.g) + (uColorMatrix[2] * c.b) + (uColorMatrix[3] * c.a) + uColorMatrix[4];
+    result.g = (uColorMatrix[5] * c.r) + (uColorMatrix[6] * c.g) + (uColorMatrix[7] * c.b) + (uColorMatrix[8] * c.a) + uColorMatrix[9];
+    result.b = (uColorMatrix[10] * c.r) + (uColorMatrix[11] * c.g) + (uColorMatrix[12] * c.b) + (uColorMatrix[13] * c.a) + uColorMatrix[14];
+    result.a = (uColorMatrix[15] * c.r) + (uColorMatrix[16] * c.g) + (uColorMatrix[17] * c.b) + (uColorMatrix[18] * c.a) + uColorMatrix[19];
+    vec3 rgb = mix(c.rgb, result.rgb, uAlpha);
+    rgb *= result.a;
+    gl_FragColor = vec4(rgb, result.a);
+}`}),36682:(e=>{e.exports=`#define SHADER_NAME PHASER_COPY_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform float uBrightness;
+varying vec2 outTexCoord;
+void main ()
+{
+    gl_FragColor = texture2D(uMainSampler, outTexCoord) * uBrightness;
+}`}),99155:(e=>{e.exports=`#define SHADER_NAME BARREL_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform float amount;
+varying vec2 outTexCoord;
+vec2 Distort(vec2 p)
+{
+    float theta  = atan(p.y, p.x);
+    float radius = length(p);
+    radius = pow(radius, amount);
+    p.x = radius * cos(theta);
+    p.y = radius * sin(theta);
+    return 0.5 * (p + 1.0);
+}
+void main()
+{
+    vec2 xy = 2.0 * outTexCoord - 1.0;
+    vec2 texCoord = outTexCoord;
+    if (length(xy) < 1.0)
+    {
+        texCoord = Distort(xy);
+    }
+    gl_FragColor = texture2D(uMainSampler, texCoord);
+}`}),24400:(e=>{e.exports=`#define SHADER_NAME BLOOM_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 offset;
+uniform float strength;
+uniform vec3 color;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 sum = texture2D(uMainSampler, outTexCoord) * 0.204164 * strength;
+    sum = sum + texture2D(uMainSampler, outTexCoord + offset * 1.407333) * 0.304005;
+    sum = sum + texture2D(uMainSampler, outTexCoord - offset * 1.407333) * 0.304005;
+    sum = sum + texture2D(uMainSampler, outTexCoord + offset * 3.294215) * 0.093913;
+    gl_FragColor = (sum + texture2D(uMainSampler, outTexCoord - offset * 3.294215) * 0.093913) * vec4(color, 1);
+}`}),94328:(e=>{e.exports=`#define SHADER_NAME BLUR_HIGH_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform vec2 offset;
+uniform float strength;
+uniform vec3 color;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec2 uv = outTexCoord;
+    vec4 col = vec4(0.0);
+    vec2 off1 = vec2(1.411764705882353) * offset * strength;
+    vec2 off2 = vec2(3.2941176470588234) * offset * strength;
+    vec2 off3 = vec2(5.176470588235294) * offset * strength;
+    col += texture2D(uMainSampler, uv) * 0.1964825501511404;
+    col += texture2D(uMainSampler, uv + (off1 / resolution)) * 0.2969069646728344;
+    col += texture2D(uMainSampler, uv - (off1 / resolution)) * 0.2969069646728344;
+    col += texture2D(uMainSampler, uv + (off2 / resolution)) * 0.09447039785044732;
+    col += texture2D(uMainSampler, uv - (off2 / resolution)) * 0.09447039785044732;
+    col += texture2D(uMainSampler, uv + (off3 / resolution)) * 0.010381362401148057;
+    col += texture2D(uMainSampler, uv - (off3 / resolution)) * 0.010381362401148057;
+    gl_FragColor = col * vec4(color, 1.0);
+}`}),41514:(e=>{e.exports=`#define SHADER_NAME BLUR_LOW_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform vec2 offset;
+uniform float strength;
+uniform vec3 color;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec2 uv = outTexCoord;
+    vec4 col = vec4(0.0);
+    vec2 offset = vec2(1.333) * offset * strength;
+    col += texture2D(uMainSampler, uv) * 0.29411764705882354;
+    col += texture2D(uMainSampler, uv + (offset / resolution)) * 0.35294117647058826;
+    col += texture2D(uMainSampler, uv - (offset / resolution)) * 0.35294117647058826;
+    gl_FragColor = col * vec4(color, 1.0);
+}`}),51078:(e=>{e.exports=`#define SHADER_NAME BLUR_MED_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform vec2 offset;
+uniform float strength;
+uniform vec3 color;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec2 uv = outTexCoord;
+    vec4 col = vec4(0.0);
+    vec2 off1 = vec2(1.3846153846) * offset * strength;
+    vec2 off2 = vec2(3.2307692308) * offset * strength;
+    col += texture2D(uMainSampler, uv) * 0.2270270270;
+    col += texture2D(uMainSampler, uv + (off1 / resolution)) * 0.3162162162;
+    col += texture2D(uMainSampler, uv - (off1 / resolution)) * 0.3162162162;
+    col += texture2D(uMainSampler, uv + (off2 / resolution)) * 0.0702702703;
+    col += texture2D(uMainSampler, uv - (off2 / resolution)) * 0.0702702703;
+    gl_FragColor = col * vec4(color, 1.0);
+}`}),90610:(e=>{e.exports=`#define SHADER_NAME BOKEH_FS
+precision mediump float;
+#define ITERATIONS 100.0
+#define ONEOVER_ITR 1.0 / ITERATIONS
+#define PI 3.141596
+#define GOLDEN_ANGLE 2.39996323
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform float radius;
+uniform float amount;
+uniform float contrast;
+uniform bool isTiltShift;
+uniform float strength;
+uniform vec2 blur;
+varying vec2 outTexCoord;
+vec2 Sample (in float theta, inout float r)
+{
+    r += 1.0 / r;
+    return (r - 1.0) * vec2(cos(theta), sin(theta)) * 0.06;
+}
+vec3 Bokeh (sampler2D tex, vec2 uv, float radius)
+{
+    vec3 acc = vec3(0.0);
+    vec3 div = vec3(0.0);
+    vec2 pixel = vec2(resolution.y / resolution.x, 1.0) * radius * .025;
+    float r = 1.0;
+    for (float j = 0.0; j < GOLDEN_ANGLE * ITERATIONS; j += GOLDEN_ANGLE)
+    {
+        vec3 col = texture2D(tex, uv + pixel * Sample(j, r)).xyz;
+        col = contrast > 0.0 ? col * col * (1.0 + contrast) : col;
+        vec3 bokeh = vec3(0.5) + pow(col, vec3(10.0)) * amount;
+        acc += col * bokeh;
+        div += bokeh;
+    }
+    return acc / div;
+}
+void main ()
+{
+    float shift = 1.0;
+    if (isTiltShift)
+    {
+        vec2 uv = vec2(gl_FragCoord.xy / resolution + vec2(-0.5, -0.5)) * 2.0;
+        float centerStrength = 1.0;
+        shift = length(uv * blur * strength) * centerStrength;
+    }
+    gl_FragColor = vec4(Bokeh(uMainSampler, outTexCoord * vec2(1.0, 1.0), radius * shift), 0.0);
+}`}),91899:(e=>{e.exports=`#define SHADER_NAME CIRCLE_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform vec3 color;
+uniform vec4 backgroundColor;
+uniform float thickness;
+uniform float scale;
+uniform float feather;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec2 position = (gl_FragCoord.xy / resolution.xy) * 2.0 - 1.0;
+    float aspectRatio = resolution.x / resolution.y;
+    position.x *= aspectRatio;
+    float grad = length(position);
+    float outer = aspectRatio;
+    float inner = outer - (thickness * 2.0 / resolution.y);
+    if (aspectRatio >= 1.0)
+    {
+        float f = 2.0 + (resolution.y / resolution.x);
+        outer = 1.0;
+        inner = 1.0 - (thickness * f / resolution.x);
+    }
+    outer *= scale;
+    inner *= scale;
+    float circle = smoothstep(outer, outer - 0.01, grad);
+    float ring = circle - smoothstep(inner, inner - feather, grad);
+    texture = mix(backgroundColor * backgroundColor.a, texture, texture.a);
+    texture = (texture * (circle - ring));
+    gl_FragColor = vec4(texture.rgb + (ring * color), texture.a);
+}`}),47838:(e=>{e.exports=`#define SHADER_NAME DISPLACEMENT_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform sampler2D uDisplacementSampler;
+uniform vec2 amount;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec2 disp = (-vec2(0.5, 0.5) + texture2D(uDisplacementSampler, outTexCoord).rr) * amount;
+    gl_FragColor = texture2D(uMainSampler, outTexCoord + disp).rgba;
+}`}),98656:(e=>{e.exports=`#define SHADER_NAME GLOW_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+varying vec2 outTexCoord;
+uniform float outerStrength;
+uniform float innerStrength;
+uniform vec2 resolution;
+uniform vec4 glowColor;
+uniform bool knockout;
+const float PI = 3.14159265358979323846264;
+const float DIST = __DIST__;
+const float SIZE = min(__SIZE__, PI * 2.0);
+const float STEP = ceil(PI * 2.0 / SIZE);
+const float MAX_ALPHA = STEP * DIST * (DIST + 1.0) / 2.0;
+void main ()
+{
+    vec2 px = vec2(1.0 / resolution.x, 1.0 / resolution.y);
+    float totalAlpha = 0.0;
+    vec2 direction;
+    vec2 displaced;
+    vec4 color;
+    for (float angle = 0.0; angle < PI * 2.0; angle += SIZE)
+    {
+        direction = vec2(cos(angle), sin(angle)) * px;
+        for (float curDistance = 0.0; curDistance < DIST; curDistance++)
+        {
+            displaced = outTexCoord + direction * (curDistance + 1.0);
+            color = texture2D(uMainSampler, displaced);
+            totalAlpha += (DIST - curDistance) * color.a;
+        }
+    }
+    color = texture2D(uMainSampler, outTexCoord);
+    float alphaRatio = (totalAlpha / MAX_ALPHA);
+    float innerGlowAlpha = (1.0 - alphaRatio) * innerStrength * color.a;
+    float innerGlowStrength = min(1.0, innerGlowAlpha);
+    vec4 innerColor = mix(color, glowColor, innerGlowStrength);
+    float outerGlowAlpha = alphaRatio * outerStrength * (1.0 - color.a);
+    float outerGlowStrength = min(1.0 - innerColor.a, outerGlowAlpha);
+    vec4 outerGlowColor = outerGlowStrength * glowColor.rgba;
+    if (knockout)
+    {
+        float resultAlpha = outerGlowAlpha + innerGlowAlpha;
+        gl_FragColor = vec4(glowColor.rgb * resultAlpha, resultAlpha);
+    }
+    else
+    {
+        gl_FragColor = innerColor + outerGlowColor;
+    }
+}`}),70463:(e=>{e.exports=`#define SHADER_NAME GRADIENT_FS
+#define SRGB_TO_LINEAR(c) pow((c), vec3(2.2))
+#define LINEAR_TO_SRGB(c) pow((c), vec3(1.0 / 2.2))
+#define SRGB(r, g, b) SRGB_TO_LINEAR(vec3(float(r), float(g), float(b)) / 255.0)
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 positionFrom;
+uniform vec2 positionTo;
+uniform vec3 color1;
+uniform vec3 color2;
+uniform float alpha;
+uniform int size;
+varying vec2 outTexCoord;
+float gradientNoise(in vec2 uv)
+{
+    const vec3 magic = vec3(0.06711056, 0.00583715, 52.9829189);
+    return fract(magic.z * fract(dot(uv, magic.xy)));
+}
+float stepped (in float s, in float scale, in int steps)
+{
+    return steps > 0 ? floor( s / ((1.0 * scale) / float(steps))) * 1.0 / float(steps - 1) : s;
+}
+void main ()
+{
+    vec2 a = positionFrom;
+    vec2 b = positionTo;
+    vec2 ba = b - a;
+    float d = dot(outTexCoord - a, ba) / dot(ba, ba);
+    float t = size > 0 ? stepped(d, 1.0, size) : d;
+    t = smoothstep(0.0, 1.0, clamp(t, 0.0, 1.0));
+    vec3 color = mix(SRGB(color1.r, color1.g, color1.b), SRGB(color2.r, color2.g, color2.b), t);
+    color = LINEAR_TO_SRGB(color);
+    color += (1.0 / 255.0) * gradientNoise(outTexCoord) - (0.5 / 255.0);
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    gl_FragColor = vec4(mix(color.rgb, texture.rgb, alpha), 1.0) * texture.a;
+}`}),50831:(e=>{e.exports=`#define SHADER_NAME PIXELATE_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform float amount;
+varying vec2 outTexCoord;
+void main ()
+{
+    float pixelSize = floor(2.0 + amount);
+    vec2 center = pixelSize * floor(outTexCoord * resolution / pixelSize) + pixelSize * vec2(0.5, 0.5);
+    vec2 corner1 = center + pixelSize * vec2(-0.5, -0.5);
+    vec2 corner2 = center + pixelSize * vec2(+0.5, -0.5);
+    vec2 corner3 = center + pixelSize * vec2(+0.5, +0.5);
+    vec2 corner4 = center + pixelSize * vec2(-0.5, +0.5);
+    vec4 pixel = 0.4 * texture2D(uMainSampler, center / resolution);
+    pixel += 0.15 * texture2D(uMainSampler, corner1 / resolution);
+    pixel += 0.15 * texture2D(uMainSampler, corner2 / resolution);
+    pixel += 0.15 * texture2D(uMainSampler, corner3 / resolution);
+    pixel += 0.15 * texture2D(uMainSampler, corner4 / resolution);
+    gl_FragColor = pixel;
+}`}),92595:(e=>{e.exports=`#define SHADER_NAME SHADOW_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+varying vec2 outTexCoord;
+uniform vec2 lightPosition;
+uniform vec4 color;
+uniform float decay;
+uniform float power;
+uniform float intensity;
+uniform int samples;
+const int MAX = 12;
+void main ()
+{
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec2 pc = (lightPosition - outTexCoord) * intensity;
+    float shadow = 0.0;
+    float limit = max(float(MAX), float(samples));
+    for (int i = 0; i < MAX; ++i)
+    {
+        if (i >= samples)
+        {
+            break;
+        }
+        shadow += texture2D(uMainSampler, outTexCoord + float(i) * decay / limit * pc).a * power;
+    }
+    float mask = 1.0 - texture.a;
+    gl_FragColor = mix(texture, color, shadow * mask);
+}`}),72464:(e=>{e.exports=`#define SHADER_NAME SHINE_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec2 resolution;
+uniform bool reveal;
+uniform float speed;
+uniform float time;
+uniform float lineWidth;
+uniform float gradient;
+varying vec2 outTexCoord;
+void main ()
+{
+	vec2 uv = gl_FragCoord.xy / resolution.xy;
+    vec4 tex = texture2D(uMainSampler, outTexCoord);
+    vec4 col1 = vec4(0.3, 0.0, 0.0, 1.0);
+    vec4 col2 = vec4(0.85, 0.85, 0.85, 1.0);
+    uv.x = uv.x - mod(time * speed, 2.0) + 0.5;
+    float y = uv.x * gradient;
+    float s = smoothstep(y - lineWidth, y, uv.y) - smoothstep(y, y + lineWidth, uv.y);
+    gl_FragColor = (((s * col1) + (s * col2)) * tex);
+    if (!reveal)
+    {
+        gl_FragColor += tex;
+    }
+}`}),39249:(e=>{e.exports=`#define SHADER_NAME VIGNETTE_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform float radius;
+uniform float strength;
+uniform vec2 position;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 col = vec4(1.0);
+    float d = length(outTexCoord - position);
+    if (d <= radius)
+    {
+        float g = d / radius;
+        g = sin(g * 3.14 * strength);
+    	col = vec4(g * g * g);
+    }
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    gl_FragColor = texture * (1.0 - col);
+}`}),2878:(e=>{e.exports=`#define SHADER_NAME WIPE_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+uniform vec4 config;
+uniform bool reveal;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec2 uv = outTexCoord;
+    vec4 color0;
+    vec4 color1;
+    

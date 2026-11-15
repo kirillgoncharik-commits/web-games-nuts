@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Cinder Shift 64 — a playable emergency shift on Caldera 7. Nuts Games." />
+  <!-- web-channel:start -->
+  <link rel="canonical" href="https://nuts.bid/games/cinder-shift/" />
+  <script  src="./game-analytics.js?v=20261109c"></script>
+  <!-- web-channel:end -->
+  <meta name="theme-color" content="#111823" />
+  <title>Cinder Shift 64 · Nuts Games</title>
+  <link rel="icon" href="data:," />
+  <script type="module" crossorigin src="./assets/index-cbZYbrPR.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-rL3FTNW8.css">
+</head>
+<body>
+  <main id="app" class="shell">
+    <header class="toolbar">
+      <a class="brand" href="/games/" aria-label="Nuts Games">NUTS<span>GAMES</span></a>
+      <div class="compact-title">CINDER SHIFT 64<small id="build-label"></small></div>
+      <div class="toolbar-actions"><button id="mute" class="quiet" data-i18n="settings.muteOff" aria-pressed="false">Sound: on</button><button id="settings-open" class="quiet" data-i18n="common.settings">Settings</button><button id="pause" class="quiet" data-i18n="common.pause" disabled>Pause</button></div>
+    </header>
+    <div id="storage-notice" class="storage-notice" role="status" hidden></div>
+    <section class="console" aria-label="Cinder Shift 64">
+      <div id="playframe" class="playframe">
+        <div id="viewport" class="viewport">
+          <div id="game" tabindex="0" role="application" data-i18n-aria="accessibility.game" aria-label="Game field"></div>
+          <div id="hud" class="hud" hidden>
+            <div class="health" data-i18n-aria="accessibility.integrity" aria-live="off"><span data-i18n="hud.integrity">INTEGRITY</span><span id="hp-segments" aria-hidden="true"></span><strong id="hp-value"></strong></div>
+            <span id="hud-objective"></span><span id="hud-split" class="hud-split" hidden aria-live="polite"></span><span id="hud-cell" hidden><span aria-hidden="true">◆</span><span id="hud-cell-label" data-i18n="hud.cellCarried">CORE</span></span><span id="interaction-progress" hidden></span><span id="ability-status" hidden><span id="ability-icon" class="ability-emblem" aria-hidden="true"></span><span data-i18n="hud.impulse">Impulse</span> <strong id="ability-time"></strong><i><b id="ability-fill"></b></i></span><span id="buffer-status" hidden></span><strong id="hud-room"></strong><button id="hud-pause" class="hud-pause" type="button" data-i18n-aria="accessibility.pause" aria-label="Pause">Ⅱ</button>
+          </div>
+          <div id="critical-vignette" class="critical-vignette" aria-hidden="true" hidden></div><div id="critical-status" class="critical-status" role="status" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14a8 8 0 0 1 16 0v4H4zM8 18v2m8-2v2M14 7l-3 5h3l-2 5"/></svg><strong data-i18n="hud.critical">CRITICAL</strong></div>
+          <div id="transition" class="transition" data-i18n="mission.transition" hidden>ROOM TRANSFER</div>
+        </div>
+        <div id="touch-controls" class="touch-controls" hidden data-i18n-aria="accessibility.touch" aria-label="Touch controls">
+          <div class="directions"><button data-action="left" data-i18n-aria="accessibility.left" aria-label="Move left"><span aria-hidden="true">◀</span></button><button data-action="crouch" data-i18n-aria="accessibility.crouch" aria-label="Crouch"><span aria-hidden="true">▾</span></button><button data-action="right" data-i18n-aria="accessibility.right" aria-label="Move right"><span aria-hidden="true">▶</span></button></div>
+          <div class="actions"><button id="touch-context" data-action="interact" data-i18n-aria="accessibility.interact" aria-label="Interact"><span aria-hidden="true">◎</span><span id="touch-context-label" data-i18n="touch.context">ACTION</span></button><div id="touch-ability-slot" class="control-slot"><button data-action="ability" data-i18n-aria="accessibility.ability" aria-label="Ground impulse"><span aria-hidden="true">↗</span><span data-i18n="touch.ability">IMPULSE</span></button></div><button data-action="fire" data-i18n-aria="accessibility.fire" aria-label="Fire cutter"><span aria-hidden="true">✧</span><span data-i18n="touch.fire">FIRE</span></button><button data-action="jump" class="jump" data-i18n-aria="accessibility.jump" aria-label="Jump"><span aria-hidden="true">↑</span><span data-i18n="touch.jump">JUMP</span></button></div>
+        </div>
+        <div id="overlay" class="overlay boot-loading" role="dialog" aria-modal="true" aria-labelledby="screen-title"><img id="loading-art" alt="" aria-hidden="true"><div class="panel loading"><h1 id="screen-title">CINDER SHIFT 64</h1><p id="loading-label" data-i18n="loading.initial">Loading suit systems…</p><progress id="loading-progress" max="1" value="0" data-i18n-aria="accessibility.progress" aria-label="Loading resources"></progress></div></div>
+      </div>
+      <div id="mission-footer" class="console-footer" hidden><span id="objective"></span><span id="device"></span></div>
+    </section>
+  </main>
+  <p class="game-description">Cinder Shift 64 is a browser action game by Nuts Games. Prepare Mira, explore five sectors of Caldera 7, choose a route through the foundry, and reach the evacuation platform. Twelve research technologies and six campaign events shape each run. Keyboard, touch and gamepad controls; English and Russian interface. No account required.</p>
+  <script  src="./boot-guard.js"></script>
+</body>
+</html>
