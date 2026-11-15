@@ -1,0 +1,665 @@
+{
+  "mission": "airlock",
+  "room": "A",
+  "fixture": "one_room_entry_only_then_trusted_input",
+  "audio": {
+    "mimeType": "video/webm;codecs=vp8,opus",
+    "peakRms": 0.02207468212312834,
+    "samples": 127,
+    "audioTracks": 1,
+    "width": 640,
+    "height": 360,
+    "bytes": 96414
+  },
+  "snapshot": {
+    "build": "0.7.0-rw2.c1",
+    "sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+    "target": "web",
+    "platform": {
+      "target": "web",
+      "integrationStatus": "local_candidate",
+      "adsEnabled": false,
+      "nativeSdkLoaded": false
+    },
+    "state": "playing",
+    "screen": null,
+    "device": "keyboard",
+    "locale": "ru",
+    "mode": "mission",
+    "challengeResult": null,
+    "relayLeg": null,
+    "relaySupport": "none",
+    "relayIntelCollected": false,
+    "relayRepairUsed": false,
+    "relayReceipt": null,
+    "activeScenes": [
+      "Room"
+    ],
+    "player": {
+      "x": 117.75000000000009,
+      "y": 298,
+      "vx": 0,
+      "vy": 0,
+      "facing": 1,
+      "animation_id": "idle",
+      "crouching": false,
+      "dashReady": 0,
+      "chargeReady": 0
+    },
+    "missionId": "airlock",
+    "targetHp": 0,
+    "combatRemaining": 1,
+    "exitOpen": false,
+    "powered": false,
+    "room": "A",
+    "hp": 6,
+    "maxHp": 6,
+    "feedback": {
+      "damageAlpha": 0,
+      "shieldAlpha": 0,
+      "repairAlpha": 0,
+      "offsetX": 0,
+      "offsetY": 0
+    },
+    "critical": false,
+    "score": 0,
+    "loadout": {
+      "nodes": [],
+      "maxHp": 6,
+      "spread": false,
+      "piercing": false,
+      "ricochet": false,
+      "chargedShot": false,
+      "dash": false,
+      "airDash": false,
+      "wallMove": false,
+      "phaseDash": false,
+      "buffer": false,
+      "shieldClear": false,
+      "deathSave": false,
+      "active": null
+    },
+    "eventPlan": [
+      {
+        "event_id": "E03",
+        "definition_version": 2,
+        "room_id": "B",
+        "variant": "repair-cache"
+      }
+    ],
+    "containerUsed": false,
+    "bufferUsed": false,
+    "cellCollected": false,
+    "cellInstalled": false,
+    "reactorCircuit": "isolation",
+    "reactorRerouted": false,
+    "cargoCircuit": "security",
+    "cargoRerouted": false,
+    "conveyor": null,
+    "archiveCarrierCollected": false,
+    "archiveUploadPowered": false,
+    "enemyTelegraphScale": 1,
+    "dataCarrier": null,
+    "dataUploaded": false,
+    "scoutedArchive": false,
+    "s05Accepted": false,
+    "e06Rewarded": false,
+    "d4Used": false,
+    "bossHp": 32,
+    "boss": {
+      "hp": 32,
+      "elapsedMs": 0,
+      "phaseTwoAt": null,
+      "aimX": 192,
+      "windowDamage": 0,
+      "pattern": {
+        "rects": [
+          {
+            "x": 168,
+            "y": 40,
+            "width": 48,
+            "height": 280
+          }
+        ],
+        "moving": false,
+        "cycle": 0,
+        "warningId": "lanes:0:0",
+        "overloaded": false,
+        "stage": "lanes",
+        "phase": "warning"
+      }
+    },
+    "bossHitboxes": null,
+    "powerCircuit": "press",
+    "hazards": [],
+    "solids": [
+      {
+        "x": 0,
+        "y": 320,
+        "width": 640,
+        "height": 40
+      },
+      {
+        "x": 176,
+        "y": 288,
+        "width": 80,
+        "height": 32
+      },
+      {
+        "x": 324,
+        "y": 252,
+        "width": 96,
+        "height": 36
+      }
+    ],
+    "foundryRoute": null,
+    "objective": false,
+    "attemptId": "c931dae5-8a64-487a-bbb5-66843d00c123",
+    "activeSeconds": 2.3333333333333344,
+    "holdMs": 0,
+    "projectiles": [],
+    "enemies": [
+      {
+        "id": "a-sentry",
+        "kind": "walker",
+        "preset": "walker_service",
+        "x": 484,
+        "y": 305,
+        "end": {
+          "x": 516,
+          "y": 305
+        },
+        "activateX": 436,
+        "first": true,
+        "behavior": "passive",
+        "home": {
+          "x": 484,
+          "y": 305
+        },
+        "hp": 3,
+        "state": "patrol",
+        "attackPhase": null,
+        "phaseMs": 250,
+        "cooldown": 0,
+        "direction": 1,
+        "shots": 0,
+        "shotFlashMs": 0,
+        "aim": {
+          "x": 164,
+          "y": 288
+        },
+        "active": false,
+        "provoked": false,
+        "warnings": 0,
+        "acquireMs": 0,
+        "memoryMs": 0,
+        "lastSeen": null,
+        "noticeMs": 0,
+        "stuckMs": 0,
+        "aimLocked": false,
+        "phase": "patrol",
+        "activated": false,
+        "powered": true,
+        "muzzle": {
+          "x": 467,
+          "y": 288
+        },
+        "remaining": 250
+      }
+    ],
+    "roomStates": {
+      "A": {
+        "powerCircuit": "press",
+        "targetHp": 0,
+        "terminal": false,
+        "visited": true,
+        "containerUsed": false,
+        "repairUsed": false,
+        "cacheUsed": false,
+        "bufferUsed": false,
+        "brokenPanels": [],
+        "route": "ground",
+        "enemies": [
+          {
+            "id": "a-sentry",
+            "kind": "walker",
+            "preset": "walker_service",
+            "x": 484,
+            "y": 305,
+            "end": {
+              "x": 516,
+              "y": 305
+            },
+            "activateX": 436,
+            "first": true,
+            "behavior": "passive",
+            "home": {
+              "x": 484,
+              "y": 305
+            },
+            "hp": 3,
+            "state": "patrol",
+            "attackPhase": null,
+            "phaseMs": 250,
+            "cooldown": 0,
+            "direction": 1,
+            "shots": 0,
+            "shotFlashMs": 0,
+            "aim": {
+              "x": 164,
+              "y": 288
+            },
+            "active": false,
+            "provoked": false,
+            "warnings": 0,
+            "acquireMs": 0,
+            "memoryMs": 0,
+            "lastSeen": null,
+            "noticeMs": 0,
+            "stuckMs": 0,
+            "aimLocked": false
+          }
+        ]
+      },
+      "B": {
+        "powerCircuit": "press",
+        "targetHp": 0,
+        "terminal": false,
+        "visited": false,
+        "containerUsed": false,
+        "repairUsed": false,
+        "cacheUsed": false,
+        "bufferUsed": false,
+        "brokenPanels": [],
+        "route": "ground",
+        "enemies": [
+          {
+            "id": "b-walker",
+            "kind": "walker",
+            "preset": "walker_service",
+            "x": 368,
+            "y": 305,
+            "end": {
+              "x": 432,
+              "y": 305
+            },
+            "activateX": 112,
+            "first": true,
+            "behavior": "passive",
+            "home": {
+              "x": 368,
+              "y": 305
+            },
+            "hp": 3,
+            "state": "patrol",
+            "attackPhase": null,
+            "phaseMs": 250,
+            "cooldown": 0,
+            "direction": 1,
+            "shots": 0,
+            "shotFlashMs": 0,
+            "aim": {
+              "x": 48,
+              "y": 288
+            },
+            "active": false,
+            "provoked": false,
+            "warnings": 0,
+            "acquireMs": 0,
+            "memoryMs": 0,
+            "lastSeen": null,
+            "noticeMs": 0,
+            "stuckMs": 0,
+            "aimLocked": false
+          },
+          {
+            "id": "b-drone",
+            "kind": "drone",
+            "preset": "drone_service",
+            "x": 432,
+            "y": 292,
+            "end": {
+              "x": 496,
+              "y": 248
+            },
+            "activateX": 300,
+            "behavior": "passive",
+            "home": {
+              "x": 432,
+              "y": 292
+            },
+            "hp": 2,
+            "state": "patrol",
+            "attackPhase": null,
+            "phaseMs": 250,
+            "cooldown": 0,
+            "direction": 1,
+            "shots": 0,
+            "shotFlashMs": 0,
+            "aim": {
+              "x": 112,
+              "y": 275
+            },
+            "active": false,
+            "provoked": false,
+            "warnings": 0,
+            "acquireMs": 0,
+            "memoryMs": 0,
+            "lastSeen": null,
+            "noticeMs": 0,
+            "stuckMs": 0,
+            "aimLocked": false
+          }
+        ]
+      }
+    },
+    "simMs": 2333.3333333333344,
+    "transition": false,
+    "campaign": {
+      "character_id": "mira",
+      "campaign_id": "21565c1c-9566-4de7-a563-196971d6aafb",
+      "campaign_seed": 4,
+      "mission_id": "airlock",
+      "location_id": "airlock",
+      "stage": "mission",
+      "nodes": [],
+      "active": null,
+      "points": 1,
+      "completed_missions": [],
+      "reward_ledger": [],
+      "processed_attempts": [],
+      "run_stats": {
+        "ruleset_id": "campaign-rework9",
+        "active_ms": 0,
+        "deaths": 0,
+        "score": 0,
+        "foundry_route": null,
+        "history_complete": true,
+        "assisted": false
+      },
+      "entry": {
+        "mission_id": "airlock",
+        "seed": 4,
+        "build": {
+          "nodes": [],
+          "maxHp": 6,
+          "spread": false,
+          "piercing": false,
+          "ricochet": false,
+          "chargedShot": false,
+          "dash": false,
+          "airDash": false,
+          "wallMove": false,
+          "phaseDash": false,
+          "buffer": false,
+          "shieldClear": false,
+          "deathSave": false,
+          "active": null
+        },
+        "max_hp": 6,
+        "initial_hp": 6,
+        "initial_score": 0,
+        "event_plan": [
+          {
+            "event_id": "E03",
+            "definition_version": 2,
+            "room_id": "B",
+            "variant": "repair-cache"
+          }
+        ]
+      },
+      "result": null
+    },
+    "save": {
+      "available": true,
+      "issue": null,
+      "diagnostic": null,
+      "savedAt": null
+    },
+    "settings": {
+      "locale": "ru",
+      "muted": false,
+      "touchMode": "auto",
+      "layout": "dock",
+      "autofire": true,
+      "debugBodies": false,
+      "reducedFlashes": false,
+      "reducedMotion": false,
+      "effectsIntensity": 0.7,
+      "combatAssist": false,
+      "ghostEnabled": true,
+      "keyBindings": {},
+      "musicVolume": 0.18,
+      "sfxVolume": 0.75,
+      "uiVolume": 0.6
+    },
+    "audio": "running",
+    "audioStatus": {
+      "state": "running",
+      "expected": 32,
+      "decoded": 32,
+      "unavailable": false,
+      "unavailableResources": [],
+      "partialFailure": false,
+      "ready": true,
+      "world": true,
+      "hidden": false,
+      "muted": false,
+      "voices": 0,
+      "resultVoices": 0,
+      "retiring": 0,
+      "music": "airlock",
+      "maxVoices": 3,
+      "dropped": 0,
+      "played": {
+        "ui_focus": 2,
+        "ui_cancel": 1,
+        "shot": 3,
+        "hit_wall": 3
+      },
+      "levels": {
+        "musicVolume": 0.18,
+        "sfxVolume": 0.75,
+        "uiVolume": 0.6
+      }
+    },
+    "events": [
+      "game_boot",
+      "load_complete",
+      "screen_view",
+      "game_ready",
+      "screen_view",
+      "screen_view",
+      "room_enter",
+      "first_control",
+      "tutorial_step"
+    ],
+    "eventLog": [
+      {
+        "name": "game_boot",
+        "event_id": "6aca118c-05b9-480f-8eac-c50fac54be92",
+        "at": 1,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard"
+        }
+      },
+      {
+        "name": "load_complete",
+        "event_id": "a17eb9db-0ef0-4bc9-a63b-c2914e59873e",
+        "at": 286,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "load_ms": 286,
+          "technical_load_ms": 286
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "d73acd17-c1b8-4efd-b77d-86e78aa084c1",
+        "at": 287,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "menu"
+        }
+      },
+      {
+        "name": "game_ready",
+        "event_id": "fa67fd4d-917e-4596-9bf3-f6a6cd548d76",
+        "at": 298,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "load_ms": 286,
+          "technical_load_ms": 286,
+          "intro_visible_ms": 0,
+          "time_to_menu_ms": 298
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "a8540aae-36cd-4e02-916e-6d3381a47bfa",
+        "at": 610,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "settings"
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "6b9ac766-150e-4311-9172-722273569d9f",
+        "at": 958,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "menu"
+        }
+      },
+      {
+        "name": "room_enter",
+        "event_id": "841976ac-938d-4053-afeb-577f8c7c7692",
+        "at": 1046,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "campaign_id": "21565c1c-9566-4de7-a563-196971d6aafb",
+          "campaign_seed": 4,
+          "mode": "mission",
+          "mission_id": "airlock",
+          "room_id": "A",
+          "attempt_id": "c931dae5-8a64-487a-bbb5-66843d00c123",
+          "active_duration": 0,
+          "revisit": 0
+        }
+      },
+      {
+        "name": "first_control",
+        "event_id": "44368095-da71-4592-93c7-671b8159ac5a",
+        "at": 2499,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "campaign_id": "21565c1c-9566-4de7-a563-196971d6aafb",
+          "campaign_seed": 4,
+          "mode": "mission",
+          "mission_id": "airlock",
+          "room_id": "A",
+          "attempt_id": "c931dae5-8a64-487a-bbb5-66843d00c123",
+          "active_duration": 1.45
+        }
+      },
+      {
+        "name": "tutorial_step",
+        "event_id": "70fa9402-1c83-4322-a5ce-e63a6d4c0e9e",
+        "at": 2957,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.7.0-rw2.c1",
+          "source_sha": "88d855b38fbfabec9228fab10c6a45f900acf643",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "campaign_id": "21565c1c-9566-4de7-a563-196971d6aafb",
+          "campaign_seed": 4,
+          "mode": "mission",
+          "mission_id": "airlock",
+          "room_id": "A",
+          "attempt_id": "c931dae5-8a64-487a-bbb5-66843d00c123",
+          "active_duration": 1.933,
+          "step": "move"
+        }
+      }
+    ],
+    "fps": [
+      45,
+      55
+    ],
+    "frames": 119,
+    "longFrames": 1,
+    "loadMs": 286,
+    "technicalLoadMs": 286,
+    "arrivalMs": 0,
+    "introVisibleMs": 0,
+    "timeToMenuMs": 298,
+    "mobileLayout": {
+      "mode": "none",
+      "scale": 1.9625,
+      "frame": {
+        "x": 12,
+        "y": 61,
+        "width": 1256,
+        "height": 706
+      },
+      "canvas": {
+        "x": 12,
+        "y": 61,
+        "width": 1256,
+        "height": 706
+      },
+      "controls": null,
+      "controlRects": {},
+      "available": {
+        "width": 1256,
+        "height": 820
+      }
+    },
+    "screenMs": 724.5,
+    "screenTimes": {
+      "menu": 340.3000000000029,
+      "settings": 384.1999999999971
+    },
+    "sessionWallMs": 3379.9000000000015,
+    "eventTestSeeds": {
+      "E02+E03": 0,
+      "E03": 1,
+      "none": 5,
+      "E02": 8
+    }
+  }
+}
