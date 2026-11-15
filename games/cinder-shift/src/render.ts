@@ -33,7 +33,7 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
-  private recoilUntil=-1;
+  private recoilUntil=-1;private enemyHitUntil=new Map<string,number>();
   private bossSprite?:Phaser.GameObjects.Image;
   private environment:EnvironmentMotion;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
@@ -93,7 +93,8 @@ export class SceneArt{
     for(const target of targets.slice(0,3))this.cues.connect(point,target,now);
   }
 
-  clearFeedback(){this.cues.clear();this.recoilUntil=-1;}
+  enemyHit(id:string,now:number){this.enemyHitUntil.set(id,now+130);}
+  clearFeedback(){this.cues.clear();this.recoilUntil=-1;this.bossHitUntil=-1;this.bufferEffectUntil=-1;this.enemyHitUntil.clear();}
 
   private artImage(frame:ArtFrame,x:number,y:number,depth:number){
     let image=this.artPool[this.artUsed++];
@@ -152,14 +153,15 @@ export class SceneArt{
   }
   private turret(e:import('./enemies').EnemyState,powered:boolean){
     const g=this.threats,{state}=turretPresentation(e,powered),cx=e.x,muzzle=enemyMuzzle(e),facing=Math.sign(e.aim.x-e.x)||1;
-    this.art(`turret_${state}`,cx,e.y+15,54,50,5,facing);
-    if(state==='destroyed')return;
+    const body=this.art(`turret_${state}`,cx,e.y+15,54,50,5,facing);
+    if(state==='destroyed')return body;
     if(state==='warning'){
       this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral',2).setAlpha(.85);
       this.sprite('warning-reticle',e.aim.x,e.aim.y,8);g.lineStyle(2,0xf36d76).lineBetween(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y);
     }
     if(state==='burst'&&e.shotFlashMs>0)g.fillStyle(signals.shot,.9).fillRect(muzzle.x-2,muzzle.y-2,5,5);
     if(state==='exposed')g.lineStyle(2,signals.energy,.9).lineBetween(cx-8,e.y-8,cx+8,e.y-8);
+    return body;
   }
   private dataChip(x:number,feet:number,scale:number,empty:boolean){
     const g=this.threats,c=empty?0x456171:0x76dcc8;g.lineStyle(2*scale,c,empty?.45:1);
@@ -334,16 +336,20 @@ export class SceneArt{
     if(room.previous)this.sprite('gate-open',31,320,3);
     for(const e of state.enemies){
       if(e.hp<=0){if(e.kind==='turret')this.turret(e,false);else if(e.preset==='walker_security')this.art('security-walker_destroyed',e.x,e.y+15,44,40,5);else if(e.preset==='ram_charge')this.art('ram-charger_destroyed',e.x,e.y+15,48,38,5);else this.sprite(e.kind==='drone'?'drone-wreck':'walker-wreck',e.x,320);continue;}
-      const phase=enemyPhase(e),facing=e.state==='attack'?Math.sign(e.aim.x-e.x)||-1:e.direction;
-      if(e.kind==='turret')this.turret(e,attempt.enemyPowered(e));
+      const phase=enemyPhase(e),facing=e.state==='attack'?Math.sign(e.aim.x-e.x)||-1:e.direction;let actorImage:Phaser.GameObjects.Image;
+      if(e.kind==='turret')actorImage=this.turret(e,attempt.enemyPowered(e));
       else if(e.preset==='walker_security'){
         const frame=phase==='telegraph'?'warning':phase==='attack'?'fire':phase==='recovery'?'recovery':e.state==='chase'||e.noticeMs>0?'notice':'patrol';
-        this.art(`security-walker_${frame}`,e.x,e.y+15,42,40,5,facing);
+        actorImage=this.art(`security-walker_${frame}`,e.x,e.y+15,42,40,5,facing);
       }else if(e.preset==='ram_charge'){
         const frame=phase==='telegraph'?'windup':phase==='attack'?'charge':phase==='recovery'?'recovery':'idle';
-        this.art(`ram-charger_${frame}`,e.x,e.y+15,48,38,5,facing);
+        actorImage=this.art(`ram-charger_${frame}`,e.x,e.y+15,48,38,5,facing);
         const exposed=ramVulnerable(e);this.threats.lineStyle(2,exposed?signals.energy:0x9bb3bf,.9).strokeRect(e.x-15,e.y-20,30,7);if(exposed)this.threats.fillStyle(signals.energy,.6).fillRect(e.x-12,e.y-18,24,3);else this.threats.lineBetween(e.x-8,e.y-20,e.x+8,e.y-13);
-      }else this.sprite(e.kind,e.x,e.kind==='walker'?e.y+15:e.y,5,facing);
+      }else actorImage=this.sprite(e.kind,e.x,e.kind==='walker'?e.y+15:e.y,5,facing);
+      if(now<(this.enemyHitUntil.get(e.id)??-1))actorImage.setTint(signals.damage);
+      if(e.kind!=='turret'&&e.shotFlashMs>0){const muzzle=enemyMuzzle(e);this.threats.fillStyle(signals.shot,.85).fillRect(Math.round(muzzle.x)-2,Math.round(muzzle.y)-2,5,3);}
+      if(e.kind==='walker'&&e.preset!=='ram_charge'&&(e.state==='patrol'||e.state==='chase')){const step=reducedFlashes?0:Math.floor(now/140)%2,px=Math.round(e.x);this.threats.fillStyle(0x91a7b0,.75).fillRect(px-10+step*3,Math.round(e.y)+13,6,2).fillRect(px+4-step*3,Math.round(e.y)+13,6,2);}
+      if(e.kind!=='turret'&&phase==='recovery'){this.threats.lineStyle(1,signals.energy,.85).lineBetween(e.x-12,e.y-33,e.x-12,e.y-29).lineBetween(e.x-12,e.y-29,e.x+12,e.y-29).lineBetween(e.x+12,e.y-33,e.x+12,e.y-29);}
       if(e.aimed){const open=guardVulnerable(e),g=this.threats;g.lineStyle(2,open?signals.energy:signals.warning,.9);if(open){g.lineBetween(e.x-20,e.y-22,e.x-20,e.y-4);g.lineBetween(e.x+20,e.y-22,e.x+20,e.y-4);}else g.strokeRoundedRect(e.x-19,e.y-24,38,28,3);g.strokeCircle(e.x,e.y-39,5);}
       if(e.behavior==='aggressive'){this.threats.lineStyle(2,0xffb65b).strokeTriangle(e.x-20,e.y-12,e.x-13,e.y-7,e.x-20,e.y-2);if(e.noticeMs>0)this.threats.lineStyle(2,0xf1d8ae).strokeCircle(e.x,e.y-38,12);}
       for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
