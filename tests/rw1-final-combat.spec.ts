@@ -2,14 +2,14 @@ import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {encounter} from './encounter-helpers';
 import {state} from './helpers';
-import {jump,ground,until} from './route-helpers';
+import {jump,ground,until,standingJump} from './route-helpers';
 import {routeCapture} from './route-capture';
 
 test.use({video:'on'});
 for(const depth of [1,2,3])test(`W${depth} real boss volley respects armor and ${depth===3?'reflects into':'directly hits'} the open core`,async({page},info)=>{
  test.setTimeout(45000);const nodes=['W1','W2','W3'].slice(0,depth);
  await encounter(page,{mission:'reactor',room:'M5D',nodes});
- await jump(page,106,180);await ground(page,288);await jump(page,176,272);await ground(page,256);
+ await jump(page,106,180);await ground(page,288);await standingJump(page,272);await ground(page,256);
  await until(page,()=>(window as any).__CINDER__().boss.pattern.phase==='core',null,'core opens');
  const before=await state(page);await page.keyboard.press('j');
  if(depth===3){await until(page,()=>(window as any).__CINDER__().projectiles.some((p:any)=>p.hitIds.includes('solid:regulator-ricochet')&&p.vy>0),null,'actual reflected pellet');await routeCapture(page,info.outputPath('boss-reflected-pellet.png'));}

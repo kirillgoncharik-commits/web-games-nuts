@@ -1,7 +1,7 @@
 // Full-campaign trusted-input driver. No fixture imports or simulation writes.
 import {expect,type Page} from '@playwright/test';
 import {state} from './helpers';
-import {ground,to,jump,clear,counterRam,drone,cross,next,until} from './route-helpers';
+import {ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
 
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
@@ -98,7 +98,7 @@ export async function campaignReactor(page:Page){
 export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
  const phases=new Set<string>(),windows=new Set<string>(),build=(await state(page)).loadout;let lastWarning='',firing=false,climbed=false;
  async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
- async function climb(){await jump(page,106,180);await ground(page,288);await jump(page,176,272);await ground(page,256);climbed=true;}
+ async function climb(){await jump(page,106,180);await ground(page,288);await standingJump(page,272);await ground(page,256);climbed=true;}
 
  await climb();
   for(let i=0;i<2200;i++){
