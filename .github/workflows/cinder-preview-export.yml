@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 5db28327c2ce1a23c14c6f8870453102312ef072
+          ref: 77a44fec74af3a00a0fc9e3a78b0ff2ae016759f
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -35,16 +35,16 @@ jobs:
           git read-tree --empty
           git add -f dist/cinder-shift qa-export
           tree=$(git write-tree)
-          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'Archive pinned RW2 preview build 5db28327c2ce1a23c14c6f8870453102312ef072')
+          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'Archive pinned RW2 preview build 77a44fec74af3a00a0fc9e3a78b0ff2ae016759f')
           branch="qa/cinder-rw2-build-$GITHUB_RUN_ID"
           git push origin "$commit:refs/heads/$branch"
           echo "CINDER_BUILD_BRANCH=$branch"
           echo "CINDER_BUILD_COMMIT=$commit"
 
-      - name: Render the exact-source compact challenge menu
+      - name: Verify RW2 interaction fixes and render compact menus
         run: |
           npx playwright install --with-deps chromium || (sudo apt-get update && npx playwright install --with-deps chromium)
-          npx playwright test tests/sprint2-details.spec.ts --grep='challenge choices' --output=test-results/compact-menus --reporter=line
+          npx playwright test tests/sprint2-details.spec.ts --output=test-results/compact-menus --reporter=line
       - name: Export compact menu contact sheet
         if: always()
         run: |

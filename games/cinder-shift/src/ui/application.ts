@@ -426,7 +426,7 @@ export class Application{
     const playing=this.state==='playing',playInputActive=playing,active=playInputActive||this.state==='dying',touchMode=this.settings.touchMode==='on'||this.settings.touchMode==='auto'&&this.controls.device==='touch';
     const combatActive=Boolean(this.attempt)&&['playing','dying','paused','event','fork'].includes(this.state);$('app').classList.toggle('combat-active',combatActive);
     $('touch-controls').hidden=!active||!touchMode;$('playframe').classList.toggle('touch-sides',!$('touch-controls').hidden&&this.touchLayoutMode==='sides');
-    document.querySelectorAll<HTMLButtonElement>('#touch-controls button').forEach(button=>{button.disabled=!playInputActive;});
+    document.querySelectorAll<HTMLButtonElement>('#touch-controls button').forEach(button=>{button.disabled=!playInputActive||button.id==='touch-context'&&button.dataset.available!=='true';});
     const ability=document.querySelector<HTMLButtonElement>('[data-action=ability]');if(ability)ability.disabled=!playing||!this.attempt||!(this.attempt.mode==='training'||this.attempt.build.active!==null);
     $('hud').hidden=!this.attempt||!['playing','dying','paused','event','fork'].includes(this.state);
     $('mission-footer').hidden=combatActive||!this.attempt||!['playing','dying','paused','event','fork'].includes(this.state);
@@ -445,7 +445,7 @@ export class Application{
     const skill=a.build.active||'M1';$('ability-icon').innerHTML=hasImpulse?researchIcon(skill,'hud-module-icon'):'';
     const ability=document.querySelector<HTMLButtonElement>('[data-action="ability"]')!,abilityName=this.t(hasImpulse?(charge?'touch.charge':'touch.ability'):'touch.empty'),abilityLabel=this.t(hasImpulse?(charge?'accessibility.charge':'accessibility.ability'):'accessibility.noSkill');ability.setAttribute('aria-label',abilityLabel);ability.disabled=this.state!=='playing'||!hasImpulse;const abilitySpans=ability.querySelectorAll('span');if(abilitySpans[0])abilitySpans[0].innerHTML=hasImpulse?researchIcon(skill,'touch-module-icon'):'';if(abilitySpans[1])abilitySpans[1].textContent=abilityName;
     if(hasImpulse){const cooldown=charge?5000:3000,readyAt=charge?player.chargeReady:player.dashReady,remaining=Math.max(0,readyAt-a.clock.now);$('ability-status').dataset.ready=String(remaining===0);$('ability-time').textContent=remaining?this.t('hud.cooldown',{seconds:Math.ceil(remaining/100)/10}):this.t('hud.ready');$('ability-fill').style.width=`${100*(1-remaining/cooldown)}%`;const caption=$('ability-status').querySelector('[data-i18n]');if(caption)caption.textContent=this.t(charge?'hud.charge':'hud.impulse');}
-    const context=this.touchContext(a,player),contextButton=$<HTMLButtonElement>('touch-context');contextButton.disabled=this.state!=='playing'||!context.available;contextButton.setAttribute('aria-label',this.t('accessibility.context',{context:this.t(context.key)}));$('touch-context-label').textContent=this.t(context.key);
+    const context=this.touchContext(a,player),contextButton=$<HTMLButtonElement>('touch-context');contextButton.dataset.available=String(context.available);contextButton.disabled=this.state!=='playing'||!context.available;contextButton.setAttribute('aria-label',this.t('accessibility.context',{context:this.t(context.key)}));$('touch-context-label').textContent=this.t(context.key);
     $('interaction-progress').hidden=hold<=0;if(hold>0)$('interaction-progress').textContent=this.t('hud.hold',{percent:Math.min(100,Math.floor(hold/6))});
   }
   private touchContext(a:MissionAttempt,player:Player){
