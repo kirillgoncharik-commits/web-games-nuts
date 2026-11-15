@@ -40,3 +40,23 @@ jobs:
           git push origin "$commit:refs/heads/$branch"
           echo "CINDER_BUILD_BRANCH=$branch"
           echo "CINDER_BUILD_COMMIT=$commit"
+
+      - name: Render the exact-source compact challenge menu
+        run: |
+          npx playwright install --with-deps chromium || (sudo apt-get update && npx playwright install --with-deps chromium)
+          npx playwright test tests/sprint2-details.spec.ts --grep='challenge choices' --output=test-results/compact-menus --reporter=line
+      - name: Export compact menu contact sheet
+        if: always()
+        run: |
+          node --input-type=module <<'JS'
+          import {readFile,readdir} from 'node:fs/promises';
+          import path from 'node:path';
+          import sharp from 'sharp';
+          async function files(root){return(await Promise.all((await readdir(root,{withFileTypes:true})).map(e=>e.isDirectory()?files(path.join(root,e.name)):[path.join(root,e.name)]))).flat();}
+          const paths=(await files('test-results/compact-menus')).filter(p=>p.endsWith('/challenges.png')).sort(),layers=[];
+          if(paths.length!==3)throw Error('Expected three real menu captures');
+          for(const [i,file]of paths.entries()){const left=i*480;layers.push({input:await sharp(file).resize(480,650,{fit:'contain',background:'#101823'}).png().toBuffer(),left,top:0});}
+          const png=await sharp({create:{width:1440,height:650,channels:4,background:'#101823'}}).composite(layers).png({palette:true,colours:256}).toBuffer(),base64=png.toString('base64');
+          for(let n=0;n<base64.length;n+=6000)console.log('CINDER_RW2_MENUS_'+String(n/6000).padStart(3,'0')+':'+base64.slice(n,n+6000));
+          console.log('CINDER_RW2_MENUS_END bytes='+png.length);
+          JS
