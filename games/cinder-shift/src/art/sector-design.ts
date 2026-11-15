@@ -50,14 +50,6 @@ export function drawSectorArchitecture(scene:Phaser.Scene,room:RoomDefinition){
  for(const x of [6,626]){g.fillStyle(d.metal,.8).fillRect(x,238,8,82);g.fillStyle(d.accent,.4).fillRect(x+2,244,4,7);}
  const floor=scene.add.graphics().setDepth(2.1);
  for(const solid of room.solids)if(!solid.id)drawPlatformEdge(floor,solid,d.accent,d.metal);
- bakeLayer(scene,g,'rw2-architecture-'+room.id,1.05);
- bakeLayer(scene,floor,'rw2-surfaces-'+room.id,2.1);
-}
-
-function bakeLayer(scene:Phaser.Scene,graphics:Phaser.GameObjects.Graphics,key:string,depth:number){
- graphics.generateTexture(key,640,360);graphics.destroy();
- scene.add.image(0,0,key).setOrigin(0).setDepth(depth);
- scene.events.once('shutdown',()=>scene.textures.remove(key));
 }
 
 function drawPlatformEdge(g:Phaser.GameObjects.Graphics,s:Rect,accent:number,metal:number){

@@ -38,6 +38,7 @@ export class SceneArt{
   private environment:EnvironmentMotion;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
+    const staticStart=scene.children.list.length;
     const light=roomLighting(room,new URLSearchParams(location.search).get('light')==='high');
     scene.add.image(0,40,'m03-bg-far').setOrigin(0).setTint(0x616c81);
     scene.add.image(0,40,'m03-bg-'+room.theme).setOrigin(0).setTint(light.back);
@@ -53,6 +54,10 @@ export class SceneArt{
     this.cueGraphics=scene.add.graphics().setDepth(8);
     for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
     if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
+    // Composite the complete static background once; avoid extra fullscreen alpha layers.
+    const statics=(scene.children.list.slice(staticStart) as Array<Phaser.GameObjects.GameObject & {depth:number}>).filter(object=>object.depth<1.4).sort((a,b)=>a.depth-b.depth);
+    scene.add.renderTexture(0,0,640,360).setOrigin(0).setDepth(1.05).draw(statics);
+    for(const object of statics)object.destroy();
     for(const solid of room.solids)if(!solid.id)this.platform(solid);
     this.exitMarker=scene.add.text(609,222,'→',{fontFamily:'Arial',fontSize:'18px',color:'#FFB65B'}).setOrigin(.5).setDepth(3);
     if(room.id==='B'&&hasEvent(plan,'E02'))for(const x of [320,382])scene.add.image(x,40,'m03-props','signal-mint').setOrigin(0).setDisplaySize(2,232).setTintFill(0xffb65b).setDepth(3);
