@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 39b0c152d75332b9317eae90d6c82ab269c016b9
+          ref: 03e491a8d138a4b71255d3cbf40031091a7edafd
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -35,7 +35,7 @@ jobs:
           git read-tree --empty
           git add -f dist/cinder-shift qa-export
           tree=$(git write-tree)
-          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'Archive pinned RW2 preview build 39b0c152d75332b9317eae90d6c82ab269c016b9')
+          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'Archive pinned RW2 preview build 03e491a8d138a4b71255d3cbf40031091a7edafd')
           branch="qa/cinder-rw2-build-$GITHUB_RUN_ID"
           git push origin "$commit:refs/heads/$branch"
           echo "CINDER_BUILD_BRANCH=$branch"
