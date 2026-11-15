@@ -1,0 +1,111 @@
+{
+  "checkpoint": "M-RW2 A1; integrated presentation pass; full sprint IN_PROGRESS",
+  "runtime_source": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+  "sources": {
+    "hero": "games/cinder-shift/src/art/rig.ts; original M03 Mira parts and integer anchors retained",
+    "atlas": "games/cinder-shift/src/art/assets.generated.json; games/cinder-shift/public/assets/art-refresh-v1/",
+    "regulator": "games/cinder-shift/src/art/regulator.generated.json; existing approved robot source retained",
+    "architecture": "games/cinder-shift/src/art/sector-design.ts",
+    "environment": "games/cinder-shift/src/art/environment-motion.ts",
+    "effects": "games/cinder-shift/src/art/combat-effects.ts",
+    "interface": [
+      "games/cinder-shift/src/ui/sprint2.css",
+      "games/cinder-shift/src/ui/workshop.ts",
+      "games/cinder-shift/src/ui/world-map.ts"
+    ],
+    "module_icons": "games/cinder-shift/src/ui/research-icons.ts: researchIcon; all 12 W/M/D icons",
+    "event_icons": "games/cinder-shift/src/ui/research-icons.ts: eventIcon; E01–E06 in preparation and event panels"
+  },
+  "sectors": [
+    {
+      "id": "airlock",
+      "material": "Pressure bulkheads, braces and cool steel",
+      "processes": [
+        "ventilation rotor",
+        "pressure scan"
+      ],
+      "rooms": "A/B/M1*/C; T uses the same training materials"
+    },
+    {
+      "id": "cargo",
+      "material": "Freight trusses, ribbed containers, rail beams",
+      "processes": [
+        "transport rollers",
+        "gantry hoist"
+      ],
+      "rooms": "D/E/F/G and every M2* room; M2C/D use actual circuit/conveyor state"
+    },
+    {
+      "id": "foundry",
+      "material": "Cast iron, furnace apertures, return pipes; service racks differ from press route",
+      "processes": [
+        "hydraulic pistons",
+        "coolant return"
+      ],
+      "rooms": "Every M3* room, including both service and press paths"
+    },
+    {
+      "id": "archive",
+      "material": "Racks, bus channels and violet data-vault steel",
+      "processes": [
+        "rack transfer",
+        "optical scan"
+      ],
+      "rooms": "Every M4* room; upload areas follow actual archive power"
+    },
+    {
+      "id": "reactor",
+      "material": "Containment rings, cooling columns and power buses",
+      "processes": [
+        "cooling impeller",
+        "power circulation"
+      ],
+      "rooms": "Every M5* room; shutdown freezes power motion; evacuation theme in M5E"
+    }
+  ],
+  "state_inventory": {
+    "mira": [
+      "idle/run/crouch/jump",
+      "muzzle/recoil",
+      "HP hit",
+      "room shield ready/absorbed/spent",
+      "repair",
+      "active ability and cooldown ready"
+    ],
+    "roles": [
+      "walker and security patrol/notice/telegraph/fire/recovery/death",
+      "ram idle/windup/charge/recovery/death",
+      "drone warning/attack/wreck",
+      "turret unpowered/warning/burst/exposed/destroyed",
+      "marksman tracking/locked aim/shot/open counter"
+    ],
+    "equipment": [
+      "terminal off/ready/hold/done",
+      "repair ready/protected/full/used",
+      "cell uncollected/carried/installed/socket",
+      "cache available/interact/used",
+      "press and heat safe/warning/active/recovery/off",
+      "ricochet metal, magnetic wall and phase barrier have separate silhouettes"
+    ],
+    "regulator": [
+      "armored",
+      "warning/attack",
+      "open chest core",
+      "phase transition",
+      "shutdown",
+      "evacuation"
+    ]
+  },
+  "lifecycle": {
+    "time_source": "MissionAttempt.clock only; no decorative browser timers",
+    "static_layers": "One 640x360 RenderTexture composites the full static background once per room; platform edges stay local geometry; scene destruction owns texture cleanup",
+    "dynamic_redraw": "Environment redraw is quantized to 140 ms and skipped while the signature is unchanged",
+    "reset": "Combat cue/link pools cleared by existing pause/death/Retry/scene lifecycle",
+    "static_texture_payload_bytes": 921600
+  },
+  "evidence": {
+    "captures": "Workflow 43718801894, job 132826053059; final compositor sector images visually reviewed; UI is unchanged from the reviewed A1 layout",
+    "videos": "Playwright presentation and existing route recordings; music/mix listening and audible runtime delivery remain OPEN",
+    "full_inventory_gate": "Final art/state/animation acceptance over all 44 rooms remains part of M-RW2 B/C/D"
+  }
+}

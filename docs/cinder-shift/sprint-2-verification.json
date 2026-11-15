@@ -1,0 +1,322 @@
+{
+  "schema_version": 1,
+  "milestone": "M-RW2",
+  "checkpoint": "A1",
+  "status": "IN_PROGRESS; NOT_FULL_SPRINT_COMPLETE",
+  "build_id": "0.7.0-rw2.a1",
+  "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+  "test_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+  "tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+  "checks": {
+    "build": "PASS",
+    "typescript": "PASS",
+    "i18n": "PASS_720_EN_RU_KEYS",
+    "art_contracts": "PASS",
+    "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
+    "models": "PASS_105",
+    "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
+    "general_regression": "RUNNING_EXACT_SOURCE",
+    "full_campaign": "RUNNING_EXACT_SOURCE",
+    "foundry_routes": "RUNNING_EXACT_SOURCE",
+    "reachable_builds": "RUNNING_EXACT_SOURCE"
+  },
+  "workflows": [
+    {
+      "name": "Cinder Shift reachable build curve",
+      "run_id": 43718801937,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801937",
+      "status": "PENDING_FINAL_COLLECTION"
+    },
+    {
+      "name": "Cinder Shift full routes and saves",
+      "run_id": 43718801884,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801884",
+      "status": "PENDING_FINAL_COLLECTION"
+    },
+    {
+      "name": "Cinder Shift Sprint 2 presentation",
+      "run_id": 43718801894,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801894",
+      "status": "SUCCESS"
+    },
+    {
+      "name": "Cinder Shift check",
+      "run_id": 43718801978,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801978",
+      "status": "PENDING_FINAL_COLLECTION"
+    },
+    {
+      "name": "Cinder Shift rework candidate",
+      "run_id": 43718802057,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718802057",
+      "status": "PENDING_FINAL_COLLECTION"
+    },
+    {
+      "name": "Cinder Shift rework combat flow",
+      "run_id": 43718801961,
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43718801961",
+      "status": "PENDING_FINAL_COLLECTION"
+    }
+  ],
+  "performance": {
+    "status": "PASS_CHECKPOINT_CAPTURE; FULL_STRESS_AND_PHYSICAL_MATRIX_REMAIN_OPEN",
+    "run_id": 43718801894,
+    "job_id": 132826053059,
+    "environment": "same ubuntu-latest runner; Playwright Chromium; native CPU; 1280x844; seed 4; 110 retained rAF samples per scene; assets already loaded; no mobile-network emulation",
+    "baseline_p95_ms": [
+      33.4,
+      33.4
+    ],
+    "candidate_p95_ms": [
+      16.7,
+      16.8
+    ],
+    "metrics": [
+      {
+        "mission": "airlock",
+        "room": "A",
+        "reduced": false,
+        "p50": 33.29999999999973,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 257,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "airlock",
+        "room": "A",
+        "reduced": true,
+        "p50": 33.19999999999982,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 211,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "archive",
+        "room": "M4H",
+        "reduced": false,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 188,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "archive",
+        "room": "M4H",
+        "reduced": true,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 183,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "cargo",
+        "room": "M2C",
+        "reduced": false,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 186,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "cargo",
+        "room": "M2C",
+        "reduced": true,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 6,
+        "technicalLoadMs": 189,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "foundry",
+        "room": "M3E",
+        "reduced": false,
+        "p50": 16.700000000000045,
+        "p95": 33.399999999999636,
+        "hp": 6,
+        "technicalLoadMs": 183,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "foundry",
+        "room": "M3E",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 33.399999999999864,
+        "hp": 6,
+        "technicalLoadMs": 193,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "reactor",
+        "room": "M5D",
+        "reduced": false,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 5,
+        "technicalLoadMs": 187,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "reactor",
+        "room": "M5D",
+        "reduced": true,
+        "p50": 16.700000000000045,
+        "p95": 33.40000000000009,
+        "hp": 5,
+        "technicalLoadMs": 187,
+        "sha": "38468184f63637f53b14d369c5b656e9ac36ed04"
+      },
+      {
+        "mission": "airlock",
+        "room": "A",
+        "reduced": false,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 6,
+        "technicalLoadMs": 275,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "airlock",
+        "room": "A",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 16.799999999999727,
+        "hp": 6,
+        "technicalLoadMs": 204,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "archive",
+        "room": "M4H",
+        "reduced": false,
+        "p50": 16.699999999999818,
+        "p95": 16.799999999999727,
+        "hp": 6,
+        "technicalLoadMs": 175,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "archive",
+        "room": "M4H",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 6,
+        "technicalLoadMs": 193,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "cargo",
+        "room": "M2C",
+        "reduced": false,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 6,
+        "technicalLoadMs": 196,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "cargo",
+        "room": "M2C",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 16.799999999999955,
+        "hp": 6,
+        "technicalLoadMs": 191,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "foundry",
+        "room": "M3E",
+        "reduced": false,
+        "p50": 16.699999999999818,
+        "p95": 16.799999999999727,
+        "hp": 6,
+        "technicalLoadMs": 197,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "foundry",
+        "room": "M3E",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 6,
+        "technicalLoadMs": 194,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "reactor",
+        "room": "M5D",
+        "reduced": false,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 5,
+        "technicalLoadMs": 181,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      },
+      {
+        "mission": "reactor",
+        "room": "M5D",
+        "reduced": true,
+        "p50": 16.699999999999818,
+        "p95": 16.700000000000273,
+        "hp": 5,
+        "technicalLoadMs": 190,
+        "sha": "4900fa73a2719c895794fa14129b01b086602f89"
+      }
+    ],
+    "limits": "Stationary sector captures; not a universal FPS or input-latency claim. Full sustained combat, longer cold/warm and physical measurements remain in later checkpoints."
+  },
+  "visual_review": {
+    "status": "REVIEWED_SECTOR_AND_UI_CONTACT_SHEETS",
+    "scenes": [
+      "five sectors normal/reduced",
+      "map and workshop 1280x844, 667x375, 390x844"
+    ],
+    "source": "Latest runtime contact sheets from job 132826053059; reviewed after final static compositor",
+    "live_browser": "NOT_RUN; browser transport disconnected and host became unavailable"
+  },
+  "deployment": {
+    "status": "PASS_CLOUDFLARE_AND_SITE_CI",
+    "source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+    "site_commit": "06a0d29e91174f495ac19bc4ceb44a1e2eb0fecb",
+    "site_pr": 15,
+    "source_pr": 9,
+    "production_unchanged": "0.7.0-rw1.b6 / nutsbid main 46ee58b70b101f7f85b93594f142741fac7c5c21",
+    "artifact_branch": "qa/cinder-rw2-build-43718799326",
+    "artifact_commit": "c60b7f46e789d0538e953f905951616bda867616",
+    "js_blob_sha": "f5e5fdc3dc19708082f11cffa7ecf8f5e1bd046a",
+    "js_copy": "Verified identical Git blob SHA before site update",
+    "url": "https://ab2511d6.nuts-games.pages.dev/games/cinder-shift/",
+    "cloudflare_deployment_id": "ab2511d6-77f6-4f58-a07d-116e1b02539b",
+    "site_ci": "PASS",
+    "cloudflare_pages": "SUCCESS"
+  },
+  "deferred": {
+    "human_duration": "DEFERRED_M_RW4",
+    "subjective_art_and_music_acceptance": "DEFERRED; not a blocker by user instruction",
+    "physical_phones": "DEFERRED_M_RW4",
+    "audible_runtime_clips": "OPEN_IN_M_RW2",
+    "complete_31_requirement_verification": "OPEN"
+  },
+  "remaining": [
+    "Complete full art/state/animation review across all 44 rooms and both Foundry paths",
+    "Complete UX pass for Challenges/Training, compact map/workshop and narrative transitions",
+    "Record audible runtime clips and final interaction/stress measurements",
+    "Collect final regression/routes/build-curve results before declaring this checkpoint verified"
+  ],
+  "recovery": {
+    "host": "UNAVAILABLE",
+    "remote_branch": "codex/cinder-shift-m-rework",
+    "local_checkout_last_synced": "254b542bee1c13c491a6dbae2cc0194597c728ab; fetch and compare before resuming local edits",
+    "rollback": "38468184f63637f53b14d369c5b656e9ac36ed04 / B6"
+  }
+}

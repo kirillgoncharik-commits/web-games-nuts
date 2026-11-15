@@ -18,20 +18,21 @@
   },
   "candidate": {
     "build_id": "0.7.0-rw2.a1",
-    "stage": "M_RW2_A1_PRESENTATION_VERIFICATION_PENDING",
+    "stage": "M_RW2_A1_IN_PROGRESS",
     "published": false,
     "accepted": false,
     "verification": {
-      "build": "PASS_LOCAL",
-      "typecheck": "PASS_LOCAL",
+      "build": "PASS",
+      "typescript": "PASS",
       "i18n": "PASS_720_EN_RU_KEYS",
-      "art_contracts": "PASS_LOCAL",
-      "model_tests": "PASS_105_LOCAL",
-      "browser_tests": "PENDING_CI; LOCAL_LISTEN_EPERM",
-      "visual_review": "PENDING_CI_EVIDENCE",
-      "human_playtests": "DEFERRED",
-      "physical_devices": "DEFERRED",
-      "subjective_audio_review": "DEFERRED"
+      "art_contracts": "PASS",
+      "room_registry": "PASS_REPRODUCIBLE_44_ROOMS",
+      "models": "PASS_105",
+      "presentation": "PASS_13_CANDIDATE_PLUS_13_BASELINE; SETS_NOT_ADDED_TO_GENERAL_REGRESSION",
+      "general_regression": "RUNNING_EXACT_SOURCE",
+      "full_campaign": "RUNNING_EXACT_SOURCE",
+      "foundry_routes": "RUNNING_EXACT_SOURCE",
+      "reachable_builds": "RUNNING_EXACT_SOURCE"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -434,26 +435,9 @@
     "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
     "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
     "previous_validated_candidate": {
-      "build_id": "0.7.0-rework.5",
-      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-      "verification": {
-        "typecheck": "passed",
-        "i18n": "passed_657_en_ru_keys",
-        "build": "passed_exact_source_CI",
-        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
-        "model_tests": "64_passed",
-        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-        "physical_devices": "not_run",
-        "human_playtests": "not_run",
-        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
-        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
-        "persistence": "8 migrated persistence checks passed on exact .5 source.",
-        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
-        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
-        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
-        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
-      }
+      "build_id": "0.7.0-rw1.b6",
+      "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "report": "docs/cinder-shift/sprint-1-b6-verification.json"
     },
     "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
     "sprint_1": {
@@ -750,14 +734,14 @@
       "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
       "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
     },
-    "validated_head_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-    "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+    "validated_head_sha": null,
+    "tested_merge_sha": null,
     "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
-    "current_source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-    "current_tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-    "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
+    "current_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+    "current_tested_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89",
+    "report": "docs/cinder-shift/sprint-2-release-notes.ru.md",
     "preview_published": true,
-    "publication_status": "B6_SEPARATE_DEVELOPMENT_PREVIEW; PRODUCTION_REMAINS_B3",
+    "publication_status": "A1_DEVELOPMENT_PREVIEW_ONLY",
     "acceptance_policy": {
       "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
       "instruction_date": "2026-11-14",
@@ -1071,22 +1055,25 @@
         }
       }
     },
-    "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+    "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
     "development_preview": {
-      "url": "https://23728b9d.nuts-games.pages.dev/games/cinder-shift/",
-      "site_pr": 14,
-      "site_artifact_sha": "31a9112bfd6578e28b8d1868d7754d28d94455a8",
-      "site_head_sha": "686ce45b384143d401735ac013f7653402a568cd",
-      "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
-      "manifest_files": 55,
-      "source_dirty": false,
-      "site_ci": "SUCCESS",
-      "cloudflare": "SUCCESS",
-      "cloudflare_deployment_id": "23728b9d-b285-4197-acf2-d2966204c352",
-      "live_ui": "PASS B6 / a390b80 -> map -> workshop -> arrival -> sector 1 A at 6/6 HP"
+      "status": "PASS_CLOUDFLARE_AND_SITE_CI",
+      "source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+      "site_commit": "06a0d29e91174f495ac19bc4ceb44a1e2eb0fecb",
+      "site_pr": 15,
+      "source_pr": 9,
+      "production_unchanged": "0.7.0-rw1.b6 / nutsbid main 46ee58b70b101f7f85b93594f142741fac7c5c21",
+      "artifact_branch": "qa/cinder-rw2-build-43718799326",
+      "artifact_commit": "c60b7f46e789d0538e953f905951616bda867616",
+      "js_blob_sha": "f5e5fdc3dc19708082f11cffa7ecf8f5e1bd046a",
+      "js_copy": "Verified identical Git blob SHA before site update",
+      "url": "https://ab2511d6.nuts-games.pages.dev/games/cinder-shift/",
+      "cloudflare_deployment_id": "ab2511d6-77f6-4f58-a07d-116e1b02539b",
+      "site_ci": "PASS",
+      "cloudflare_pages": "SUCCESS"
     },
-    "previous_verified_candidate": "0.7.0-rw1.b6 / a390b80"
+    "previous_verified_candidate": "0.7.0-rw1.b6 / a390b80",
+    "test_candidate_merge_sha": "4900fa73a2719c895794fa14129b01b086602f89"
   },
   "requirements": [
     {
@@ -2196,12 +2183,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/ui/arrival.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2214,12 +2215,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/ui/arrival.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2241,7 +2256,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/ui/arrival.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2254,12 +2284,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/ui/arrival.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2274,7 +2318,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/ui/arrival.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2287,12 +2346,25 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/world-map.ts",
+          "games/cinder-shift/src/ui/caldera-complex.svg"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2305,12 +2377,25 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "implemented",
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/world-map.ts",
+          "games/cinder-shift/src/ui/caldera-complex.svg"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2331,7 +2416,21 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/world-map.ts",
+          "games/cinder-shift/src/ui/caldera-complex.svg"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2373,7 +2472,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/workshop.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2396,7 +2510,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/workshop.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2417,7 +2546,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/workshop.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2430,12 +2574,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/workshop.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2448,12 +2606,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/workshop.ts",
+          "games/cinder-shift/src/ui/research-icons.ts",
+          "games/cinder-shift/src/ui/sprint2.css"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2468,7 +2640,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2481,12 +2668,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2501,7 +2702,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2516,7 +2732,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2531,7 +2762,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2544,12 +2790,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2564,7 +2824,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/sector-design.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/art/assets.generated.json"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2586,7 +2861,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "IMPLEMENTED; M_RW2_FINAL_GATE_OPEN",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2599,12 +2889,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2617,12 +2921,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2640,12 +2958,26 @@
         "docs/cinder-shift/sprint-1-b5-verification.json"
       ],
       "publication": "separate_development_preview_B5; acceptance_open",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2658,12 +2990,26 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2678,7 +3024,22 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/environment-motion.ts",
+          "games/cinder-shift/src/render.ts",
+          "games/cinder-shift/src/room-scene.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2735,12 +3096,28 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "implementation_status": "partial",
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/audio.ts",
+          "games/cinder-shift/src/room-scene.ts",
+          "audio/m06/effects.mjs",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2799,7 +3176,24 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/audio.ts",
+          "games/cinder-shift/src/room-scene.ts",
+          "audio/m06/effects.mjs",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2814,7 +3208,24 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/audio.ts",
+          "games/cinder-shift/src/room-scene.ts",
+          "audio/m06/effects.mjs",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2829,7 +3240,24 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/combat-effects.ts",
+          "games/cinder-shift/src/audio.ts",
+          "games/cinder-shift/src/room-scene.ts",
+          "audio/m06/effects.mjs",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -2864,7 +3292,21 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
+        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+      },
+      "implementation_status": "PARTIAL_IMPLEMENTATION",
+      "verification_status": "PARTIAL_A1_CHECKS; FULL_REQUIREMENT_OPEN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/sprint2.css",
+          "games/cinder-shift/src/ui/mobile-layout.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-2-checkpoint.ru.md",
+          "docs/cinder-shift/sprint-2-verification.json"
+        ],
+        "scope": "A1 checkpoint only; not full M-RW2 acceptance"
       }
     },
     {
@@ -3075,20 +3517,12 @@
     }
   ],
   "production_preview": {
-    "build_id": "0.7.0-rw1.b3",
-    "game_source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
-    "tested_code_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
-    "site_merge_sha": "825e2dde64aba18a123ec063100e63ce84d5204c",
-    "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/13",
-    "cloudflare_deployment_id": "9820c610-5091-4a91-ad53-ee1742f4e61e",
-    "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+    "build_id": "0.7.0-rw1.b6",
+    "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+    "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+    "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/14",
     "url": "https://nuts.bid/games/cinder-shift/",
-    "verification": {
-      "site_ci": "PASS",
-      "cloudflare_pages": "SUCCESS",
-      "live_build_label": "v0.7.0-rw1.b3 / d52853e",
-      "live_flow": "continue -> workshop -> arrival -> sector 1 A, 6/6 HP"
-    },
-    "acceptance_complete": false
+    "acceptance_complete": false,
+    "verification": "Existing B6 publication record preserved; no production replacement in M-RW2 A1"
   }
 }
