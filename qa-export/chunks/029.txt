@@ -1,0 +1,325 @@
+if (reveal)
+    {
+        color0 = vec4(0);
+        color1 = texture2D(uMainSampler, uv);
+    }
+    else
+    {
+        color0 = texture2D(uMainSampler, uv);
+        color1 = vec4(0);
+    }
+    float distance = config.x;
+    float width = config.y;
+    float direction = config.z;
+    float axis = uv.x;
+    if (config.w == 1.0)
+    {
+        axis = uv.y;
+    }
+    float adjust = mix(width, -width, distance);
+    float value = smoothstep(distance - width, distance + width, abs(direction - axis) + adjust);
+    gl_FragColor = mix(color1, color0, value);
+}`}),31063:(e=>{e.exports=`#define SHADER_NAME PHASER_LIGHT_FS
+precision mediump float;
+struct Light
+{
+    vec2 position;
+    vec3 color;
+    float intensity;
+    float radius;
+};
+const int kMaxLights = %LIGHT_COUNT%;
+uniform vec4 uCamera; /* x, y, rotation, zoom */
+uniform vec2 uResolution;
+uniform sampler2D uMainSampler;
+uniform sampler2D uNormSampler;
+uniform vec3 uAmbientLightColor;
+uniform Light uLights[kMaxLights];
+uniform mat3 uInverseRotationMatrix;
+uniform int uLightCount;
+varying vec2 outTexCoord;
+varying float outTexId;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    vec3 finalColor = vec3(0.0, 0.0, 0.0);
+    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec4 color = texture * texel;
+    if (outTintEffect == 1.0)
+    {
+        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
+    }
+    else if (outTintEffect == 2.0)
+    {
+        color = texel;
+    }
+    vec3 normalMap = texture2D(uNormSampler, outTexCoord).rgb;
+    vec3 normal = normalize(uInverseRotationMatrix * vec3(normalMap * 2.0 - 1.0));
+    vec2 res = vec2(min(uResolution.x, uResolution.y)) * uCamera.w;
+    for (int index = 0; index < kMaxLights; ++index)
+    {
+        if (index < uLightCount)
+        {
+            Light light = uLights[index];
+            vec3 lightDir = vec3((light.position.xy / res) - (gl_FragCoord.xy / res), 0.1);
+            vec3 lightNormal = normalize(lightDir);
+            float distToSurf = length(lightDir) * uCamera.w;
+            float diffuseFactor = max(dot(normal, lightNormal), 0.0);
+            float radius = (light.radius / res.x * uCamera.w) * uCamera.w;
+            float attenuation = clamp(1.0 - distToSurf * distToSurf / (radius * radius), 0.0, 1.0);
+            vec3 diffuse = light.color * diffuseFactor;
+            finalColor += (attenuation * diffuse) * light.intensity;
+        }
+    }
+    vec4 colorOutput = vec4(uAmbientLightColor + finalColor, 1.0);
+    gl_FragColor = color * vec4(colorOutput.rgb * colorOutput.a, colorOutput.a);
+}`}),48247:(e=>{e.exports=`#define SHADER_NAME PHASER_LINEAR_BLEND_FS
+precision mediump float;
+uniform sampler2D uMainSampler1;
+uniform sampler2D uMainSampler2;
+uniform float uStrength;
+varying vec2 outTexCoord;
+void main ()
+{
+    vec4 frame1 = texture2D(uMainSampler1, outTexCoord);
+    vec4 frame2 = texture2D(uMainSampler2, outTexCoord);
+    gl_FragColor = mix(frame1, frame2 * uStrength, 0.5);
+}`}),41214:(e=>{e.exports=`#define SHADER_NAME PHASER_MESH_FS
+precision mediump float;
+uniform vec3 uLightPosition;
+uniform vec3 uLightAmbient;
+uniform vec3 uLightDiffuse;
+uniform vec3 uLightSpecular;
+uniform vec3 uFogColor;
+uniform float uFogNear;
+uniform float uFogFar;
+uniform vec3 uMaterialAmbient;
+uniform vec3 uMaterialDiffuse;
+uniform vec3 uMaterialSpecular;
+uniform float uMaterialShine;
+uniform vec3 uCameraPosition;
+uniform sampler2D uTexture;
+varying vec2 vTextureCoord;
+varying vec3 vNormal;
+varying vec3 vPosition;
+void main (void)
+{
+    vec4 color = texture2D(uTexture, vTextureCoord);
+    vec3 ambient = uLightAmbient * uMaterialAmbient;
+    vec3 norm = normalize(vNormal);
+    vec3 lightDir = normalize(uLightPosition - vPosition);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = uLightDiffuse * (diff * uMaterialDiffuse);
+    vec3 viewDir = normalize(uCameraPosition - vPosition);
+    vec3 reflectDir = reflect(-lightDir, norm);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterialShine);
+    vec3 specular = uLightSpecular * (spec * uMaterialSpecular);
+    vec3 result = (ambient + diffuse + specular) * color.rgb;
+    float depth = gl_FragCoord.z / gl_FragCoord.w;
+    float fogFactor = smoothstep(uFogNear, uFogFar, depth);
+    gl_FragColor.rgb = mix(result.rgb, uFogColor, fogFactor);
+    gl_FragColor.a = color.a;
+}`}),39653:(e=>{e.exports=`#define SHADER_NAME PHASER_MESH_VS
+precision mediump float;
+attribute vec3 aVertexPosition;
+attribute vec3 aVertexNormal;
+attribute vec2 aTextureCoord;
+uniform mat4 uViewProjectionMatrix;
+uniform mat4 uModelMatrix;
+uniform mat4 uNormalMatrix;
+varying vec2 vTextureCoord;
+varying vec3 vNormal;
+varying vec3 vPosition;
+void main ()
+{
+    vTextureCoord = aTextureCoord;
+    vPosition = vec3(uModelMatrix * vec4(aVertexPosition, 1.0));
+    vNormal = vec3(uNormalMatrix * vec4(aVertexNormal, 1.0));
+    gl_Position = uViewProjectionMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);
+}`}),62143:(e=>{e.exports=`#define SHADER_NAME PHASER_MOBILE_FS
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D uMainSampler;
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec4 color = texture * texel;
+    if (outTintEffect == 1.0)
+    {
+        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
+    }
+    else if (outTintEffect == 2.0)
+    {
+        color = texel;
+    }
+    gl_FragColor = color;
+}`}),47940:(e=>{e.exports=`#define SHADER_NAME PHASER_MOBILE_VS
+precision mediump float;
+uniform mat4 uProjectionMatrix;
+uniform vec2 uResolution;
+attribute vec2 inPosition;
+attribute vec2 inTexCoord;
+attribute float inTexId;
+attribute float inTintEffect;
+attribute vec4 inTint;
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+    outTexCoord = inTexCoord;
+    outTint = inTint;
+    outTintEffect = inTintEffect;
+}`}),98840:(e=>{e.exports=`#define SHADER_NAME PHASER_MULTI_FS
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D uMainSampler[%count%];
+varying vec2 outTexCoord;
+varying float outTexId;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    vec4 texture;
+    %forloop%
+    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+    vec4 color = texture * texel;
+    if (outTintEffect == 1.0)
+    {
+        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
+    }
+    else if (outTintEffect == 2.0)
+    {
+        color = texel;
+    }
+    gl_FragColor = color;
+}`}),44667:(e=>{e.exports=`#define SHADER_NAME PHASER_MULTI_VS
+precision mediump float;
+uniform mat4 uProjectionMatrix;
+uniform vec2 uResolution;
+attribute vec2 inPosition;
+attribute vec2 inTexCoord;
+attribute float inTexId;
+attribute float inTintEffect;
+attribute vec4 inTint;
+varying vec2 outTexCoord;
+varying float outTexId;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+    outTexCoord = inTexCoord;
+    outTexId = inTexId;
+    outTint = inTint;
+    outTintEffect = inTintEffect;
+}`}),4127:(e=>{e.exports=`#define SHADER_NAME PHASER_POINTLIGHT_FS
+precision mediump float;
+uniform vec2 uResolution;
+uniform float uCameraZoom;
+varying vec4 lightPosition;
+varying vec4 lightColor;
+varying float lightRadius;
+varying float lightAttenuation;
+void main ()
+{
+    vec2 center = (lightPosition.xy + 1.0) * (uResolution.xy * 0.5);
+    float distToSurf = length(center - gl_FragCoord.xy);
+    float radius = 1.0 - distToSurf / (lightRadius * uCameraZoom);
+    float intensity = smoothstep(0.0, 1.0, radius * lightAttenuation);
+    vec4 color = vec4(intensity, intensity, intensity, 0.0) * lightColor;
+    gl_FragColor = vec4(color.rgb * lightColor.a, color.a);
+}`}),89924:(e=>{e.exports=`#define SHADER_NAME PHASER_POINTLIGHT_VS
+precision mediump float;
+uniform mat4 uProjectionMatrix;
+attribute vec2 inPosition;
+attribute vec2 inLightPosition;
+attribute vec4 inLightColor;
+attribute float inLightRadius;
+attribute float inLightAttenuation;
+varying vec4 lightPosition;
+varying vec4 lightColor;
+varying float lightRadius;
+varying float lightAttenuation;
+void main ()
+{
+    lightColor = inLightColor;
+    lightRadius = inLightRadius;
+    lightAttenuation = inLightAttenuation;
+    lightPosition = uProjectionMatrix * vec4(inLightPosition, 1.0, 1.0);
+    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+}`}),27681:(e=>{e.exports=`#define SHADER_NAME PHASER_POSTFX_FS
+precision mediump float;
+uniform sampler2D uMainSampler;
+varying vec2 outTexCoord;
+void main ()
+{
+    gl_FragColor = texture2D(uMainSampler, outTexCoord);
+}`}),49627:(e=>{e.exports=`#define SHADER_NAME PHASER_QUAD_VS
+precision mediump float;
+attribute vec2 inPosition;
+attribute vec2 inTexCoord;
+varying vec2 outFragCoord;
+varying vec2 outTexCoord;
+void main ()
+{
+    outFragCoord = inPosition.xy * 0.5 + 0.5;
+    outTexCoord = inTexCoord;
+    gl_Position = vec4(inPosition, 0, 1);
+}`}),45561:(e=>{e.exports=`#define SHADER_NAME PHASER_SINGLE_FS
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D uMainSampler;
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    vec4 texture = texture2D(uMainSampler, outTexCoord);
+    vec4 texel = vec4(outTint.bgr * outTint.a, outTint.a);
+    vec4 color = texture * texel;
+    if (outTintEffect == 1.0)
+    {
+        color.rgb = mix(texture.rgb, outTint.bgr * outTint.a, texture.a);
+    }
+    else if (outTintEffect == 2.0)
+    {
+        color = texel;
+    }
+    gl_FragColor = color;
+}`}),60722:(e=>{e.exports=`#define SHADER_NAME PHASER_SINGLE_VS
+precision mediump float;
+uniform mat4 uProjectionMatrix;
+uniform vec2 uResolution;
+attribute vec2 inPosition;
+attribute vec2 inTexCoord;
+attribute float inTexId;
+attribute float inTintEffect;
+attribute vec4 inTint;
+varying vec2 outTexCoord;
+varying float outTintEffect;
+varying vec4 outTint;
+void main ()
+{
+    gl_Position = uProjectionMatrix * vec4(inPosition, 1.0, 1.0);
+    outTexCoord = inTexCoord;
+    outTint = inTint;
+    outTintEffect = inTintEffect;
+}`}),89350:((e,t,n)=>{e.exports={AddBlendFrag:n(35407),BitmapMaskFrag:n(78908),BitmapMaskVert:n(85191),ColorMatrixFrag:n(96293),CopyFrag:n(36682),FXBarrelFrag:n(99155),FXBloomFrag:n(24400),FXBlurHighFrag:n(94328),FXBlurLowFrag:n(41514),FXBlurMedFrag:n(51078),FXBokehFrag:n(90610),FXCircleFrag:n(91899),FXDisplacementFrag:n(47838),FXGlowFrag:n(98656),FXGradientFrag:n(70463),FXPixelateFrag:n(50831),FXShadowFrag:n(92595),FXShineFrag:n(72464),FXVignetteFrag:n(39249),FXWipeFrag:n(2878),LightFrag:n(31063),LinearBlendFrag:n(48247),MeshFrag:n(41214),MeshVert:n(39653),MobileFrag:n(62143),MobileVert:n(47940),MultiFrag:n(98840),MultiVert:n(44667),PointLightFrag:n(4127),PointLightVert:n(89924),PostFXFrag:n(27681),QuadVert:n(49627),SingleFrag:n(45561),SingleVert:n(60722)}}),93567:((e,t,n)=>{e.exports=new(n(83419))({initialize:function(e,t,n){this.webGLAttribLocation=-1,this.gl=e,this.program=t,this.name=n,this.createResource()},createResource:function(){if(this.program.webGLProgram===null)this.webGLAttribLocation=-1;else{var e=this.gl;e.isContextLost()||(this.webGLAttribLocation=e.getAttribLocation(this.program.webGLProgram,this.name))}},destroy:function(){this.gl=null,this.program=null,this.name=null,this.webGLAttribLocation=-1}})}),26128:((e,t,n)=>{e.exports=new(n(83419))({initialize:function(e,t,n,r){this.webGLBuffer=null,this.gl=e,this.initialDataOrSize=t,this.bufferType=n,this.bufferUsage=r,this.createResource()},createResource:function(){if(this.initialDataOrSize!==null){var e=this.gl;if(!e.isContextLost()){var t=this.bufferType,n=e.createBuffer();this.webGLBuffer=n,e.bindBuffer(t,this.webGLBuffer),e.bufferData(t,this.initialDataOrSize,this.bufferUsage),e.bindBuffer(t,null)}}},destroy:function(){var e=this.gl;e.isContextLost()||e.deleteBuffer(this.webGLBuffer),this.webGLBuffer=null,this.initialDataOrSize=null,this.gl=null}})}),84387:((e,t,n)=>{var r=n(83419),i={36054:`Incomplete Attachment`,36055:`Missing Attachment`,36057:`Incomplete Dimensions`,36061:`Framebuffer Unsupported`};e.exports=new r({initialize:function(e,t,n,r,i){this.webGLFramebuffer=null,this.gl=e,this.width=t,this.height=n,this.renderTexture=r,this.addDepthStencilBuffer=!!i,this.createResource()},createResource:function(){var e=this.gl;if(!e.isContextLost()){var t=this.renderTexture,n=0,r=e.createFramebuffer();if(this.webGLFramebuffer=r,e.bindFramebuffer(e.FRAMEBUFFER,r),t.isRenderTexture=!0,t.isAlphaPremultiplied=!1,e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,t.webGLTexture,0),n=e.checkFramebufferStatus(e.FRAMEBUFFER),n!==e.FRAMEBUFFER_COMPLETE)throw Error(`Framebuffer status: `+(i[n]||n));if(this.addDepthStencilBuffer){var a=e.createRenderbuffer();e.bindRenderbuffer(e.RENDERBUFFER,a),e.renderbufferStorage(e.RENDERBUFFER,e.DEPTH_STENCIL,this.width,this.height),e.framebufferRenderbuffer(e.FRAMEBUFFER,e.DEPTH_STENCIL_ATTACHMENT,e.RENDERBUFFER,a)}e.bindFramebuffer(e.FRAMEBUFFER,null)}},destroy:function(){if(this.webGLFramebuffer!==null){var e=this.gl;if(!e.isContextLost()){e.bindFramebuffer(e.FRAMEBUFFER,this.webGLFramebuffer);var t=e.getFramebufferAttachmentParameter(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);t!==null&&(e.framebufferTexture2D(e.FRAMEBUFFER,e.COLOR_ATTACHMENT0,e.TEXTURE_2D,null,0),e.deleteTexture(t));var n=e.getFramebufferAttachmentParameter(e.FRAMEBUFFER,e.DEPTH_STENCIL_ATTACHMENT,e.FRAMEBUFFER_ATTACHMENT_OBJECT_NAME);n!==null&&e.deleteRenderbuffer(n),e.bindFramebuffer(e.FRAMEBUFFER,null),e.deleteFramebuffer(this.webGLFramebuffer)}this.renderTexture=null,this.webGLFramebuffer=null,this.gl=null}}})}),1482:((e,t,n)=>{e.exports=new(n(83419))({initialize:function(e,t,n){this.webGLProgram=null,this.gl=e,this.vertexSource=t,this.fragmentSource=n,this.createResource()},createResource:function(){var e=this.gl;if(!e.isContextLost()){var t=e.createProgram(),n=e.createShader(e.VERTEX_SHADER),r=e.createShader(e.FRAGMENT_SHADER);e.shaderSource(n,this.vertexSource),e.shaderSource(r,this.fragmentSource),e.compileShader(n),e.compileShader(r);var i=`Shader failed:
+`;if(!e.getShaderParameter(n,e.COMPILE_STATUS))throw Error(`Vertex `+i+e.getShaderInfoLog(n));if(!e.getShaderParameter(r,e.COMPILE_STATUS))throw Error(`Fragment `+i+e.getShaderInfoLog(r));if(e.attachShader(t,n),e.attachShader(t,r),e.linkProgram(t),!e.getProgramParameter(t,e.LINK_STATUS))throw Error(`Link `+i+e.getProgramInfoLog(t));e.useProgram(t),this.webGLProgram=t}},destroy:function(){this.webGLProgram&&(this.gl.isContextLost()||this.gl.deleteProgram(this.webGLProgram),this.webGLProgram=null,this.gl=null)}})}),82751:((e,t,n)=>{var r=n(83419),i=n(50030),a=new r({initialize:function(e,t,n,r,i,a,o,s,c,l,u,d,f){this.webGLTexture=null,this.isRenderTexture=!1,this.gl=e,this.mipLevel=t,this.minFilter=n,this.magFilter=r,this.wrapT=i,this.wrapS=a,this.format=o,this.pixels=s,this.width=c,this.height=l,this.pma=u??!0,this.forceSize=!!d,this.flipY=!!f,this.__SPECTOR_Metadata={},this.createResource()},createResource:function(){var e=this.gl;if(!e.isContextLost()){if(this.pixels instanceof a)this.webGLTexture=this.pixels.webGLTexture;else{var t=e.createTexture();t.__SPECTOR_Metadata=this.__SPECTOR_Metadata,this.webGLTexture=t,this._processTexture()}}},update:function(e,t,n,r,i,a,o,s,c){t!==0&&n!==0&&(this.pixels=e,this.width=t,this.height=n,this.flipY=r,this.wrapS=i,this.wrapT=a,this.minFilter=o,this.magFilter=s,this.format=c,this.gl.isContextLost()||this._processTexture())},_processTexture:function(){var e=this.gl;e.activeTexture(e.TEXTURE0);var t=e.getParameter(e.TEXTURE_BINDING_2D);e.bindTexture(e.TEXTURE_2D,this.webGLTexture),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,this.minFilter),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,this.magFilter),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,this.wrapS),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,this.wrapT),e.pixelStorei(e.UNPACK_PREMULTIPLY_ALPHA_WEBGL,this.pma),e.pixelStorei(e.UNPACK_FLIP_Y_WEBGL,this.flipY);var n=this.pixels,r=this.mipLevel,a=this.width,o=this.height,s=this.format,c=!1;if(n==null)e.texImage2D(e.TEXTURE_2D,r,s,a,o,0,s,e.UNSIGNED_BYTE,null),c=i(a,o);else if(n.compressed){a=n.width,o=n.height,c=n.generateMipmap;for(var l=0;l<n.mipmaps.length;l++)e.compressedTexImage2D(e.TEXTURE_2D,l,n.internalFormat,n.mipmaps[l].width,n.mipmaps[l].height,0,n.mipmaps[l].data)}else n instanceof Uint8Array?(e.texImage2D(e.TEXTURE_2D,r,s,a,o,0,s,e.UNSIGNED_BYTE,n),c=i(a,o)):(this.forceSize||(a=n.width,o=n.height),e.texImage2D(e.TEXTURE_2D,r,s,s,e.UNSIGNED_BYTE,n),c=i(a,o));c&&e.generateMipmap(e.TEXTURE_2D),t?e.bindTexture(e.TEXTURE_2D,t):e.bindTexture(e.TEXTURE_2D,null)},spectorMetadata:{get:function(){return this.__SPECTOR_Metadata},set:function(e){this.__SPECTOR_Metadata=e,this.gl.isContextLost()||(this.webGLTexture.__SPECTOR_Metadata=e)}},destroy:function(){this.webGLTexture!==null&&(this.gl.isContextLost()||this.pixels instanceof a||this.gl.deleteTexture(this.webGLTexture),this.pixels=null,this.webGLTexture=null,this.gl=null)}});e.exports=a}),57183:((e,t,n)=>{e.exports=new(n(83419))({initialize:function(e,t,n){this.webGLUniformLocation=null,this.gl=e,this.program=t,this.name=n,this.createResource()},createResource:function(){if(this.program.webGLProgram===null)this.webGLUniformLocation=null;else{var e=this.gl;e.isContextLost()||(this.webGLUniformLocation=e.getUniformLocation(this.program.webGLProgram,this.name))}},destroy:function(){this.gl=null,this.program=null,this.name=null,this.webGLUniformLocation=null}})}),9503:((e,t,n)=>{e.exports={WebGLAttribLocationWrapper:n(93567),WebGLBufferWrapper:n(26128),WebGLProgramWrapper:n(1482),WebGLTextureWrapper:n(82751),WebGLFramebufferWrapper:n(84387),WebGLUniformLocationWrapper:n(57183)}}),76531:((e,t,n)=>{var r=n(13560),i=n(83419),a=n(45319),o=n(50792),s=n(97480),c=n(8443),l=n(57811),u=n(74403),d=n(45818),f=n(29747),p=n(87841),m=n(86555),h=n(56583),g=n(26099),_=n(38058);e.exports=new i({Extends:o,initialize:function(e){o.call(this),this.game=e,this.canvas,this.canvasBounds=new p,this.parent=null,this.parentIsWindow=!1,this.parentSize=new m,this.gameSize=new m,this.baseSize=new m,this.displaySize=new m,this.scaleMode=r.SCALE_MODE.NONE,this.zoom=1,this._resetZoom=!1,this.displayScale=new g(1,1),this.autoRound=!1,this.autoCenter=r.CENTER.NO_CENTER,this.orientation=r.ORIENTATION.LANDSCAPE,this.fullscreen,this.fullscreenTarget=null,this._createdFullscreenTarget=!1,this.dirty=!1,this.resizeInterval=500,this._lastCheck=0,this._checkOrientation=!1,this.domlisteners={orientationChange:f,windowResize:f,fullScreenChange:f,fullScreenError:f}},preBoot:function(){this.parseConfig(this.game.config),this.game.events.once(c.BOOT,this.boot,this)},boot:function(){var e=this.game;this.canvas=e.canvas,this.fullscreen=e.device.fullscreen;var t=this.scaleMode;t!==r.SCALE_MODE.RESIZE&&t!==r.SCALE_MODE.EXPAND&&this.displaySize.setAspectMode(t),t===r.SCALE_MODE.NONE?this.resize(this.width,this.height):(this.getParentBounds(),this.parentSize.width>0&&this.parentSize.height>0&&this.displaySize.setParent(this.parentSize),this.refresh()),e.events.on(c.PRE_STEP,this.step,this),e.events.once(c.READY,this.refresh,this),e.events.once(c.DESTROY,this.destroy,this),this.startListeners()},parseConfig:function(e){this.getParent(e),this.getParentBounds();var t=e.width,n=e.height,i=e.scaleMode,a=e.zoom,o=e.autoRound;if(typeof t==`string`){if(t.substr(-1)!==`%`)t=parseInt(t,10);else{var s=this.parentSize.width;s===0&&(s=window.innerWidth);var c=parseInt(t,10)/100;t=Math.floor(s*c)}}if(typeof n==`string`){if(n.substr(-1)!==`%`)n=parseInt(n,10);else{var l=this.parentSize.height;l===0&&(l=window.innerHeight);var u=parseInt(n,10)/100;n=Math.floor(l*u)}}this.scaleMode=i,this.autoRound=o,this.autoCenter=e.autoCenter,this.resizeInterval=e.resizeInterval,o&&(t=Math.floor(t),n=Math.floor(n)),this.gameSize.setSize(t,n),a===r.ZOOM.MAX_ZOOM&&(a=this.getMaxZoom()),this.zoom=a,a!==1&&(this._resetZoom=!0),this.baseSize.setSize(t,n),o&&(this.baseSize.width=Math.floor(this.baseSize.width),this.baseSize.height=Math.floor(this.baseSize.height)),e.minWidth>0&&this.displaySize.setMin(e.minWidth*a,e.minHeight*a),e.maxWidth>0&&this.displaySize.setMax(e.maxWidth*a,e.maxHeight*a),this.displaySize.setSize(t,n),(e.snapWidth>0||e.snapHeight>0)&&this.displaySize.setSnap(e.snapWidth,e.snapHeight),this.orientation=d(t,n)},getParent:function(e){var t=e.parent;if(t!==null){if(this.parent=u(t),this.parentIsWindow=this.parent===document.body,e.expandParent&&e.scaleMode!==r.SCALE_MODE.NONE){var n=this.parent.getBoundingClientRect();(this.parentIsWindow||n.height===0)&&(document.documentElement.style.height=`100%`,document.body.style.height=`100%`,n=this.parent.getBoundingClientRect(),!this.parentIsWindow&&n.height===0&&(this.parent.style.overflow=`hidden`,this.parent.style.width=`100%`,this.parent.style.height=`100%`))}e.fullscreenTarget&&!this.fullscreenTarget&&(this.fullscreenTarget=u(e.fullscreenTarget))}},getParentBounds:function(){if(!this.parent)return!1;var e=this.parentSize,t=this.parent.getBoundingClientRect();this.parentIsWindow&&this.game.device.os.iOS&&(t.height=l(!0));var n=t.width,r=t.height;if(e.width!==n||e.height!==r)return e.setSize(n,r),!0;if(this.canvas){var i=this.canvasBounds,a=this.canvas.getBoundingClientRect();if(a.x!==i.x||a.y!==i.y)return!0}return!1},lockOrientation:function(e){var t=screen.lockOrientation||screen.mozLockOrientation||screen.msLockOrientation;return t?t.call(screen,e):!1},setParentSize:function(e,t){return this.parentSize.setSize(e,t),this.refresh()},setGameSize:function(e,t){var n=this.autoRound;n&&(e=Math.floor(e),t=Math.floor(t));var r=this.width,i=this.height;return this.gameSize.resize(e,t),this.baseSize.resize(e,t),n&&(this.baseSize.width=Math.floor(this.baseSize.width),this.baseSize.height=Math.floor(this.baseSize.height)),this.displaySize.setAspectRatio(e/t),this.canvas.width=this.baseSize.width,this.canvas.height=this.baseSize.height,this.refresh(r,i)},resize:function(e,t){var n=this.zoom,r=this.autoRound;r&&(e=Math.floor(e),t=Math.floor(t));var i=this.width,a=this.height;this.gameSize.resize(e,t),this.baseSize.resize(e,t),r&&(this.baseSize.width=Math.floor(this.baseSize.width),this.baseSize.height=Math.floor(this.baseSize.height)),this.displaySize.setSize(e*n,t*n),this.canvas.width=this.baseSize.width,this.canvas.height=this.baseSize.height;var o=this.canvas.style,s=e*n,c=t*n;return r&&(s=Math.floor(s),c=Math.floor(c)),(s!==e||c!==t)&&(o.width=s+`px`,o.height=c+`px`),this.refresh(i,a)},setZoom:function(e){return this.zoom=e,this._resetZoom=!0,this.refresh()},setMaxZoom:function(){return this.zoom=this.getMaxZoom(),this._resetZoom=!0,this.refresh()},setSnap:function(e,t){return e===void 0&&(e=0),t===void 0&&(t=e),this.displaySize.setSnap(e,t),this.refresh()},refresh:function(e,t){e===void 0&&(e=this.width),t===void 0&&(t=this.height),this.updateScale(),this.updateBounds(),this.updateOrientation(),this.displayScale.set(this.baseSize.width/this.canvasBounds.width,this.baseSize.height/this.canvasBounds.height);var n=this.game.domContainer;if(n){this.baseSize.setCSS(n);var r=this.canvas.style,i=n.style;i.transform=`scale(`+this.displaySize.width/this.baseSize.width+`,`+this.displaySize.height/this.baseSize.height+`)`,i.marginLeft=r.marginLeft,i.marginTop=r.marginTop}return this.emit(s.RESIZE,this.gameSize,this.baseSize,this.displaySize,e,t),this},updateOrientation:function(){if(this._checkOrientation){this._checkOrientation=!1;var e=d(this.width,this.height);e!==this.orientation&&(this.orientation=e,this.emit(s.ORIENTATION_CHANGE,e))}},updateScale:function(){var e=this.canvas.style,t=this.gameSize.width,n=this.gameSize.height,i,o,s=this.zoom,c=this.autoRound;if(this.scaleMode===r.SCALE_MODE.NONE)this.displaySize.setSize(t*s,n*s),i=this.displaySize.width,o=this.displaySize.height,c&&(i=Math.floor(i),o=Math.floor(o)),this._resetZoom&&=(e.width=i+`px`,e.height=o+`px`,!1);else if(this.scaleMode===r.SCALE_MODE.RESIZE)this.displaySize.setSize(this.parentSize.width,this.parentSize.height),this.gameSize.setSize(this.displaySize.width,this.displaySize.height),this.baseSize.setSize(this.displaySize.width,this.displaySize.height),i=this.displaySize.width,o=this.displaySize.height,c&&(i=Math.floor(i),o=Math.floor(o)),this.canvas.width=i,this.canvas.height=o;else if(this.scaleMode===r.SCALE_MODE.EXPAND){var l=this.game.config.width,u=this.game.config.height,d=this.parentSize.width,f=this.parentSize.height,p=d/l,m=f/u,h,g;p<m?(h=l,g=p===0?u:f/p):(h=m===0?l:d/m,g=u);var _=a(h,this.displaySize.minWidth,this.displaySize.maxWidth),v=a(g,this.displaySize.minHeight,this.displaySize.maxHeight);this.baseSize.setSize(_,v),this.gameSize.setSize(_,v),c&&(_=Math.floor(_),v=Math.floor(v)),this.canvas.width=_,this.canvas.height=v;var y=_/h*d,b=v/g*f;this.displaySize.setSize(y,b),i=this.displaySize.width,o=this.displaySize.height,c&&(i=Math.floor(i),o=Math.floor(o)),e.width=i+`px`,e.height=o+`px`}else this.displaySize.setSize(this.parentSize.width,this.parentSize.height),i=this.displaySize.width,o=this.displaySize.height,c&&(i=Math.floor(i),o=Math.floor(o)),e.width=i+`px`,e.height=o+`px`;this.getParentBounds(),this.updateCenter()},getMaxZoom:function(){var e=h(this.parentSize.width,this.gameSize.width,0,!0),t=h(this.parentSize.height,this.gameSize.height,0,!0);return Math.max(Math.min(e,t),1)},updateCenter:function(){var e=this.autoCenter;if(e!==r.CENTER.NO_CENTER){var t=this.canvas,n=t.style,i=t.getBoundingClientRect(),a=i.width,o=i.height,s=Math.floor((this.parentSize.width-a)/2),c=Math.floor((this.parentSize.height-o)/2);e===r.CENTER.CENTER_HORIZONTALLY?c=0:e===r.CENTER.CENTER_VERTICALLY&&(s=0),n.marginLeft=s+`px`,n.marginTop=c+`px`}},updateBounds:function(){var e=this.canvasBounds,t=this.canvas.getBoundingClientRect();e.x=t.left+(window.pageXOffset||0)-(document.documentElement.clientLeft||0),e.y=t.top+(window.pageYOffset||0)-(document.documentElement.clientTop||0),e.width=t.width,e.height=t.height},transformX:function(e){return(e-this.canvasBounds.left)*this.displayScale.x},transformY:function(e){return(e-this.canvasBounds.top)*this.displayScale.y},startFullscreen:function(e){e===void 0&&(e={navigationUI:`hide`});var t=this.fullscreen;if(!t.available)this.emit(s.FULLSCREEN_UNSUPPORTED);else if(!t.active){var n=this.getFullscreenTarget();t.keyboard?n[t.request](Element.ALLOW_KEYBOARD_INPUT):n[t.request](e)}},fullscreenSuccessHandler:function(){this.getParentBounds(),this.refresh(),this.emit(s.ENTER_FULLSCREEN)},fullscreenErrorHandler:function(e){this.removeFullscreenTarget(),this.emit(s.FULLSCREEN_FAILED,e)},getFullscreenTarget:function(){if(!this.fullscreenTarget){var e=document.createElement(`div`);e.style.margin=`0`,e.style.padding=`0`,e.style.width=`100%`,e.style.height=`100%`,this.fullscreenTarget=e,this._createdFullscreenTarget=!0}return this._createdFullscreenTarget&&(this.canvas.parentNode.insertBefore(this.fullscreenTarget,this.canvas),this.fullscreenTarget.appendChild(this.canvas)),this.fullscreenTarget},removeFullscreenTarget:function(){if(this._createdFullscreenTarget){var e=this.fullscreenTarget;if(e&&e.parentNode){var t=e.parentNode;t.insertBefore(this.canvas,e),t.removeChild(e)}}},stopFullscreen:function(){var e=this.fullscreen;if(!e.available)return this.emit(s.FULLSCREEN_UNSUPPORTED),!1;e.active&&document[e.cancel](),this.removeFullscreenTarget()},leaveFullScreenSuccessHandler:function(){this.getParentBounds(),this.emit(s.LEAVE_FULLSCREEN),this.refresh()},toggleFullscreen:function(e){this.fullscreen.active?this.stopFullscreen():this.startFullscreen(e)},startListeners:function(){var e=this,t=this.domlisteners;t.orientationChange=function(){e.updateBounds(),e._checkOrientation=!0,e.dirty=!0,e.refresh()},t.windowResize=function(){e.updateBounds(),e.dirty=!0},screen.orientation&&screen.orientation.addEventListener?screen.orientation.addEventListener(`change`,t.orientationChange,!1):window.addEventListener(`orientationchange`,t.orientationChange,!1),window.addEventListener(`resize`,t.windowResize,!1),this.fullscreen.available&&(t.fullScreenChange=function(t){return e.onFullScreenChange(t)},t.fullScreenError=function(t){return e.onFullScreenError(t)},[`webkit`,`moz`,``].forEach(function(e){document.addEventListener(e+`fullscreenchange`,t.fullScreenChange,!1),document.addEventListener(e+`fullscreenerror`,t.fullScreenError,!1)}),document.addEventListener(`MSFullscreenChange`,t.fullScreenChange,!1),document.addEventListener(`MSFullscreenError`,t.fullScreenError,!1))},onFullScreenChange:function(){document.fullscreenElement||document.webkitFullscreenElement||document.msFullscreenElement||document.mozFullScreenElement?this.fullscreenSuccessHandler():(this.stopFullscreen(),this.leaveFullScreenSuccessHandler())},onFullScreenError:function(){this.removeFullscreenTarget()},getViewPort:function(e,t){e instanceof _||(t=e,e=void 0),t===void 0&&(t=new p);var n=this.baseSize,r=this.parentSize,i=this.canvasBounds,a=this.displayScale,o=i.x>=0?0:-(i.x*a.x),s=i.y>=0?0:-(i.y*a.y),c=r.width>=i.width?n.width:n.width-(i.width-r.width)*a.x,l=r.height>=i.height?n.height:n.height-(i.height-r.height)*a.y;return t.setTo(o,s,c,l),e&&(t.width/=e.zoomX,t.height/=e.zoomY,t.centerX=e.centerX+e.scrollX,t.centerY=e.centerY+e.scrollY),t},step:function(e,t){this.parent&&(this._lastCheck+=t,(this.dirty||this._lastCheck>this.resizeInterval)&&(this.getParentBounds()&&this.refresh(),this.dirty=!1,this._lastCheck=0))},stopListeners:function(){var e=this.domlisteners;screen.orientation&&screen.orientation.addEventListener?screen.orientation.removeEventListener(`change`,e.orientationChange,!1):window.removeEventListener(`orientationchange`,e.orientationChange,!1),window.removeEventListener(`resize`,e.windowResize,!1),[`webkit`,`moz`,``].forEach(function(t){document.removeEventListener(t+`fullscreenchange`,e.fullScreenChange,!1),document.removeEventListener(t+`fullscreenerror`,e.fullScreenError,!1)}),document.removeEventListener(`MSFullscreenChange`,e.fullScreenChange,!1),document.removeEventListener(`MSFullscreenError`,e.fullScreenError,!1)},destroy:function(){this.removeAllListeners(),this.stopListeners(),this.game=null,this.canvas=null,this.canvasBounds=null,this.parent=null,this.fullscreenTarget=null,this.parentSize.destroy(),this.gameSize.destroy(),this.baseSize.destroy(),this.displaySize.destroy()},isFullscreen:{get:function(){return this.fullscreen.active}},width:{get:function(){return this.gameSize.width}},height:{get:function(){return this.gameSize.height}},isPortrait:{get:function(){return this.orientation===r.ORIENTATION.PORTRAIT}},isLandscape:{get:function(){return this.orientation===r.ORIENTATION.LANDSCAPE}},isGamePortrait:{get:function(){return this.height>this.width}},isGameLandscape:{get:function(){return this.width>this.height}}})}),64743:(e=>{e.exports={NO_CENTER:0,CENTER_BOTH:1,CENTER_HORIZONTALLY:2,CENTER_VERTICALLY:3}}),39218:(e=>{e.exports={LANDSCAPE:`landscape-primary`,LANDSCAPE_SECONDARY:`landscape-secondary`,PORTRAIT:`portrait-primary`,PORTRAIT_SECONDARY:`portrait-secondary`}}),81050:(e=>{e.exports={NONE:0,WIDTH_CONTROLS_HEIGHT:1,HEIGHT_CONTROLS_WIDTH:2,FIT:3,ENVELOP:4,RESIZE:5,EXPAND:6}}),80805:(e=>{e.exports={NO_ZOOM:1,ZOOM_2X:2,ZOOM_4X:4,MAX_ZOOM:-1}}),13560:((e,t,n)=>{e.exports={CENTER:n(64743),ORIENTATION:n(39218),SCALE_MODE:n(81050),ZOOM:n(80805)}}),56139:(e=>{e.exports=`enterfullscreen`}),2336:(e=>{e.exports=`fullscreenfailed`}),47412:(e=>{e.exports=`fullscreenunsupported`}),51452:(e=>{e.exports=`leavefullscreen`}),20666:(e=>{e.exports=`orientationchange`}),47945:(e=>{e.exports=`resize`}),97480:((e,t,n)=>{e.exports={ENTER_FULLSCREEN:n(56
