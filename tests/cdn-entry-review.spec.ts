@@ -2,7 +2,7 @@ import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 test('RW2 public CDN cold and warm entry',async({browser},info)=>{
  test.setTimeout(120000);const report:any[]=[];
- for(const [variant,origin,source] of [['production-B6','https://nuts.bid','a390b80e4488e0cde4596ba64631098c030843d4'],['candidate-C2','https://codex-cinder-shift-rw2-a1-pr.nuts-games.pages.dev','77a44fec74af3a00a0fc9e3a78b0ff2ae016759f']]){
+ for(const [variant,origin,source] of [['production-B6','https://nuts.bid','a390b80e4488e0cde4596ba64631098c030843d4'],['candidate-C3','https://codex-cinder-shift-rw2-a1-pr.nuts-games.pages.dev','c7a4b1cd519bd917bc738b581c1ce485dcd1c650']]){
   const context=await browser.newContext({viewport:{width:1280,height:844},locale:'ru-RU'}),page=await context.newPage();
   try{
    for(const cache of ['fresh-context','same-context-reload']){
