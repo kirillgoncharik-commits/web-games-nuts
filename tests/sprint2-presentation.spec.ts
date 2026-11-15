@@ -44,3 +44,11 @@ for(const width of [1280,667,390])test(`RW2 map and workshop input ${width}`,asy
  await expect.poll(async()=>(await state(page)).campaign.nodes).toEqual(['D1']);expect((await state(page)).campaign.points).toBe(0);
  await writeFile(info.outputPath('input.json'),JSON.stringify({targets,technicalLoadMs:(await state(page)).loadMs},null,2));
 });
+
+for(const [mission,room,nodes] of [['foundry','M3G',['W1','W2','W3']],['reactor','M5D',['W1','W2','W3','D1','D2']]] as const)for(const reduced of [false,true])test(`RW2 loaded combat ${mission} ${reduced?'reduced':'normal'}`,async({page},info)=>{
+ await encounter(page,{mission,room,nodes:[...nodes],reduced});await page.keyboard.down('j');
+ const frames=await page.evaluate(()=>new Promise<number[]>(resolve=>{const samples:number[]=[];let last=performance.now();function sample(now:number){samples.push(now-last);last=now;if(samples.length>=150)resolve(samples.slice(10));else requestAnimationFrame(sample);}requestAnimationFrame(sample);}));
+ await page.keyboard.up('j');const snapshot=await state(page);expect(snapshot.hp).toBeGreaterThan(0);expect(snapshot.projectiles.filter((shot:any)=>shot.team==='player').length).toBeLessThanOrEqual(64);
+ await page.screenshot({path:info.outputPath('loaded-combat.png')});const sorted=frames.slice().sort((a,b)=>a-b);
+ await writeFile(info.outputPath('measurement.json'),JSON.stringify({mission,room,reduced,nodes,scenario:'reachable-build-live-fire',p50:sorted[Math.floor(sorted.length*.5)],p95:sorted[Math.floor(sorted.length*.95)],snapshot},null,2));
+});
