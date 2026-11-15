@@ -9,30 +9,26 @@ jobs:
   presentation:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        revision: [baseline, candidate]
     steps:
       - uses: actions/checkout@v4
         with:
           path: candidate
       - uses: actions/checkout@v4
-        if: matrix.revision == 'baseline'
         with:
           ref: 38468184f63637f53b14d369c5b656e9ac36ed04
           path: baseline
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Prepare comparable source and test driver
+      - name: Prepare one shared capture driver
         run: |
-          if [ '${{ matrix.revision }}' = baseline ]; then
-            cp candidate/tests/sprint2-presentation.spec.ts baseline/tests/
-            cp candidate/playwright.sprint2.config.ts baseline/
-          fi
-      - name: Build and record presentation, lifecycle and input
-        working-directory: ${{ matrix.revision == 'baseline' && 'baseline' || 'candidate' }}
+          cp candidate/tests/sprint2-presentation.spec.ts baseline/tests/
+          cp candidate/playwright.sprint2.config.ts baseline/
+          cp candidate/scripts/report-sprint2-evidence.mjs baseline/scripts/
+      - name: Measure B6 on this runner
+        id: baseline
+        continue-on-error: true
+        working-directory: baseline
         run: |
           npm ci --ignore-scripts
           npx playwright install --with-deps chromium
@@ -40,14 +36,36 @@ jobs:
           npx playwright test --config=playwright.sprint2.config.ts --output=test-results/sprint2 --reporter=line,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/sprint2.json
-      - name: Export rendered frames and timings
+      - name: Measure candidate on the same runner
+        id: candidate
+        continue-on-error: true
+        working-directory: candidate
+        run: |
+          npm ci --ignore-scripts
+          npm run build
+          npx playwright test --config=playwright.sprint2.config.ts --output=test-results/sprint2 --reporter=line,json
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/sprint2.json
+      - name: Export B6 rendered frames and timings
         if: always()
-        working-directory: ${{ matrix.revision == 'baseline' && 'baseline' || 'candidate' }}
-        run: node ../candidate/scripts/report-sprint2-evidence.mjs
+        working-directory: baseline
+        run: node scripts/report-sprint2-evidence.mjs
+      - name: Export candidate rendered frames and timings
+        if: always()
+        working-directory: candidate
+        run: node scripts/report-sprint2-evidence.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cinder-sprint2-${{ matrix.revision }}
+          name: cinder-sprint2-baseline
+          path: baseline/test-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-sprint2-candidate
           path: |
-            ${{ matrix.revision == 'baseline' && 'baseline' || 'candidate' }}/test-results
+            candidate/test-results
             candidate/dist/cinder-shift
+      - name: Require both actual test results
+        if: always()
+        run: test '${{ steps.baseline.outcome }}' = success && test '${{ steps.candidate.outcome }}' = success
