@@ -60,3 +60,26 @@ jobs:
           for(let n=0;n<base64.length;n+=6000)console.log('CINDER_RW2_MENUS_'+String(n/6000).padStart(3,'0')+':'+base64.slice(n,n+6000));
           console.log('CINDER_RW2_MENUS_END bytes='+png.length);
           JS
+
+  public-entry:
+    if: github.ref == 'refs/heads/codex/cinder-rw2-preview-build'
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium || (sudo apt-get update && npx playwright install --with-deps chromium)
+      - name: Measure ordinary public CDN navigation
+        run: npx playwright test tests/cdn-entry-review.spec.ts --output=test-results/public-entry --reporter=line
+        env:
+          CINDER_BASE_URL: https://nuts.bid
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-rw2-public-entry
+          path: test-results/public-entry
