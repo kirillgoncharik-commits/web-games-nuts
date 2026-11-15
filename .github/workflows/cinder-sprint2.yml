@@ -40,6 +40,10 @@ jobs:
           npx playwright test --config=playwright.sprint2.config.ts --output=test-results/sprint2 --reporter=line,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/sprint2.json
+      - name: Export rendered frames and timings
+        if: always()
+        working-directory: ${{ matrix.revision == 'baseline' && 'baseline' || 'candidate' }}
+        run: node ../candidate/scripts/report-sprint2-evidence.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
