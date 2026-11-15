@@ -33,12 +33,17 @@ export function workshopBody(i:I18n,ui:Panels,d:CampaignData,selected:NodeId,sel
  const cards=research.filter(node=>!d.nodes.includes(node.id)).map(node=>{
   const insufficient=d.points<node.cost,locked=!prerequisitesMet(d.nodes,node.id);
   const visualState=locked?'locked':insufficient?'no-points':selected===node.id?'selected':'available';
-  const stateText=locked?i.t('research.requires',{nodes:node.requires.join(', ')}):i.t(insufficient?'research.insufficient':'research.available');
+  const stateText=locked?i.t('research.requires',{nodes:node.requires.map(id=>id+' / '+i.t('research.'+id+'.name')).join(', ')}):i.t(insufficient?'research.insufficient':'research.available');
   const heading=ui.button('research-'+node.id,e(node.id+' / '+i.t(node.nameKey)),()=>select(node.id),{pressed:selected===node.id,sound:'silent',html:true,className:'module-inspect'});
   const purchase=ui.button('buy-'+node.id,i.t('rework.buyModule',{cost:node.cost}),()=>buy(node.id),{kind:'secondary',disabled:locked||insufficient||busy,className:'module-purchase',label:i.t('rework.buyNamed',{name:i.t(node.nameKey),cost:node.cost})});
-  return'<article class="research-card state-'+visualState+'" data-module="'+node.id+'"><span class="module-emblem">'+researchIcon(node.icon)+moduleStateMark(visualState)+'</span><div class="module-copy"><div class="module-heading">'+heading+'</div><span class="module-kind">'+e(i.t(node.id==='M1'||node.id==='W4'?'workshop.activeType':'workshop.passiveType'))+'</span><span class="effect">'+e(i.t(node.effectKey))+'</span><span class="node-state">'+e(stateText)+'</span>'+purchase+'</div></article>';
+  return{branch:node.branch,html:'<article class="research-card state-'+visualState+'" data-module="'+node.id+'"><span class="module-emblem">'+researchIcon(node.icon)+moduleStateMark(visualState)+'</span><div class="module-copy"><div class="module-heading">'+heading+'</div><span class="module-kind">'+e(i.t(node.id==='M1'||node.id==='W4'?'workshop.activeType':'workshop.passiveType'))+'</span><span class="effect">'+e(i.t(node.effectKey))+'</span><span class="node-state">'+e(stateText)+'</span>'+purchase+'</div></article>'};
+ });
+ const branches=(['weapon','movement','defence'] as const).map(branch=>{
+  const nodes=research.filter(node=>node.branch===branch),count=nodes.filter(node=>d.nodes.includes(node.id)).length;
+  const progress=nodes.map(node=>'<li class="'+(d.nodes.includes(node.id)?'owned':'')+'"'+(d.active===node.id?' aria-current="true"':'')+'>'+e(node.id)+(d.nodes.includes(node.id)?' ✓':'')+'</li>').join('');
+  return'<section class="module-branch branch-'+branch+'"><h4>'+e(i.t('rw2.branch.'+branch))+' <small>'+count+'/4</small></h4><ol class="branch-progress" aria-label="'+e(i.t('rw2.dependencies'))+'">'+progress+'</ol><div class="research-grid">'+cards.filter(card=>card.branch===branch).map(card=>card.html).join('')+'</div></section>';
  }).join('');
- return'<div class="workshop-layout">'+heroProfile(i,d.nodes,d.active)+'<section class="module-list"><h3>'+e(i.t('workshop.modules'))+'</h3><div class="research-grid">'+cards+'</div></section><details class="installed-modules" open><summary>'+e(i.t('rework.installed',{count:d.nodes.length}))+'</summary>'+(owned?'<ul>'+owned+'</ul>':'<p class="helper">'+e(i.t('common.base'))+'</p>')+'</details><details class="workshop-technical"><summary>'+e(i.t('workshop.details'))+'</summary>'+stats(i,d.nodes,selected,false,'detail-',d.active)+'</details></div>';
+ return'<div class="workshop-layout">'+heroProfile(i,d.nodes,d.active)+'<section class="module-list"><h3>'+e(i.t('workshop.modules'))+'</h3><div class="module-branches">'+branches+'</div></section><details class="installed-modules" open><summary>'+e(i.t('rework.installed',{count:d.nodes.length}))+'</summary>'+(owned?'<ul>'+owned+'</ul>':'<p class="helper">'+e(i.t('common.base'))+'</p>')+'</details><details class="workshop-technical"><summary>'+e(i.t('workshop.details'))+'</summary>'+stats(i,d.nodes,selected,false,'detail-',d.active)+'</details></div>';
 }
 
 export function characterSlots(i:I18n){

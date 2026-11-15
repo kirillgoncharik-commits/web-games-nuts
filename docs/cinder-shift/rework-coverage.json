@@ -1,6 +1,6 @@
 {
   "milestone": "M-REWORK",
-  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_TO_M_RW4_REMAIN",
+  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_ACTIVE",
   "started_at": "2026-11-12",
   "source": "https://trello.com/c/AqZ78Mjo",
   "requirements_source": {
@@ -17,28 +17,21 @@
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
   "candidate": {
-    "build_id": "0.7.0-rw1.b6",
-    "stage": "M_RW1_ENGINEERING_COMPLETE_VERIFIED_B6",
+    "build_id": "0.7.0-rw2.a1",
+    "stage": "M_RW2_A1_PRESENTATION_VERIFICATION_PENDING",
     "published": false,
     "accepted": false,
     "verification": {
-      "build": "PASS",
-      "typecheck": "PASS",
-      "i18n": "PASS_710_EN_RU_KEYS",
-      "art_contracts": "PASS",
-      "model_tests": "PASS_105",
-      "browser_tests": "PASS_147_THREE_BROWSERS",
-      "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
-      "persistence": "PASS_8",
-      "sector_and_boss_routes": "PASS_15",
-      "reachable_build_routes": "PASS_33",
-      "purposeful_mobility_routes": "PASS_9; SEVEN_DASH_CASES_TWO_CONTROLS",
-      "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_BOTH_BOSS_PHASES_FINALE_RELOAD",
-      "legacy_full_ui_suite": "PASS_307_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
-      "physical_devices": "NOT_RUN; DEFERRED_OUTSIDE_CURRENT_GATE",
-      "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; DEFERRED_OUTSIDE_CURRENT_GATE",
-      "native_touch": "PASS_12_EXECUTIONS",
-      "visual_review": "B6_RENDERED_COMBAT_CONTACT_SHEET_AND_LIVE_ENTRY_REVIEWED; HUMAN_REVIEW_DEFERRED"
+      "build": "PASS_LOCAL",
+      "typecheck": "PASS_LOCAL",
+      "i18n": "PASS_720_EN_RU_KEYS",
+      "art_contracts": "PASS_LOCAL",
+      "model_tests": "PASS_105_LOCAL",
+      "browser_tests": "PENDING_CI; LOCAL_LISTEN_EPERM",
+      "visual_review": "PENDING_CI_EVIDENCE",
+      "human_playtests": "DEFERRED",
+      "physical_devices": "DEFERRED",
+      "subjective_audio_review": "DEFERRED"
     },
     "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
     "verification_runs": [
@@ -1092,7 +1085,8 @@
       "cloudflare": "SUCCESS",
       "cloudflare_deployment_id": "23728b9d-b285-4197-acf2-d2966204c352",
       "live_ui": "PASS B6 / a390b80 -> map -> workshop -> arrival -> sector 1 A at 6/6 HP"
-    }
+    },
+    "previous_verified_candidate": "0.7.0-rw1.b6 / a390b80"
   },
   "requirements": [
     {
@@ -2203,7 +2197,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-05.02",
@@ -2216,7 +2215,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-05.03",
@@ -2233,7 +2237,12 @@
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
       ],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-05.04",
@@ -2246,7 +2255,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-05.05",
@@ -2256,7 +2270,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-06.01",
@@ -2269,7 +2288,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-06.02",
@@ -2282,7 +2306,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "implemented",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-06.03",
@@ -2298,7 +2327,12 @@
         "docs/cinder-shift/sprint-1-b5-verification.json"
       ],
       "publication": "separate_development_preview_B5; acceptance_open",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-06.04",
@@ -2335,7 +2369,12 @@
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
       ],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-07.02",
@@ -2353,7 +2392,12 @@
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
       ],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-07.03",
@@ -2369,7 +2413,12 @@
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
       ],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-07.04",
@@ -2382,7 +2431,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-07.05",
@@ -2395,7 +2449,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.01",
@@ -2405,7 +2464,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.02",
@@ -2418,7 +2482,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.03",
@@ -2428,7 +2497,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.04",
@@ -2438,7 +2512,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.05",
@@ -2448,7 +2527,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.06",
@@ -2461,7 +2545,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-08.07",
@@ -2471,7 +2560,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.01",
@@ -2488,7 +2582,12 @@
         "Local foundation checkpoint: 44 selected model tests passed; no runtime PASS claimed"
       ],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "polish_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.02",
@@ -2501,7 +2600,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.03",
@@ -2514,7 +2618,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.04",
@@ -2532,7 +2641,12 @@
       ],
       "publication": "separate_development_preview_B5; acceptance_open",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.05",
@@ -2545,7 +2659,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-09.06",
@@ -2555,7 +2674,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-10.01",
@@ -2612,7 +2736,12 @@
       "evidence": [],
       "publication": "not_published",
       "implementation_status": "partial",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-10.03",
@@ -2666,7 +2795,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-10.05",
@@ -2676,7 +2810,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-10.06",
@@ -2686,7 +2825,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-10.07",
@@ -2716,7 +2860,12 @@
       "verification": [],
       "evidence": [],
       "publication": "not_published",
-      "sprint_owner": "M-RW2"
+      "sprint_owner": "M-RW2",
+      "sprint_2_audit": {
+        "baseline": "38468184 / B6; reuse existing mechanics and assets",
+        "action": "implement_and_verify",
+        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW"
+      }
     },
     {
       "id": "RW-11.03",

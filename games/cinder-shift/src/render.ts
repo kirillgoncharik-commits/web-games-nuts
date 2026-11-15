@@ -12,6 +12,7 @@ import {cacheInReach} from './interactions';
 import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
 import {roomLighting,signals} from './art/lighting';
 import {EnvironmentMotion} from './art/environment-motion';
+import {drawSectorArchitecture} from './art/sector-design';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
 import type {Player} from './player';
@@ -43,6 +44,7 @@ export class SceneArt{
     scene.add.rectangle(0,216,640,104,0x101827).setOrigin(0).setDepth(1);
     scene.add.tileSprite(0,216,640,104,'m03-environment','wall').setOrigin(0).setTint(light.foreground).setAlpha(.34).setDepth(1);
     const lamps=scene.add.graphics().setDepth(1.1);
+    drawSectorArchitecture(scene,room);
     for(const x of [142,492]){
       lamps.fillStyle(light.light,light.strength*.55).fillEllipse(x,232,154,104);
       lamps.fillStyle(light.light,light.strength).fillEllipse(x,220,84,60);
@@ -75,6 +77,15 @@ export class SceneArt{
   }
   cue(kind:CombatCue,point:Point,now:number,direction=1){
     this.cues.push(kind,point,now,direction);if(kind==='muzzle')this.recoilUntil=now+66;
+  }
+
+  powerConnection(attempt:MissionAttempt,point:Point,now:number){
+    this.cue('charge',point,now);
+    const def=attempt.definition();
+    const targets=(def.hazards||[]).filter(h=>h.enabled!==false).map(h=>({x:h.x+h.width/2,y:h.y}));
+    if(def.conveyor?.enabled)targets.push({x:def.conveyor.x+def.conveyor.width/2,y:def.conveyor.y});
+    if(!targets.length)targets.push({x:609,y:252});
+    for(const target of targets.slice(0,3))this.cues.connect(point,target,now);
   }
 
   clearFeedback(){this.cues.clear();this.recoilUntil=-1;}
@@ -126,7 +137,9 @@ export class SceneArt{
       M5D:[['reactor-landmark_cooling-manifold',132,236,144,70],['reactor-landmark_power-bus',456,204,152,64]],
       M5E:[['reactor-landmark_beacon-mast',184,216,76,82],['reactor-landmark_power-bus',440,202,156,66]],
     };
-    for(const [frame,x,y,w,h] of groups[room.id]||[])this.art(frame,x,y,w,h,1.5,1,'bottom',.69);
+    const family=room.sector||(['D','E','F','G'].includes(room.id)?'cargo':'airlock');
+    const fallback=family==='foundry'?'M3B':family==='archive'?'M4B':family==='reactor'?'M5C':family==='cargo'?'D':'';
+    for(const [frame,x,y,w,h] of groups[room.id]||groups[fallback]||[])this.art(frame,x,y,w,h,1.3,1,'bottom',.55);
   }
   private line(x:number,y:number,toX:number,toY:number,color:'signal-coral'|'signal-mint',thickness=1){
     const a=Math.round(toX)-Math.round(x),b=Math.round(toY)-Math.round(y);
@@ -206,10 +219,14 @@ export class SceneArt{
       else if(panel.material==='ricochet'){
         const impact=shots.shots.some(s=>s.team==='player'&&s.x>=panel.x-4&&s.x<=panel.x+panel.width+4&&s.y>=panel.y-4&&s.y<=panel.y+panel.height+4);
         this.art(`ricochet-panel_${impact?'impact':'normal'}`,panel.x+panel.width/2,panel.y+panel.height/2,panel.width+18,panel.height+18,4,1,'center');
+        this.threats.lineStyle(2,signals.shot,.9).lineBetween(panel.x,panel.y,panel.x+panel.width,panel.y);
+        for(let y=panel.y+8;y<panel.y+panel.height;y+=12)this.threats.lineStyle(1,signals.energy,.8).lineBetween(panel.x+3,y,panel.x+panel.width-3,y-4);
       }else if(panel.material==='wall'){
         const overlapping=player.x+14>=panel.x&&player.x-14<=panel.x+panel.width&&player.feet>=panel.y&&player.feet-44<=panel.y+panel.height;
         const crossing=attempt.build.wallMove&&now<player.dashUntil&&overlapping;
         this.art(`magnetic-wall_${crossing?'pass-ripple':'idle'}`,panel.x+panel.width/2,panel.y+panel.height/2,Math.max(48,panel.width+28),panel.height+16,4,1,'center',crossing?.9:1);
+        this.threats.lineStyle(2,signals.energy,.8).lineBetween(panel.x+2,panel.y,panel.x+2,panel.y+panel.height);
+        const cy=panel.y+panel.height/2;for(const dx of [-8,8])this.threats.lineBetween(panel.x+panel.width/2+dx-3,cy-4,panel.x+panel.width/2+dx+3,cy).lineBetween(panel.x+panel.width/2+dx+3,cy,panel.x+panel.width/2+dx-3,cy+4);
       }
       else if(panel.material==='phase'){
         const overlapping=player.x+14>=panel.x&&player.x-14<=panel.x+panel.width&&player.feet>=panel.y&&player.feet-44<=panel.y+panel.height;
@@ -248,12 +265,13 @@ export class SceneArt{
     for(const zone of room.safeZones||[]){const protectedPocket=zone.shielded===true;this.threats.fillStyle(0x153c3f,protectedPocket?.3:.22).fillRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?3:2,0x76dcc8,.8).strokeRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?4:3,0x76dcc8).lineBetween(zone.x,zone.y+4,zone.x,zone.y+zone.height-4);if(protectedPocket)for(let px=zone.x+10;px<zone.x+zone.width-3;px+=14)this.threats.lineStyle(1,0x76dcc8,.65).lineBetween(px,zone.y+4,px,zone.y+zone.height-4);}
     if(room.id==='B'){
       const station=this.art(`repair-station_${state.containerUsed?'used':'ready'}`,repairPosition.x,320,46,48,5);
-      if(state.containerUsed)station.setAlpha(.72);
+      if(state.containerUsed||attempt.hp>=attempt.maxHp)station.setAlpha(.62);
     }
     if(room.repair&&(room.repair.slot!=='R04'||attempt.dataUploaded)){
       const protectedSlot=(room.safeZones||[]).some(zone=>zone.slot===room.repair?.slot&&zone.shielded);
       const frame=state.repairUsed?'used':protectedSlot?'protected':'ready';
       this.art(`repair-station_${frame}`,room.repair.x,320,46,50,5);
+      if(attempt.hp>=attempt.maxHp&&!state.repairUsed)this.threats.lineStyle(2,signals.repair,.85).lineBetween(room.repair.x-7,280,room.repair.x-2,285).lineBetween(room.repair.x-2,285,room.repair.x+7,275);
     }
     if(room.cache){
       const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby&&attempt.cacheReady()?'interact':'available';
@@ -270,7 +288,7 @@ export class SceneArt{
         ?active?'press_strike':warning?'press_warning':recovering?'press_recovery':'press_safe'
         :active?'heat-emitter_active':warning?'heat-emitter_warning':recovering?'heat-emitter_recovery':'heat-emitter_cool';
       this.art(frame,hazard.x+hazard.width/2,hazard.y+hazard.height,hazard.width+18,hazard.height+14,3);
-      this.threats.fillStyle(color,active ? .30 : warning ? .17 : .035).fillRect(hazard.x,hazard.y,hazard.width,hazard.height);
+      this.threats.fillStyle(color,active ? (reducedFlashes?.13:.23) : warning ? .10 : .025).fillRect(hazard.x,hazard.y,hazard.width,hazard.height);
       this.threats.lineStyle(2,color,active ? .95 : warning ? .8 : .4).strokeRect(hazard.x,hazard.y,hazard.width,hazard.height);
       if(warning)this.sprite('warning-triangle',hazard.x+hazard.width/2,hazard.y+hazard.height/2,8);
       if(active){

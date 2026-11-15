@@ -19,6 +19,19 @@ export function researchIcon(id:NodeId,extraClass=''){
   return`<svg class="research-icon ${extraClass}" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="square" stroke-linejoin="miter" shape-rendering="crispEdges" aria-hidden="true" focusable="false">${drawings[id]}</svg>`;
 }
 
+const eventDrawings={
+ E01:'<path d="M8 16h16v32H8zM40 16h16v32H40zM24 32h16M32 8v12M27 15l5 5 5-5"/>',
+ E02:'<path d="M12 8h40v48H12zM20 8v48M44 8v48M20 20h24M20 32h24M20 44h24"/>',
+ E03:'<path d="M8 22h22v30H8zM34 22h22v30H34zM12 12h40M19 28v18M12 37h14M39 32h12M39 40h12"/>',
+ E04:'<path d="M10 48h44M18 38h28M22 38V18l10-9 4 15 8-5v19"/>',
+ E05:'<path d="M24 54V30h16v24M32 10v13M18 17l7 7M46 17l-7 7M12 31h10M42 31h10"/><circle cx="32" cy="31" r="5"/>',
+ E06:'<path d="M8 22h48v24H8zM16 46v8M48 46v8M20 14h24v8M16 30h8M40 30h8M28 38h8"/>'
+};
+export function eventIcon(id:string){
+ const drawing=eventDrawings[id as keyof typeof eventDrawings];
+ return drawing?`<svg class="event-icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" shape-rendering="crispEdges" aria-hidden="true"><title>${id}</title>${drawing}</svg>`:'';
+}
+
 export const moduleStateDrawings={
   available:'<circle cx="12" cy="12" r="7"/>',
   selected:'<path d="M3 8V3h5M16 3h5v5M21 16v5h-5M8 21H3v-5"/>',

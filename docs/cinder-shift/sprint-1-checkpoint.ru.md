@@ -164,3 +164,8 @@ Preview https://23728b9d.nuts-games.pages.dev/games/cinder-shift/, site 686ce45b
 Production CI: https://github.com/kirillgoncharik-commits/nutsbid/actions/runs/43649233697 — SUCCESS. Cloudflare Pages: `bea206b4-3e65-4d8a-ae54-938527d733ee` — SUCCESS, 22:39:55 UTC / 23:39:55 Europe/Podgorica. Deployment URL: https://bea206b4.nuts-games.pages.dev/games/cinder-shift/ .
 
 Повторный запуск UI на production **NOT RUN**: подключение к браузеру прервалось, локальная среда стала недоступна; прямое получение публичной страницы также недоступно. Успех публикации подтверждён Cloudflare check-run на точном merge SHA; это не выдаётся за новый игровой проход. Человеческая приёмка остаётся отложенной по указанию Кирилла. Инженерная сдача M-RW1 не изменена; следующий этап M-RW2.
+
+
+## Уточнение передачи M-RW2 · 15 ноября 2026
+
+Полный UX C01, карта и мастерская принадлежат M-RW2 (RW-05, RW-06, RW-07). M-RW3 получает C02/C03 и перенос готового стандарта; прежнюю неточную передачу полного UX в следующий спринт не использовать. Исторические результаты B6 сохранены. M-RW2 начат по заданию редакции 2.

@@ -1,6 +1,10 @@
 import{renderDefinition}from'../m05a/score.mjs';
 const p=(wave,start,duration,from,to,level=1)=>({wave,start,duration,from,to,level});
 export const definitions={
+ shield_absorb:{seconds:.23,priority:5,bus:'sfx',peak:.22,cue_id:'RW2_SHIELD',parts:[p('noise',0,.06,2600,500,.18),p('triangle',0,.18,880,220,.55),p('pulse',.04,.16,1320,440,.22)]},
+ repair_suit:{seconds:.38,priority:3,bus:'sfx',peak:.18,cue_id:'RW2_REPAIR',parts:[p('triangle',0,.12,330,330,.5),p('triangle',.12,.12,440,440,.5),p('triangle',.24,.14,660,660,.5)]},
+ ability_ready:{seconds:.13,priority:2,bus:'sfx',peak:.12,cue_id:'RW2_ABILITY_READY',parts:[p('triangle',0,.055,660,660,.5),p('triangle',.06,.07,990,990,.4)]},
+ boss_shutdown:{seconds:1.4,priority:6,bus:'sfx',peak:.24,cue_id:'RW2_SHUTDOWN',parts:[p('noise',0,.4,400,45,.4),p('pulse',0,.8,110,28,.5),p('triangle',.4,1,165,41,.6)]},
  module_purchase:{seconds:.72,priority:3,bus:'ui',peak:.2,cue_id:'ST_TECH_PURCHASE',parts:[p('noise',0,.06,400,150,.3),p('triangle',.04,.16,330,330,.45),p('pulse',.21,.14,494,494,.44),p('triangle',.38,.28,659,659,.52)]},
  mission_start:{seconds:1.2,priority:4,bus:'ui',peak:.24,cue_id:'ST_MISSION_START',parts:[p('triangle',0,.18,330,330,.5),p('triangle',.16,.18,440,440,.55),p('pulse',.32,.18,523,523,.45),p('triangle',.52,.62,660,660,.55),p('triangle',.52,.62,165,165,.32)]},
  mission_retry:{seconds:.9,priority:4,bus:'ui',peak:.22,parts:[p('triangle',0,.16,392,392,.5),p('triangle',.18,.16,494,494,.5),p('pulse',.38,.36,587,587,.45)]},
