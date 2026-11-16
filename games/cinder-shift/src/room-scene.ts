@@ -153,7 +153,7 @@ export class RoomScene extends Phaser.Scene{
  }
  private interact(ms:number,frame:Frame){
   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;
-  if(def.world&&saved.world&&frame.pressed.has('interact')){
+  if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){
    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);
    if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}
   }

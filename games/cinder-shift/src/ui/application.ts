@@ -483,7 +483,7 @@ export class Application{
   }
   private touchContext(a:MissionAttempt,player:Player){
     const def=a.definition(),saved=a.room(),near=(x:number,radius=36)=>Math.abs(player.x-x)<radius&&player.feet>303;
-    if(def.world&&saved.world){const action=worldContext(def.world,saved.world,{x:player.x,y:player.feet},a.clock.now,a.hp<a.maxHp);if(action)return{key:'worlds.touch.'+action,available:action!=='repair'||a.hp<a.maxHp};}
+    if(def.world&&saved.world&&!(def.terminal&&a.terminalReady()&&terminalInReach(player.x,player.feet,def.terminal))){const action=worldContext(def.world,saved.world,{x:player.x,y:player.feet},a.clock.now,a.hp<a.maxHp);if(action)return{key:'worlds.touch.'+action,available:action!=='repair'||a.hp<a.maxHp};}
     if(def.powerSwitch&&near(def.powerSwitch.x,34))return{key:'touch.power',available:true};
     if(def.relayIntel&&a.entry.relay_leg==='A'&&!a.relayIntelCollected&&near(def.relayIntel.x,repairPosition.radius))return{key:'challenge.touchIntel',available:true};
     if(def.relayRepairCache&&a.entry.relay_leg==='B'&&a.entry.relay_support==='repair'&&a.cellCollected&&!a.relayRepairUsed&&a.hp<a.maxHp&&near(def.relayRepairCache.x,def.relayRepairCache.radius))return{key:'challenge.touchRelayRepair',available:true};

@@ -30,7 +30,7 @@ async function walk(page:Page,target:number){
   previous=p.x;await page.waitForTimeout(80);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
-async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>Math.abs((window as any).__CINDER__().player.vx)<1);}
+async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
@@ -44,7 +44,7 @@ async function solveRoom(page:Page){
  await combat(page);let s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
-  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=rooms[s.room as keyof typeof rooms].world?.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y>=276&&r.y<320&&r.x<x+14&&r.x+r.width>x-14));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
+  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=rooms[s.room as keyof typeof rooms].world?.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open;});if((await state(page)).world.carry.item.state!=='held')continue;await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.carry.item.state).not.toBe('held');await page.waitForFunction(()=>(window as any).__CINDER__().world.carry.item.state!=='thrown');
  }await expect.poll(async()=>(await state(page)).world.carry.contacts.every((c:any)=>c.active)).toBe(true);}
