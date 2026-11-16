@@ -60,3 +60,13 @@ test('all authored power contacts have a standing position outside fixed and act
   for(let phase=0;phase<spec.sequence.length;phase++){world.phase=phase;const target=powerTarget(spec,world)!;const body={x:target.x-11,y:target.y-44,width:22,height:44};const solidTargets=[...room.solids.filter(r=>r.y<320),...(spec.powerObjects||[]).filter(o=>o.solidOn===spec.sequence![phase]).map(o=>o.rect)];expect(solidTargets.some(r=>body.x<r.x+r.width&&body.x+body.width>r.x&&body.y<r.y+r.height&&body.y+body.height>r.y),room.id+':phase-'+phase).toBe(false);}
  }
 });
+
+test('repair pockets have an unobstructed standing position',()=>{
+ for(const design of newCampaignRegistry.rooms){const room=rooms[design.room_id as keyof typeof rooms],p=room.world?.repair;if(!p)continue;const body={x:p.x-11,y:p.y-44,width:22,height:44};expect(room.solids.filter(r=>r.y<320).some(r=>body.x<r.x+r.width&&body.x+body.width>r.x&&body.y<r.y+r.height&&body.y+body.height>r.y),room.id).toBe(false);}
+});
+test('world storage retry recovers its own namespace and preserves the C01 record',async({page})=>{
+ await page.addInitScript(()=>{const put=IDBObjectStore.prototype.put;IDBObjectStore.prototype.put=function(value:any,key?:IDBValidKey){if((window as any).__FAIL_WORLD_WRITE__&&key==='world.c02-small-world.v1'){(window as any).__FAIL_WORLD_WRITE__=false;throw new DOMException('Injected quota fault','QuotaExceededError');}return key===undefined?put.call(this,value):put.call(this,value,key);};});
+ await startWorld(page,'c02-small-world');const worldId=(await state(page)).campaign.campaign_id;
+ const read=(key:string)=>page.evaluate(key=>new Promise<any>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onsuccess=()=>{const db=r.result,tx=db.transaction('records','readonly'),request=tx.objectStore('records').get(key);request.onsuccess=()=>{db.close();resolve(request.result);};request.onerror=()=>reject(request.error);};}),key);
+ const base=await read('campaign');await page.evaluate(()=>(window as any).__FAIL_WORLD_WRITE__=true);await page.keyboard.press('Escape');await expect.poll(async()=>(await state(page)).save.issue).toBe('write_failed');await page.getByTestId('pause-settings').click();await page.getByTestId('retry-save').click();await expect.poll(async()=>(await state(page)).save.issue).toBeNull();expect(await read('campaign')).toEqual(base);expect((await read('world.c02-small-world.v1')).campaign.campaign_id).toBe(worldId);
+});

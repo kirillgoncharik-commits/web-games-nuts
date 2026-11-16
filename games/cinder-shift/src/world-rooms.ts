@@ -20,7 +20,7 @@ type Authored={id:WorldRoomId;solids:Rect[];world:WorldRoomSpec;enemies?:EnemyDe
 const authored:Authored[]=[
  {id:'SW01-A',solids:[platform(174,226,16,52),platform(174,220,90,10),platform(332,260,72)],world:{landmark:'mug',carry:carry('lid',112,contact('drawer-lock-01',294))},cache:{x:366,y:260}},
  {id:'SW01-B',solids:[platform(150,236,112),platform(332,246,96),cover(484,32)],world:{landmark:'plates',carry:carry('lid',112,contact('rack-lock-01',552)),pulse:{x:276,width:56,cycle:5400,warning:1400,active:800}},enemies:[enemy('sw01b-scanner',430)]},
- {id:'SW01-C',solids:[platform(116,248,90),platform(250,276,72),platform(398,248,72),cover(520,32)],world:{landmark:'drawer',repair:{x:552,y:320},carry:carry('lid',340,contact('drawer-dock-01',470))}},
+ {id:'SW01-C',solids:[platform(116,248,90),platform(250,276,72),platform(398,248,72),cover(520,32)],world:{landmark:'drawer',repair:{x:572,y:320},carry:carry('lid',340,contact('drawer-dock-01',470))}},
  {id:'SW01-D',solids:[platform(132,244,92),cover(300,32,40),platform(450,244,80)],world:{landmark:'lidar',carry:carry('lid',112,contact('dock-phase-01',264,280,true),contact('dock-phase-02',408,280,true),contact('dock-phase-03',548,280,true)),pulse:{x:352,width:56,cycle:4800,warning:1400,active:700}}},
  {id:'SW02-A',solids:[cover(160,24,64),cover(272,48,64),cover(384,24,64),platform(464,240,88)],world:{landmark:'keys'},enemies:[enemy('sw02a-scanner',488)]},
  {id:'SW02-B',solids:[platform(160,276,88),platform(292,240,112),platform(448,268,80)],world:{landmark:'cable',carry:carry('spool',112,contact('cable-latch-01',536))},enemies:[enemy('sw02b-service',448)],cache:{x:344,y:240}},
