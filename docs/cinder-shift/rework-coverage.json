@@ -445,7 +445,7 @@
       "Human first-play duration and subjective art/music acceptance are not claimed.",
       "CDN measurements are one unthrottled Ubuntu browser run per origin; baseline and candidate origins differ."
     ],
-    "recovery": "Host unavailable; exact C3 source, build and evidence saved through GitHub. Compare remote before using stale local checkout.",
+    "recovery": "Remote C3 is authoritative. Local cinder-shift-sprint-2 remains at 254b542 and must not be pushed over the remote branch. Shell Git fetch failed DNS on 2026-11-16; native GitHub reads confirmed C3 and all seven main workflows succeeded. Use a fresh exact-source checkout before runtime edits.",
     "requirement_counts": {
       "VERIFIED": 59,
       "PARTIAL": 2,
@@ -1108,7 +1108,14 @@
         "revision": 2
       },
       "requirement_review": "docs/cinder-shift/sprint-2-requirement-review.json",
-      "verification_report": "docs/cinder-shift/sprint-2-verification.json"
+      "verification_report": "docs/cinder-shift/sprint-2-verification.json",
+      "revalidated_at": "2026-11-16",
+      "revalidation": {
+        "source_head": "eac92cba25f856064568493f9c2d51f85235a31c",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "main_workflows": "7/7 completed success; existing results re-read, not re-run",
+        "runtime_changed": false
+      }
     },
     "general_regression": {
       "status": "PASS",
@@ -1204,7 +1211,8 @@
           "not_run": 0
         }
       ]
-    }
+    },
+    "production_published": false
   },
   "requirements": [
     {
@@ -2433,8 +2441,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2474,8 +2485,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2518,8 +2532,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2562,8 +2579,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2603,8 +2623,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2647,8 +2670,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2690,8 +2716,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2733,8 +2762,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2798,8 +2830,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2845,8 +2880,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2891,8 +2929,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -2934,8 +2975,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -2977,8 +3021,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "PARTIALLY_VERIFIED; MULTILINGUAL_RTL_DEFERRED_M_RW4",
       "current_engineering_evidence": {
@@ -3018,8 +3065,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3063,8 +3113,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3105,8 +3158,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3146,8 +3202,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3190,8 +3249,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3235,8 +3297,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3279,8 +3344,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3325,8 +3393,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "polish_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3368,8 +3439,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3411,8 +3485,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3458,8 +3535,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3502,8 +3582,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3545,8 +3628,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3635,8 +3721,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "verification_status": "VERIFIED_ENGINEERING_C3",
       "current_engineering_evidence": {
@@ -3726,8 +3815,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3769,8 +3861,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
@@ -3813,8 +3908,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "IMPLEMENTED; FINAL_COMBINED_AUDIT_OPEN_M_RW4",
       "verification_status": "PARTIALLY_VERIFIED; FINAL_FLASH_PHYSICAL_AUDIT_M_RW4",
@@ -3876,8 +3974,11 @@
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
         "action": "implement_and_verify",
-        "gate": "PENDING_EXACT_CANDIDATE_CI_AND_VISUAL_REVIEW",
-        "current_checkpoint": "A1: connected art/UX/audio pass; full requirement gate stays open"
+        "gate": "VERIFIED_ENGINEERING_C3",
+        "current_checkpoint": "C3: exact-source CI and rendered review complete; cross-sprint subscopes remain with M-RW4",
+        "evidence": "docs/cinder-shift/sprint-2-requirement-review.json",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "reviewed_at": "2026-11-16"
       },
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_C3",
