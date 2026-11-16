@@ -1,4 +1,4 @@
-import {actWorld,stepWorld,worldCanFire,worldPulse,worldReady} from './session/world-runtime';
+import {actWorld,stepWorld,stepWorldEnvironment,worldCanFire,worldPulse,worldReady} from './session/world-runtime';
 import {WorldArt} from './art/world-art';
 import Phaser from 'phaser';
 import config from '../game.config.json' with {type:'json'};
@@ -61,7 +61,8 @@ export class RoomScene extends Phaser.Scene{
  private readyTerminal(){return this.attempt.terminalReady();}
  private removeSolid(id:string){this.solidRemovers.get(id)?.();this.solidRemovers.delete(id);}
  private step(ms:number,frame:Frame){
-  const attempt=this.attempt,now=attempt.clock.now,def=attempt.definition(),saved=attempt.room();attempt.activeMs+=ms;
+  const attempt=this.attempt,now=attempt.clock.now,saved=attempt.room();let def=attempt.definition();attempt.activeMs+=ms;
+  if(def.world&&saved.world){const pressed=saved.world.keyboard?.pressed;if(stepWorldEnvironment(def.world,saved.world,this.player.rect(),this.player.feet,now)){this.rebuildWorldSolids();def=attempt.definition();}if(!pressed&&saved.world.keyboard?.pressed)this.hooks.effects.play('power_restore');}
 
   const oldVy=this.player.body.velocity.y,wasDashing=now<this.player.dashUntil;
   this.player.step(frame,now,ms,def.solids,attempt.mode==='training'||attempt.build.active==='M1',attempt.build.airDash);

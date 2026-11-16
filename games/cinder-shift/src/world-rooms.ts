@@ -1,6 +1,7 @@
 import type {RoomDefinition,Rect,Point,EnemyDefinition,HazardDefinition} from './room-data';
 import type {CarryKind,PowerObject,Circuit} from './session/world-mechanics';
 import type {WorldRoomId,WorldMissionId} from './session/new-campaign-content';
+import type {KeyboardSpec} from './session/world-environment';
 
 /** Authored collision/action data; the design registry keeps the matching intent and acceptance. */
 export type WorldRoomSpec={
@@ -8,6 +9,7 @@ export type WorldRoomSpec={
  switches?:Point[];powerObjects?:PowerObject[];sequence?:Circuit[];sequenceTargets?:Point[];
  pulse?:{x:number;width:number;cycle:number;warning:number;active:number};
  repair?:Point;landmark:string;wind?:number;
+ keyboard?:KeyboardSpec;
 };
 const floor:Rect={x:0,y:320,width:640,height:40};
 const platform=(x:number,y:number,width:number,height=12):Rect=>({x,y,width,height});
@@ -22,7 +24,7 @@ const authored:Authored[]=[
  {id:'SW01-B',solids:[platform(150,236,112),platform(332,246,96),cover(484,32)],world:{landmark:'plates',carry:carry('lid',112,contact('rack-lock-01',552)),pulse:{x:276,width:56,cycle:5400,warning:1400,active:800}},enemies:[enemy('sw01b-scanner',430)]},
  {id:'SW01-C',solids:[platform(116,248,90),platform(250,276,72),platform(398,248,72),cover(520,32)],world:{landmark:'drawer',repair:{x:572,y:320},carry:carry('lid',340,contact('drawer-dock-01',470))}},
  {id:'SW01-D',solids:[platform(132,244,92),cover(300,32,40),platform(450,244,80)],world:{landmark:'lidar',carry:carry('lid',112,contact('dock-phase-01',264,280,true),contact('dock-phase-02',408,280,true),contact('dock-phase-03',548,280,true)),pulse:{x:352,width:56,cycle:4800,warning:1400,active:700}}},
- {id:'SW02-A',solids:[cover(160,24,64),cover(272,48,64),cover(384,24,64),platform(464,240,88)],world:{landmark:'keys'},enemies:[enemy('sw02a-scanner',488)]},
+ {id:'SW02-A',solids:[cover(384,24,64),platform(464,240,88)],world:{landmark:'keys',keyboard:{id:'c02-small-world:SW02-A:key-pair-01',trigger:cover(160,24,64),target:cover(272,48,64),travel:16,returnDelayMs:1800}},enemies:[enemy('sw02a-scanner',488)]},
  {id:'SW02-B',solids:[platform(160,276,88),platform(292,240,112),platform(448,268,80)],world:{landmark:'cable',carry:carry('spool',112,contact('cable-latch-01',536))},enemies:[enemy('sw02b-service',448)],cache:{x:344,y:240}},
  {id:'SW02-C',solids:[platform(132,276,88),platform(276,244,88),platform(420,276,100)],world:{landmark:'printer',pulse:{x:244,width:40,cycle:5000,warning:1600,active:700}}},
  {id:'SW02-D',solids:[cover(152,32,40),platform(256,252,88),cover(432,32,48)],world:{landmark:'desktop-node',carry:carry('block',112,contact('desktop-line-01',380),contact('desktop-line-02',548))},enemies:[enemy('sw02d-turret',504,'turret')]},

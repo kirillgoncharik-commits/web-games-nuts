@@ -1,14 +1,16 @@
 import type {WorldRoomSpec} from '../world-rooms';
 import type {Point,Rect} from '../room-data';
 import {createCarryRoom,createPowerRoom,carryAction,canPickUp,canFire,stepCarry,settleCarry,switchCircuit,circuitSolids,absorbLidHit,resetMandatoryItem,type CarryRoom,type PowerRoom} from './world-mechanics';
-export type WorldRoomState={carry?:CarryRoom;power?:PowerRoom;phase:number;repaired:boolean;ledger:string[]};
+import {createKeyboardState,keyboardSolids,stepKeyboard,type KeyboardState} from './world-environment';
+export type WorldRoomState={carry?:CarryRoom;power?:PowerRoom;keyboard?:KeyboardState;phase:number;repaired:boolean;ledger:string[]};
 export function createWorldState(id:string,spec:WorldRoomSpec):WorldRoomState{
- return{phase:0,repaired:false,ledger:[],carry:spec.carry?createCarryRoom(id,spec.carry.kind,spec.carry.spawn,spec.carry.contacts.map(c=>({...c,active:false,open:!c.window}))):undefined,power:spec.powerObjects?createPowerRoom(spec.powerObjects):undefined};
+ return{phase:0,repaired:false,ledger:[],carry:spec.carry?createCarryRoom(id,spec.carry.kind,spec.carry.spawn,spec.carry.contacts.map(c=>({...c,active:false,open:!c.window}))):undefined,power:spec.powerObjects?createPowerRoom(spec.powerObjects):undefined,keyboard:spec.keyboard?createKeyboardState():undefined};
 }
 export function worldPulse(spec:WorldRoomSpec,now:number){const p=spec.pulse;if(!p)return'safe' as const;const phase=now%p.cycle;return phase<p.warning?'warning' as const:phase<p.warning+p.active?'active' as const:'safe' as const;}
 export function powerTarget(spec:WorldRoomSpec,state:WorldRoomState):Point|null{const seq=spec.sequence;if(!seq||state.phase>=seq.length)return null;if(spec.sequenceTargets?.[state.phase])return{...spec.sequenceTargets[state.phase]};return{x:seq.length===1?552:seq.length===2?(state.phase===0?300:552):[264,408,552][state.phase],y:320};}
 export function worldReady(spec:WorldRoomSpec,state:WorldRoomState){return (!state.carry||state.carry.contacts.every(c=>c.active))&&(!spec.sequence||state.phase>=spec.sequence.length);}
-export function worldSolids(spec:WorldRoomSpec,state:WorldRoomState){return state.power?circuitSolids(state.power):[];}
+export function worldSolids(spec:WorldRoomSpec,state:WorldRoomState){return [...(state.power?circuitSolids(state.power):[]),...(spec.keyboard&&state.keyboard?keyboardSolids(spec.keyboard,state.keyboard):[])];}
+export function stepWorldEnvironment(spec:WorldRoomSpec,state:WorldRoomState,body:Rect,feet:number,now:number){return Boolean(spec.keyboard&&state.keyboard&&stepKeyboard(spec.keyboard,state.keyboard,body,feet,now));}
 export function worldContext(spec:WorldRoomSpec,state:WorldRoomState,player:Point,now:number,allowRepair=true):'pickup'|'throw'|'switch'|'activate'|'repair'|null{
  if(state.carry&&(state.carry.item.state==='held'||canPickUp(state.carry,{x:player.x,y:player.y-28})))return state.carry.item.state==='held'?'throw':'pickup';
  const target=powerTarget(spec,state);if(target&&Math.abs(player.x-target.x)<32&&Math.abs(player.y-target.y)<30&&state.power?.circuit===spec.sequence?.[state.phase]&&worldPulse(spec,now)==='safe')return'activate';

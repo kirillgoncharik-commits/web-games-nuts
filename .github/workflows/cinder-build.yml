@@ -24,7 +24,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build
       - name: Verify reported Cargo turret encounters
-        run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/cargo-turrets.spec.ts --output=test-results/cargo-turrets
+        run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/cargo-turrets.spec.ts tests/world-environment.spec.ts --output=test-results/cargo-turrets
       - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium --output=test-results/sprint3
       - run: npx playwright test --config=playwright.final.config.ts --project=chromium tests/final-worlds.spec.ts --output=test-results/final-worlds
       - uses: actions/upload-artifact@v4

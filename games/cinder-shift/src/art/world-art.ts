@@ -3,6 +3,7 @@ import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
 import {powerTarget,worldReady,worldPulse} from '../session/world-runtime';
+import {keyboardSolids,keyboardPhase} from '../session/world-environment';
 
 const palettes={
  SW01:[0x382932,0xc98551,0xf2d39b,0x6a5264],SW02:[0x242f42,0x526887,0xf0c577,0x85929c],SW03:[0x344753,0x8f9cac,0xd5c9bd,0x7470a0],SW04:[0x294747,0xa56347,0xc7c98b,0x628d6e],SW05:[0x282d4a,0x715166,0xf2c97b,0x827b9c],
@@ -11,6 +12,7 @@ const palettes={
 /** Original pixel geometry, with gameplay surfaces drawn from the actual colliders. */
 export class WorldArt{
  private ink:Phaser.GameObjects.Graphics;private environment:Phaser.GameObjects.Graphics;private labels:Phaser.GameObjects.Text[]=[];
+ private keyLabels:Phaser.GameObjects.Text[]=[];
  constructor(private scene:Phaser.Scene,private room:RoomDefinition){
   const mission=room.id.slice(0,4) as keyof typeof palettes,p=palettes[mission],home=mission.startsWith('SW');
   const g=scene.add.graphics().setDepth(1.25),landmark=room.world!.landmark;
@@ -65,12 +67,27 @@ export class WorldArt{
   }
   // Visible lip/material at every real collision surface, including the safe lower route.
   const materials=scene.add.graphics().setDepth(2.2);
-  for(const s of room.solids){materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
+  for(const s of room.solids){if(s.id?.startsWith('world-key:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
   this.ink=scene.add.graphics().setDepth(6.5);this.environment=scene.add.graphics().setDepth(3.2);
   if(room.world?.switches)for(const point of room.world.switches)this.labels.push(scene.add.text(point.x,point.y-62,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae',backgroundColor:'#172533'}).setOrigin(.5).setDepth(6.6));
+  if(room.world?.keyboard)for(const text of ['I','II'])this.keyLabels.push(scene.add.text(0,0,text,{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae'}).setOrigin(.5,0).setDepth(3.3));
  }
  render(player:Player,a:MissionAttempt,state:RoomState,reduced:boolean){
   const spec=this.room.world!,world=state.world!,g=this.ink,h=this.environment,now=a.clock.now;g.clear();h.clear();
+  if(spec.keyboard&&world.keyboard){
+   const keys=keyboardSolids(spec.keyboard,world.keyboard),phase=keyboardPhase(world.keyboard,now);
+   for(const [i,k]of keys.entries()){
+    const down=i===0?world.keyboard.pressed:world.keyboard.lowered,c=down?0xf0c577:0xa1acbc;
+    h.fillStyle(0x283344).fillRect(k.x,k.y,k.width,k.height);h.fillStyle(down?0x6f6b62:0x526887).fillRect(k.x+3,k.y+3,k.width-6,Math.min(18,k.height-3));
+    h.lineStyle(2,c,.9).lineBetween(k.x+2,k.y+1,k.x+k.width-2,k.y+1);h.lineStyle(1,0x172331).lineBetween(k.x+5,k.y+5,k.x+k.width-5,k.y+5);
+    this.keyLabels[i].setPosition(k.x+k.width/2,k.y+6);
+   }
+   const [a,b]=keys,ax=a.x+a.width/2,bx=b.x+b.width/2;
+   h.lineStyle(2,world.keyboard.lowered?0xf0c577:0x65758b,.7).lineBetween(ax,334,bx,334).lineBetween(ax,320,ax,334).lineBetween(bx,320,bx,334);
+   h.lineBetween(bx-5,329,bx,334).lineBetween(bx-5,339,bx,334);
+   if(world.keyboard.lowered){const width=48*Math.max(0,Math.min(1,(world.keyboard.releaseAt-now)/spec.keyboard.returnDelayMs));h.fillStyle(0xf0c577,.7).fillRect(bx-24,b.y+24,width,3);}
+   if(phase==='returning')h.lineStyle(2,0xf0c577,.9).lineBetween(bx-6,b.y-8,bx,b.y-14).lineBetween(bx,b.y-14,bx+6,b.y-8);
+  }
   if(spec.wind){const drift=reduced?0:(now/60)%24;h.lineStyle(1,0xd9e3c4,.18);for(let n=0;n<5;n++)h.lineBetween(48+n*128+drift*spec.wind,116+n%3*28,76+n*128+drift*spec.wind,116+n%3*28);}
   const pulse=worldPulse(spec,now),p=spec.pulse;if(p){h.fillStyle(pulse==='active'?0xff985f:0xffc67a,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(p.x,274,p.width,46);h.lineStyle(2,pulse==='active'?0xff985f:0xe7bb77,pulse==='safe'?.22:.8).strokeRect(p.x,274,p.width,46);if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}}
   if(world.carry){const carry=world.carry,item=carry.item;for(const c of carry.contacts){g.fillStyle(0x132532).fillRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);g.lineStyle(c.open?3:2,c.active?0x8ddab2:c.open?0xf3ce8e:0x797d94).strokeRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);if(c.active){g.lineBetween(c.rect.x+4,c.rect.y+14,c.rect.x+10,c.rect.y+21);g.lineBetween(c.rect.x+10,c.rect.y+21,c.rect.x+20,c.rect.y+6);}else if(c.open)g.fillStyle(0xf3ce8e).fillRect(c.rect.x+8,c.rect.y+8,8,12);else g.lineBetween(c.rect.x+4,c.rect.y+4,c.rect.x+20,c.rect.y+24);}

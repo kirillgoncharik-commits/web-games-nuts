@@ -2,19 +2,20 @@ import {test,expect,type Page} from '@playwright/test';
 import {state} from './helpers';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
+import packageInfo from '../package.json' with {type:'json'};
 async function db(page:Page,action:'get'|'put'|'delete',key:string,value?:unknown){return page.evaluate(({action,key,value})=>new Promise<any>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onsuccess=()=>{const database=r.result,tx=database.transaction('records',action==='get'?'readonly':'readwrite'),store=tx.objectStore('records');const request=action==='get'?store.get(key):action==='delete'?store.delete(key):store.put(value,key);let result:any;request.onsuccess=()=>result=request.result;tx.oncomplete=()=>{database.close();resolve(result);};tx.onabort=()=>reject(tx.error);};r.onerror=()=>reject(r.error);}),{action,key,value});}
-async function ready(page:Page){await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();expect((await state(page)).build).toBe('0.8.0-alpha.2');}
+async function ready(page:Page){await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();expect((await state(page)).build).toBe(packageInfo.version);}
 test('fresh entry has no update modal; embedded and artifact metadata match',async({page})=>{
  await ready(page);expect((await state(page)).screen).toBe('menu');expect((await state(page)).releaseNotesPending).toBe(false);
  const manifest=await page.request.get('/games/cinder-shift/build-manifest.json').then(r=>r.json()),running=(await state(page)).buildMetadata;
  for(const key of ['version','release_id','source_sha','build_id','built_at_utc','channel','notes_id'])expect(running[key]).toBe(manifest[key]);
- await expect(page.locator('#build-label')).toContainText('v0.8.0-alpha.2 · rev');expect((await db(page,'get','release-notes.v1')).acknowledged_release).toBeNull();
+ await expect(page.locator('#build-label')).toContainText(`v${packageInfo.version} · rev`);expect((await db(page,'get','release-notes.v1')).acknowledged_release).toBeNull();
 });
 test('legacy profile sees one update, preserves its campaign and acknowledges only on close',async({page})=>{
  await ready(page);await page.getByTestId('new-shift').click();await expect(page.getByTestId('map-prepare')).toBeVisible();const campaign=(await state(page)).campaign;
  await expect.poll(async()=>(await db(page,'get','campaign'))?.campaign?.campaign_id).toBe(campaign.campaign_id);await db(page,'delete','release-notes.v1');await page.reload();
  await expect(page.getByTestId('notes-close')).toBeVisible();expect((await state(page)).campaign).toEqual(campaign);expect(await db(page,'get','release-notes.v1')).toBeUndefined();
- await page.keyboard.press('Escape');await expect(page.getByTestId('continue')).toBeVisible();await expect.poll(async()=>(await db(page,'get','release-notes.v1'))?.acknowledged_release).toBe('0.8.0-alpha.2');
+ await page.keyboard.press('Escape');await expect(page.getByTestId('continue')).toBeVisible();await expect.poll(async()=>(await db(page,'get','release-notes.v1'))?.acknowledged_release).toBe(packageInfo.version);
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();expect((await state(page)).screen).toBe('menu');expect((await state(page)).campaign).toEqual(campaign);
 });
 test('manual notes return keyboard focus and language changes do not re-open acknowledged notes',async({page})=>{
