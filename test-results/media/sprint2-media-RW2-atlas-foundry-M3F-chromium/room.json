@@ -1,0 +1,576 @@
+{
+  "mission": "foundry",
+  "room": "M3F",
+  "fixture": "one_room_entry_only_then_trusted_input",
+  "audio": {
+    "mimeType": "video/webm;codecs=vp8,opus",
+    "peakRms": 0.02315163842326,
+    "samples": 133,
+    "audioTracks": 1,
+    "width": 640,
+    "height": 360,
+    "bytes": 105872
+  },
+  "snapshot": {
+    "activeWorld": "r01",
+    "worldProgress": {
+      "r01": null,
+      "c02-small-world": null,
+      "c03-adriatic-1986": null
+    },
+    "baseCampaignCompleted": false,
+    "completionProfileValid": true,
+    "buildMetadata": {
+      "version": "0.8.0-alpha.2",
+      "release_id": "0.8.0-alpha.2",
+      "milestone": "M-RW3",
+      "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+      "source_dirty": false,
+      "build_id": "verify.43870469589.a1",
+      "built_at_utc": "2026-11-16T12:53:08.551Z",
+      "channel": "verification",
+      "notes_id": "0.8.0-alpha.2"
+    },
+    "releaseNotesPending": false,
+    "build": "0.8.0-alpha.2",
+    "sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+    "target": "web",
+    "platform": {
+      "target": "web",
+      "integrationStatus": "local_candidate",
+      "adsEnabled": false,
+      "nativeSdkLoaded": false
+    },
+    "state": "playing",
+    "screen": null,
+    "device": "keyboard",
+    "locale": "ru",
+    "mode": "mission",
+    "challengeResult": null,
+    "relayLeg": null,
+    "relaySupport": "none",
+    "relayIntelCollected": false,
+    "relayRepairUsed": false,
+    "relayReceipt": null,
+    "activeScenes": [
+      "Room"
+    ],
+    "world": null,
+    "worldPulse": null,
+    "player": {
+      "x": 115.83333333333341,
+      "y": 298,
+      "vx": 0,
+      "vy": 0,
+      "facing": 1,
+      "animation_id": "idle",
+      "crouching": false,
+      "dashReady": 0,
+      "chargeReady": 0
+    },
+    "missionId": "foundry",
+    "targetHp": 0,
+    "combatRemaining": 1,
+    "exitOpen": false,
+    "powered": false,
+    "room": "M3F",
+    "hp": 6,
+    "maxHp": 6,
+    "feedback": {
+      "damageAlpha": 0,
+      "shieldAlpha": 0,
+      "repairAlpha": 0,
+      "offsetX": 0,
+      "offsetY": 0
+    },
+    "critical": false,
+    "score": 0,
+    "loadout": {
+      "nodes": [],
+      "maxHp": 6,
+      "spread": false,
+      "piercing": false,
+      "ricochet": false,
+      "chargedShot": false,
+      "dash": false,
+      "airDash": false,
+      "wallMove": false,
+      "phaseDash": false,
+      "buffer": false,
+      "shieldClear": false,
+      "deathSave": false,
+      "active": null
+    },
+    "eventPlan": [],
+    "containerUsed": false,
+    "bufferUsed": false,
+    "cellCollected": false,
+    "cellInstalled": false,
+    "reactorCircuit": "isolation",
+    "reactorRerouted": false,
+    "cargoCircuit": "security",
+    "cargoRerouted": false,
+    "conveyor": null,
+    "archiveCarrierCollected": false,
+    "archiveUploadPowered": false,
+    "enemyTelegraphScale": 1,
+    "dataCarrier": null,
+    "dataUploaded": false,
+    "scoutedArchive": false,
+    "s05Accepted": false,
+    "e06Rewarded": false,
+    "d4Used": false,
+    "bossHp": 32,
+    "boss": {
+      "hp": 32,
+      "elapsedMs": 0,
+      "phaseTwoAt": null,
+      "aimX": 192,
+      "windowDamage": 0,
+      "pattern": {
+        "rects": [
+          {
+            "x": 168,
+            "y": 40,
+            "width": 48,
+            "height": 280
+          }
+        ],
+        "moving": false,
+        "cycle": 0,
+        "warningId": "lanes:0:0",
+        "overloaded": false,
+        "stage": "lanes",
+        "phase": "warning"
+      }
+    },
+    "bossHitboxes": null,
+    "powerCircuit": "press",
+    "hazards": [],
+    "solids": [
+      {
+        "x": 0,
+        "y": 320,
+        "width": 640,
+        "height": 40
+      },
+      {
+        "x": 192,
+        "y": 288,
+        "width": 48,
+        "height": 32
+      },
+      {
+        "x": 328,
+        "y": 256,
+        "width": 80,
+        "height": 16
+      }
+    ],
+    "foundryRoute": null,
+    "objective": false,
+    "attemptId": "b69dc1de-f62e-479a-b0a5-cf682f13558c",
+    "activeSeconds": 2.183333333333336,
+    "holdMs": 0,
+    "projectiles": [],
+    "enemies": [
+      {
+        "id": "m3f-security",
+        "kind": "walker",
+        "preset": "walker_security",
+        "x": 456,
+        "y": 305,
+        "end": {
+          "x": 504,
+          "y": 305
+        },
+        "activateX": 240,
+        "leash": {
+          "min": 420,
+          "max": 552
+        },
+        "behavior": "aggressive",
+        "home": {
+          "x": 456,
+          "y": 305
+        },
+        "hp": 3,
+        "state": "patrol",
+        "attackPhase": null,
+        "phaseMs": 250,
+        "cooldown": 0,
+        "direction": 1,
+        "shots": 0,
+        "shotFlashMs": 0,
+        "aim": {
+          "x": 136,
+          "y": 288
+        },
+        "active": false,
+        "provoked": false,
+        "warnings": 0,
+        "acquireMs": 0,
+        "memoryMs": 0,
+        "lastSeen": null,
+        "noticeMs": 0,
+        "stuckMs": 0,
+        "aimLocked": false,
+        "phase": "patrol",
+        "activated": false,
+        "powered": true,
+        "muzzle": {
+          "x": 439,
+          "y": 288
+        },
+        "remaining": 250
+      }
+    ],
+    "roomStates": {
+      "M3F": {
+        "powerCircuit": "press",
+        "targetHp": 0,
+        "terminal": false,
+        "visited": true,
+        "containerUsed": false,
+        "repairUsed": false,
+        "cacheUsed": false,
+        "bufferUsed": false,
+        "brokenPanels": [],
+        "route": "ground",
+        "enemies": [
+          {
+            "id": "m3f-security",
+            "kind": "walker",
+            "preset": "walker_security",
+            "x": 456,
+            "y": 305,
+            "end": {
+              "x": 504,
+              "y": 305
+            },
+            "activateX": 240,
+            "leash": {
+              "min": 420,
+              "max": 552
+            },
+            "behavior": "aggressive",
+            "home": {
+              "x": 456,
+              "y": 305
+            },
+            "hp": 3,
+            "state": "patrol",
+            "attackPhase": null,
+            "phaseMs": 250,
+            "cooldown": 0,
+            "direction": 1,
+            "shots": 0,
+            "shotFlashMs": 0,
+            "aim": {
+              "x": 136,
+              "y": 288
+            },
+            "active": false,
+            "provoked": false,
+            "warnings": 0,
+            "acquireMs": 0,
+            "memoryMs": 0,
+            "lastSeen": null,
+            "noticeMs": 0,
+            "stuckMs": 0,
+            "aimLocked": false
+          }
+        ]
+      }
+    },
+    "simMs": 2183.3333333333358,
+    "transition": false,
+    "campaign": {
+      "character_id": "mira",
+      "campaign_id": "b0c425b7-6569-4bda-b26e-dbf62a34296e",
+      "campaign_seed": 4,
+      "mission_id": "foundry",
+      "location_id": "foundry",
+      "stage": "mission",
+      "nodes": [],
+      "active": null,
+      "points": 3,
+      "completed_missions": [
+        "airlock",
+        "cargo"
+      ],
+      "reward_ledger": [
+        "b0c425b7-6569-4bda-b26e-dbf62a34296e:airlock",
+        "b0c425b7-6569-4bda-b26e-dbf62a34296e:cargo"
+      ],
+      "processed_attempts": [
+        "fixture-airlock",
+        "fixture-cargo"
+      ],
+      "run_stats": {
+        "ruleset_id": "campaign-rework9",
+        "active_ms": 2,
+        "deaths": 0,
+        "score": 0,
+        "foundry_route": null,
+        "history_complete": true,
+        "assisted": false
+      },
+      "entry": {
+        "mission_id": "foundry",
+        "seed": 74486982,
+        "build": {
+          "nodes": [],
+          "maxHp": 6,
+          "spread": false,
+          "piercing": false,
+          "ricochet": false,
+          "chargedShot": false,
+          "dash": false,
+          "airDash": false,
+          "wallMove": false,
+          "phaseDash": false,
+          "buffer": false,
+          "shieldClear": false,
+          "deathSave": false,
+          "active": null
+        },
+        "max_hp": 6,
+        "initial_hp": 6,
+        "initial_score": 0,
+        "event_plan": []
+      },
+      "result": null
+    },
+    "save": {
+      "available": true,
+      "issue": null,
+      "diagnostic": null,
+      "savedAt": null
+    },
+    "settings": {
+      "locale": "ru",
+      "muted": false,
+      "touchMode": "auto",
+      "layout": "dock",
+      "autofire": true,
+      "debugBodies": false,
+      "reducedFlashes": false,
+      "reducedMotion": false,
+      "effectsIntensity": 0.7,
+      "combatAssist": false,
+      "ghostEnabled": true,
+      "keyBindings": {},
+      "musicVolume": 0.18,
+      "sfxVolume": 0.75,
+      "uiVolume": 0.6
+    },
+    "audio": "running",
+    "audioStatus": {
+      "state": "running",
+      "expected": 32,
+      "decoded": 32,
+      "unavailable": false,
+      "unavailableResources": [],
+      "partialFailure": false,
+      "ready": true,
+      "world": true,
+      "hidden": false,
+      "muted": false,
+      "voices": 0,
+      "resultVoices": 0,
+      "retiring": 0,
+      "music": "foundry",
+      "maxVoices": 3,
+      "dropped": 0,
+      "played": {
+        "ui_focus": 2,
+        "ui_cancel": 1,
+        "shot": 2,
+        "hit_wall": 2
+      },
+      "levels": {
+        "musicVolume": 0.18,
+        "sfxVolume": 0.75,
+        "uiVolume": 0.6
+      }
+    },
+    "events": [
+      "game_boot",
+      "load_complete",
+      "screen_view",
+      "game_ready",
+      "screen_view",
+      "screen_view",
+      "room_enter",
+      "first_control"
+    ],
+    "eventLog": [
+      {
+        "name": "game_boot",
+        "event_id": "971ef172-a00e-422a-90c1-4aaee97859bc",
+        "at": 1,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard"
+        }
+      },
+      {
+        "name": "load_complete",
+        "event_id": "a7d24495-f095-47eb-a0e7-a44c6ad66d17",
+        "at": 241,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "load_ms": 241,
+          "technical_load_ms": 241
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "cbf558a7-f6c3-4d58-ba75-85da0fa85ea5",
+        "at": 241,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "menu"
+        }
+      },
+      {
+        "name": "game_ready",
+        "event_id": "87f7dbf7-9ee6-4652-9511-cd71614015c7",
+        "at": 252,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "load_ms": 241,
+          "technical_load_ms": 241,
+          "intro_visible_ms": 0,
+          "time_to_menu_ms": 252
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "4aabf904-8c29-4913-a751-7c094137e8e9",
+        "at": 395,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "settings"
+        }
+      },
+      {
+        "name": "screen_view",
+        "event_id": "56175c5a-fe96-4cf6-af38-8f2c534cf305",
+        "at": 513,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "screen": "menu"
+        }
+      },
+      {
+        "name": "room_enter",
+        "event_id": "76cb0c8d-c0d2-448e-9872-788969e35a0f",
+        "at": 558,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "campaign_id": "b0c425b7-6569-4bda-b26e-dbf62a34296e",
+          "campaign_seed": 4,
+          "mode": "mission",
+          "mission_id": "foundry",
+          "room_id": "M3F",
+          "attempt_id": "b69dc1de-f62e-479a-b0a5-cf682f13558c",
+          "active_duration": 0,
+          "revisit": 0
+        }
+      },
+      {
+        "name": "first_control",
+        "event_id": "d7429fbb-088e-4170-b40c-997bed6a6460",
+        "at": 1931,
+        "params": {
+          "game_id": "r01",
+          "build_id": "0.8.0-alpha.2",
+          "source_sha": "bb9da0d22cc47eafc9fdc7651ae76fc76f270350",
+          "locale": "ru",
+          "input_method": "keyboard",
+          "campaign_id": "b0c425b7-6569-4bda-b26e-dbf62a34296e",
+          "campaign_seed": 4,
+          "mode": "mission",
+          "mission_id": "foundry",
+          "room_id": "M3F",
+          "attempt_id": "b69dc1de-f62e-479a-b0a5-cf682f13558c",
+          "active_duration": 1.367
+        }
+      }
+    ],
+    "fps": [
+      43,
+      60
+    ],
+    "frames": 128,
+    "longFrames": 1,
+    "loadMs": 241,
+    "technicalLoadMs": 241,
+    "arrivalMs": 0,
+    "introVisibleMs": 0,
+    "timeToMenuMs": 252,
+    "mobileLayout": {
+      "mode": "none",
+      "scale": 1.9625,
+      "frame": {
+        "x": 12,
+        "y": 52,
+        "width": 1256,
+        "height": 706
+      },
+      "canvas": {
+        "x": 12,
+        "y": 52,
+        "width": 1256,
+        "height": 706
+      },
+      "controls": null,
+      "controlRects": {},
+      "available": {
+        "width": 1256,
+        "height": 802
+      }
+    },
+    "screenMs": 293.3000000000029,
+    "screenTimes": {
+      "menu": 160.3000000000029,
+      "settings": 133
+    },
+    "sessionWallMs": 2746.0999999999913,
+    "eventTestSeeds": {
+      "E02+E03": 0,
+      "E03": 1,
+      "none": 5,
+      "E02": 8
+    }
+  }
+}
