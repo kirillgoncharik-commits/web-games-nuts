@@ -16,15 +16,1249 @@
     "local_uncommitted_modes_branch": "codex/cinder-shift-new-modes-mod00 preserved unchanged",
     "base_difference": "Only render.ts cache-version fix; retained in the rework"
   },
+  "sprint_2_verified_candidate": {
+    "build_id": "0.7.0-rw2.c3",
+    "stage": "M_RW2_C3_ENGINEERING_CHECKPOINT_VERIFIED",
+    "published": true,
+    "accepted": false,
+    "verification": {
+      "build": "PASS_EXACT_SOURCE_CI",
+      "typescript": "PASS_EXACT_SOURCE_CI",
+      "i18n": "PASS_735_MATCHED_EN_RU_KEYS",
+      "art_contracts": "PASS_EXACT_SOURCE_CI",
+      "room_registry": "PASS_44_REPRODUCIBLE_ROOMS",
+      "models": "PASS_105",
+      "presentation": "PASS_17_CANDIDATE_AND17_BASELINE",
+      "three_browser_ui_combat": "PASS_147_EXECUTIONS",
+      "airlock_flow": "PASS_15_EXECUTIONS",
+      "native_touch": "PASS_12_EXECUTIONS",
+      "persistence": "PASS_8",
+      "sector_and_boss_routes": "PASS_15_PLUS_FULL_C01",
+      "reachable_builds": "PASS_33_SECTOR_BUILDS",
+      "purposeful_mobility": "PASS_9",
+      "room_media": "PASS_44_CANDIDATE_PLUS44_BASELINE_WITH_AUDIO",
+      "full_campaign": "PASS_TWO_FRESH_PROFILE_C01_ROUTES_ONE_AUDIBLE",
+      "interaction_details": "PASS_7_INCLUDING_TOUCH_AVAILABILITY_AND_COLLAPSE_SCROLL",
+      "public_cdn": "PASS_PINNED_PRODUCTION_AND_C3_SOURCES_COLD_AND_WARM",
+      "general_regression": "PASS_331_FAILED_0_NOT_RUN_0_ALL12SHARDS"
+    },
+    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "verification_runs": [
+      {
+        "source_sha": "ec5273650fa31234ca6265055873ff27ebfa07f7",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43198969966",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/i18n/art",
+          "44 model tests",
+          "15 UI tests across Chromium/Firefox/WebKit"
+        ],
+        "scope": "foundation menu/settings, map inspection, inline purchase/cancel/installed build at three sizes, arrival skip and first real combat"
+      },
+      {
+        "source_sha": "ade4252f9048c55288055d398d6b2a082906bd32",
+        "head_sha": "152cbf4e18633cb775b89587a14307ac2e886c57",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock flow scenarios across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, first reward, Retry, full HP, frozen entry, reload and earned Cargo transition; not a Foundry/robot test."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/640 EN-RU keys/art",
+          "source-reproduced room registry matches",
+          "60 selected model tests",
+          "39 UI/encounter executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes real long-range hit-triggered drone warning and a real-input base landing pocket that remains harmless through a full first-press cycle."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock input executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory, reward, full-HP same-entry Retry, reload deduplication and earned Cargo unlock."
+      },
+      {
+        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full eight-room Foundry routes, base suit / campaign seed 4 / Chromium",
+          "8 migrated persistence regressions"
+        ],
+        "scope": "One sector-entry fixture followed only by real input. Service 62.23 active seconds and press 57.97 seconds, both finish at 4 HP after real R03 repair. No human duration/device/whole-milestone acceptance."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321080",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/657 EN-RU keys/art",
+          "source-reproduced registry matches",
+          "64 selected models",
+          "48 UI/equipment executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes the actual Cargo power choice and physical enabled/disabled belt transport; isolated equipment fixtures do not replace the full input routes."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321222",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload and earned Cargo unlock."
+      },
+      {
+        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
+        "result": "SUCCESS",
+        "checks": [
+          "2 full nine-room base Cargo routes, both equipment choices and Retry",
+          "2 full eight-room base Foundry routes",
+          "8 persistence checks"
+        ],
+        "scope": "One entry fixture followed only by actual keyboard/UI. Cargo seed 4 has no E01 event; optional upper salvage is taken in the security case only. Other builds/seeds, E01/Relay full combinations and human acceptance remain open."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228871",
+        "result": "SUCCESS",
+        "checks": [
+          "build/typecheck/682 EN-RU keys/art",
+          "source-regenerated 37-room registry matches",
+          "71 selected model tests",
+          "60 UI/equipment executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Includes actual carrier pickup, Scout screen removal and longer warning, power gate, upload and R04. Isolated interactions supplement full input routes."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228335",
+        "result": "SUCCESS",
+        "checks": [
+          "15 full Airlock input executions across Chromium/Firefox/WebKit"
+        ],
+        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload, earned Cargo transition."
+      },
+      {
+        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228350",
+        "result": "SUCCESS",
+        "checks": [
+          "3 complete nine-room base Archive routes and Retry",
+          "2 complete nine-room base Cargo routes",
+          "2 complete eight-room base Foundry routes",
+          "8 migrated persistence checks"
+        ],
+        "scope": "One sector-entry fixture then only keyboard/UI, with real damage/repair/collection/power/terminals. Scripted durations are not human first-campaign duration."
+      },
+      {
+        "source_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
+        "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
+        "build_id": "0.7.0-rw1.b3",
+        "result": "SUCCESS",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013554",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013566",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013604",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013569"
+        ],
+        "full_regression": {
+          "status": "PASS",
+          "passed": 276,
+          "failed": 0,
+          "not_run": 0,
+          "run_id": 43574013569,
+          "parts": [
+            {
+              "job": "check (5)",
+              "job_id": 132384291090,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (8)",
+              "job_id": 132384291303,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (7)",
+              "job_id": 132384291324,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "job_id": 132384291350,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (12)",
+              "job_id": 132384291351,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (10)",
+              "job_id": 132384291369,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "job_id": 132384291372,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "job_id": 132384291387,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "job_id": 132384291391,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (6)",
+              "job_id": 132384291414,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (11)",
+              "job_id": 132384291431,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (9)",
+              "job_id": 132384291467,
+              "advertised": 23,
+              "passed": 23,
+              "failed": 0,
+              "not_run": 0
+            }
+          ]
+        },
+        "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json"
+      },
+      {
+        "head_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+        "source_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699923",
+        "result": "SUCCESS",
+        "checks": [
+          "33 reachable-build full-sector routes, including both boss phases and evacuation with original HP"
+        ],
+        "scope": "Common keyboard route, real purchase budgets. Optimized mobility and human balance/duration remain open."
+      },
+      {
+        "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+        "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118",
+        "result": "SUCCESS",
+        "checks": [
+          "290/290 general regression, 12/12 shards",
+          "96 models, 123 three-browser UI/combat executions",
+          "15 Airlock, 12 native-touch, 8 persistence",
+          "15 sector/boss, 33 affordable-build routes",
+          "41-room fresh-profile campaign and reload"
+        ],
+        "scope": "B5 engineering checkpoint; sets overlap; human/physical-device acceptance remains open"
+      },
+      {
+        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+        "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+        "build_id": "0.7.0-rw1.b6",
+        "result": "SUCCESS",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
+        ],
+        "general_regression": {
+          "run_id": 43636325727,
+          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+          "passed": 307,
+          "failed": 0,
+          "not_run": 0,
+          "parts": [
+            {
+              "job": "check (10)",
+              "job_id": 132573806076,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "job_id": 132573806274,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (11)",
+              "job_id": 132573806316,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (6)",
+              "job_id": 132573806339,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (9)",
+              "job_id": 132573806348,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (5)",
+              "job_id": 132573806363,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "job_id": 132573806387,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "job_id": 132573806404,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (8)",
+              "job_id": 132573806407,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "job_id": 132573806418,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (12)",
+              "job_id": 132573806469,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (7)",
+              "job_id": 132573806514,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            }
+          ]
+        },
+        "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
+        "scope": "All 30 current M-RW1 engineering requirements. Human acceptance deferred by user; M-REWORK as a whole remains in progress."
+      },
+      {
+        "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+        "build_id": "0.7.0-rw2.c3",
+        "result": "SUCCESS",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786394",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786484",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786352",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786381",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786418",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786386",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786597"
+        ],
+        "proof": "docs/cinder-shift/sprint-2-verification.json",
+        "scope": "331 general regression;105 models;147 three-browser UI/combat; full C01 twice including one audible;44 current clips and44 B6 references;17+17 presentations. Sets overlap; formal human acceptance excluded."
+      }
+    ],
+    "known_limitations": [
+      "50 locales/RTL, physical phones, physical soft keyboard and final combined-flash audit remain M-RW4.",
+      "Human first-play duration and subjective art/music acceptance are not claimed.",
+      "CDN measurements are one unthrottled Ubuntu browser run per origin; baseline and candidate origins differ."
+    ],
+    "recovery": "Remote C3 is authoritative. Local cinder-shift-sprint-2 remains at 254b542 and must not be pushed over the remote branch. Shell Git fetch failed DNS on 2026-11-16; native GitHub reads confirmed C3 and all seven main workflows succeeded. Use a fresh exact-source checkout before runtime edits.",
+    "requirement_counts": {
+      "VERIFIED": 59,
+      "PARTIAL": 2,
+      "OPEN": 19,
+      "total": 80,
+      "sprint_1_total": 30,
+      "sprint_1_engineering_verified": 30,
+      "sprint_2_total": 31,
+      "sprint_2_engineering_verified": 29,
+      "sprint_2_partial": 2,
+      "accepted_whole_milestone": false
+    },
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rw1.b6",
+      "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "report": "docs/cinder-shift/sprint-1-b6-verification.json"
+    },
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
+    "sprint_1": {
+      "status": "ENGINEERING_COMPLETE",
+      "checkpoint": "B6_ENGINEERING_COMPLETE_VERIFIED",
+      "build_id": "0.7.0-rw1.b6",
+      "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+      "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+      "local_verification": {
+        "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
+        "build": "PASS_CI",
+        "typecheck": "PASS_CI",
+        "i18n": "PASS_710",
+        "art": "PASS_CI",
+        "models": "PASS_105_CI"
+      },
+      "browser_verification": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "i18n": "PASS_710_EN_RU_KEYS",
+        "art_contracts": "PASS",
+        "model_tests": "PASS_105",
+        "browser_tests": "PASS_147_THREE_BROWSERS",
+        "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
+        "persistence": "PASS_8",
+        "sector_and_boss_routes": "PASS_15",
+        "reachable_build_routes": "PASS_33",
+        "purposeful_mobility_routes": "PASS_9; SEVEN_DASH_CASES_TWO_CONTROLS",
+        "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_BOTH_BOSS_PHASES_FINALE_RELOAD",
+        "legacy_full_ui_suite": "PASS_307_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+        "physical_devices": "NOT_RUN; DEFERRED_OUTSIDE_CURRENT_GATE",
+        "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; DEFERRED_OUTSIDE_CURRENT_GATE",
+        "native_touch": "PASS_12_EXECUTIONS",
+        "visual_review": "B6_RENDERED_COMBAT_CONTACT_SHEET_AND_LIVE_ENTRY_REVIEWED; HUMAN_REVIEW_DEFERRED",
+        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+        "runs": [
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
+          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
+        ]
+      },
+      "human_playtest": "QUALITATIVE_USER_FEEDBACK_RECEIVED; FORMAL_ACCEPTANCE_DEFERRED_OUTSIDE_CURRENT_GATE",
+      "physical_devices": "NOT_RUN",
+      "accepted": false,
+      "published": false,
+      "baseline_full_regression": {
+        "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+        "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+        "passed": 201,
+        "failed": 33,
+        "not_run": 0
+      },
+      "checkpoint_implementation": "IMPLEMENTED",
+      "checkpoint_verification": "VERIFIED",
+      "full_regression": {
+        "run_id": 43636325727,
+        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+        "passed": 307,
+        "failed": 0,
+        "not_run": 0,
+        "parts": [
+          {
+            "job": "check (10)",
+            "job_id": 132573806076,
+            "passed": 25,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (2)",
+            "job_id": 132573806274,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (11)",
+            "job_id": 132573806316,
+            "passed": 25,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (6)",
+            "job_id": 132573806339,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (9)",
+            "job_id": 132573806348,
+            "passed": 25,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (5)",
+            "job_id": 132573806363,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (3)",
+            "job_id": 132573806387,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (1)",
+            "job_id": 132573806404,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (8)",
+            "job_id": 132573806407,
+            "passed": 25,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (4)",
+            "job_id": 132573806418,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (12)",
+            "job_id": 132573806469,
+            "passed": 25,
+            "failed": 0,
+            "not_run": 0
+          },
+          {
+            "job": "check (7)",
+            "job_id": 132573806514,
+            "passed": 26,
+            "failed": 0,
+            "not_run": 0
+          }
+        ]
+      },
+      "checkpoint_A": {
+        "status": "IN_PROGRESS",
+        "checkpoint": "A_ENGINEERING_VERIFIED",
+        "build_id": "0.7.0-rw1.a1",
+        "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+        "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+        "local_verification": {
+          "build": "PASS",
+          "typecheck": "PASS",
+          "i18n": "PASS_683_EN_RU_KEYS",
+          "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
+          "models": "PASS_76_TESTS"
+        },
+        "browser_verification": {
+          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+          "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
+          "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
+          "persistence": "PASS_8_CHECKS",
+          "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
+          "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
+          "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
+          "runs": [
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+          ],
+          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
+        },
+        "human_playtest": "NOT_RUN",
+        "physical_devices": "NOT_RUN",
+        "accepted": false,
+        "published": false,
+        "baseline_full_regression": {
+          "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+          "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+          "passed": 201,
+          "failed": 33,
+          "not_run": 0
+        },
+        "checkpoint_implementation": "IMPLEMENTED",
+        "checkpoint_verification": "VERIFIED",
+        "full_regression": {
+          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
+          "passed": 244,
+          "failed": 0,
+          "not_run": 0,
+          "shards": [
+            {
+              "job": "check (6)",
+              "passed": 40,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (5)",
+              "passed": 40,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "passed": 41,
+              "failed": 0,
+              "not_run": 0
+            }
+          ],
+          "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+        }
+      },
+      "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
+      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
+      "preview_published": true,
+      "acceptance_policy": {
+        "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+        "instruction_date": "2026-11-14",
+        "instruction": "человеческая приемка пока не учитывается",
+        "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
+        "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+      },
+      "user_play_feedback": {
+        "date": "2026-11-14",
+        "author": "Kirill",
+        "text": "я поиграл, неидеально но стало лучше",
+        "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
+        "timed_or_full_route_details_provided": false
+      },
+      "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+      "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+      "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
+      "remaining_engineering": [],
+      "known_p0": [],
+      "known_p1": [],
+      "completion_policy": {
+        "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+        "instruction_date": "2026-11-14",
+        "instruction": "человеческая приемка пока не учитывается",
+        "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+        "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+      }
+    },
+    "pre_sprint_1_baseline": {
+      "build_id": "0.7.0-rework.6",
+      "stage": "archive_nine_episodes_carrier_scout_power_upload",
+      "verification": {
+        "typecheck": "passed_exact_source_CI",
+        "i18n": "passed_682_EN_RU_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "71_passed",
+        "browser_tests": "60 UI/equipment executions passed across Chromium/Firefox/WebKit on head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458",
+        "full_archive_routes": "All three nine-room base cases PASS. E05 scout (seed 0): 73.73 active seconds / 5 HP; E05 health (seed 0): 71.27 / 6 HP, real +1 repair; no-E05 salvage (seed 3): 71.28 / 6 HP, +150 score. Carrier, power, transmission, final victory and full-HP same-entry Retry/reward deduplication verified.",
+        "full_cargo_routes": "Both nine-room base routes PASS on seed 4: conveyor 73.60 / security+optional salvage 78.00 active seconds; both 3 HP after R02 and Retry.",
+        "full_foundry_routes": "Both eight-room base alternatives PASS on seed 4: service 61.20 / press 57.53 active seconds; both 4 HP after R03.",
+        "airlock_flow": "15 complete Airlock input executions PASS across Chromium/Firefox/WebKit, base/W1/M1/D1, victory/reward/Retry/reload/earned Cargo unlock.",
+        "persistence": "8 migrated persistence checks PASS",
+        "room_registry": "Source-regenerated registry matches committed inventory: 37 unique campaign rooms / 34 selected; Archive 9.",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "visual_review": "not_performed; screenshots in workflow artifacts",
+        "legacy_full_ui_suite": "Known previous old menu/character-contract failures; .6 run 43441228441 in progress at evidence recording. Not an overall-suite PASS."
+      },
+      "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
+      "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
+    },
+    "validated_head_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
+    "current_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "current_tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "report": "docs/cinder-shift/sprint-2-verification.json",
+    "preview_published": true,
+    "publication_status": "SEPARATE_C3_DEVELOPMENT_PREVIEW; PRODUCTION_B6",
+    "acceptance_policy": {
+      "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+      "instruction_date": "2026-11-14",
+      "instruction": "человеческая приемка пока не учитывается",
+      "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+    },
+    "historical_b5_checkpoint": {
+      "build_id": "0.7.0-rw1.b5",
+      "stage": "M_RW1_B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE",
+      "verification": {
+        "build": "PASS",
+        "typecheck": "PASS",
+        "i18n": "PASS_710_EN_RU_KEYS",
+        "art_contracts": "PASS",
+        "model_tests": "PASS_96",
+        "browser_tests": "PASS_123_THREE_BROWSERS",
+        "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
+        "persistence": "PASS_8",
+        "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
+        "reachable_build_routes": "PASS_33",
+        "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
+        "legacy_full_ui_suite": "PASS_290_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+        "physical_devices": "NOT_RUN",
+        "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; HUMAN_ACCEPTANCE_DEFERRED_NOT_CURRENT_GATE",
+        "native_touch": "PASS_12_EXECUTIONS; THREE_FULL_MISSIONS_SIX_DELAYED_SHELF_CLIMBS_THREE_MOVEMENT_CHECKS",
+        "visual_review": "AIMED_GUARD_LOCK_AND_COUNTER_FRAMES_REVIEWED; HUMAN_REVIEW_OPEN"
+      },
+      "known_limitations": [
+        "First natural 25–35-minute duration is not verified; B5 scripted input takes 381.62 active seconds. Human timing/acceptance is outside the current Sprint 1 gate per user instruction.",
+        "All 33 affordable-build comparisons pass; defence ends every tested variant at full HP. Gameplay balance/pacing and optimized mobility comparisons remain in scope.",
+        "Human audiovisual and physical-device acceptance is deferred, outside the current Sprint 1 gate.",
+        "Reference study is source-level; selected reference sections were not played.",
+        "B5 is a separate development preview; production stays B3; current Sprint 1 implementation remains in progress."
+      ],
+      "requirement_counts": {
+        "OPEN": 64,
+        "IMPLEMENTED": 16,
+        "total": 80,
+        "verified_whole_milestone": 0,
+        "accepted_whole_milestone": false
+      },
+      "sprint_1": {
+        "status": "ENGINEERING_COMPLETE",
+        "checkpoint": "B6_ENGINEERING_COMPLETE_VERIFIED",
+        "build_id": "0.7.0-rw1.b6",
+        "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+        "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+        "local_verification": {
+          "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
+          "build": "PASS_CI",
+          "typecheck": "PASS_CI",
+          "i18n": "PASS_710",
+          "art": "PASS_CI",
+          "models": "PASS_105_CI"
+        },
+        "browser_verification": {
+          "build": "PASS",
+          "typecheck": "PASS",
+          "i18n": "PASS_710_EN_RU_KEYS",
+          "art_contracts": "PASS",
+          "model_tests": "PASS_105",
+          "browser_tests": "PASS_147_THREE_BROWSERS",
+          "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
+          "persistence": "PASS_8",
+          "sector_and_boss_routes": "PASS_15",
+          "reachable_build_routes": "PASS_33",
+          "purposeful_mobility_routes": "PASS_9; SEVEN_DASH_CASES_TWO_CONTROLS",
+          "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_BOTH_BOSS_PHASES_FINALE_RELOAD",
+          "legacy_full_ui_suite": "PASS_307_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
+          "physical_devices": "NOT_RUN; DEFERRED_OUTSIDE_CURRENT_GATE",
+          "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; DEFERRED_OUTSIDE_CURRENT_GATE",
+          "native_touch": "PASS_12_EXECUTIONS",
+          "visual_review": "B6_RENDERED_COMBAT_CONTACT_SHEET_AND_LIVE_ENTRY_REVIEWED; HUMAN_REVIEW_DEFERRED",
+          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+          "runs": [
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
+            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
+          ]
+        },
+        "human_playtest": "QUALITATIVE_USER_FEEDBACK_RECEIVED; FORMAL_ACCEPTANCE_DEFERRED_OUTSIDE_CURRENT_GATE",
+        "physical_devices": "NOT_RUN",
+        "accepted": false,
+        "published": false,
+        "baseline_full_regression": {
+          "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+          "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+          "passed": 201,
+          "failed": 33,
+          "not_run": 0
+        },
+        "checkpoint_implementation": "IMPLEMENTED",
+        "checkpoint_verification": "VERIFIED",
+        "full_regression": {
+          "run_id": 43636325727,
+          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+          "passed": 307,
+          "failed": 0,
+          "not_run": 0,
+          "parts": [
+            {
+              "job": "check (10)",
+              "job_id": 132573806076,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (2)",
+              "job_id": 132573806274,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (11)",
+              "job_id": 132573806316,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (6)",
+              "job_id": 132573806339,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (9)",
+              "job_id": 132573806348,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (5)",
+              "job_id": 132573806363,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (3)",
+              "job_id": 132573806387,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (1)",
+              "job_id": 132573806404,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (8)",
+              "job_id": 132573806407,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (4)",
+              "job_id": 132573806418,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (12)",
+              "job_id": 132573806469,
+              "passed": 25,
+              "failed": 0,
+              "not_run": 0
+            },
+            {
+              "job": "check (7)",
+              "job_id": 132573806514,
+              "passed": 26,
+              "failed": 0,
+              "not_run": 0
+            }
+          ]
+        },
+        "checkpoint_A": {
+          "status": "IN_PROGRESS",
+          "checkpoint": "A_ENGINEERING_VERIFIED",
+          "build_id": "0.7.0-rw1.a1",
+          "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
+          "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
+          "local_verification": {
+            "build": "PASS",
+            "typecheck": "PASS",
+            "i18n": "PASS_683_EN_RU_KEYS",
+            "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
+            "models": "PASS_76_TESTS"
+          },
+          "browser_verification": {
+            "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+            "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
+            "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
+            "persistence": "PASS_8_CHECKS",
+            "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
+            "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
+            "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
+            "runs": [
+              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
+              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
+              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
+              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+            ],
+            "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
+          },
+          "human_playtest": "NOT_RUN",
+          "physical_devices": "NOT_RUN",
+          "accepted": false,
+          "published": false,
+          "baseline_full_regression": {
+            "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
+            "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
+            "passed": 201,
+            "failed": 33,
+            "not_run": 0
+          },
+          "checkpoint_implementation": "IMPLEMENTED",
+          "checkpoint_verification": "VERIFIED",
+          "full_regression": {
+            "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
+            "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
+            "passed": 244,
+            "failed": 0,
+            "not_run": 0,
+            "shards": [
+              {
+                "job": "check (6)",
+                "passed": 40,
+                "failed": 0,
+                "not_run": 0
+              },
+              {
+                "job": "check (5)",
+                "passed": 40,
+                "failed": 0,
+                "not_run": 0
+              },
+              {
+                "job": "check (1)",
+                "passed": 41,
+                "failed": 0,
+                "not_run": 0
+              },
+              {
+                "job": "check (3)",
+                "passed": 41,
+                "failed": 0,
+                "not_run": 0
+              },
+              {
+                "job": "check (4)",
+                "passed": 41,
+                "failed": 0,
+                "not_run": 0
+              },
+              {
+                "job": "check (2)",
+                "passed": 41,
+                "failed": 0,
+                "not_run": 0
+              }
+            ],
+            "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
+          }
+        },
+        "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
+        "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
+        "preview_published": true,
+        "acceptance_policy": {
+          "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+          "instruction_date": "2026-11-14",
+          "instruction": "человеческая приемка пока не учитывается",
+          "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
+          "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
+        },
+        "user_play_feedback": {
+          "date": "2026-11-14",
+          "author": "Kirill",
+          "text": "я поиграл, неидеально но стало лучше",
+          "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
+          "timed_or_full_route_details_provided": false
+        },
+        "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+        "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
+        "remaining_engineering": [],
+        "known_p0": [],
+        "known_p1": [],
+        "completion_policy": {
+          "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+          "instruction_date": "2026-11-14",
+          "instruction": "человеческая приемка пока не учитывается",
+          "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+          "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+        }
+      }
+    },
+    "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "development_preview": {
+      "url": "https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/",
+      "cloudflare_deployment_id": "6f6fa95d-34cb-4473-8274-4e8254c587b5",
+      "site_commit": "658c1e7dc8a5f42c5028999ebf1d2cd25f479f2f",
+      "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "site_ci": "PASS",
+      "cloudflare": "SUCCESS",
+      "files_equal": 60
+    },
+    "previous_verified_candidate": {
+      "build_id": "0.7.0-rw2.a1",
+      "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+      "documentation_head": "a90728a93b1269759865333bc3390262847842ba",
+      "report": "https://github.com/kirillgoncharik-commits/web-games-nuts/blob/a90728a93b1269759865333bc3390262847842ba/docs/cinder-shift/sprint-2-verification.json"
+    },
+    "test_candidate_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "sprint_2": {
+      "status": "C3_ENGINEERING_CHECKPOINT_VERIFIED; TWO_M_RW4_SUBSCOPES_OPEN",
+      "checkpoint": "C3",
+      "full_31_requirement_gate": "29 engineering-verified; 2 cross-sprint subscopes remain with M-RW4",
+      "work_order": {
+        "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
+        "revision": 2
+      },
+      "requirement_review": "docs/cinder-shift/sprint-2-requirement-review.json",
+      "verification_report": "docs/cinder-shift/sprint-2-verification.json",
+      "revalidated_at": "2026-11-16",
+      "revalidation": {
+        "source_head": "eac92cba25f856064568493f9c2d51f85235a31c",
+        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+        "main_workflows": "7/7 completed success; existing results re-read, not re-run",
+        "runtime_changed": false
+      }
+    },
+    "general_regression": {
+      "status": "PASS",
+      "run_id": 43725786597,
+      "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+      "passed": 331,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (8)",
+          "job_id": 132847378378,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132847378468,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132847378555,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132847378583,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132847378593,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132847378645,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132847378502,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132847378544,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (10)",
+          "job_id": 132847378741,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (1)",
+          "job_id": 132847378654,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132847378534,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132847378566,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
+    },
+    "production_published": true,
+    "production_deployment": {
+      "date": "2026-11-16",
+      "timezone": "Europe/Podgorica",
+      "status": "PUBLISHED",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "build_id": "0.7.0-rw2.c3",
+      "game_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "site_merge_sha": "b7573456a19730f04d34499a423bafab4dda6944",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/15",
+      "site_branch": "main",
+      "cloudflare_deployment_id": "e7018101-85d2-4c86-8e90-bd03d67b0658",
+      "cloudflare_check": "SUCCESS",
+      "cloudflare_check_id": 133223254337,
+      "site_verify": "SUCCESS",
+      "site_verify_check_id": 133223009075,
+      "manifest_blob": "c5677e4181fe15f59dcfa5aeb4be9f0f13c82009",
+      "manifest_matches_verified_preview": true,
+      "verification_scope": "Cloudflare production-branch deployment succeeded; site CI succeeded; main manifest matches verified preview C3 exactly. Direct live JSON fetch via web tool was unavailable; no new browser/playtest claimed.",
+      "upstream_regression": "331/331 on exact C3 source; seven main workflows succeeded; existing results re-read",
+      "previous_production": {
+        "build_id": "0.7.0-rw1.b6",
+        "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+        "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4"
+      },
+      "acceptance_complete": false,
+      "remaining": [
+        "50 locales/RTL: M-RW4",
+        "Final combined-flash and physical-device audit: M-RW4",
+        "Formal human acceptance deferred"
+      ],
+      "authorization": "Kirill: обнови версию на бою"
+    }
+  },
   "candidate": {
     "version": "0.8.0-alpha.1",
     "milestone": "M-RW3",
     "checkpoint": "A0_FOUNDATION",
     "status": "IN_PROGRESS",
-    "published": false,
+    "published": true,
     "accepted": false,
     "verification_report": "docs/cinder-shift/sprint-3-verification.json",
-    "limitations": "Not checkpoint A: SW01/YU01 full vertical slices and all 40 production rooms/art/audio remain open. Two internal fixtures are not campaign delivery."
+    "limitations": "Not checkpoint A: SW01/YU01 full vertical slices and all 40 production rooms/art/audio remain open. Two internal fixtures are not campaign delivery.",
+    "build_id": "cinder-v1.b1.a1",
+    "runtime_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "publication_scope": "A0 preview only",
+    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/"
   },
   "requirements": [
     {
@@ -3083,1260 +4317,42 @@
     "acceptance_complete": false,
     "verification": "B6 production remains unchanged. Production source asserted by the C3 public CDN comparison."
   },
-  "sprint_2_verified_candidate": {
-    "build_id": "0.7.0-rw2.c3",
-    "stage": "M_RW2_C3_ENGINEERING_CHECKPOINT_VERIFIED",
-    "published": true,
-    "accepted": false,
-    "verification": {
-      "build": "PASS_EXACT_SOURCE_CI",
-      "typescript": "PASS_EXACT_SOURCE_CI",
-      "i18n": "PASS_735_MATCHED_EN_RU_KEYS",
-      "art_contracts": "PASS_EXACT_SOURCE_CI",
-      "room_registry": "PASS_44_REPRODUCIBLE_ROOMS",
-      "models": "PASS_105",
-      "presentation": "PASS_17_CANDIDATE_AND17_BASELINE",
-      "three_browser_ui_combat": "PASS_147_EXECUTIONS",
-      "airlock_flow": "PASS_15_EXECUTIONS",
-      "native_touch": "PASS_12_EXECUTIONS",
-      "persistence": "PASS_8",
-      "sector_and_boss_routes": "PASS_15_PLUS_FULL_C01",
-      "reachable_builds": "PASS_33_SECTOR_BUILDS",
-      "purposeful_mobility": "PASS_9",
-      "room_media": "PASS_44_CANDIDATE_PLUS44_BASELINE_WITH_AUDIO",
-      "full_campaign": "PASS_TWO_FRESH_PROFILE_C01_ROUTES_ONE_AUDIBLE",
-      "interaction_details": "PASS_7_INCLUDING_TOUCH_AVAILABILITY_AND_COLLAPSE_SCROLL",
-      "public_cdn": "PASS_PINNED_PRODUCTION_AND_C3_SOURCES_COLD_AND_WARM",
-      "general_regression": "PASS_331_FAILED_0_NOT_RUN_0_ALL12SHARDS"
-    },
-    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
-    "verification_runs": [
-      {
-        "source_sha": "ec5273650fa31234ca6265055873ff27ebfa07f7",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43198969966",
-        "result": "SUCCESS",
-        "checks": [
-          "build/typecheck/i18n/art",
-          "44 model tests",
-          "15 UI tests across Chromium/Firefox/WebKit"
-        ],
-        "scope": "foundation menu/settings, map inspection, inline purchase/cancel/installed build at three sizes, arrival skip and first real combat"
-      },
-      {
-        "source_sha": "ade4252f9048c55288055d398d6b2a082906bd32",
-        "head_sha": "152cbf4e18633cb775b89587a14307ac2e886c57",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43217028352",
-        "result": "SUCCESS",
-        "checks": [
-          "15 full Airlock flow scenarios across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Base/W1/M1/D1 victory, first reward, Retry, full HP, frozen entry, reload and earned Cargo transition; not a Foundry/robot test."
-      },
-      {
-        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
-        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
-        "result": "SUCCESS",
-        "checks": [
-          "build/typecheck/640 EN-RU keys/art",
-          "source-reproduced room registry matches",
-          "60 selected model tests",
-          "39 UI/encounter executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Includes real long-range hit-triggered drone warning and a real-input base landing pocket that remains harmless through a full first-press cycle."
-      },
-      {
-        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
-        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
-        "result": "SUCCESS",
-        "checks": [
-          "15 full Airlock input executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Base/W1/M1/D1 victory, reward, full-HP same-entry Retry, reload deduplication and earned Cargo unlock."
-      },
-      {
-        "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
-        "source_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055",
-        "result": "SUCCESS",
-        "checks": [
-          "2 full eight-room Foundry routes, base suit / campaign seed 4 / Chromium",
-          "8 migrated persistence regressions"
-        ],
-        "scope": "One sector-entry fixture followed only by real input. Service 62.23 active seconds and press 57.97 seconds, both finish at 4 HP after real R03 repair. No human duration/device/whole-milestone acceptance."
-      },
-      {
-        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321080",
-        "result": "SUCCESS",
-        "checks": [
-          "build/typecheck/657 EN-RU keys/art",
-          "source-reproduced registry matches",
-          "64 selected models",
-          "48 UI/equipment executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Includes the actual Cargo power choice and physical enabled/disabled belt transport; isolated equipment fixtures do not replace the full input routes."
-      },
-      {
-        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321222",
-        "result": "SUCCESS",
-        "checks": [
-          "15 full Airlock executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload and earned Cargo unlock."
-      },
-      {
-        "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
-        "source_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050",
-        "result": "SUCCESS",
-        "checks": [
-          "2 full nine-room base Cargo routes, both equipment choices and Retry",
-          "2 full eight-room base Foundry routes",
-          "8 persistence checks"
-        ],
-        "scope": "One entry fixture followed only by actual keyboard/UI. Cargo seed 4 has no E01 event; optional upper salvage is taken in the security case only. Other builds/seeds, E01/Relay full combinations and human acceptance remain open."
-      },
-      {
-        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228871",
-        "result": "SUCCESS",
-        "checks": [
-          "build/typecheck/682 EN-RU keys/art",
-          "source-regenerated 37-room registry matches",
-          "71 selected model tests",
-          "60 UI/equipment executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Includes actual carrier pickup, Scout screen removal and longer warning, power gate, upload and R04. Isolated interactions supplement full input routes."
-      },
-      {
-        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228335",
-        "result": "SUCCESS",
-        "checks": [
-          "15 full Airlock input executions across Chromium/Firefox/WebKit"
-        ],
-        "scope": "Base/W1/M1/D1 victory/reward, full-HP same-entry Retry/reload, earned Cargo transition."
-      },
-      {
-        "head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-        "source_sha": "363f2c55c947e60b115927725eee28fc8fb18458",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43441228350",
-        "result": "SUCCESS",
-        "checks": [
-          "3 complete nine-room base Archive routes and Retry",
-          "2 complete nine-room base Cargo routes",
-          "2 complete eight-room base Foundry routes",
-          "8 migrated persistence checks"
-        ],
-        "scope": "One sector-entry fixture then only keyboard/UI, with real damage/repair/collection/power/terminals. Scripted durations are not human first-campaign duration."
-      },
-      {
-        "source_sha": "483484fbf206e5fcbf03b525ac0d9a9db3d91bf2",
-        "tested_merge_sha": "0fec14efd0836741f8b2f068f48f3f6214f12d05",
-        "build_id": "0.7.0-rw1.b3",
-        "result": "SUCCESS",
-        "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013554",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013566",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013604",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43574013569"
-        ],
-        "full_regression": {
-          "status": "PASS",
-          "passed": 276,
-          "failed": 0,
-          "not_run": 0,
-          "run_id": 43574013569,
-          "parts": [
-            {
-              "job": "check (5)",
-              "job_id": 132384291090,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (8)",
-              "job_id": 132384291303,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (7)",
-              "job_id": 132384291324,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (4)",
-              "job_id": 132384291350,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (12)",
-              "job_id": 132384291351,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (10)",
-              "job_id": 132384291369,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (3)",
-              "job_id": 132384291372,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (2)",
-              "job_id": 132384291387,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (1)",
-              "job_id": 132384291391,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (6)",
-              "job_id": 132384291414,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (11)",
-              "job_id": 132384291431,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (9)",
-              "job_id": 132384291467,
-              "advertised": 23,
-              "passed": 23,
-              "failed": 0,
-              "not_run": 0
-            }
-          ]
-        },
-        "proof": "docs/cinder-shift/sprint-1-b-input-baseline.json"
-      },
-      {
-        "head_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
-        "source_sha": "aeef9a4d5a315a49c4a0c31bf1f93fc99cf6a41c",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699923",
-        "result": "SUCCESS",
-        "checks": [
-          "33 reachable-build full-sector routes, including both boss phases and evacuation with original HP"
-        ],
-        "scope": "Common keyboard route, real purchase budgets. Optimized mobility and human balance/duration remain open."
-      },
-      {
-        "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
-        "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
-        "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118",
-        "result": "SUCCESS",
-        "checks": [
-          "290/290 general regression, 12/12 shards",
-          "96 models, 123 three-browser UI/combat executions",
-          "15 Airlock, 12 native-touch, 8 persistence",
-          "15 sector/boss, 33 affordable-build routes",
-          "41-room fresh-profile campaign and reload"
-        ],
-        "scope": "B5 engineering checkpoint; sets overlap; human/physical-device acceptance remains open"
-      },
-      {
-        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-        "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-        "build_id": "0.7.0-rw1.b6",
-        "result": "SUCCESS",
-        "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
-        ],
-        "general_regression": {
-          "run_id": 43636325727,
-          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-          "passed": 307,
-          "failed": 0,
-          "not_run": 0,
-          "parts": [
-            {
-              "job": "check (10)",
-              "job_id": 132573806076,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (2)",
-              "job_id": 132573806274,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (11)",
-              "job_id": 132573806316,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (6)",
-              "job_id": 132573806339,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (9)",
-              "job_id": 132573806348,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (5)",
-              "job_id": 132573806363,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (3)",
-              "job_id": 132573806387,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (1)",
-              "job_id": 132573806404,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (8)",
-              "job_id": 132573806407,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (4)",
-              "job_id": 132573806418,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (12)",
-              "job_id": 132573806469,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (7)",
-              "job_id": 132573806514,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            }
-          ]
-        },
-        "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
-        "scope": "All 30 current M-RW1 engineering requirements. Human acceptance deferred by user; M-REWORK as a whole remains in progress."
-      },
-      {
-        "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-        "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-        "build_id": "0.7.0-rw2.c3",
-        "result": "SUCCESS",
-        "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786394",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786484",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786352",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786381",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786418",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786386",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43725786597"
-        ],
-        "proof": "docs/cinder-shift/sprint-2-verification.json",
-        "scope": "331 general regression;105 models;147 three-browser UI/combat; full C01 twice including one audible;44 current clips and44 B6 references;17+17 presentations. Sets overlap; formal human acceptance excluded."
-      }
-    ],
-    "known_limitations": [
-      "50 locales/RTL, physical phones, physical soft keyboard and final combined-flash audit remain M-RW4.",
-      "Human first-play duration and subjective art/music acceptance are not claimed.",
-      "CDN measurements are one unthrottled Ubuntu browser run per origin; baseline and candidate origins differ."
-    ],
-    "recovery": "Remote C3 is authoritative. Local cinder-shift-sprint-2 remains at 254b542 and must not be pushed over the remote branch. Shell Git fetch failed DNS on 2026-11-16; native GitHub reads confirmed C3 and all seven main workflows succeeded. Use a fresh exact-source checkout before runtime edits.",
-    "requirement_counts": {
-      "VERIFIED": 59,
-      "PARTIAL": 2,
-      "OPEN": 19,
-      "total": 80,
-      "sprint_1_total": 30,
-      "sprint_1_engineering_verified": 30,
-      "sprint_2_total": 31,
-      "sprint_2_engineering_verified": 29,
-      "sprint_2_partial": 2,
-      "accepted_whole_milestone": false
-    },
-    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
-    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
-    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
-    "previous_validated_candidate": {
-      "build_id": "0.7.0-rw1.b6",
-      "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-      "report": "docs/cinder-shift/sprint-1-b6-verification.json"
-    },
-    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
-    "sprint_1": {
-      "status": "ENGINEERING_COMPLETE",
-      "checkpoint": "B6_ENGINEERING_COMPLETE_VERIFIED",
-      "build_id": "0.7.0-rw1.b6",
-      "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
-      "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-      "local_verification": {
-        "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
-        "build": "PASS_CI",
-        "typecheck": "PASS_CI",
-        "i18n": "PASS_710",
-        "art": "PASS_CI",
-        "models": "PASS_105_CI"
-      },
-      "browser_verification": {
-        "build": "PASS",
-        "typecheck": "PASS",
-        "i18n": "PASS_710_EN_RU_KEYS",
-        "art_contracts": "PASS",
-        "model_tests": "PASS_105",
-        "browser_tests": "PASS_147_THREE_BROWSERS",
-        "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
-        "persistence": "PASS_8",
-        "sector_and_boss_routes": "PASS_15",
-        "reachable_build_routes": "PASS_33",
-        "purposeful_mobility_routes": "PASS_9; SEVEN_DASH_CASES_TWO_CONTROLS",
-        "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_BOTH_BOSS_PHASES_FINALE_RELOAD",
-        "legacy_full_ui_suite": "PASS_307_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
-        "physical_devices": "NOT_RUN; DEFERRED_OUTSIDE_CURRENT_GATE",
-        "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; DEFERRED_OUTSIDE_CURRENT_GATE",
-        "native_touch": "PASS_12_EXECUTIONS",
-        "visual_review": "B6_RENDERED_COMBAT_CONTACT_SHEET_AND_LIVE_ENTRY_REVIEWED; HUMAN_REVIEW_DEFERRED",
-        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-        "runs": [
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
-          "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
-        ]
-      },
-      "human_playtest": "QUALITATIVE_USER_FEEDBACK_RECEIVED; FORMAL_ACCEPTANCE_DEFERRED_OUTSIDE_CURRENT_GATE",
-      "physical_devices": "NOT_RUN",
-      "accepted": false,
-      "published": false,
-      "baseline_full_regression": {
-        "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
-        "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
-        "passed": 201,
-        "failed": 33,
-        "not_run": 0
-      },
-      "checkpoint_implementation": "IMPLEMENTED",
-      "checkpoint_verification": "VERIFIED",
-      "full_regression": {
-        "run_id": 43636325727,
-        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-        "passed": 307,
-        "failed": 0,
-        "not_run": 0,
-        "parts": [
-          {
-            "job": "check (10)",
-            "job_id": 132573806076,
-            "passed": 25,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (2)",
-            "job_id": 132573806274,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (11)",
-            "job_id": 132573806316,
-            "passed": 25,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (6)",
-            "job_id": 132573806339,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (9)",
-            "job_id": 132573806348,
-            "passed": 25,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (5)",
-            "job_id": 132573806363,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (3)",
-            "job_id": 132573806387,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (1)",
-            "job_id": 132573806404,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (8)",
-            "job_id": 132573806407,
-            "passed": 25,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (4)",
-            "job_id": 132573806418,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (12)",
-            "job_id": 132573806469,
-            "passed": 25,
-            "failed": 0,
-            "not_run": 0
-          },
-          {
-            "job": "check (7)",
-            "job_id": 132573806514,
-            "passed": 26,
-            "failed": 0,
-            "not_run": 0
-          }
-        ]
-      },
-      "checkpoint_A": {
-        "status": "IN_PROGRESS",
-        "checkpoint": "A_ENGINEERING_VERIFIED",
-        "build_id": "0.7.0-rw1.a1",
-        "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
-        "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-        "local_verification": {
-          "build": "PASS",
-          "typecheck": "PASS",
-          "i18n": "PASS_683_EN_RU_KEYS",
-          "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
-          "models": "PASS_76_TESTS"
-        },
-        "browser_verification": {
-          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
-          "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
-          "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
-          "persistence": "PASS_8_CHECKS",
-          "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
-          "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
-          "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
-          "runs": [
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
-          ],
-          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
-        },
-        "human_playtest": "NOT_RUN",
-        "physical_devices": "NOT_RUN",
-        "accepted": false,
-        "published": false,
-        "baseline_full_regression": {
-          "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
-          "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
-          "passed": 201,
-          "failed": 33,
-          "not_run": 0
-        },
-        "checkpoint_implementation": "IMPLEMENTED",
-        "checkpoint_verification": "VERIFIED",
-        "full_regression": {
-          "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
-          "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
-          "passed": 244,
-          "failed": 0,
-          "not_run": 0,
-          "shards": [
-            {
-              "job": "check (6)",
-              "passed": 40,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (5)",
-              "passed": 40,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (1)",
-              "passed": 41,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (3)",
-              "passed": 41,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (4)",
-              "passed": 41,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (2)",
-              "passed": 41,
-              "failed": 0,
-              "not_run": 0
-            }
-          ],
-          "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
-        }
-      },
-      "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
-      "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
-      "preview_published": true,
-      "acceptance_policy": {
-        "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
-        "instruction_date": "2026-11-14",
-        "instruction": "человеческая приемка пока не учитывается",
-        "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
-        "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
-      },
-      "user_play_feedback": {
-        "date": "2026-11-14",
-        "author": "Kirill",
-        "text": "я поиграл, неидеально но стало лучше",
-        "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
-        "timed_or_full_route_details_provided": false
-      },
-      "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-      "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-      "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-      "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
-      "remaining_engineering": [],
-      "known_p0": [],
-      "known_p1": [],
-      "completion_policy": {
-        "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
-        "instruction_date": "2026-11-14",
-        "instruction": "человеческая приемка пока не учитывается",
-        "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
-        "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
-      }
-    },
-    "pre_sprint_1_baseline": {
-      "build_id": "0.7.0-rework.6",
-      "stage": "archive_nine_episodes_carrier_scout_power_upload",
-      "verification": {
-        "typecheck": "passed_exact_source_CI",
-        "i18n": "passed_682_EN_RU_keys",
-        "build": "passed_exact_source_CI",
-        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
-        "model_tests": "71_passed",
-        "browser_tests": "60 UI/equipment executions passed across Chromium/Firefox/WebKit on head 230e8018931f3f2301162884949e78cf7b59a883 / tested merge 363f2c55c947e60b115927725eee28fc8fb18458",
-        "full_archive_routes": "All three nine-room base cases PASS. E05 scout (seed 0): 73.73 active seconds / 5 HP; E05 health (seed 0): 71.27 / 6 HP, real +1 repair; no-E05 salvage (seed 3): 71.28 / 6 HP, +150 score. Carrier, power, transmission, final victory and full-HP same-entry Retry/reward deduplication verified.",
-        "full_cargo_routes": "Both nine-room base routes PASS on seed 4: conveyor 73.60 / security+optional salvage 78.00 active seconds; both 3 HP after R02 and Retry.",
-        "full_foundry_routes": "Both eight-room base alternatives PASS on seed 4: service 61.20 / press 57.53 active seconds; both 4 HP after R03.",
-        "airlock_flow": "15 complete Airlock input executions PASS across Chromium/Firefox/WebKit, base/W1/M1/D1, victory/reward/Retry/reload/earned Cargo unlock.",
-        "persistence": "8 migrated persistence checks PASS",
-        "room_registry": "Source-regenerated registry matches committed inventory: 37 unique campaign rooms / 34 selected; Archive 9.",
-        "physical_devices": "not_run",
-        "human_playtests": "not_run",
-        "visual_review": "not_performed; screenshots in workflow artifacts",
-        "legacy_full_ui_suite": "Known previous old menu/character-contract failures; .6 run 43441228441 in progress at evidence recording. Not an overall-suite PASS."
-      },
-      "validated_head_sha": "230e8018931f3f2301162884949e78cf7b59a883",
-      "tested_merge_sha": "363f2c55c947e60b115927725eee28fc8fb18458"
-    },
-    "validated_head_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-    "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-    "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
-    "current_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-    "current_tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-    "report": "docs/cinder-shift/sprint-2-verification.json",
-    "preview_published": true,
-    "publication_status": "SEPARATE_C3_DEVELOPMENT_PREVIEW; PRODUCTION_B6",
-    "acceptance_policy": {
-      "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
-      "instruction_date": "2026-11-14",
-      "instruction": "человеческая приемка пока не учитывается",
-      "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
-      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
-    },
-    "historical_b5_checkpoint": {
-      "build_id": "0.7.0-rw1.b5",
-      "stage": "M_RW1_B5_ENGINEERING_VERIFIED_PREVIEW_AVAILABLE",
-      "verification": {
-        "build": "PASS",
-        "typecheck": "PASS",
-        "i18n": "PASS_710_EN_RU_KEYS",
-        "art_contracts": "PASS",
-        "model_tests": "PASS_96",
-        "browser_tests": "PASS_123_THREE_BROWSERS",
-        "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
-        "persistence": "PASS_8",
-        "sector_and_boss_routes": "PASS_15_INCLUDING_COMPLETE_REACTOR",
-        "reachable_build_routes": "PASS_33",
-        "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_ONE_CAREER_RECORD_RELOAD",
-        "legacy_full_ui_suite": "PASS_290_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
-        "physical_devices": "NOT_RUN",
-        "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; HUMAN_ACCEPTANCE_DEFERRED_NOT_CURRENT_GATE",
-        "native_touch": "PASS_12_EXECUTIONS; THREE_FULL_MISSIONS_SIX_DELAYED_SHELF_CLIMBS_THREE_MOVEMENT_CHECKS",
-        "visual_review": "AIMED_GUARD_LOCK_AND_COUNTER_FRAMES_REVIEWED; HUMAN_REVIEW_OPEN"
-      },
-      "known_limitations": [
-        "First natural 25–35-minute duration is not verified; B5 scripted input takes 381.62 active seconds. Human timing/acceptance is outside the current Sprint 1 gate per user instruction.",
-        "All 33 affordable-build comparisons pass; defence ends every tested variant at full HP. Gameplay balance/pacing and optimized mobility comparisons remain in scope.",
-        "Human audiovisual and physical-device acceptance is deferred, outside the current Sprint 1 gate.",
-        "Reference study is source-level; selected reference sections were not played.",
-        "B5 is a separate development preview; production stays B3; current Sprint 1 implementation remains in progress."
-      ],
-      "requirement_counts": {
-        "OPEN": 64,
-        "IMPLEMENTED": 16,
-        "total": 80,
-        "verified_whole_milestone": 0,
-        "accepted_whole_milestone": false
-      },
-      "sprint_1": {
-        "status": "ENGINEERING_COMPLETE",
-        "checkpoint": "B6_ENGINEERING_COMPLETE_VERIFIED",
-        "build_id": "0.7.0-rw1.b6",
-        "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
-        "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-        "local_verification": {
-          "recovery": "EXACT_REMOTE_TREE_AND_COMMIT_MATCH",
-          "build": "PASS_CI",
-          "typecheck": "PASS_CI",
-          "i18n": "PASS_710",
-          "art": "PASS_CI",
-          "models": "PASS_105_CI"
-        },
-        "browser_verification": {
-          "build": "PASS",
-          "typecheck": "PASS",
-          "i18n": "PASS_710_EN_RU_KEYS",
-          "art_contracts": "PASS",
-          "model_tests": "PASS_105",
-          "browser_tests": "PASS_147_THREE_BROWSERS",
-          "airlock": "PASS_15_FULL_RUNS_THREE_BROWSERS",
-          "persistence": "PASS_8",
-          "sector_and_boss_routes": "PASS_15",
-          "reachable_build_routes": "PASS_33",
-          "purposeful_mobility_routes": "PASS_9; SEVEN_DASH_CASES_TWO_CONTROLS",
-          "fresh_profile_campaign": "PASS_41_ROOMS_ZERO_DEATHS_BOTH_BOSS_PHASES_FINALE_RELOAD",
-          "legacy_full_ui_suite": "PASS_307_FAILED_0_NOT_RUN_0_ALL_12_SHARDS",
-          "physical_devices": "NOT_RUN; DEFERRED_OUTSIDE_CURRENT_GATE",
-          "human_playtests": "QUALITATIVE_FEEDBACK_ONLY; DEFERRED_OUTSIDE_CURRENT_GATE",
-          "native_touch": "PASS_12_EXECUTIONS",
-          "visual_review": "B6_RENDERED_COMBAT_CONTACT_SHEET_AND_LIVE_ENTRY_REVIEWED; HUMAN_REVIEW_DEFERRED",
-          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-          "runs": [
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325720",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325708",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325727",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325747",
-            "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43636325749"
-          ]
-        },
-        "human_playtest": "QUALITATIVE_USER_FEEDBACK_RECEIVED; FORMAL_ACCEPTANCE_DEFERRED_OUTSIDE_CURRENT_GATE",
-        "physical_devices": "NOT_RUN",
-        "accepted": false,
-        "published": false,
-        "baseline_full_regression": {
-          "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
-          "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
-          "passed": 201,
-          "failed": 33,
-          "not_run": 0
-        },
-        "checkpoint_implementation": "IMPLEMENTED",
-        "checkpoint_verification": "VERIFIED",
-        "full_regression": {
-          "run_id": 43636325727,
-          "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-          "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-          "passed": 307,
-          "failed": 0,
-          "not_run": 0,
-          "parts": [
-            {
-              "job": "check (10)",
-              "job_id": 132573806076,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (2)",
-              "job_id": 132573806274,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (11)",
-              "job_id": 132573806316,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (6)",
-              "job_id": 132573806339,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (9)",
-              "job_id": 132573806348,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (5)",
-              "job_id": 132573806363,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (3)",
-              "job_id": 132573806387,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (1)",
-              "job_id": 132573806404,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (8)",
-              "job_id": 132573806407,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (4)",
-              "job_id": 132573806418,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (12)",
-              "job_id": 132573806469,
-              "passed": 25,
-              "failed": 0,
-              "not_run": 0
-            },
-            {
-              "job": "check (7)",
-              "job_id": 132573806514,
-              "passed": 26,
-              "failed": 0,
-              "not_run": 0
-            }
-          ]
-        },
-        "checkpoint_A": {
-          "status": "IN_PROGRESS",
-          "checkpoint": "A_ENGINEERING_VERIFIED",
-          "build_id": "0.7.0-rw1.a1",
-          "source_baseline": "c1a1e7e2430bc8443ca6d41774c1a0c420c1747e",
-          "checkpoint_document": "docs/cinder-shift/sprint-1-checkpoint.ru.md",
-          "local_verification": {
-            "build": "PASS",
-            "typecheck": "PASS",
-            "i18n": "PASS_683_EN_RU_KEYS",
-            "art": "PASS_RIG_AND_MUZZLE_ANCHORS_UNCHANGED",
-            "models": "PASS_76_TESTS"
-          },
-          "browser_verification": {
-            "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
-            "encounters": "PASS_75_EXECUTIONS_THREE_BROWSERS",
-            "airlock": "PASS_15_FULL_INPUT_EXECUTIONS_THREE_BROWSERS",
-            "persistence": "PASS_8_CHECKS",
-            "sector_routes": "PASS_3_ARCHIVE_2_CARGO_2_FOUNDRY",
-            "full_regression": "PASS_244_FAILED_0_NOT_RUN_0",
-            "visual_review": "PASS: exact renderer frames of HP damage, shield, Reduced Effects; not an all-sector art acceptance",
-            "runs": [
-              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223690",
-              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223673",
-              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223672",
-              "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
-            ],
-            "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0"
-          },
-          "human_playtest": "NOT_RUN",
-          "physical_devices": "NOT_RUN",
-          "accepted": false,
-          "published": false,
-          "baseline_full_regression": {
-            "source_sha": "fb3a33107ce5e9743e05ddcff7ca7c0fba50180b",
-            "tested_merge_sha": "5808492ba8f0d1ddbd3eb28db70348ae191670b5",
-            "passed": 201,
-            "failed": 33,
-            "not_run": 0
-          },
-          "checkpoint_implementation": "IMPLEMENTED",
-          "checkpoint_verification": "VERIFIED",
-          "full_regression": {
-            "source_sha": "80225df1f8f423b47f89d4f30e660aa4a81da4c3",
-            "tested_merge_sha": "e81a2950f90fbf8fdc7cb234571f44b30df068d0",
-            "passed": 244,
-            "failed": 0,
-            "not_run": 0,
-            "shards": [
-              {
-                "job": "check (6)",
-                "passed": 40,
-                "failed": 0,
-                "not_run": 0
-              },
-              {
-                "job": "check (5)",
-                "passed": 40,
-                "failed": 0,
-                "not_run": 0
-              },
-              {
-                "job": "check (1)",
-                "passed": 41,
-                "failed": 0,
-                "not_run": 0
-              },
-              {
-                "job": "check (3)",
-                "passed": 41,
-                "failed": 0,
-                "not_run": 0
-              },
-              {
-                "job": "check (4)",
-                "passed": 41,
-                "failed": 0,
-                "not_run": 0
-              },
-              {
-                "job": "check (2)",
-                "passed": 41,
-                "failed": 0,
-                "not_run": 0
-              }
-            ],
-            "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43564223708"
-          }
-        },
-        "report": "docs/cinder-shift/sprint-1-b6-release-notes.ru.md",
-        "mechanics_matrix": "docs/cinder-shift/rw1-mechanics-matrix.ru.md",
-        "preview_published": true,
-        "acceptance_policy": {
-          "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
-          "instruction_date": "2026-11-14",
-          "instruction": "человеческая приемка пока не учитывается",
-          "current_gate": "Implemented gameplay scope, build/types/art contracts, automated regression and input-only route/build comparisons; remaining gameplay balance and pacing work stays in scope.",
-          "duration_measurement": "Human 25–35-minute first-play duration is not verified and is not a current completion gate."
-        },
-        "user_play_feedback": {
-          "date": "2026-11-14",
-          "author": "Kirill",
-          "text": "я поиграл, неидеально но стало лучше",
-          "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
-          "timed_or_full_route_details_provided": false
-        },
-        "runtime_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-        "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
-        "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
-        "proof": "docs/cinder-shift/sprint-1-b6-verification.json",
-        "remaining_engineering": [],
-        "known_p0": [],
-        "known_p1": [],
-        "completion_policy": {
-          "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
-          "instruction_date": "2026-11-14",
-          "instruction": "человеческая приемка пока не учитывается",
-          "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
-          "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
-        }
-      }
-    },
-    "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-    "development_preview": {
-      "url": "https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/",
-      "cloudflare_deployment_id": "6f6fa95d-34cb-4473-8274-4e8254c587b5",
-      "site_commit": "658c1e7dc8a5f42c5028999ebf1d2cd25f479f2f",
-      "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-      "site_ci": "PASS",
-      "cloudflare": "SUCCESS",
-      "files_equal": 60
-    },
-    "previous_verified_candidate": {
-      "build_id": "0.7.0-rw2.a1",
-      "runtime_source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
-      "documentation_head": "a90728a93b1269759865333bc3390262847842ba",
-      "report": "https://github.com/kirillgoncharik-commits/web-games-nuts/blob/a90728a93b1269759865333bc3390262847842ba/docs/cinder-shift/sprint-2-verification.json"
-    },
-    "test_candidate_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-    "sprint_2": {
-      "status": "C3_ENGINEERING_CHECKPOINT_VERIFIED; TWO_M_RW4_SUBSCOPES_OPEN",
-      "checkpoint": "C3",
-      "full_31_requirement_gate": "29 engineering-verified; 2 cross-sprint subscopes remain with M-RW4",
-      "work_order": {
-        "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
-        "revision": 2
-      },
-      "requirement_review": "docs/cinder-shift/sprint-2-requirement-review.json",
-      "verification_report": "docs/cinder-shift/sprint-2-verification.json",
-      "revalidated_at": "2026-11-16",
-      "revalidation": {
-        "source_head": "eac92cba25f856064568493f9c2d51f85235a31c",
-        "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-        "main_workflows": "7/7 completed success; existing results re-read, not re-run",
-        "runtime_changed": false
-      }
-    },
-    "general_regression": {
-      "status": "PASS",
-      "run_id": 43725786597,
-      "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-      "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-      "passed": 331,
-      "failed": 0,
-      "not_run": 0,
-      "parts": [
-        {
-          "job": "check (8)",
-          "job_id": 132847378378,
-          "passed": 27,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (12)",
-          "job_id": 132847378468,
-          "passed": 27,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (9)",
-          "job_id": 132847378555,
-          "passed": 27,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (3)",
-          "job_id": 132847378583,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (4)",
-          "job_id": 132847378593,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (2)",
-          "job_id": 132847378645,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (6)",
-          "job_id": 132847378502,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (7)",
-          "job_id": 132847378544,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (10)",
-          "job_id": 132847378741,
-          "passed": 27,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (1)",
-          "job_id": 132847378654,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (11)",
-          "job_id": 132847378534,
-          "passed": 27,
-          "failed": 0,
-          "not_run": 0
-        },
-        {
-          "job": "check (5)",
-          "job_id": 132847378566,
-          "passed": 28,
-          "failed": 0,
-          "not_run": 0
-        }
-      ]
-    },
-    "production_published": true,
-    "production_deployment": {
-      "date": "2026-11-16",
-      "timezone": "Europe/Podgorica",
-      "status": "PUBLISHED",
-      "url": "https://nuts.bid/games/cinder-shift/",
-      "build_id": "0.7.0-rw2.c3",
-      "game_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-      "site_merge_sha": "b7573456a19730f04d34499a423bafab4dda6944",
-      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/15",
-      "site_branch": "main",
-      "cloudflare_deployment_id": "e7018101-85d2-4c86-8e90-bd03d67b0658",
-      "cloudflare_check": "SUCCESS",
-      "cloudflare_check_id": 133223254337,
-      "site_verify": "SUCCESS",
-      "site_verify_check_id": 133223009075,
-      "manifest_blob": "c5677e4181fe15f59dcfa5aeb4be9f0f13c82009",
-      "manifest_matches_verified_preview": true,
-      "verification_scope": "Cloudflare production-branch deployment succeeded; site CI succeeded; main manifest matches verified preview C3 exactly. Direct live JSON fetch via web tool was unavailable; no new browser/playtest claimed.",
-      "upstream_regression": "331/331 on exact C3 source; seven main workflows succeeded; existing results re-read",
-      "previous_production": {
-        "build_id": "0.7.0-rw1.b6",
-        "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
-        "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4"
-      },
-      "acceptance_complete": false,
-      "remaining": [
-        "50 locales/RTL: M-RW4",
-        "Final combined-flash and physical-device audit: M-RW4",
-        "Formal human acceptance deferred"
-      ],
-      "authorization": "Kirill: обнови версию на бою"
-    }
-  },
   "sprint_3_additions": [
     {
       "id": "RW3-ADD-01",
-      "status": "IMPLEMENTED_PENDING_EXACT_SOURCE_CI",
+      "status": "VERIFIED_CHECKPOINT_A0",
       "implementation": [
         "scripts/build-metadata.mjs",
         "games/cinder-shift/src/build.ts"
-      ]
+      ],
+      "evidence": [
+        "sprint-3-verification.json"
+      ],
+      "remaining": "Full milestone integration, combined modal flow with new-world endings and required cross-browser/device acceptance remain open."
     },
     {
       "id": "RW3-ADD-02",
-      "status": "IMPLEMENTED_PENDING_EXACT_SOURCE_CI",
+      "status": "VERIFIED_CHECKPOINT_A0",
       "implementation": [
         "games/cinder-shift/src/session/release-notes.ts",
         "games/cinder-shift/src/ui/application.ts"
-      ]
+      ],
+      "evidence": [
+        "sprint-3-verification.json"
+      ],
+      "remaining": "Full milestone integration, combined modal flow with new-world endings and required cross-browser/device acceptance remain open."
     },
     {
       "id": "RW3-ADD-03",
-      "status": "IMPLEMENTED_PENDING_EXACT_SOURCE_CI",
+      "status": "VERIFIED_CHECKPOINT_A0",
       "implementation": [
         "docs/cinder-shift/versioning-policy.ru.md",
         ".github/workflows/cinder-build.yml"
-      ]
+      ],
+      "evidence": [
+        "sprint-3-verification.json"
+      ],
+      "remaining": "Full milestone integration, combined modal flow with new-world endings and required cross-browser/device acceptance remain open."
     }
   ]
 }
