@@ -16,8 +16,13 @@ async function unlocked(page:Page){
 }
 async function walk(page:Page,target:number){
  let previous=NaN;for(let n=0;n<120;n++){
-  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<7){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
-  const f=target>p.x?1:-1,dir=f>0?'d':'a';await page.keyboard.up(f>0?'a':'d');await page.keyboard.down(dir);const feet=p.y+22;
+  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<2){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
+  const f=target>p.x?1:-1,dir=f>0?'d':'a';
+  const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
+  if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=s.simMs%pulse.cycle;
+   if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){await page.keyboard.up('a');await page.keyboard.up('d');await page.waitForFunction(({cycle,start,end})=>{const s=(window as any).__CINDER__(),p=s.simMs%cycle;return p>=start&&p<=end;},{cycle:pulse.cycle,start:pulse.warning+pulse.active,end:pulse.cycle-crossing});continue;}
+  }
+  await page.keyboard.up(f>0?'a':'d');await page.keyboard.down(dir);const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);
   if(head)await page.keyboard.down('s');else await page.keyboard.up('s');
   const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
@@ -29,7 +34,7 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
-  const candidates=[en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60].filter(x=>x>40&&x<600&&!s.solids.some((r:any)=>r.y>=276&&r.y<320&&r.x<x+14&&r.x+r.width>x-14));
+  const candidates=[en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60].filter(x=>x>40&&x<600&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
   await walk(page,at);await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
@@ -37,12 +42,12 @@ async function combat(page:Page){
 }
 async function solveRoom(page:Page){
  await combat(page);let s=await state(page);
- if(s.world.carry){for(let n=0;n<4;n++){
+ if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
-  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids;const launch=[contact.rect.x-52,contact.rect.x+52].find(x=>x>32&&x<610&&!ground.some((r:any)=>r.y>=276&&r.y<320&&r.x<x+14&&r.x+r.width>x-14));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);
-  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open;});await page.keyboard.press('e');
-  await expect.poll(async()=>(await state(page)).world.carry.contacts.find((c:any)=>c.id===contact.id).active).toBe(true);
- }}
+  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=rooms[s.room as keyof typeof rooms].world?.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y>=276&&r.y<320&&r.x<x+14&&r.x+r.width>x-14));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open;});if((await state(page)).world.carry.item.state!=='held')continue;await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.carry.item.state).not.toBe('held');await page.waitForFunction(()=>(window as any).__CINDER__().world.carry.item.state!=='thrown');
+ }await expect.poll(async()=>(await state(page)).world.carry.contacts.every((c:any)=>c.active)).toBe(true);}
  s=await state(page);if(s.world.power){
   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
