@@ -1,6 +1,6 @@
 {
   "milestone": "M-RW4_ENTRY_WITH_M_RW3_PRODUCTION",
-  "status": "INCOMPLETE_LOCAL_ENVIRONMENT_UNAVAILABLE_FULL_INPUT_GATES_FAILED",
+  "status": "INCOMPLETE_PRODUCTION_BRIEF_AND_RW4_OPEN",
   "version": "0.8.0-alpha.2",
   "date": "2026-11-16",
   "timezone": "Europe/Podgorica",
@@ -8,8 +8,8 @@
     "branch": "codex/cinder-shift-final",
     "pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "first_runtime_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
-    "current_runtime_sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
-    "tree_sha": "1961fa69b1f43ec4e9fbc474c41e40f625d6f881"
+    "current_runtime_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "tree_sha": "3f5572e3eb0f7b1d09274539237bcb25768e6b81"
   },
   "production": {
     "changed_by_this_task": false,
@@ -18,20 +18,33 @@
     "site_merge_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c"
   },
   "local": {
-    "source_equivalent_remote_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
-    "local_sha": "0d3f38a6772320c867482706bb3edf5c1f307722",
-    "identical_tree_sha": "6f7d31b5895c3eb1bc7314805e27359cfda23775",
-    "build": "PASS",
+    "source_equivalent_remote_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "local_sha": "37a2df9",
+    "identical_tree_sha": "3f5572e3eb0f7b1d09274539237bcb25768e6b81",
+    "build": "PASS_EARLIER_LOCAL_SNAPSHOT; CURRENT_EXACT_RUNTIME_BUILD_PASS_IN_CI",
     "typecheck": "PASS",
-    "i18n": "PASS_882_EN_RU_KEYS",
+    "i18n": "PASS_885_EN_RU_KEYS",
     "art_contracts": "PASS_EXISTING_ART_ANCHOR_RIG_CONTRACTS_NOT_NEW_WORLD_PRODUCTION_ACCEPTANCE",
-    "model_checks": {
+    "browser": "NOT_RUN_LOCAL_SERVER_LISTEN_EPERM",
+    "availability": "SOURCE_ENVIRONMENT_RESTORED; original local worktree preserved; isolated browser/server still blocked",
+    "continuation_checks": {
+      "legacy_and_turret_models": {
+        "passed": 58,
+        "failed": 0
+      },
+      "world_action_placement_and_spawn_models": {
+        "passed": 44,
+        "failed": 0
+      },
+      "typecheck": "PASS",
+      "workflow_yaml": "PASS",
+      "browser": "NOT_RUN_SERVER_EPERM_AND_CHROME_ABORT"
+    },
+    "historical_first_runtime_model_checks": {
       "selected_core_and_world_pack": 121,
       "additional_ballistics_input_feedback_pack": 43,
       "failed": 0
-    },
-    "browser": "NOT_RUN_LOCAL_SERVER_LISTEN_EPERM",
-    "availability": "LOCAL_ENVIRONMENT_BECAME_UNAVAILABLE_DURING_CI; subsequent fixes are remote and require their own CI"
+    }
   },
   "ci_history": [
     {
@@ -95,27 +108,14 @@
       "new_pack_pass": 49,
       "new_pack_fail": 2,
       "full_world_routes": "FAILED due input-driver overshoot during room transitions; adaptive approach added."
-    }
-  ],
-  "current_ci": {
-    "sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
-    "artifact_run_id": 43873344613,
-    "job_id": 133319919429,
-    "status": "FAILURE",
-    "build": "PASS",
-    "typecheck": "PASS",
-    "old_rw3_pack": {
-      "passed": 29,
-      "failed": 0
     },
-    "new_targeted_pack": {
-      "passed": 49,
-      "failed": 0
-    },
-    "full_world_routes": {
-      "passed": 0,
-      "failed": 2,
-      "issues": [
+    {
+      "sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+      "run_id": 43873344613,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 49,
+      "full_world_routes": "FAILED_2",
+      "diagnostics": [
         {
           "world": "c02-small-world",
           "room": "SW01-C",
@@ -126,26 +126,147 @@
           "room": "YU01-C",
           "observed": "Input driver fired from an upper platform (feet244) at a lower drone (y292); no accepted ground firing line/full route yet."
         }
-      ],
-      "interpretation": "Observed expert-driver positions do not establish a game softlock. Full real-input proof remains failed; resume with a playable local view."
+      ]
     },
-    "game_artifact_id": null,
-    "game_artifact_status": "NOT_ISSUED_BECAUSE_INPUT_GATE_FAILED",
-    "test_evidence_artifact": {
-      "id": 14228767961,
-      "name": "cinder-sprint3-checks",
-      "bytes": 276206,
-      "sha256": "2930101cdd20efcf74b9a7b47fc2033a0669cee0b3b2c59d57ded2cd7fce2665",
-      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613/artifacts/14228767961",
-      "kind": "TEST_EVIDENCE_ZIP_NOT_GAME_ARTIFACT"
+    {
+      "sha": "52e56d58b76822359954ddff1d29f073a525f19a",
+      "run_id": 43886261413,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 49,
+      "reported_turret_pack": {
+        "passed": 5,
+        "failed": 0
+      },
+      "full_world_routes": "FAILED_2",
+      "diagnostics": [
+        "C02 reached SW02-B but died after an unsafe approach through enemy fire. Driver now chooses the nearest clear firing lane, with a contact safety margin.",
+        "C03 reached YU05-C (19th room), then attempted to jump against the A wall from under a low ceiling. Driver now uses the visible shelf and a second jump."
+      ],
+      "additional_runtime_fix": "SW02-D turret overlapped cover and hovered above the floor; corrected in successor d8b3d032. Spawn regression failed before the fix and passed afterward."
+    },
+    {
+      "sha": "0894fe17c9bbc811a14d845f5e49c63bdeea6e1e",
+      "run_id": 43888960993,
+      "turret_pack_pass": 5,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 50,
+      "full_world_routes": "FAILED_2",
+      "diagnostics": [
+        "C02 reached SW04-B (14 rooms), HP6; input oscillated at the exit.",
+        "C03 stood at x346.5 on the edge of the A wall instead of the ground firing lane."
+      ]
+    },
+    {
+      "sha": "c263a5bf070e3b1ade7112ee4c8e0c286578f5ed",
+      "run_id": 43890057437,
+      "turret_pack_pass": 5,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 50,
+      "full_world_routes": "FAILED_2",
+      "diagnostics": [
+        "C02 missed a short contact window; item rested beside a cover and the driver stood on its edge instead of beside it.",
+        "C03 reached YU05-B (18 rooms); the 64-pixel conservative firing margin rejected a valid shorter drone approach."
+      ]
+    },
+    {
+      "sha": "b782ee22a97afa3ea7e0fc30ff492a1a8099daf7",
+      "run_id": 43891987840,
+      "turret_pack_pass": 5,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 50,
+      "full_world_routes": {
+        "c02-small-world": "PASS_20_ROOMS_5_MISSIONS_FINAL_FACTS_AND_RELOAD",
+        "c03-adriatic-1986": "FAIL_YU01_C_SWITCH_APPROACH"
+      },
+      "jobs": {
+        "c02": 133385371877,
+        "c03": 133385371930,
+        "runtime": 133385371439
+      },
+      "diagnostics": [
+        "C02 completed with ordinary input after one labelled C01-unlock fixture; its final persisted result was checked after reload.",
+        "C03 approached the x568 console from atop the adjacent cover (feet288); the action requires proximity to feet320. Successor chooses a supported standing point within the existing interaction radius."
+      ]
     }
+  ],
+  "current_ci": {
+    "sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "artifact_run_id": 43893609588,
+    "status": "SUCCESS_SELECTED_ENGINEERING_GATE",
+    "required_jobs": [
+      "runtime-checks",
+      "world-routes (c02-small-world)",
+      "world-routes (c03-adriatic-1986)",
+      "artifact"
+    ],
+    "game_artifact_id": 14237839242,
+    "game_artifact_status": "IMMUTABLE_ALPHA2_CANDIDATE_NOT_RC",
+    "note": "All four jobs in run 43893609588 passed. This is the selected runtime/input gate, not a claim that every repository workflow or the production brief is complete.",
+    "runtime_checks": {
+      "passed": 84,
+      "failed": 0,
+      "packs": [
+        5,
+        29,
+        50
+      ]
+    },
+    "world_route_jobs": {
+      "c02-small-world": 133391074761,
+      "c03-adriatic-1986": 133391073823
+    },
+    "build": "PASS",
+    "typecheck": "PASS",
+    "job_id": 133394649627,
+    "full_world_routes": {
+      "passed": 2,
+      "failed": 0,
+      "worlds": {
+        "c02-small-world": {
+          "job_id": 133391074761,
+          "rooms": 20,
+          "missions": 5,
+          "final_facts": 3,
+          "persisted_result_reload": true
+        },
+        "c03-adriatic-1986": {
+          "job_id": 133391073823,
+          "rooms": 20,
+          "missions": 5,
+          "final_facts": 5,
+          "persisted_result_reload": true
+        }
+      },
+      "input": "One labelled legacy C01 unlock fixture, then ordinary keyboard and UI input; no world progress/HP/clock injection."
+    },
+    "game_artifact": {
+      "id": 14237839242,
+      "name": "cinder-shift-18-1",
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43893609588/artifacts/14237839242",
+      "source_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+      "source_dirty": false,
+      "build_id": "cinder-v1.b18.a1",
+      "zip_bytes": 4541077,
+      "zip_sha256": "4cde336401862e73033695864f7ac23edc3bbb0de4100be9fc49c1b727ed9f76",
+      "game_tar_bytes": 4535199,
+      "game_tar_sha256": "695bffb81faad7268de94f0fb6a18eb68c5103c9d3cd141ee6145c67ab570f66",
+      "download_and_checksum_verified": true,
+      "total_gzip_asset_bytes": 4565786,
+      "deployed": false
+    },
+    "runtime_evidence_artifact": {
+      "id": 14237288957,
+      "bytes": 2285161,
+      "zip_sha256": "703df7aae13b18b97ede8d75d042e2662cdb748d49c69d42a21895e461235900"
+    },
+    "route_report_limit": "Successful info.attach(body) payloads were not written by the CI list reporter; route PASS logs and test assertions are the proof. An export-only successor adds explicit writeFile for future successful runs. No full-route rerun is claimed for that file-output-only delta."
   },
   "runtime_inventory": {
     "new_rooms": 40,
     "new_missions": 10,
     "base_rooms": 44,
-    "new_locale_keys": 131,
-    "total_en_ru_keys": 882,
+    "new_locale_keys": 134,
+    "total_en_ru_keys": 885,
     "procedural_music_themes": 14,
     "production_art_manifest_complete": false,
     "production_audio_brief_complete": false
@@ -156,10 +277,10 @@
     "blind_playtests": "NOT_RUN",
     "physical_phones": "NOT_RUN",
     "human_timing_minutes": "NOT_MEASURED",
-    "current_full_routes": "FAILED_2; NO_FULL_WORLD_ACCEPTANCE"
+    "current_full_routes": "PASS_2_ON_9017044_WITH_LABELLED_LEGACY_UNLOCK_FIXTURE; HUMAN_AND_PHYSICAL_DEVICE_ACCEPTANCE_NOT_RUN"
   },
   "internal_open": [
-    "Resolve the two exact-source real-input routes with an available playable/debugging environment, then verify all 40 rooms and Retry/reload/touch/build variants.",
+    "Finish detailed production mechanisms, then verify touch/Retry/build variants and earned fresh C01 unlock. Ordinary-input C02/C03 routes and persisted final reload passed on 9017044.",
     "Complete production art/animation/VFX manifest and full audio stems/stinger/SFX/export brief.",
     "Accepted new content in five challenge flows; existing challenge catalog remains unchanged.",
     "48 additional complete locale catalogs and RTL integration; English copies were not added.",
@@ -174,72 +295,57 @@
   ],
   "workflow_snapshot": [
     {
-      "id": 43873349237,
-      "name": "Cinder Shift check",
-      "status": "queued",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344853,
-      "name": "Cinder Shift reachable build curve",
-      "status": "queued",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344953,
-      "name": "Cinder Shift rework candidate",
-      "status": "in_progress",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344774,
-      "name": "Cinder Shift Sprint 2 runtime media",
-      "status": "in_progress",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344857,
-      "name": "Cinder Shift full routes and saves",
-      "status": "queued",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344613,
+      "id": 43893609588,
       "name": "Cinder Shift artifact",
       "status": "completed",
-      "conclusion": "failure",
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344586,
-      "name": "Cinder Shift Sprint 2 presentation",
-      "status": "completed",
       "conclusion": "success",
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
-    },
-    {
-      "id": 43873344679,
-      "name": "Cinder Shift rework combat flow",
-      "status": "in_progress",
-      "conclusion": null,
-      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+      "head_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+      "scope": "selected runtime/input gate only"
     }
   ],
   "resume": {
     "source_branch": "codex/cinder-shift-final",
-    "source_head": "40ef862630f80948c2c2375700a6e39aee036fc6",
-    "required_action": "Create a fresh checkout of this remote HEAD when the environment is restored; do not continue the old local 7a69ad8 worktree without synchronization.",
+    "source_head": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "required_action": "Continue cinder-shift-final-continue, local37a2df9 with exact remote runtime tree. Preserve the original cinder-shift-final worktree and its pending documents.",
     "first_checks": [
-      "npm ci --ignore-scripts",
-      "npm run build",
-      "npm run art:check",
-      "npx playwright test --config=playwright.final.config.ts --project=chromium"
+      "Resume from the exact runtime 9017044 or its clearly labelled documentation/report-export successor. Preserve the older local worktree.",
+      "Do not rerun the already successful keyboard route gate without a new change or concern. Explicit report-file export was typechecked, with no gameplay code change.",
+      "Continue detailed M-RW3 mechanics, the full production art/audio/VFX brief and then M-RW4 matrices.",
+      "Keep sector 2 E inactivity open unless the user-specific failure is reproduced; F power-off presentation is corrected."
     ],
-    "next_gate": "Resolve input-driver positioning and inspect actual game behavior, keeping failing tests and all previous evidence."
+    "next_gate": "M-RW3 production mechanics/art/audio/animation/VFX completion, touch/build/Retry/earned-unlock checks; then M-RW4 locales/RTL/challenges/storage/performance/devices/channels and one accepted RC preview."
+  },
+  "turret_report": {
+    "reported_sector": 2,
+    "reported_rooms": [
+      "E",
+      "F"
+    ],
+    "report": "docs/cinder-shift/cargo-turrets-2026-11-16.md",
+    "E_status": "NOT_REPRODUCED; report stays open",
+    "F_status": "POWER_OFF_IS_DESIGNED; misleading HP display and stale E armor hint corrected",
+    "verified_source_sha": "52e56d58b76822359954ddff1d29f073a525f19a",
+    "cross_browser_run_id": 43886261363,
+    "cross_browser_jobs": {
+      "chromium": 133365252393,
+      "firefox": 133365251623,
+      "webkit": 133365251708
+    },
+    "cross_browser_checks": {
+      "per_browser": 54,
+      "total_passed": 162,
+      "failed": 0,
+      "turret_cases_per_browser": 5
+    },
+    "chromium_evidence": {
+      "artifact_id": 14234952822,
+      "sha256": "33bd7d7aaf6e36600a49e99813ebe9e85745967080ee3588277066050a0d2ec7",
+      "bytes": 21508685,
+      "screenshots_visually_reviewed": [
+        "cargo-F-off.png",
+        "cargo-E-destroyed.png"
+      ]
+    },
+    "production_changed": false
   }
 }

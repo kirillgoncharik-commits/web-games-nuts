@@ -6,9 +6,19 @@
 
 Ветка `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10), база — `codex/cinder-shift-m-rework` / PR9. Исходный remote `487b6757e60f1b7152e566503139d9cd425f57eb` перед началом сверён через compare: identical.
 
-Текущий runtime source: `40ef862630f80948c2c2375700a6e39aee036fc6`. Точный отчёт — [sprint-4-verification.json](sprint-4-verification.json); каталог новых комнат — [new-world-runtime-registry.json](new-world-runtime-registry.json).
+Текущий runtime source: `90170441b9742ce6a2f0dee5cf6a71e689b46935`. Точный отчёт — [sprint-4-verification.json](sprint-4-verification.json); каталог новых комнат — [new-world-runtime-registry.json](new-world-runtime-registry.json).
 
-Первая поставка remote `1fba2c9f1452c457f0a4d5833b526215049b586f` совпадала с локальным `0d3f38a6772320c867482706bb3edf5c1f307722` по tree `6f7d31b5895c3eb1bc7314805e27359cfda23775`. Затем локальная среда отключилась. Последующие исправления сохранены через GitHub и проверялись своим CI. Старую локальную копию `7a69ad8` нельзя продолжать без fetch/сверки нового HEAD.
+Первая поставка remote `1fba2c9f1452c457f0a4d5833b526215049b586f` совпадала с локальным `0d3f38a6772320c867482706bb3edf5c1f307722` по tree `6f7d31b5895c3eb1bc7314805e27359cfda23775`. Затем локальная среда отключилась. Последующие исправления сохранены через GitHub и проверялись своим CI. Среда исходников восстановлена: свежая локальная копия `cinder-shift-final-continue`, commit `37a2df9`, совпадает с remote runtime по tree `3f5572e3eb0f7b1d09274539237bcb25768e6b81`. Старая копия `cinder-shift-final` и её незакоммиченные документы сохранены; продолжать её без сверки нельзя.
+
+## Продолжение и сообщение о турелях
+
+Пользователь подтвердил сектор 2, E/F. Исправлены показ отключённой турели (знак отсутствия питания, без HP) и зависевшая от старого tutorial-флага подсказка E. На source `52e56d5` прошли пять проверок турелей и полный набор 54 encounter/UI/combat checks в каждом из Chromium/Firefox/WebKit — 162 PASS. В F выключенное состояние предусмотрено E01/Relay; E всегда получает питание. Неподвижная E пока не воспроизведена и остаётся открытой. [Точный отчёт](cargo-turrets-2026-11-16.md).
+
+Новая проверка геометрии нашла SW02-D: турель пересекала укрытие и не стояла на полу. Размещение исправлено; модель сначала упала, после исправления все 44 action/placement/spawn models PASS. Ещё 58 legacy/turret models PASS; typecheck/i18n — 885 ключей.
+
+Исторически полные маршруты на `52e56d5` были красными: C02 — смерть при небезопасном обходе к SW02-B; C03 дошёл до YU05-C (19-я комната), где driver прыгал под низким потолком вместо подъёма на полку. Последующие input-прогоны выявили неточности подхода к консолям и предметам; сохранены все failure-state. На source `b782ee2`, run `43891987840`, C02 впервые прошёл все 20 комнат/5 миссий, финал, факты и reload результата. C03 остался красным: player стоял на краю укрытия возле консоли x568. Current source `9017044` использует ближайшие консоли, проверенные позиции взаимодействия, запас времени для броска и боковой подход к предмету. На exact source `9017044`, [run 43893609588](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43893609588), оба полных маршрута теперь PASS: 20+20 комнат, по пять миссий, три SW-фрагмента/пять YU-передач, финалы и reload сохранённого результата. Пакеты 5 turret + 29 previous + 50 targeted PASS. Все четыре job выбранного gate завершились успешно; это не общий PASS всех workflow и не production acceptance.
+
+Сохранён [immutable alpha.2 artifact](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43893609588/artifacts/14237839242), build `cinder-v1.b18.a1`, source `9017044`, clean. ZIP SHA256 `4cde336401862e73033695864f7ac23edc3bbb0de4100be9fc49c1b727ed9f76`; game tar SHA256 `695bffb81faad7268de94f0fb6a18eb68c5103c9d3cd141ee6145c67ab570f66`. Скачивание и checksum проверены. Это alpha-кандидат, не RC и не live deploy. Успешные body-only route attachments не сохранялись list reporter; proof — CI PASS и assertions. Добавлена явная запись JSON для будущих прогонов; этот export-only delta прошёл typecheck, игровые файлы не изменены.
 
 ## Реальная поставка alpha.2
 
@@ -26,7 +36,7 @@
 
 Локально на первой поставке: build/typecheck/i18n (882 EN/RU ключа), прежние art/anchor/rig contracts, reproducible C01 registry и 164 модельных теста PASS. Локальный HTTP server был запрещён (listen EPERM), затем среда стала unavailable.
 
-Текущий exact-source [CI 43873344613](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613):
+Исторический exact-source [CI 43873344613](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613):
 - build/typecheck PASS;
 - прежний RW3 pack: 29 PASS;
 - новый targeted pack: 49 PASS, включая action models, placement checks, selector/notes/механику, обычные входы и recovery world save;
@@ -40,7 +50,7 @@ C02 останавливается в SW01-C: контакт выполнен, �
 
 ## Следующий конкретный шаг
 
-Восстановить рабочую среду, получить свежий HEAD PR10 и открыть играбельный/debug runtime. Исправить точность input-driver и проверить реальное поведение: безопасный подход к ремонту SW01-C, спуск/позицию стрельбы YU01-C, затем весь путь 20+20 комнат, финалы, Retry/reload и сохраняемый результат. Не выдавать driver failure за доказанный дефект игры и не подменять реальный ввод debug unlock.
+Сквозной keyboard gate на `9017044` закрыт. Продолжить production brief M-RW3: подробные комнатные механизмы, затем touch/Retry/build-варианты и earned fresh C01 unlock. Локальный HTTP/browser по-прежнему запрещён; человеческие и физические device-проверки остаются NOT RUN. Случай E не закрывать как исправленный без воспроизведения.
 
 После этого продолжить production по brief: нажимаемые клавиши, бумажная/воздушная среда, пространственные фазы и encounters; весь 128-position art/animation/VFX manifest; stems/intensities, восемь stinger, SFX среды, editable masters/экспорты и listening evidence. Текущий процедурный draft/14 themes этот объём не закрывают.
 

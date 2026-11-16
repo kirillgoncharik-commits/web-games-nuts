@@ -2,14 +2,14 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-16",
-  "reference": "Final-stage entry remains incomplete: alpha.2 runtime draft, 29 previous and 49 targeted CI checks pass; two full world input routes fail; local environment unavailable.",
+  "reference": "Final-stage entry remains incomplete: selected runtime gate PASS (84 checks and both complete world routes), immutable alpha.2 candidate saved. Production mechanics/art/audio and RW4/human gates remain open; E inactivity not reproduced.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
-    "code_sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "code_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Remote PR10 contains the latest source. The former local environment is unavailable and behind. Current CI passes build/typecheck, 29 old checks and 49 targeted checks; 2 full world routes FAIL. No alpha.2 deployment or RC approval.",
+    "working_tree": "Runtime 9017044 passes build/typecheck, 5 turret + 29 prior + 50 world checks and both 20-room/5-mission routes with persisted result reload. Artifact cinder-v1.b18.a1 is pinned. The documentation/report-export successor changes no game files; export-only delta typechecked. No alpha.2 deployment or RC approval.",
     "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "test_source_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    "test_source_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
     "version": "0.8.0-alpha.1",
@@ -555,7 +555,7 @@
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
     "publication_scope": "No alpha.2 production deployment in this task.",
-    "runtime_source_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    "runtime_source_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1019,13 +1019,13 @@
     "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
   },
   "final_stage_entry": {
-    "status": "INCOMPLETE_ENVIRONMENT_UNAVAILABLE_FULL_INPUT_FAILED",
+    "status": "INCOMPLETE_PRODUCTION_BRIEF_AND_RW4_OPEN",
     "version": "0.8.0-alpha.2",
     "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
     "verification": "docs/cinder-shift/sprint-4-verification.json",
     "accepted": false,
     "published": false,
-    "current_runtime_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    "current_runtime_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "historical_rw3_a0_workstream": {
     "milestone": "M-RW3",

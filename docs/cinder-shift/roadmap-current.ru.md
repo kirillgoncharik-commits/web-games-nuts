@@ -4,7 +4,7 @@
 
 Production: `0.8.0-alpha.1`, build `cinder-v1.b1.a1`, runtime `ffa3df5f24d155df95daaafd2c127c5fc97d0a29`, site merge `f9f31a615ed05fc206a93eef24cb78d2fc67bb4c`. [Live evidence](sprint-3-production-release-2026-11-16.json). Live в этом проходе не менялся.
 
-Разработка: `0.8.0-alpha.2`, `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10) в ветку PR9. Все 40 SW/YU room IDs подключены к обычному runtime. Текущие build/typecheck, 29 прежних и 49 targeted CI checks PASS; два полных input routes FAIL. Локальная среда недоступна. Подробные комнатные механизмы, полные маршруты, production art/audio и приёмка остаются открытыми.
+Разработка: `0.8.0-alpha.2`, runtime `9017044`, `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10). Выбранный инженерный gate PASS: 5 проверок турелей, 29 прежних, 50 targeted world checks и оба полных маршрута по 20 комнат/5 миссий с финалом и reload сохранённого результата. Собран immutable alpha.2 `cinder-v1.b18.a1`; это не RC. Отключённые турели и подсказка брони исправлены; случай неподвижной E пока не воспроизведён. Подробные production-механизмы, art/audio и M-RW4/человеческая приёмка остаются открытыми.
 
 | Этап | Фактический результат | Остаток |
 | --- | --- | --- |

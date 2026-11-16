@@ -5,6 +5,7 @@ import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/ses
 import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
+import {writeFile} from 'node:fs/promises';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -98,5 +99,8 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
   }
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
- await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);await info.attach('input-route.json',{body:JSON.stringify({source:'legacy C01 unlock fixture; all world input real',visited,final},null,2),contentType:'application/json'});
+ await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);
+ // Body-only attachments are not retained by the CI list reporter on success.
+ // Keep the actual result file in the directory uploaded by the workflow.
+ const report=info.outputPath('input-route.json');await writeFile(report,JSON.stringify({source:'legacy C01 unlock fixture; all world input real',source_sha:(await state(page)).sha,visited,final},null,2));await info.attach('input-route.json',{path:report,contentType:'application/json'});
 });
