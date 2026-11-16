@@ -1,5 +1,7 @@
 // Original 8-bit inspired score data. Themes share instruments but not melodies or harmonic paths.
 export const themes={
+ shutdown:{bpm:72,bars:8,roots:[36,36,43,40],motif:[0,7,0,3,0,7,3,0],answer:[7,3,0,7],swing:0,lead:.025,bass:.065,answerLevel:.018,noise:.004},
+ evacuation:{bpm:136,bars:16,roots:[40,43,45,47],motif:[0,7,10,12,7,5,3,7],answer:[12,10,7,12],swing:0,lead:.066,bass:.11,answerLevel:.035,noise:.012},
  menu:{bpm:108,bars:32,roots:[45,41,43,40],motif:[0,7,9,7,4,2,0,-3],answer:[12,9,7,4],swing:0,lead:.075,bass:.12,answerLevel:.045,noise:.012},
  map:{bpm:96,bars:16,roots:[41,48,43,45],motif:[0,3,7,10,7,5,3,0],answer:[12,10,7,3],swing:0,lead:.052,bass:.085,answerLevel:.036,noise:.006},
  airlock:{bpm:144,bars:32,roots:[40,45,43,47],motif:[0,3,7,10,9,7,3,0],answer:[12,10,7,3],swing:.03,lead:.084,bass:.13,answerLevel:.048,noise:.018},

@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "build_id": "0.7.0-rework.4",
+  "head_sha": "755e80882ae7e29adc59b99d9058489539438971",
+  "tested_merge_sha": "db25262a4df831d2cffa512c5824da7e4a94088b",
+  "status": "AUTOMATED_INPUT_ONLY",
+  "campaign_seed": 4,
+  "nodes": [],
+  "method": "One Foundry entry fixture pre-completes earlier sectors only. Each route then uses trusted keyboard and UI inputs through all eight rooms with no position/HP/enemy/clock/room mutations or Retry. Measurements exclude menu reading and are not independent human playtests.",
+  "duration_target_status": "NOT_VERIFIED: natural first successful campaign target remains 25–35 minutes; a scripted Foundry route is not that measurement.",
+  "limitations": [
+    "Chromium desktop only for the continuous Foundry routes.",
+    "Base suit and campaign seed 4 only; other builds and event-plan seeds remain open.",
+    "No physical-device, human visual/audio or whole-milestone acceptance."
+  ],
+  "fixes": [
+    "Powered enemy impacts can alert before proximity activation while preserving room threat budgets, full warnings and recovery.",
+    "M3J entrance cover moved from x160–208 to x136–176: the safe floor interval for a 22px-wide body grows from 2px to 34px before the press at x232.",
+    "Separate real-input test waits through a complete first-press cycle with full HP in the landing pocket."
+  ],
+  "workflow_runs": {
+    "model_and_encounters": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280145",
+    "airlock_flow": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280045",
+    "routes_and_persistence": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43288280055"
+  },
+  "routes": [
+    {
+      "route": "service",
+      "outcome": "victory",
+      "rooms_visited": 8,
+      "active_seconds": 62.23333333333,
+      "wall_seconds": 65.451,
+      "initial_hp": 6,
+      "final_hp": 4,
+      "hits_received": 4,
+      "repair": {
+        "slot": "R03",
+        "room": "M3K",
+        "hp_before": 3,
+        "hp_after": 5
+      },
+      "rooms": [
+        {
+          "room": "M3A",
+          "active_seconds": 7.516666666666716,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "M3E",
+          "active_seconds": 7.583333333333087,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M3F",
+          "active_seconds": 6.150000000000324,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M3B",
+          "active_seconds": 7.333333333333865,
+          "hp_in": 5,
+          "hp_out": 4
+        },
+        {
+          "room": "M3G",
+          "active_seconds": 9.333333333332863,
+          "hp_in": 4,
+          "hp_out": 4
+        },
+        {
+          "room": "M3H",
+          "active_seconds": 9.083333333332014,
+          "hp_in": 4,
+          "hp_out": 3
+        },
+        {
+          "room": "M3K",
+          "active_seconds": 5.5333333333325285,
+          "hp_in": 3,
+          "hp_out": 5
+        },
+        {
+          "room": "M3D",
+          "active_seconds": 9.56666666666527,
+          "hp_in": 5,
+          "hp_out": 4
+        }
+      ],
+      "hits": [
+        {
+          "room": "M3A",
+          "reason": "walker-contact",
+          "active_seconds": 3.267,
+          "hp_after": 5
+        },
+        {
+          "room": "M3B",
+          "reason": "drone-shot",
+          "active_seconds": 26.067,
+          "hp_after": 4
+        },
+        {
+          "room": "M3H",
+          "reason": "walker-shot",
+          "active_seconds": 39.817,
+          "hp_after": 3
+        },
+        {
+          "room": "M3D",
+          "reason": "drone-shot",
+          "active_seconds": 58.533,
+          "hp_after": 4
+        }
+      ]
+    },
+    {
+      "route": "press",
+      "outcome": "victory",
+      "rooms_visited": 8,
+      "active_seconds": 57.966666666663954,
+      "wall_seconds": 60.811,
+      "initial_hp": 6,
+      "final_hp": 4,
+      "hits_received": 4,
+      "repair": {
+        "slot": "R03",
+        "room": "M3K",
+        "hp_before": 3,
+        "hp_after": 5
+      },
+      "rooms": [
+        {
+          "room": "M3A",
+          "active_seconds": 7.50000000000005,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "M3E",
+          "active_seconds": 7.2833333333331,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M3F",
+          "active_seconds": 6.05000000000028,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M3C",
+          "active_seconds": 6.983333333333842,
+          "hp_in": 5,
+          "hp_out": 5
+        },
+        {
+          "room": "M3I",
+          "active_seconds": 7.266666666666669,
+          "hp_in": 5,
+          "hp_out": 3
+        },
+        {
+          "room": "M3J",
+          "active_seconds": 7.79999999999886,
+          "hp_in": 3,
+          "hp_out": 3
+        },
+        {
+          "room": "M3K",
+          "active_seconds": 5.416666666665883,
+          "hp_in": 3,
+          "hp_out": 5
+        },
+        {
+          "room": "M3D",
+          "active_seconds": 9.549999999998604,
+          "hp_in": 5,
+          "hp_out": 4
+        }
+      ],
+      "hits": [
+        {
+          "room": "M3A",
+          "reason": "walker-contact",
+          "active_seconds": 3.25,
+          "hp_after": 5
+        },
+        {
+          "room": "M3I",
+          "reason": "drone-shot",
+          "active_seconds": 30.883,
+          "hp_after": 4
+        },
+        {
+          "room": "M3I",
+          "reason": "walker-shot",
+          "active_seconds": 32.717,
+          "hp_after": 3
+        },
+        {
+          "room": "M3D",
+          "reason": "drone-shot",
+          "active_seconds": 54.25,
+          "hp_after": 4
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "typecheck": "PASS",
+    "i18n": "640 EN/RU keys PASS",
+    "build": "PASS",
+    "art_contracts": "PASS",
+    "reproducible_room_registry": "PASS",
+    "selected_models": 60,
+    "encounter_ui_executions": 39,
+    "airlock_flow_executions": 15,
+    "persistence_executions": 8,
+    "full_foundry_routes": 2,
+    "legacy_full_ui": "NOT_ACCEPTED: old menu/character/purchase contracts still require migration"
+  }
+}

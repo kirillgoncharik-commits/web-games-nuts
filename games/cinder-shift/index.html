@@ -16,7 +16,7 @@
   <main id="app" class="shell">
     <header class="toolbar">
       <a class="brand" href="/games/" aria-label="Nuts Games">NUTS<span>GAMES</span></a>
-      <div class="compact-title">CINDER SHIFT 64<small id="build-label"></small></div>
+      <div class="compact-title">CINDER SHIFT 64</div>
       <div class="toolbar-actions"><button id="mute" class="quiet" data-i18n="settings.muteOff" aria-pressed="false">Sound: on</button><button id="settings-open" class="quiet" data-i18n="common.settings">Settings</button><button id="pause" class="quiet" data-i18n="common.pause" disabled>Pause</button></div>
     </header>
     <div id="storage-notice" class="storage-notice" role="status" hidden></div>
@@ -40,6 +40,7 @@
       <div id="mission-footer" class="console-footer" hidden><span id="objective"></span><span id="device"></span></div>
     </section>
   </main>
+  <small id="build-label" class="build-signature" aria-label="Build version"></small>
   <p class="game-description">Cinder Shift 64 is a browser action game by Nuts Games. Prepare Mira, explore five sectors of Caldera 7, choose a route through the foundry, and reach the evacuation platform. Twelve research technologies and six campaign events shape each run. Keyboard, touch and gamepad controls; English and Russian interface. No account required.</p>
   <script vite-ignore src="./boot-guard.js"></script>
   <script type="module" src="./src/main.ts"></script>

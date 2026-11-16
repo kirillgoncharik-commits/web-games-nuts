@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "build_id": "0.7.0-rework.5",
+  "head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+  "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+  "status": "AUTOMATED_INPUT_ONLY",
+  "campaign_room_count": 32,
+  "selected_campaign_route_room_count": 29,
+  "browser": "Chromium",
+  "campaign_seed": 4,
+  "nodes": [],
+  "method": "One sector-entry fixture pre-completes Airlock only. Each Cargo case then uses actual keyboard/UI through all nine rooms with no HP/enemy/position/clock/room mutations after entry. Both cases reach victory and verify same-entry full-HP Retry without duplicate rewards.",
+  "workflow_runs": {
+    "models_and_equipment": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321080",
+    "airlock_flow": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321222",
+    "sector_routes_and_persistence": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43427321050"
+  },
+  "checks": {
+    "build": "PASS",
+    "typecheck": "PASS",
+    "i18n": "657 EN/RU keys PASS",
+    "art_contracts": "PASS",
+    "source_room_registry": "PASS",
+    "selected_models": 64,
+    "ui_equipment_executions": 48,
+    "airlock_executions": 15,
+    "persistence_executions": 8,
+    "full_sector_routes": 4
+  },
+  "cargo": [
+    {
+      "circuit": "conveyor",
+      "outcome": "victory",
+      "event_plan": [],
+      "optional_salvage": false,
+      "active_seconds": 73.46666666666516,
+      "wall_seconds": 76.579,
+      "initial_hp": 6,
+      "final_hp": 3,
+      "repair": {
+        "slot": "R02",
+        "room": "M2E",
+        "hp_in": 2,
+        "hp_out": 4
+      },
+      "retry_verified": true,
+      "reward_deduplication_verified": true,
+      "rooms": [
+        {
+          "room": "D",
+          "active_seconds": 9.266666666666682,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M2A",
+          "active_seconds": 10.316666666666656,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "E",
+          "active_seconds": 10.85000000000079,
+          "hp_in": 5,
+          "hp_out": 4
+        },
+        {
+          "room": "M2B",
+          "active_seconds": 6.683333333332843,
+          "hp_in": 4,
+          "hp_out": 3
+        },
+        {
+          "room": "M2C",
+          "active_seconds": 5.29999999999923,
+          "hp_in": 3,
+          "hp_out": 3
+        },
+        {
+          "room": "M2D",
+          "active_seconds": 6.733333333332354,
+          "hp_in": 3,
+          "hp_out": 2
+        },
+        {
+          "room": "F",
+          "active_seconds": 8.38333333333211,
+          "hp_in": 2,
+          "hp_out": 2
+        },
+        {
+          "room": "M2E",
+          "active_seconds": 6.0833333333324475,
+          "hp_in": 2,
+          "hp_out": 4
+        },
+        {
+          "room": "G",
+          "active_seconds": 9.70000000000205,
+          "hp_in": 4,
+          "hp_out": 3
+        }
+      ],
+      "hits": [
+        {
+          "room": "M2A",
+          "reason": "drone-shot",
+          "active_seconds": 11.733,
+          "hp_after": 5
+        },
+        {
+          "room": "E",
+          "reason": "turret-shot",
+          "active_seconds": 23.583,
+          "hp_after": 4
+        },
+        {
+          "room": "M2B",
+          "reason": "walker-shot",
+          "active_seconds": 33.3,
+          "hp_after": 3
+        },
+        {
+          "room": "M2D",
+          "reason": "drone-shot",
+          "active_seconds": 45.567,
+          "hp_after": 2
+        },
+        {
+          "room": "G",
+          "reason": "turret-shot",
+          "active_seconds": 69.267,
+          "hp_after": 3
+        }
+      ]
+    },
+    {
+      "circuit": "security",
+      "outcome": "victory",
+      "event_plan": [],
+      "optional_salvage": true,
+      "active_seconds": 77.8333333333331,
+      "wall_seconds": 80.752,
+      "initial_hp": 6,
+      "final_hp": 3,
+      "repair": {
+        "slot": "R02",
+        "room": "M2E",
+        "hp_in": 2,
+        "hp_out": 4
+      },
+      "retry_verified": true,
+      "reward_deduplication_verified": true,
+      "rooms": [
+        {
+          "room": "D",
+          "active_seconds": 9.183333333333351,
+          "hp_in": 6,
+          "hp_out": 6
+        },
+        {
+          "room": "M2A",
+          "active_seconds": 10.283333333333312,
+          "hp_in": 6,
+          "hp_out": 5
+        },
+        {
+          "room": "E",
+          "active_seconds": 10.750000000000782,
+          "hp_in": 5,
+          "hp_out": 4
+        },
+        {
+          "room": "M2B",
+          "active_seconds": 7.816666666666055,
+          "hp_in": 4,
+          "hp_out": 4
+        },
+        {
+          "room": "M2C",
+          "active_seconds": 5.349999999999227,
+          "hp_in": 4,
+          "hp_out": 4
+        },
+        {
+          "room": "M2D",
+          "active_seconds": 10.0666666666652,
+          "hp_in": 4,
+          "hp_out": 2
+        },
+        {
+          "room": "F",
+          "active_seconds": 8.349999999998786,
+          "hp_in": 2,
+          "hp_out": 2
+        },
+        {
+          "room": "M2E",
+          "active_seconds": 6.11666666666688,
+          "hp_in": 2,
+          "hp_out": 4
+        },
+        {
+          "room": "G",
+          "active_seconds": 9.766666666669508,
+          "hp_in": 4,
+          "hp_out": 3
+        }
+      ],
+      "hits": [
+        {
+          "room": "M2A",
+          "reason": "drone-shot",
+          "active_seconds": 11.633,
+          "hp_after": 5
+        },
+        {
+          "room": "E",
+          "reason": "turret-shot",
+          "active_seconds": 23.433,
+          "hp_after": 4
+        },
+        {
+          "room": "M2D",
+          "reason": "drone-shot",
+          "active_seconds": 46.55,
+          "hp_after": 3
+        },
+        {
+          "room": "M2D",
+          "reason": "turret-shot",
+          "active_seconds": 51.067,
+          "hp_after": 2
+        },
+        {
+          "room": "G",
+          "reason": "turret-shot",
+          "active_seconds": 73.6,
+          "hp_after": 3
+        }
+      ]
+    }
+  ],
+  "foundry_regression": [
+    {
+      "route": "service",
+      "outcome": "victory",
+      "active_seconds": 61.78333333333007,
+      "final_hp": 4,
+      "rooms_visited": 8
+    },
+    {
+      "route": "press",
+      "outcome": "victory",
+      "active_seconds": 58.049999999997276,
+      "final_hp": 4,
+      "rooms_visited": 8
+    }
+  ],
+  "human_duration_target_verified": false,
+  "limitations": [
+    "Full Cargo input cases use the base suit and campaign seed 4, with no E01 event. Other builds/seeds and full E01/Relay combinations remain open; their model contracts pass.",
+    "The turret case collects the optional upper salvage; the conveyor case skips it. Their timings do not isolate circuit difficulty.",
+    "These are scripted known routes, not natural first-human playtests or verification of a 25–35-minute campaign.",
+    "Physical devices and human visual/audio acceptance remain open. Full legacy UI regression still requires migration."
+  ]
+}
+

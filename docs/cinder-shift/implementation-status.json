@@ -1,34 +1,26 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-07",
-  "reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
+  "updated_at": "2026-11-16",
+  "reference": "M-RW3 A0 foundation started; checkpoint A and complete campaigns remain open",
   "source_checkout": {
-    "branch": "codex/cinder-shift-m05b1-campaign",
-    "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-    "working_tree": "clean",
-    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
-    "source_pr_head_includes_current_changes": true,
-    "ci_for_code_commit_d9088f00c771d4add647e97501010f4e7ab72e4b": "failed_run_45_art_check_hit_flash_hash_false_positive",
-    "ci_for_head_8f4c4cb755e888dceea9f3be79af0dfbaac629fc": "failed_run_47_css_motion_contract",
-    "ci_for_head_bc7044e4e741b2f4d4ea1be90cc88d5d17f96618": "failed_audio_check_missing_script_after_build_and_art_check_passed",
-    "ci_for_head_6bea87c86e67d709af5f402bfdbe0a926348295f": "failed_legacy_m05a_audio_check_incompatible_with_m06_runtime_assets",
-    "ci_for_current_changes": "pending_after_removing_stale_m05a_audio_check_workflow_step",
-    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; code commit d9088f00c771d4add647e97501010f4e7ab72e4b is in existing draft PR #7 and is not published to nuts.bid",
-    "scope_1_2_code_commit": "d9088f00c771d4add647e97501010f4e7ab72e4b",
-    "site_pr": 8,
-    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
-    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
+    "branch": "codex/cinder-shift-m-rework",
+    "code_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "working_tree": "RW3 A0 published and live-verified. Runtime SHA remains ffa3df5; subsequent report commits change documentation only.",
+    "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "test_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29"
   },
   "production": {
-    "build_id": "0.6.0-m06.0",
-    "source_sha": "22da406857d2b690f136880d0fd642dce196e071",
-    "url": "https://nuts.bid/games/cinder-shift/?build=0.6.0-m06.0",
-    "site_main_sha": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
-    "description": "M06 development preview published; not final Beta; quality gate remains open at 0/39 acceptance scenarios",
-    "source_dirty": false,
-    "previous_build_id": "0.6.0-m05b1.3",
-    "site_pr": 8
+    "version": "0.8.0-alpha.1",
+    "build_id": "cinder-v1.b1.a1",
+    "source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "site_main_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
+    "site_pr": 16,
+    "deployment_id": "1a6f2ae0-cc17-4364-8ce6-9fecf28b2d28",
+    "status": "PUBLISHED_AND_LIVE_VERIFIED",
+    "evidence": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   },
   "release_register": [
     {
@@ -62,13 +54,75 @@
       "site_commit": "00cac0b04b5b184052c07f18fe2f801e43ca5cfd",
       "source_pr": 7,
       "site_pr": 8
+    },
+    {
+      "channel": "nuts.bid web",
+      "build_id": "0.7.0-rw1.b3",
+      "source_sha": "d52853ed6b2d339d6015e64075dc93628cc482fa",
+      "status": "published_development_preview",
+      "site_commit": "825e2dde64aba18a123ec063100e63ce84d5204c",
+      "site_pr": 13,
+      "source_dirty": false,
+      "manifest_sha256": "973437c69bf3aa24759b00bc82be88e7c421bc3d9e3e4106fefe629a90534967",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "acceptance_complete": false
+    },
+    {
+      "channel": "nuts.bid web",
+      "build_id": "0.7.0-rw1.b6",
+      "source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "status": "published_development_preview",
+      "site_commit": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+      "site_pr": 14,
+      "source_dirty": false,
+      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "cloudflare_deployment_id": "bea206b4-3e65-4d8a-ae54-938527d733ee",
+      "deployed_at": "2026-11-14T22:39:55Z",
+      "site_ci": "PASS",
+      "cloudflare_pages": "SUCCESS",
+      "production_live_ui": "NOT RUN; browser connection and local execution environment unavailable after merge",
+      "acceptance_complete": false
+    },
+    {
+      "channel": "separate development preview",
+      "build_id": "0.7.0-rw2.a1",
+      "source_sha": "ba4cefd6eef70a3512de592d2e8c2e533fc6b52d",
+      "site_commit": "06a0d29e91174f495ac19bc4ceb44a1e2eb0fecb",
+      "site_pr": 15,
+      "status": "CHECKPOINT_A1; NOT_FULL_SPRINT_COMPLETE",
+      "url": "https://ab2511d6.nuts-games.pages.dev/games/cinder-shift/",
+      "cloudflare_pages": "SUCCESS",
+      "site_ci": "PASS",
+      "production_changed": false
+    },
+    {
+      "channel": "nuts.bid web",
+      "version": "0.8.0-alpha.1",
+      "build_id": "cinder-v1.b1.a1",
+      "source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+      "site_merge_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
+      "status": "PUBLISHED_AND_LIVE_VERIFIED",
+      "url": "https://nuts.bid/games/cinder-shift/"
     }
   ],
   "acceptance": {
-    "scenario_count": 39,
-    "passed": 0,
-    "open": 39,
-    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
+    "milestone": "M-RW1",
+    "status": "ENGINEERING_COMPLETE; HUMAN_ACCEPTANCE_DEFERRED",
+    "automated_checkpoint": "B6",
+    "requirements_coverage": "docs/cinder-shift/rework-coverage.json",
+    "human_duration_target_verified": false,
+    "independent_audiovisual_review": "NOT_RUN",
+    "physical_devices": "NOT_RUN",
+    "human_acceptance_in_current_scope": false,
+    "completion_policy": {
+      "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+      "instruction_date": "2026-11-14",
+      "instruction": "человеческая приемка пока не учитывается",
+      "current_gate": "Implemented M-RW1 gameplay, build/types/art contracts, automated regression and input-only route/build comparisons. All pass on B6.",
+      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+    },
+    "whole_m_rework_accepted": false
   },
   "verification_performed": [
     "npm run check passed: EN/RU keys and parameters plus TypeScript type check; this does not establish gameplay acceptance",
@@ -83,7 +137,13 @@
     "Site PR #8 merged at 00cac0b04b5b184052c07f18fe2f801e43ca5cfd; live nuts.bid page displayed v0.6.0-m06.0 / 22da406. This confirms deployment/version only; 39 acceptance cases remain open.",
     "Scope 1.2 baseline: published build 0.6.0-m06.0 remains tied to source 22da406857d2b690f136880d0fd642dce196e071 and artifact SHA da4757814ffaddc021725f682ba2a47de1cc3d03aa3d12bec439f1f4917b3de4; local HEAD before this scope work was 4028405f690c8dadf322172793d589f35f253771; no new build, tests, visual review or deployment recorded yet.",
     "Scope 1.2 local production build passed on clean code commit d9088f00c771d4add647e97501010f4e7ab72e4b: i18n 478 keys/parameters and TypeScript; build_id 0.6.0-m06.0, source_dirty false, 3,933,736 raw / 2,401,599 gzip bytes, 52 manifest entries, build-manifest SHA-256 a3b868fa255f418d82f5ec9d61af5f9c48719fab43eab0495b573eb0781a1689. This local artifact is not published; no gameplay tests or acceptance were run. Local preview server failed with EPERM while binding 127.0.0.1:4175; runtime screenshots and human visual review remain open.",
-    "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending."
+    "GitHub CI run 45 for code commit d9088f00c771d4add647e97501010f4e7ab72e4b passed the build but failed art:check at Mira rig binding: the guard included a permitted hit-flash paint branch together with frozen pose and placement code. Run 47 on head 8f4c4cb passed that rig guard and build, then failed because the CSS motion contract rejected button transitions/animation and treated existing animation:none as active motion. UI motion was removed; art:check now scans ui-art.css and permits only explicit none declarations. Run on head 6bea87c passed build and art:check, then the restored legacy M05A audio check failed because the M06 generator had intentionally removed an old runtime WAV. The stale M05A audio step is removed from the CI workflow; human audio review remains open and no replacement audio test was added. CI rerun is pending.",
+    "Build, 707 EN/RU keys, art contracts, 89 models, 108 three-browser UI/equipment/feedback executions, 15 Airlock runs, 8 persistence, 15 sector/boss routes and one fresh-profile full campaign PASS. Full regression 276 PASS / 0 FAIL / 0 NOT RUN, все 12 частей завершены. Human duration/build-curve/device acceptance open.",
+    "B5 build/types/710 EN-RU keys/art/96 models/123 three-browser executions/15 Airlock/12 native touch/8 persistence/15 sector-boss/33 upgraded routes/full fresh-profile campaign PASS. General regression 290 PASS / 0 FAIL / 0 NOT RUN, all 12 shards. Production remains B3; independent human duration, balance, audiovisual and physical-device acceptance OPEN.",
+    "2026-11-14 user instruction: human acceptance is excluded from the current Sprint 1 completion gate; qualitative first-play feedback is recorded without counting it as acceptance.",
+    "B6 final engineering verification: docs/cinder-shift/sprint-1-b6-verification.json; 307/307 general regression and all five workflows / 42 jobs SUCCESS.",
+    "2026-11-14: at user request, published B6 on nuts.bid through nutsbid PR14 / main 46ee58b70b101f7f85b93594f142741fac7c5c21. GitHub Actions push run 43649233697 SUCCESS; Cloudflare Pages deployment bea206b4-3e65-4d8a-ae54-938527d733ee SUCCESS at 22:39:55Z. Runtime and 55-resource manifest are unchanged from verified B6 preview. Post-deploy production UI check NOT RUN due lost browser connection/environment.",
+    "2026-11-15 M-RW2 C3: all7 source workflows /46 jobs SUCCESS on c7a4b1c /merge53a9e10;331/331 general regression;44 runtime room clips with audio plus full fresh-profile audibleC01; public CDN source assertion and cold/warm measurements PASS. Production remains B6."
   ],
   "blocks": [
     {
@@ -480,5 +540,483 @@
       ],
       "next_action": "Open the updated screens in a working browser preview and capture the same desktop/mobile views; obtain human visual/contrast review. Keep real-device and gameplay acceptance marked NOT RUN until performed."
     }
-  ]
+  ],
+  "active_workstream": {
+    "milestone": "M-RW3",
+    "status": "A0_FOUNDATION_IN_PROGRESS",
+    "version": "0.8.0-alpha.1",
+    "coverage": "docs/cinder-shift/rework-coverage.json",
+    "checkpoint": "docs/cinder-shift/sprint-3-checkpoint.ru.md",
+    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
+    "published": true,
+    "accepted": false,
+    "complete_campaigns_delivered": 0,
+    "internal_mechanics_fixtures": 2,
+    "build_id": "cinder-v1.b1.a1",
+    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/",
+    "publication_scope": "A0 foundation published and live-verified; two production campaigns remain in development",
+    "production_url": "https://nuts.bid/games/cinder-shift/",
+    "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
+  },
+  "historical_source_checkout": {
+    "branch": "codex/cinder-shift-m05b1-campaign",
+    "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
+    "working_tree": "clean",
+    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
+    "source_pr_head_includes_current_changes": true,
+    "ci_for_code_commit_d9088f00c771d4add647e97501010f4e7ab72e4b": "failed_run_45_art_check_hit_flash_hash_false_positive",
+    "ci_for_head_8f4c4cb755e888dceea9f3be79af0dfbaac629fc": "failed_run_47_css_motion_contract",
+    "ci_for_head_bc7044e4e741b2f4d4ea1be90cc88d5d17f96618": "failed_audio_check_missing_script_after_build_and_art_check_passed",
+    "ci_for_head_6bea87c86e67d709af5f402bfdbe0a926348295f": "failed_legacy_m05a_audio_check_incompatible_with_m06_runtime_assets",
+    "ci_for_current_changes": "pending_after_removing_stale_m05a_audio_check_workflow_step",
+    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; code commit d9088f00c771d4add647e97501010f4e7ab72e4b is in existing draft PR #7 and is not published to nuts.bid",
+    "scope_1_2_code_commit": "d9088f00c771d4add647e97501010f4e7ab72e4b",
+    "site_pr": 8,
+    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
+    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
+  },
+  "historical_quality_fix_reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
+  "historical_m06_acceptance": {
+    "scenario_count": 39,
+    "passed": 0,
+    "open": 39,
+    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
+  },
+  "previous_workstream": {
+    "milestone": "M-REWORK",
+    "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_C3_ENGINEERING_VERIFIED_WITH_M_RW4_SUBSCOPES",
+    "build_id": "0.7.0-rw2.c3",
+    "baseline_source_sha": "3a8572358a74cbf3e5b5e5e31a1abca708c4e960",
+    "branch": "codex/cinder-shift-m-rework",
+    "coverage": "docs/cinder-shift/rework-coverage.json",
+    "campaign_design": "docs/cinder-shift/rework-campaign-design.ru.md",
+    "published": false,
+    "accepted": false,
+    "verification": {
+      "build": "PASS_EXACT_SOURCE_CI",
+      "typescript": "PASS_EXACT_SOURCE_CI",
+      "i18n": "PASS_735_MATCHED_EN_RU_KEYS",
+      "art_contracts": "PASS_EXACT_SOURCE_CI",
+      "room_registry": "PASS_44_REPRODUCIBLE_ROOMS",
+      "models": "PASS_105",
+      "presentation": "PASS_17_CANDIDATE_AND17_BASELINE",
+      "three_browser_ui_combat": "PASS_147_EXECUTIONS",
+      "airlock_flow": "PASS_15_EXECUTIONS",
+      "native_touch": "PASS_12_EXECUTIONS",
+      "persistence": "PASS_8",
+      "sector_and_boss_routes": "PASS_15_PLUS_FULL_C01",
+      "reachable_builds": "PASS_33_SECTOR_BUILDS",
+      "purposeful_mobility": "PASS_9",
+      "room_media": "PASS_44_CANDIDATE_PLUS44_BASELINE_WITH_AUDIO",
+      "full_campaign": "PASS_TWO_FRESH_PROFILE_C01_ROUTES_ONE_AUDIBLE",
+      "interaction_details": "PASS_7_INCLUDING_TOUCH_AVAILABILITY_AND_COLLAPSE_SCROLL",
+      "public_cdn": "PASS_PINNED_PRODUCTION_AND_C3_SOURCES_COLD_AND_WARM",
+      "general_regression": "PASS_331_FAILED_0_NOT_RUN_0_ALL12SHARDS"
+    },
+    "draft_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
+    "room_registry": "docs/cinder-shift/rework-room-registry.json",
+    "automated_foundry_baseline": "docs/cinder-shift/rework-foundry-input-baseline.json",
+    "local_execution_status": "UNAVAILABLE; use remote PR9 and checkpoint; local checkout last synced at 254b542",
+    "repository_audit": "docs/cinder-shift/repository-audit-2026-11-12.ru.md",
+    "automated_cargo_baseline": "docs/cinder-shift/rework-cargo-input-baseline.json",
+    "stage": "M_RW2_C3",
+    "previous_validated_candidate": {
+      "build_id": "0.7.0-rework.5",
+      "validated_head_sha": "466620b66fad43274ff043e5b590a517dd5b7ac4",
+      "tested_merge_sha": "9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+      "verification": {
+        "typecheck": "passed",
+        "i18n": "passed_657_en_ru_keys",
+        "build": "passed_exact_source_CI",
+        "art_contracts": "passed_including_robot_hash_and_fixture_isolation",
+        "model_tests": "64_passed",
+        "browser_tests": "48 UI/equipment executions passed across Chromium/Firefox/WebKit on 466620b66fad43274ff043e5b590a517dd5b7ac4 / tested merge 9131a776f1ae49cfa08df9b8af4bbe33314ff5c9",
+        "physical_devices": "not_run",
+        "human_playtests": "not_run",
+        "legacy_full_ui_suite": "requires_migration_to_new_menu_purchase_and_gate_contracts; focused passes do not establish full-suite PASS",
+        "visual_review": "not_performed; CI screenshots stored in workflow artifact",
+        "persistence": "8 migrated persistence checks passed on exact .5 source.",
+        "full_foundry_routes": "Both eight-room base routes passed again in .5: service 61.78 active seconds, press 58.05; both finish at 4 HP. Chromium / campaign seed 4.",
+        "airlock_flow": "15 complete Airlock executions passed across three browsers, including base/W1/M1/D1, reward, Retry/reload and Cargo unlock.",
+        "room_registry": "Source regeneration and git diff match: 32 unique campaign rooms / 29 on a selected route; Cargo 9 episodes.",
+        "full_cargo_routes": "Both nine-room base Cargo power choices passed on campaign seed 4: conveyor 73.47 active seconds, security plus optional upper salvage 77.83; both finish at 3 HP after R02 and verify full-HP same-entry Retry without duplicate reward. Chromium; not human duration."
+      }
+    },
+    "validated_head_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "automated_archive_baseline": "docs/cinder-shift/rework-archive-input-baseline.json",
+    "active_sprint": {
+      "id": "M-RW2",
+      "checkpoint": "C3",
+      "status": "C3_ENGINEERING_CHECKPOINT_VERIFIED; TWO_M_RW4_SUBSCOPES_OPEN",
+      "requirement_count": 31,
+      "engineering_verified": 29,
+      "partial_m_rw4": 2
+    },
+    "production_preview": {
+      "build_id": "0.7.0-rw1.b6",
+      "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
+      "tested_code_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+      "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/14",
+      "cloudflare_deployment_id": "bea206b4-3e65-4d8a-ae54-938527d733ee",
+      "manifest_sha256": "3d136b2c1ddf95b34bc80f0ed683c04971d2996438c2cd2b16350629f5068702",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "verification": {
+        "site_ci": "PASS",
+        "cloudflare_pages": "SUCCESS",
+        "deployed_at": "2026-11-14T22:39:55Z",
+        "live_build_label": "NOT RUN on production; B6 / a390b80 verified on the identical pre-merge preview",
+        "live_flow": "NOT RUN on production; browser connection unavailable"
+      },
+      "acceptance_complete": false
+    },
+    "current_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "current_tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+    "full_regression_b4": {
+      "source_sha": "bcfa9e292277eefb063faa41089f2d3794dab96a",
+      "passed": 278,
+      "failed": 0,
+      "not_run": 0,
+      "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43588699908",
+      "failed_shard_rerun": "SUCCESS_ALL_12_SHARDS_RERAN; historical initial native-touch flake retained",
+      "initial_result": {
+        "passed": 277,
+        "failed": 1,
+        "not_run": 0,
+        "failed_case": "native touch M1A shelf route timing"
+      }
+    },
+    "development_preview": {
+      "url": "https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/",
+      "cloudflare_deployment_id": "6f6fa95d-34cb-4473-8274-4e8254c587b5",
+      "site_commit": "658c1e7dc8a5f42c5028999ebf1d2cd25f479f2f",
+      "source": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "site_ci": "PASS",
+      "cloudflare": "SUCCESS",
+      "files_equal": 60
+    },
+    "preview_published": true,
+    "full_regression_b5": {
+      "source_sha": "07e18683b664d9443d81ec07ffcec295f44d4030",
+      "tested_merge_sha": "e90e5a89a668498cd0b346b8ab4f3c90530cc23d",
+      "run": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43628898118",
+      "passed": 290,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (1)",
+          "job_id": 132550974438,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (10)",
+          "job_id": 132550974624,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132550974643,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132550974655,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (8)",
+          "job_id": 132550974663,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132550974678,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132550974701,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132550974748,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132550974773,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132550974833,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132550974836,
+          "passed": 24,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132550974952,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
+    },
+    "acceptance_policy": {
+      "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_SPRINT_1_COMPLETION_GATE",
+      "instruction_date": "2026-11-14",
+      "instruction": "человеческая приемка пока не учитывается",
+      "current_gate": "M-RW2 C3 runtime engineering and exact-source regression; formal human acceptance remains excluded by the prior user instruction.",
+      "duration_measurement": "Human 25-35-minute first-play duration is not verified and is not a current completion gate."
+    },
+    "user_play_feedback": {
+      "date": "2026-11-14",
+      "author": "Kirill",
+      "text": "я поиграл, неидеально но стало лучше",
+      "status": "QUALITATIVE_FEEDBACK_ONLY; NOT_ACCEPTANCE",
+      "timed_or_full_route_details_provided": false
+    },
+    "runtime_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "automated_current_baseline": "docs/cinder-shift/sprint-1-b6-verification.json",
+    "report": "docs/cinder-shift/sprint-2-verification.json",
+    "full_regression_b6": {
+      "run_id": 43636325727,
+      "source_sha": "252e80b0dea14df0f5dbffa728940bc4a17f4829",
+      "tested_merge_sha": "7efde9319419a74b97027687fe8fa455a6188b28",
+      "passed": 307,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (10)",
+          "job_id": 132573806076,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132573806274,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132573806316,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132573806339,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132573806348,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132573806363,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132573806387,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (1)",
+          "job_id": 132573806404,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (8)",
+          "job_id": 132573806407,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132573806418,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132573806469,
+          "passed": 25,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132573806514,
+          "passed": 26,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
+    },
+    "sprint_2": {
+      "status": "C3_ENGINEERING_CHECKPOINT_VERIFIED; TWO_M_RW4_SUBSCOPES_OPEN",
+      "checkpoint": "C3",
+      "full_31_requirement_gate": "29 engineering-verified; 2 cross-sprint subscopes remain with M-RW4",
+      "work_order": {
+        "library_file_id": "libfile_fde3_f-5e1762d71a7c81919c9b98195c5faa89_ae3406e10eec8191933768799a79d180",
+        "revision": 2
+      },
+      "requirement_review": "docs/cinder-shift/sprint-2-requirement-review.json",
+      "verification_report": "docs/cinder-shift/sprint-2-verification.json"
+    },
+    "historical_local_worktree": "/Users/kirill/.codex/.chatgpt-projects/g-p-6ad5ed3f3ac48191a0d11c57bf93d434/cinder-shift-sprint-1",
+    "full_regression_c3": {
+      "status": "PASS",
+      "run_id": 43725786597,
+      "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
+      "passed": 331,
+      "failed": 0,
+      "not_run": 0,
+      "parts": [
+        {
+          "job": "check (8)",
+          "job_id": 132847378378,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (12)",
+          "job_id": 132847378468,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (9)",
+          "job_id": 132847378555,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (3)",
+          "job_id": 132847378583,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (4)",
+          "job_id": 132847378593,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (2)",
+          "job_id": 132847378645,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (6)",
+          "job_id": 132847378502,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (7)",
+          "job_id": 132847378544,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (10)",
+          "job_id": 132847378741,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (1)",
+          "job_id": 132847378654,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (11)",
+          "job_id": 132847378534,
+          "passed": 27,
+          "failed": 0,
+          "not_run": 0
+        },
+        {
+          "job": "check (5)",
+          "job_id": 132847378566,
+          "passed": 28,
+          "failed": 0,
+          "not_run": 0
+        }
+      ]
+    }
+  },
+  "previous_production": {
+    "build_id": "0.7.0-rw2.c3",
+    "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "site_main_sha": "b7573456a19730f04d34499a423bafab4dda6944",
+    "site_pr": 15,
+    "evidence": "docs/cinder-shift/sprint-2-production-release-2026-11-16.json",
+    "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
+  }
 }

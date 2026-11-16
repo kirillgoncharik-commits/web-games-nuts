@@ -1,87 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid meet" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
-  <defs>
-    <linearGradient id="bulkhead" x2="0" y2="1">
-      <stop stop-color="#30495c"/>
-      <stop offset="1" stop-color="#1b2939"/>
-    </linearGradient>
-    <linearGradient id="glass" x2="0" y2="1">
-      <stop stop-color="#76dcc8" stop-opacity=".62"/>
-      <stop offset="1" stop-color="#213747" stop-opacity=".9"/>
-    </linearGradient>
-    <pattern id="floor-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-      <path d="M32 0H0V32" fill="none" stroke="#456171" stroke-opacity=".32" stroke-width="1"/>
-    </pattern>
-  </defs>
-  <rect width="1200" height="520" fill="#111823"/>
-  <rect x="14" y="14" width="1172" height="492" fill="url(#floor-grid)" stroke="#456171" stroke-width="2"/>
-  <path d="M28 42H1172M28 478H1172M28 50V470M1172 50V470" fill="none" stroke="#72909c" stroke-opacity=".42" stroke-width="3"/>
-  <path d="M74 260H1126M120 238V282M360 238V282M600 238V282M840 238V282M1080 238V282" fill="none" stroke="#30495c" stroke-width="14"/>
-  <path d="M74 260H1126M120 238V282M360 238V282M600 238V282M840 238V282M1080 238V282" fill="none" stroke="#72909c" stroke-opacity=".45" stroke-width="2" stroke-dasharray="10 8"/>
-  <g id="service-cable-tray" fill="none" stroke="#456171" stroke-width="4">
-    <path d="M38 80H1162M38 440H1162"/>
-    <path d="M120 80V106M360 80V106M600 80V106M840 80V106M1080 80V106"/>
-    <path d="M120 414V440M360 414V440M600 414V440M840 414V440M1080 414V440"/>
-  </g>
-
-  <g id="sector-airlock" transform="translate(34 104)" stroke-linejoin="miter">
-    <path d="M12 142V50L32 30H160L180 50V142Z" fill="url(#bulkhead)" stroke="#72909c" stroke-width="4"/>
-    <path d="M42 126V66L56 52H136L150 66V126Z" fill="#111823" stroke="#f1d8ae" stroke-width="3"/>
-    <path d="M74 58V120M118 58V120" stroke="#456171" stroke-width="4"/>
-    <path d="M81 70H111V108H81Z" fill="#213747" stroke="#72909c" stroke-width="3"/>
-    <path d="M96 72V106M83 89H109" stroke="#dfa15c" stroke-width="3"/>
-    <path d="M0 150H192M24 142V158M168 142V158" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M22 26V12H48M144 12H170V26" fill="none" stroke="#76dcc8" stroke-width="4"/>
-    <path d="M28 42H48M144 42H164" stroke="#dfa15c" stroke-width="6"/>
-    <path d="M64 134H128" stroke="#456171" stroke-width="4"/>
-  </g>
-
-  <g id="sector-cargo" transform="translate(258 292)" stroke-linejoin="miter">
-    <path d="M0 124H204M18 116V134M188 116V134" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M18 54H82V116H18ZM86 74H146V116H86ZM150 40H190V116H150Z" fill="url(#bulkhead)" stroke="#72909c" stroke-width="4"/>
-    <path d="M28 64H72V104H28ZM96 84H136V104H96ZM160 50H180V104H160Z" fill="#213747" stroke="#456171" stroke-width="3"/>
-    <path d="M28 80H72M96 96H136M160 66H180" stroke="#dfa15c" stroke-width="4"/>
-    <path d="M8 30V12H196V30M28 12V38M178 12V28" fill="none" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M28 38H176" stroke="#72909c" stroke-width="3"/>
-    <path d="M30 32V52M174 28V38" stroke="#76dcc8" stroke-width="4"/>
-    <path d="M8 134H28M176 134H196" stroke="#456171" stroke-width="8"/>
-  </g>
-
-  <g id="sector-foundry" transform="translate(498 92)" stroke-linejoin="miter">
-    <path d="M8 150V50L30 28H176L196 50V150Z" fill="url(#bulkhead)" stroke="#72909c" stroke-width="4"/>
-    <path d="M25 54H84V128H25ZM94 54H174V128H94Z" fill="#111823" stroke="#f1d8ae" stroke-width="3"/>
-    <path d="M37 66H72V112H37Z" fill="#dfa15c" fill-opacity=".72" stroke="#dfa15c" stroke-width="3"/>
-    <path d="M48 77H61V102H48Z" fill="#f1d8ae"/>
-    <path d="M108 66H160V84H108ZM118 84V116M150 84V116" fill="url(#glass)" stroke="#72909c" stroke-width="3"/>
-    <path d="M34 38V10H62V28M138 28V10H164V38" fill="none" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M10 158H194M24 150V166M180 150V166" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M20 134H184" stroke="#456171" stroke-width="5"/>
-    <path d="M86 42V144M92 42V144" stroke="#dfa15c" stroke-width="3"/>
-  </g>
-
-  <g id="sector-archive" transform="translate(738 292)" stroke-linejoin="miter">
-    <path d="M0 124H204M16 116V134M188 116V134" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M18 24H66V116H18ZM76 12H124V116H76ZM134 32H186V116H134Z" fill="url(#bulkhead)" stroke="#72909c" stroke-width="4"/>
-    <path d="M28 38H56V46H28ZM28 58H56V66H28ZM28 78H56V86H28ZM86 26H114V34H86ZM86 46H114V54H86ZM86 66H114V74H86ZM86 86H114V94H86ZM144 46H176V54H144ZM144 66H176V74H144ZM144 86H176V94H144Z" fill="#76dcc8" fill-opacity=".78"/>
-    <path d="M28 100H56M86 106H114M144 104H176" stroke="#dfa15c" stroke-width="4"/>
-    <path d="M10 16H194M10 8V24M194 8V24" stroke="#f1d8ae" stroke-width="3"/>
-    <path d="M68 18V118M130 18V118" stroke="#456171" stroke-width="3"/>
-  </g>
-
-  <g id="sector-reactor" transform="translate(978 88)" stroke-linejoin="miter">
-    <path d="M8 154V48L30 26H174L196 48V154Z" fill="url(#bulkhead)" stroke="#72909c" stroke-width="4"/>
-    <path d="M34 132V52H62V132M142 132V52H170V132" fill="#111823" stroke="#f1d8ae" stroke-width="3"/>
-    <circle cx="102" cy="87" r="44" fill="#111823" stroke="#f1d8ae" stroke-width="4"/>
-    <circle cx="102" cy="87" r="30" fill="#213747" stroke="#76dcc8" stroke-width="4"/>
-    <circle cx="102" cy="87" r="12" fill="#dfa15c" stroke="#f1d8ae" stroke-width="3"/>
-    <path d="M102 43V58M102 116V131M58 87H73M131 87H146M71 56L82 67M122 107L133 118M133 56L122 67M82 107L71 118" stroke="#72909c" stroke-width="5"/>
-    <path d="M18 162H186M32 154V170M172 154V170" stroke="#f1d8ae" stroke-width="4"/>
-    <path d="M90 32V18H114V32" fill="none" stroke="#dfa15c" stroke-width="4"/>
-  </g>
-
-  <g id="maintenance-lights" fill="#dfa15c">
-    <rect x="28" y="31" width="12" height="5"/>
-    <rect x="1160" y="31" width="12" height="5"/>
-    <rect x="28" y="484" width="12" height="5"/>
-    <rect x="1160" y="484" width="12" height="5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 520" preserveAspectRatio="none" shape-rendering="crispEdges" aria-hidden="true" focusable="false">
+ <defs><pattern id="facility-grid" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M24 0H0V24" fill="none" stroke="#213747" stroke-width="1"/></pattern></defs>
+ <rect width="1200" height="520" fill="#0c1420"/><rect x="20" y="20" width="1160" height="480" fill="url(#facility-grid)" stroke="#456171" stroke-width="4"/>
+ <path d="M170 144H710V380H1020" stroke="#101823" stroke-width="68" fill="none"/><path d="M170 144H710V380H1020" stroke="#456171" stroke-width="44" fill="none"/><path d="M170 144H710V380H1020" stroke="#213747" stroke-width="36" fill="none"/>
+ <g fill="#1b2939" stroke="#72909c" stroke-width="3"><path d="M62 78H278V210H62Z"/><path d="M328 64H552V224H328Z"/><path d="M592 56H828V268H592Z"/><path d="M584 308H836V452H584Z"/><path d="M896 290H1144V462H896Z"/></g>
+ <g stroke="#456171" stroke-width="2" fill="#213747"><path d="M350 78H382V102H350ZM392 78H424V102H392ZM434 78H466V102H434ZM476 78H508V102H476Z"/><path d="M610 68H632V94H610ZM642 68H664V94H642ZM674 68H696V94H674Z"/><path d="M604 416H816V438H604Z"/></g>
+ <g stroke="#76dcc8" stroke-opacity=".4" fill="none" stroke-width="2"><path d="M666 184V232H688V258H710M754 184V232H732V258H710"/><circle cx="1020" cy="380" r="62"/><circle cx="1020" cy="380" r="75"/></g>
+ <path d="M86 218H254M912 476H1128" stroke="#dfa15c" stroke-width="4" stroke-dasharray="16 10"/>
+ <g fill="#72909c"><path d="M38 44H98V50H38ZM38 54H66V58H38ZM1096 44H1160V50H1096ZM1132 54H1160V58H1132Z"/></g>
 </svg>

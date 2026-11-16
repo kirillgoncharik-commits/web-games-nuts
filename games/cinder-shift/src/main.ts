@@ -6,7 +6,7 @@ import {preloadArt} from './render';
 import './style.css';
 declare const __BUILD_ID__:string;
 declare const __SOURCE_SHA__:string;
-const app=new Application(__BUILD_ID__,__SOURCE_SHA__);
+export const app=new Application(__BUILD_ID__,__SOURCE_SHA__);
 const room=new RoomScene(app.hooks);
 class Backdrop extends Phaser.Scene{
   constructor(){super('Backdrop');}

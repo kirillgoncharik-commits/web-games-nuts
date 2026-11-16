@@ -58,7 +58,7 @@ test('ghost traces interpolate within a room, respect room boundaries, and valid
 
 test('Relay POWER disables the late Cargo turret but preserves the tutorial turret; REPAIR is separate and one-use',()=>{
   const power=new MissionAttempt('mission',relayStageBEntry('power'));power.current='F';expect(power.room('F').terminal).toBe(true);expect(power.enemyPowered(power.room('F').enemies.find(enemy=>enemy.id==='f-event-turret'))).toBe(false);power.current='E';expect(power.enemyPowered(power.room('E').enemies.find(enemy=>enemy.id==='e-turret'))).toBe(true);
-  const repair=new MissionAttempt('mission',relayStageBEntry('repair'));repair.current='F';repair.cellCollected=true;repair.hp=2;expect(repair.claimRelayRepair()).toBe(true);expect(repair.hp).toBe(4);expect(repair.claimRelayRepair()).toBe(false);expect(repair.claimRepair('R02')).toBe(true);expect(repair.hp).toBe(6);const retry=new MissionAttempt('mission',relayStageBEntry('repair'));retry.current='F';retry.cellCollected=true;retry.hp=2;expect(retry.claimRelayRepair()).toBe(true);expect(retry.hp).toBe(4);
+  const repair=new MissionAttempt('mission',relayStageBEntry('repair'));repair.current='F';repair.cellCollected=true;repair.hp=2;expect(repair.claimRelayRepair()).toBe(true);expect(repair.hp).toBe(4);expect(repair.claimRelayRepair()).toBe(false);repair.current='M2E';expect(repair.claimRepair('R02')).toBe(true);expect(repair.hp).toBe(6);const retry=new MissionAttempt('mission',relayStageBEntry('repair'));retry.current='F';retry.cellCollected=true;retry.hp=2;expect(retry.claimRelayRepair()).toBe(true);expect(retry.hp).toBe(4);
 });
 
 test('Relay handoff binds support and Stage A; receipt sums are recomputed and linked',async()=>{

@@ -17,7 +17,7 @@ export function eventAllowed(id:EventId,variant:string){
  if(id==='E04')return variant==='heat-cycle'&&rooms.M3C.hazards?.some(h=>h.kind==='heat'&&h.warning_ms===3000&&h.active_ms===3000)===true;
  if(id==='E05')return variant==='scout-cache'&&Boolean(rooms.M4B.cache);
  if(id==='E01')return variant==='emergency-power'&&rooms.F.terminalKind==='restore'&&rooms.F.enemies.some(e=>e.id==='f-event-turret'&&e.kind==='turret')&&rooms.F.cell!==undefined&&320-(cargoShutter.y+cargoShutter.height)>=44;
- const room=rooms.B,floor=room.solids.find(s=>s.y===320&&s.x===0&&s.width===640);if(!floor||room.next!=='C')return false;
+ const room=rooms.B,floor=room.solids.find(s=>s.y===320&&s.x===0&&s.width===640);if(!floor||!room.next||rooms[room.next].previous!=='B')return false;
  if(id==='E02'&&variant==='upper-shutter'){const overlapping=room.solids.filter(s=>s.y<320&&s.x<shutter.x+shutter.width&&s.x+s.width>shutter.x);const underside=Math.max(shutter.y+shutter.height,...overlapping.map(s=>s.y+s.height));return shutter.x>112&&shutter.x+shutter.width<620&&320-underside>=44&&underside<292;}
  if(id==='E03'&&variant==='repair-cache'){
   const floor=room.solids.find(s=>s.y===320&&s.x===0&&s.width===640);
@@ -25,7 +25,7 @@ export function eventAllowed(id:EventId,variant:string){
   const baffle=room.solids.find(s=>s.x===repairBaffle.x&&s.y===repairBaffle.y&&s.width===repairBaffle.width&&s.height===repairBaffle.height);
   const lastThreat=Math.max(...room.enemies.map(e=>Math.max(e.x,e.end.x)));
   const occupied=pocket&&room.solids.some(s=>s.y<320&&s.x<pocket.x+pocket.width&&s.x+s.width>pocket.x&&s.y<pocket.y+pocket.height&&s.y+s.height>pocket.y);
-  return Boolean(floor&&room.next==='C'&&pocket&&baffle&&!occupied&&repairPosition.x-repairPosition.radius>lastThreat+24&&repairPosition.x+repairPosition.radius<620&&320-repairBaffle.y<=48);
+  return Boolean(floor&&pocket&&baffle&&!occupied&&repairPosition.x-repairPosition.radius>lastThreat+24&&repairPosition.x+repairPosition.radius<620&&320-repairBaffle.y<=48);
  }
  return false;
 }

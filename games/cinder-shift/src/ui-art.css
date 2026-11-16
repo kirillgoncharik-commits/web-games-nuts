@@ -364,3 +364,33 @@
  .promo-menu .main-menu .panel-actions{width:100%;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px}
  .promo-menu .main-menu .panel-actions button{padding-inline:8px}
 }
+
+/* M-REWORK: independent inspect/purchase targets and a compact installed build. */
+article.research-card{position:relative;border:1px solid #456171;border-radius:4px}
+.panel .module-inspect{display:block;min-height:48px;width:100%;padding:4px 0;border:0;background:none;box-shadow:none;text-align:left;color:#f1d8ae;font-weight:700}
+.panel .module-inspect::before,.panel .module-inspect::after{display:none}
+.panel .module-purchase{width:100%;min-height:48px;margin-top:8px}
+.installed-modules{grid-column:1/-1;border:1px solid #456171;padding:12px}
+.installed-modules summary{min-height:48px;cursor:pointer;align-content:center}
+.installed-modules ul{padding:0;margin:8px 0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px}
+.installed-modules li{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid #30495c}
+.installed-modules .module-icon{width:32px;height:32px;flex:none;color:#76dcc8}
+.installed-modules small{display:block;color:#bac6c9;margin-top:4px}
+
+.arrival-scene{position:relative;max-width:780px;margin:auto;border:1px solid #456171;background:#101823}
+.arrival-scene svg{display:block;width:100%;max-height:48dvh;image-rendering:pixelated}
+.arrival-scene p{min-height:3em;padding:12px 18px;margin:0;color:#f1d8ae;border-top:1px solid #456171}
+
+/* Facility plan: one label per sector, orthogonal transit, an internal Foundry fork. */
+.panel .map-pin{width:164px;min-height:64px;height:auto;display:grid;grid-template-columns:24px 1fr 16px;align-items:center;gap:5px;padding:8px;white-space:normal;background:#172936;border:1px solid #72909c;clip-path:none}
+.map-pin-label{font-size:13px;line-height:1.2;overflow-wrap:anywhere}
+.panel .map-pin-airlock{left:14.1667%;top:27.6923%}
+.panel .map-pin-cargo{left:36.6667%;top:27.6923%}
+.panel .map-pin-foundry{left:59.1667%;top:27.6923%}
+.panel .map-pin-archive{left:59.1667%;top:73.0769%}
+.panel .map-pin-reactor{left:85%;top:73.0769%}
+.map-foundry-paths{position:absolute;left:48.5%;top:41%;width:21.5%;display:flex;justify-content:space-around;gap:8px;pointer-events:none}
+.map-foundry-paths span{padding:3px 6px;color:#bac6c9;background:#101823;font-size:10px;border:1px solid #456171}
+@media(max-width:680px){.map-illustrated{min-height:310px}.panel .map-pin{width:90px;grid-template-columns:1fr;gap:1px;min-height:64px;padding:4px}.map-pin-state{display:none}.map-pin-label{font-size:10px}.map-pin-number{font-size:12px}.map-foundry-paths{top:43%}.map-foundry-paths span{font-size:8px;padding:2px}}
+
+@media(max-width:480px){.panel .map-pin{width:60px}.map-foundry-paths{left:46%;width:27%}}

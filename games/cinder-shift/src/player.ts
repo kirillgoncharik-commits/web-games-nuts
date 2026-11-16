@@ -1,4 +1,4 @@
-import Phaser from 'phaser';
+import type Phaser from 'phaser';
 import config from '../game.config.json' with {type:'json'};
 import type {Frame} from './input';
 import type {Rect} from './mission';
@@ -32,7 +32,9 @@ export class Player{
       b.setVelocityX(b.velocity.x+Math.sign(target-b.velocity.x)*Math.min(change,Math.abs(target-b.velocity.x)));
     }
     if(now-this.jumpQueued<=m.jump_buffer_ms && now-this.lastGrounded<=m.coyote_ms && !this.jumpConsumed && !this.crouching){b.setVelocityY(config.initial_balance.jump_velocity);this.jumpQueued=-1000;this.lastGrounded=-1000;this.jumpConsumed=true;}
-    if(frame.released.has('jump')&&b.velocity.y< -110)b.setVelocityY(-110);
+    // A release followed by a fresh press can arrive before the next fixed tick.
+    // The currently held press owns that jump; the earlier release must not cut it.
+    if(frame.released.has('jump')&&!frame.down.has('jump')&&b.velocity.y< -110)b.setVelocityY(-110);
   }
   knock(direction:number,now:number){this.body.setVelocityX(direction*130);this.knockUntil=now+120;}
   snapshot(){const vx=this.body.velocity.x,vy=this.body.velocity.y;return {x:this.x,y:this.sprite.y,vx,vy,facing:this.facing,animation_id:this.crouching?'crouch':vy< -20?'jump':Math.abs(vx)>20?'run':'idle',crouching:this.crouching,dashReady:this.dashReady,chargeReady:this.chargeReady};}
