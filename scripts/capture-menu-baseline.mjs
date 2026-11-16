@@ -3,12 +3,12 @@ import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 import {chromium} from '@playwright/test';
 
-const checkout=process.env.CINDER_MENU_BASELINE_CHECKOUT;
-if(!checkout)throw Error('CINDER_MENU_BASELINE_CHECKOUT is required');
+const site=process.env.CINDER_MENU_BASELINE_SITE;
+if(!site)throw Error('CINDER_MENU_BASELINE_SITE is required');
 const output=resolve('test-results/menu-before');await mkdir(output,{recursive:true});
-const manifest=JSON.parse(await readFile(resolve(checkout,'dist/cinder-shift/build-manifest.json'),'utf8'));
-if(manifest.source_sha!=='469f9483925fd3126fedd4d905c1754e3e3bcf17'||manifest.source_dirty)throw Error('Unexpected menu baseline');
-const server=spawn(process.execPath,['scripts/serve.mjs'],{cwd:checkout,env:{...process.env,PORT:'4176',CINDER_QA_MUTE:'1'},stdio:'inherit'});
+const manifest=JSON.parse(await readFile(resolve(site,'games/cinder-shift/build-manifest.json'),'utf8'));
+if(manifest.source_sha!=='0117a79a53e114e9246ad6114d2c603a436f8ae7'||manifest.source_dirty)throw Error('Unexpected menu baseline');
+const server=spawn(process.execPath,['scripts/serve.mjs'],{env:{...process.env,PREVIEW_ROOT:resolve(site),PORT:'4176',CINDER_QA_MUTE:'1'},stdio:'inherit'});
 let browser;
 try{
  for(let n=0;;n++){
@@ -23,5 +23,5 @@ try{
   await page.getByTestId('new-shift').waitFor();await page.evaluate(()=>document.fonts.ready);
   const file=`menu-before-${size.width}x${size.height}-${locale}.png`;await page.screenshot({path:resolve(output,file)});captures.push({size,locale,file});await context.close();
  }
- await writeFile(resolve(output,'baseline.json'),JSON.stringify({manifest,captures,note:'Actual alpha.3 source built separately; these are before images, not reconstructed CSS.'},null,2));
+ await writeFile(resolve(output,'baseline.json'),JSON.stringify({manifest,captures,note:'Actual immutable alpha.3 cinder-v1.b19.a1; these are before images, not reconstructed CSS.'},null,2));
 }finally{await browser?.close();server.kill('SIGTERM');}

@@ -33,7 +33,7 @@ test('printer platform warns, carries Mira through return, pauses and preserves 
  const samples:any[]=[];const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
  await capture('printer-entry');await jump(page,108,176);await ground(page,276);
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),p=s.world.paper;return p.visible&&(s.simMs-p.startedAt)%4800<2500;});
- await standingJump(page,320);await ground(page,244);await capture('paper-rider');
+ await to(page,208);await ground(page,276);await standingJump(page,288);await ground(page,244);await capture('paper-rider');
  await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world.paper).toEqual(paused.world.paper);await page.getByTestId('resume').click();
  await page.waitForFunction(()=>(window as any).__CINDER__().world.paper.waitingForMira);expect((await state(page)).player.y+22).toBe(244);await capture('paper-return-held');
  await to(page,394);await ground(page,320);expect((await state(page)).hp).toBe(6);
