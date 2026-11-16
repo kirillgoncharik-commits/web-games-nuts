@@ -1,26 +1,23 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-15T15:07:10.153Z",
-  "reference": "Cinder Shift M-RW1 / Sprint 1 gameplay; current coverage and evidence in active_workstream",
+  "updated_at": "2026-11-16",
+  "reference": "M-RW3 A0 foundation started; checkpoint A and complete campaigns remain open",
   "source_checkout": {
     "branch": "codex/cinder-shift-m-rework",
-    "code_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "code_sha": null,
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
-    "working_tree": "C3 exact-source engineering checkpoint verified; host unavailable; code and evidence saved remotely",
-    "published_game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-    "test_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
-    "tested_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667",
-    "test_candidate_merge_sha": "53a9e1074fe2eec6b9d419ed2c9834442adc2667"
+    "working_tree": "Fresh checkout cinder-shift-sprint-3 from audited remote 01ac5f3; current runtime SHA in sprint-3-verification.json",
+    "published_game_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650"
   },
   "production": {
-    "build_id": "0.7.0-rw1.b6",
-    "source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
-    "source_dirty": false,
+    "build_id": "0.7.0-rw2.c3",
+    "source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
     "url": "https://nuts.bid/games/cinder-shift/",
-    "site_main_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
-    "site_pr": 14,
-    "description": "B6 Sprint 1 engineering preview published to production at explicit user request. Production CI and Cloudflare deployment succeeded. Post-deploy live UI check unavailable; human acceptance remains deferred."
+    "site_main_sha": "b7573456a19730f04d34499a423bafab4dda6944",
+    "site_pr": 15,
+    "evidence": "docs/cinder-shift/sprint-2-production-release-2026-11-16.json",
+    "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
   },
   "release_register": [
     {
@@ -533,6 +530,42 @@
     }
   ],
   "active_workstream": {
+    "milestone": "M-RW3",
+    "status": "A0_FOUNDATION_IN_PROGRESS",
+    "version": "0.8.0-alpha.1",
+    "coverage": "docs/cinder-shift/rework-coverage.json",
+    "checkpoint": "docs/cinder-shift/sprint-3-checkpoint.ru.md",
+    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
+    "published": false,
+    "accepted": false,
+    "complete_campaigns_delivered": 0,
+    "internal_mechanics_fixtures": 2
+  },
+  "historical_source_checkout": {
+    "branch": "codex/cinder-shift-m05b1-campaign",
+    "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
+    "working_tree": "clean",
+    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
+    "source_pr_head_includes_current_changes": true,
+    "ci_for_code_commit_d9088f00c771d4add647e97501010f4e7ab72e4b": "failed_run_45_art_check_hit_flash_hash_false_positive",
+    "ci_for_head_8f4c4cb755e888dceea9f3be79af0dfbaac629fc": "failed_run_47_css_motion_contract",
+    "ci_for_head_bc7044e4e741b2f4d4ea1be90cc88d5d17f96618": "failed_audio_check_missing_script_after_build_and_art_check_passed",
+    "ci_for_head_6bea87c86e67d709af5f402bfdbe0a926348295f": "failed_legacy_m05a_audio_check_incompatible_with_m06_runtime_assets",
+    "ci_for_current_changes": "pending_after_removing_stale_m05a_audio_check_workflow_step",
+    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; code commit d9088f00c771d4add647e97501010f4e7ab72e4b is in existing draft PR #7 and is not published to nuts.bid",
+    "scope_1_2_code_commit": "d9088f00c771d4add647e97501010f4e7ab72e4b",
+    "site_pr": 8,
+    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
+    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
+  },
+  "historical_quality_fix_reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
+  "historical_m06_acceptance": {
+    "scenario_count": 39,
+    "passed": 0,
+    "open": 39,
+    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
+  },
+  "previous_workstream": {
     "milestone": "M-REWORK",
     "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_C3_ENGINEERING_VERIFIED_WITH_M_RW4_SUBSCOPES",
     "build_id": "0.7.0-rw2.c3",
@@ -959,29 +992,5 @@
         }
       ]
     }
-  },
-  "historical_source_checkout": {
-    "branch": "codex/cinder-shift-m05b1-campaign",
-    "base_sha": "64629a20ee455627121b9faaad8f7858814ac949",
-    "working_tree": "clean",
-    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/7",
-    "source_pr_head_includes_current_changes": true,
-    "ci_for_code_commit_d9088f00c771d4add647e97501010f4e7ab72e4b": "failed_run_45_art_check_hit_flash_hash_false_positive",
-    "ci_for_head_8f4c4cb755e888dceea9f3be79af0dfbaac629fc": "failed_run_47_css_motion_contract",
-    "ci_for_head_bc7044e4e741b2f4d4ea1be90cc88d5d17f96618": "failed_audio_check_missing_script_after_build_and_art_check_passed",
-    "ci_for_head_6bea87c86e67d709af5f402bfdbe0a926348295f": "failed_legacy_m05a_audio_check_incompatible_with_m06_runtime_assets",
-    "ci_for_current_changes": "pending_after_removing_stale_m05a_audio_check_workflow_step",
-    "quality_fix_scope": "Scope revision 1.2 adds equipment-style UI chrome, a campaign-driven five-sector map and twelve bespoke module icons; code commit d9088f00c771d4add647e97501010f4e7ab72e4b is in existing draft PR #7 and is not published to nuts.bid",
-    "scope_1_2_code_commit": "d9088f00c771d4add647e97501010f4e7ab72e4b",
-    "site_pr": 8,
-    "head_sha_before_scope_1_2_changes": "4028405f690c8dadf322172793d589f35f253771",
-    "published_game_source_sha": "22da406857d2b690f136880d0fd642dce196e071"
-  },
-  "historical_quality_fix_reference": "Cinder_Shift_64_Quality_Fix_Scope_Work_RU_2026-11-07 (2).txt · редакция 1.2",
-  "historical_m06_acceptance": {
-    "scenario_count": 39,
-    "passed": 0,
-    "open": 39,
-    "notes": "The 0.6.0-m06.0 candidate is published as an early preview. None of the 39 gameplay, device, audio, platform or human acceptance scenarios have been run for this release."
   }
 }

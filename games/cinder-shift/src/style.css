@@ -19,3 +19,7 @@ html,body{overflow:clip}
 .touch-sides .touch-controls .actions [data-action=fire]{min-width:56px;min-height:56px}
 
 .game-description { max-width:960px; margin:12px auto; padding:0 20px; color:#c0cad0; font:14px/1.5 system-ui,sans-serif; }
+
+.build-signature{position:fixed;z-index:80;right:max(7px,env(safe-area-inset-right));bottom:max(3px,env(safe-area-inset-bottom));max-width:calc(100vw - 14px);font:10px/1.25 ui-monospace,monospace;color:#bac6c9;background:#111823d9;padding:2px 4px;pointer-events:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.shell{padding-bottom:max(22px,calc(env(safe-area-inset-bottom) + 20px))}.release-entry+.release-entry{border-top:1px solid #456171;margin-top:20px;padding-top:10px}.release-entry li{margin:8px 0}.build-diagnostics{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}
+
+.campaign-cards{display:grid;gap:14px}.campaign-card{display:grid;grid-template-columns:180px 1fr;border:1px solid #456171;background:#172636}.campaign-card>img{width:100%;height:100%;min-height:180px;object-fit:cover;image-rendering:pixelated}.campaign-card>div{padding:12px 16px}.campaign-card h3{color:#f1d8ae;margin:0 0 8px}.campaign-card p{margin:6px 0 10px}.campaign-card button{min-height:48px;padding:10px 16px}@media(max-width:550px){.campaign-card{grid-template-columns:1fr}.campaign-card>img{height:116px;min-height:116px}.campaign-card>div{padding:10px 12px}}

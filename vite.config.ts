@@ -1,4 +1,6 @@
 import { defineConfig } from 'vite';
+import {buildMetadata} from './scripts/build-metadata.mjs';
+const metadata=process.env.CINDER_BUILD_META?JSON.parse(process.env.CINDER_BUILD_META):buildMetadata();
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
@@ -23,6 +25,6 @@ export default defineConfig({
       }
     }
   }],
-  define: { __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
+  define: { __BUILD_META__:JSON.stringify(metadata), __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
   build: { outDir: '../../dist/cinder-shift', emptyOutDir: true, chunkSizeWarningLimit: 1600 },
 });

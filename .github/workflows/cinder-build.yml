@@ -1,0 +1,42 @@
+name: Cinder Shift artifact
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+concurrency:
+  group: cinder-artifact-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  artifact:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-sprint3-checks
+          path: test-results
+      - name: Hash this immutable artifact
+        run: |
+          tar -czf cinder-shift-artifact.tar.gz -C dist/cinder-shift .
+          sha256sum cinder-shift-artifact.tar.gz > cinder-shift-artifact.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cinder-shift-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            cinder-shift-artifact.tar.gz
+            cinder-shift-artifact.sha256
+            dist/cinder-shift/build-manifest.json
