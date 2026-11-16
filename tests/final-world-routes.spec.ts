@@ -1,11 +1,10 @@
-import {powerTarget} from '../games/cinder-shift/src/session/world-runtime';
+import {powerTarget,worldContext} from '../games/cinder-shift/src/session/world-runtime';
 import {rooms} from '../games/cinder-shift/src/room-data';
 import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
-import {jump,standingJump,ground} from './route-helpers';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -46,7 +45,7 @@ async function combat(page:Page){
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>200).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=64&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>200&&r.x<x+20&&r.x+r.width>x-20)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>200&&r.x<x+20&&r.x+r.width>x-20)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
   await walk(page,at);await expect.poll(async()=>(await state(page)).player.y+22).toBe(320);await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
@@ -56,21 +55,26 @@ async function solveRoom(page:Page){
  await combat(page);let s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
-  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=rooms[s.room as keyof typeof rooms].world?.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
-  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open;});if((await state(page)).world.carry.item.state!=='held')continue;await page.keyboard.press('e');
+  const spec=rooms[s.room as keyof typeof rooms].world!,itemX=s.world.carry.item.position.x;
+  const pickup=[itemX,itemX-20,itemX+20,itemX-10,itemX+10].find(x=>x>32&&x<610&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+18&&r.x+r.width>x-18)&&worldContext(spec,s.world,{x,y:320},s.simMs)==='pickup');
+  if(pickup===undefined)throw Error('no standing pickup point '+JSON.stringify(s.world.carry.item));
+  await walk(page,pickup);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=spec.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
+  const flightMs=Math.abs(contact.rect.x-launch)/220*1000+220;
+  await page.waitForFunction(({pulse,flightMs})=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open&&(!pulse||pulse.cycle-s.simMs%pulse.cycle>flightMs);},{pulse,flightMs});if((await state(page)).world.carry.item.state!=='held')continue;await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.carry.item.state).not.toBe('held');await page.waitForFunction(()=>(window as any).__CINDER__().world.carry.item.state!=='thrown');
  }await expect.poll(async()=>(await state(page)).world.carry.contacts.every((c:any)=>c.active)).toBe(true);}
  s=await state(page);if(s.world.power){
   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
   for(let phase=0;phase<sequence.length;phase++){
-   s=await state(page);if(s.world.power.circuit!==sequence[phase]){await walk(page,112);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);}
-   const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
-   if(current.room==='YU05-C'&&current.world.power.circuit==='A'&&current.player.x<240&&target.x>260){
-    // The A wall sits immediately after a low ceiling. Climb the visible left
-    // shelf, then jump across; a jump pressed underneath it hits the ceiling.
-    await walk(page,112);await jump(page,118,205);await ground(page,248);await standingJump(page,300);await ground(page,248);
+   s=await state(page);if(s.world.power.circuit!==sequence[phase]){
+    const switches=rooms[s.room as keyof typeof rooms].world!.switches!;
+    const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
+    await walk(page,point.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);
    }
+   const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
+   // Reuse the local switch on the current side of an A wall. Returning to the
+   // entrance switch can close the route before reaching the next contact.
    const x=target.x;await walk(page,x);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
   }
  }
