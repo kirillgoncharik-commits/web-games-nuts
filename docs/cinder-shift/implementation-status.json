@@ -2,15 +2,15 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-16",
-  "reference": "Verified alpha.2 remains pinned; active alpha.3 implements physical SW02-A keys. CI runtime/input checks and full C02 pass; C03 and visual review pending. Source environment unavailable again; no production deployment.",
+  "reference": "Alpha.3 selected engineering gate PASS: 86 checks, both complete world routes and immutable build. New keyboard screenshots/human/device acceptance remain unreviewed; environment unavailable. No production deployment.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
     "code_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Alpha.3 source fully saved remotely before the host disconnected. Local build/typecheck and 64 models passed; CI 86 runtime/input checks and C02 passed. New screenshots not reviewed. Continue from the fresh synchronized branch after recovery.",
+    "working_tree": "All alpha.3 game source is saved remotely. Exact source passes CI build/typecheck, 86 checks and both full 20-room/five-mission routes with persisted results. Keyboard screenshots not reviewed after host disconnect. Formal production/art/human gates remain open.",
     "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
     "test_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
-    "last_fully_verified_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
+    "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
     "version": "0.8.0-alpha.1",
@@ -1020,7 +1020,7 @@
     "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
   },
   "final_stage_entry": {
-    "status": "INCOMPLETE_ALPHA3_CI_VISUAL_REVIEW_PENDING_ENV_UNAVAILABLE",
+    "status": "INCOMPLETE_VISUAL_PRODUCTION_RW4_GATES_ENV_UNAVAILABLE",
     "version": "0.8.0-alpha.3",
     "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
     "verification": "docs/cinder-shift/sprint-4-verification.json",
@@ -1050,7 +1050,7 @@
     "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "runtime_tree_sha": "4666be1cbf90021864624cda913c174b0f674adc",
     "branch": "codex/cinder-shift-final",
-    "status": "KEYBOARD_RUNTIME_INPUT_PASS_VISUAL_REVIEW_PENDING_ENVIRONMENT_UNAVAILABLE",
+    "status": "SELECTED_ENGINEERING_GATE_PASS_VISUAL_REVIEW_PENDING_ENV_UNAVAILABLE",
     "scope": "SW02-A physical keyboard; remaining production brief is still incomplete",
     "local_checks": {
       "build": "PASS_LOCAL_SNAPSHOT",
@@ -1077,14 +1077,26 @@
         },
         "c03-adriatic-1986": {
           "job_id": 133417516279,
-          "status": "IN_PROGRESS"
+          "status": "PASS"
         }
       },
-      "game_artifact": "PENDING"
+      "game_artifact": {
+        "id": 14244131349,
+        "name": "cinder-shift-19-1",
+        "build_id": "cinder-v1.b19.a1",
+        "source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+        "zip_bytes": 4545406,
+        "zip_sha256_from_github": "3a9ced4caa808b955f8f5694d247adc131efb641ef16ee6814a8efa17859224b",
+        "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700/artifacts/14244131349",
+        "download_checksum_verification": "NOT_RUN_ENVIRONMENT_UNAVAILABLE",
+        "deployed": false
+      },
+      "status": "SUCCESS_SELECTED_ENGINEERING_GATE"
     },
-    "last_fully_verified_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
     "visual_review": "New keyboard screenshots NOT VIEWED; host became unavailable after source sync. Physical phones NOT RUN.",
     "report": "docs/cinder-shift/rw3-environment-production.ru.md",
-    "resume": "Restore a source-capable environment and sync this runtime or its report-only successor. Preserve the original worktree and the checked alpha.2 artifact; do not continue an older checkout blindly."
+    "resume": "Restore a source-capable environment and sync this runtime or its report-only successor. Preserve the original worktree and the checked alpha.2 artifact; do not continue an older checkout blindly.",
+    "engineering_verified_runtime": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   }
 }

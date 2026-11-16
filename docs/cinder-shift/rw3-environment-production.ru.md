@@ -27,6 +27,8 @@
 
 Runtime source `0117a79a53e114e9246ad6114d2c603a436f8ae7`, tree `4666be1cbf90021864624cda913c174b0f674adc`, local equivalent `eb77d1c`; все исходники сохранены в PR10. После сохранения рабочая среда стала unavailable. Новые скриншоты и JSON ещё не были просмотрены.
 
-[Run 43901074700](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700): 7 encounter checks (5 Cargo + клавиатура + два touch-контакта Chromium), 29 прежних и 50 world checks PASS; полный C02 PASS, C03 ещё выполняется. Нельзя записывать общий PASS до окончания C03 и packaging. Formal art acceptance и физические телефоны остаются NOT RUN.
+[Run 43901074700](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700): 7 encounter checks (5 Cargo + клавиатура + два touch-контакта Chromium), 29 прежних и 50 world checks PASS; оба полных C02/C03 PASS (по 20 комнат/5 миссий, финалы, факты и reload результата). Packaging также PASS: выбранный инженерный gate полностью зелёный. Это не общий PASS остальных workflow или производственной/человеческой приёмки. Formal art acceptance и физические телефоны остаются NOT RUN.
 
 После восстановления получить актуальный remote HEAD, проверить оставшийся CI и изучить screenshot evidence. Не продолжать от старого локального checkout и не сбрасывать сохранённый проверенный alpha.2 artifact.
+
+Alpha.3 artifact: [cinder-v1.b19.a1](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700/artifacts/14244131349), source `0117a79a53e114e9246ad6114d2c603a436f8ae7`. GitHub ZIP digest `3a9ced4caa808b955f8f5694d247adc131efb641ef16ee6814a8efa17859224b`, 4,545,406 bytes. Локальная проверка скачанного архива не выполнялась после отключения среды. Новые keyboard screenshot/JSON evidence сохранены в artifact 14244015759; визуальный просмотр остаётся NOT RUN.
