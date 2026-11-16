@@ -27,3 +27,35 @@ export function stepKeyboard(spec:KeyboardSpec,state:KeyboardState,body:Rect,fee
 export function keyboardPhase(state:KeyboardState,now:number){
  return state.pressed?'pressed':!state.lowered?'ready':state.releaseAt-now<=350?'returning':'lowered';
 }
+
+export type PaperSpec={id:string;platform:Rect;cycleMs:number;warningMs:number;extendedMs:number;returnWarningMs:number};
+export type PaperState={startedAt:number|null;visible:boolean;waitingForMira:boolean};
+export const createPaperState=():PaperState=>({startedAt:null,visible:false,waitingForMira:false});
+export function paperPhase(spec:PaperSpec,state:PaperState,now:number){
+ if(state.waitingForMira)return 'held' as const;
+ const time=state.startedAt===null?0:Math.max(0,now-state.startedAt)%spec.cycleMs;
+ return time<spec.warningMs?'warning' as const:time<spec.warningMs+spec.extendedMs?'extended' as const:time<spec.warningMs+spec.extendedMs+spec.returnWarningMs?'returning' as const:'idle' as const;
+}
+export const paperSolids=(spec:PaperSpec,state:PaperState):Rect[]=>state.visible?[{...spec.platform,id:'world-paper:'+spec.id}]:[];
+
+/** The external tray has a permanent lower bypass. Never spawn through or withdraw under Mira. */
+export function stepPaper(spec:PaperSpec,state:PaperState,body:Rect,feet:number,now:number){
+ if(state.startedAt===null)state.startedAt=now;
+ const before=state.visible;
+ state.waitingForMira=false;
+ const phase=paperPhase(spec,state,now),wantsPaper=phase==='extended'||phase==='returning';
+ const onPaper=body.x<spec.platform.x+spec.platform.width&&body.x+body.width>spec.platform.x&&Math.abs(feet-spec.platform.y)<=3;
+ const overlaps=intersects(body,spec.platform);
+ if(wantsPaper)state.visible=state.visible||!overlaps;
+ else if(state.visible&&(onPaper||overlaps))state.waitingForMira=true;
+ else state.visible=false;
+ return before!==state.visible;
+}
+
+export type LampSpec={origin:{x:number;y:number};cycleMs:number;warningMs:number;scanMs:number};
+export type LampState={startedAt:number|null};
+export const createLampState=():LampState=>({startedAt:null});
+export function lampPhase(spec:LampSpec,state:LampState,now:number){
+ const time=state.startedAt===null?0:Math.max(0,now-state.startedAt)%spec.cycleMs;
+ return time<spec.warningMs?'warning' as const:time<spec.warningMs+spec.scanMs?'scanning' as const:'open' as const;
+}

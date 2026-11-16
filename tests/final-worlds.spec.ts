@@ -34,9 +34,11 @@ test('world enemy spawns clear fixed geometry and ground units rest on a surface
 });
 for(const design of newCampaignRegistry.rooms)test(`model contract ${design.room_id}: reachable actions, bounded ledger and objective`,()=>{
  const room=rooms[design.room_id as keyof typeof rooms],spec=room.world!,s=createWorldState(room.id,spec);
- if(s.carry){for(const target of spec.carry!.contacts){const c=s.carry.contacts.find(c=>c.id===target.id)!;const x=target.rect.x-54; // Same swept flight as runtime; no direct activation.
-   s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,3500)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,3500)?.action).toBe('throw');
-   for(let i=0;i<60&&!c.active;i++)stepWorld(spec,s,{x,y:320},1,3500+i*16,16,[]);expect(c.active).toBe(true);
+ if(s.carry){let now=3500;for(const target of spec.carry!.contacts){const c=s.carry.contacts.find(c=>c.id===target.id)!;const x=target.rect.x-54; // Same swept flight as runtime; no direct activation.
+   // Model time follows the authored warning/scan; contacts are never forced open.
+   stepWorld(spec,s,{x,y:320},1,now,16,[]);for(let n=0;n<400&&!c.open;n++){now+=16;stepWorld(spec,s,{x,y:320},1,now,16,[]);}expect(c.open).toBe(true);
+   s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,now)?.action).toBe('throw');
+   for(let i=0;i<60&&!c.active;i++){now+=16;stepWorld(spec,s,{x,y:320},1,now,16,[]);}expect(c.active).toBe(true);
   }expect(new Set(s.carry.ledger).size).toBe(spec.carry!.contacts.length);}
  if(s.power){for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,3500)?.action).toBe('switch');const target=powerTarget(spec,s)!;expect(actWorld(spec,s,target,{x:target.x-11,y:target.y-44,width:22,height:44},1,3500)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
  expect(worldReady(spec,s)).toBe(true);const before=JSON.stringify(s.ledger);stepWorld(spec,s,{x:64,y:320},1,10000,16,[]);expect(JSON.stringify(s.ledger)).toBe(before);

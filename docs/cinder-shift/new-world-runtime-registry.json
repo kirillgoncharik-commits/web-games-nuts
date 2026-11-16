@@ -3,8 +3,8 @@
   "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
   "source_design_registry": "games/cinder-shift/content/new-campaigns/rooms_40.json",
   "status": "RUNTIME_DRAFT_NOT_COMPLETE_PRODUCTION",
-  "action_models": "PASS_ON_CURRENT_CI",
-  "full_campaign_input": "FAILED_2_CURRENT_CI",
+  "action_models": "PASS_50_LOCAL_ALPHA4_SNAPSHOT",
+  "full_campaign_input": "ALPHA3_PASS_ALPHA4_PENDING",
   "accepted": false,
   "rooms": [
     {
@@ -96,7 +96,11 @@
       "action_contract": "MODEL_PASS",
       "full_mission_real_input": "NOT_VERIFIED",
       "production_art_audio": "INCOMPLETE",
-      "accepted": false
+      "accepted": false,
+      "production_mechanism": {
+        "status": "IMPLEMENTED_MODEL_VERIFIED_BROWSER_PENDING",
+        "mechanism": "printer paper platform, warning, safe return and permanent lower route"
+      }
     },
     {
       "campaign_id": "c02-small-world",
@@ -109,7 +113,11 @@
       "action_contract": "MODEL_PASS",
       "full_mission_real_input": "NOT_VERIFIED",
       "production_art_audio": "INCOMPLETE",
-      "accepted": false
+      "accepted": false,
+      "production_mechanism": {
+        "status": "IMPLEMENTED_MODEL_VERIFIED_BROWSER_PENDING",
+        "mechanism": "two lamp scans; reflector contact changes cone coverage and opens the route"
+      }
     },
     {
       "campaign_id": "c02-small-world",
@@ -535,5 +543,9 @@
     "source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "input_checks": "PASS_KEYBOARD_AND_TWO_CONTACT_CHROMIUM",
     "visual_review": "NOT_RUN_ENVIRONMENT_UNAVAILABLE"
+  },
+  "current_iteration": {
+    "version": "0.8.0-alpha.4",
+    "browser_checks": "PENDING"
   }
 }

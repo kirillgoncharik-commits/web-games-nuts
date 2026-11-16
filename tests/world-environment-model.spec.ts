@@ -3,7 +3,8 @@ import {rooms} from '../games/cinder-shift/src/room-data';
 import {intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
-import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase} from '../games/cinder-shift/src/session/world-environment';
+import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase} from '../games/cinder-shift/src/session/world-environment';
+import {createWorldState,stepWorld,actWorld,worldReady} from '../games/cinder-shift/src/session/world-runtime';
 
 const spec=rooms['SW02-A'].world!.keyboard!;
 const body=(x:number,feet:number)=>({x:x-11,y:feet-44,width:22,height:44});
@@ -27,4 +28,41 @@ test('the real room definition consumes key geometry and a fresh attempt resets 
  const state=attempt.room().world!.keyboard!;stepKeyboard(spec,state,body(192,296),296,100);expect(attempt.definition().solids.find(s=>s.id?.endsWith(':target'))?.y).toBe(288);
  attempt.suspend();expect(state.lowered).toBe(true);expect(attempt.room().world!.ledger).toEqual([]);
  const retry=new MissionAttempt('mission',entry);expect(retry.room().world!.keyboard).toEqual(createKeyboardState());expect(retry.definition().solids.find(s=>s.id?.endsWith(':target'))?.y).toBe(272);
+});
+
+const paper=rooms['SW02-C'].world!.paper!;
+test('printer warns, extends a real surface, warns before returning and keeps its lower bypass',()=>{
+ const s=createPaperState(),outside=body(230,320);
+ stepPaper(paper,s,outside,320,500);expect(paperPhase(paper,s,500)).toBe('warning');expect(paperSolids(paper,s)).toEqual([]);
+ expect(stepPaper(paper,s,outside,320,1500)).toBe(true);expect(paperSolids(paper,s)[0]).toMatchObject(paper.platform);
+ stepPaper(paper,s,outside,320,4100);expect(paperPhase(paper,s,4100)).toBe('returning');expect(s.visible).toBe(true);
+ stepPaper(paper,s,outside,320,4800);expect(paperPhase(paper,s,4800)).toBe('idle');expect(s.visible).toBe(false);
+ expect(rooms['SW02-C'].world!.pulse).toBeUndefined();expect(rooms['SW02-C'].solids[0]).toMatchObject({x:0,y:320,width:640});
+});
+test('paper neither materializes through Mira nor withdraws under a rider',()=>{
+ const s=createPaperState();stepPaper(paper,s,body(320,260),260,0);stepPaper(paper,s,body(320,260),260,1100);expect(s.visible).toBe(false);
+ stepPaper(paper,s,body(230,320),320,1200);expect(s.visible).toBe(true);
+ stepPaper(paper,s,body(320,244),244,4400);expect(s).toMatchObject({visible:true,waitingForMira:true});expect(paperPhase(paper,s,4400)).toBe('held');
+ stepPaper(paper,s,body(400,320),320,4450);expect(s.visible).toBe(false);
+});
+test('paper uses fixed simulation time and Retry resets its cycle',()=>{
+ const run=(fps:number)=>{const s=createPaperState(),clock=new SimulationClock(),samples:boolean[]=[];for(let f=0;f<fps*6;f++)clock.advance(1000/fps,()=>{stepPaper(paper,s,body(230,320),320,clock.now);samples.push(s.visible);});return{state:s,samples};};expect(run(30)).toEqual(run(60));
+ const a=new MissionAttempt('mission',{mission_id:'SW02',seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});
+ stepPaper(paper,a.room('SW02-C').world!.paper!,body(230,320),320,0);stepPaper(paper,a.room('SW02-C').world!.paper!,body(230,320),320,1200);
+ expect(a.definition('SW02-C').solids.some(r=>r.id?.startsWith('world-paper:'))).toBe(true);
+ const retry=new MissionAttempt('mission',a.entry);expect(retry.room('SW02-C').world!.paper).toEqual(createPaperState());
+});
+test('lamp requires a fresh scan for each reflector position and awards each contact once',()=>{
+ const spec=rooms['SW02-D'].world!,s=createWorldState('SW02-D',spec);let now=0;
+ const tick=(time:number)=>stepWorld(spec,s,{x:330,y:320},1,time,16,[]);
+ tick(now);expect(lampPhase(spec.lamp!,s.lamp!,now)).toBe('warning');expect(s.carry!.contacts[0].open).toBe(false);
+ tick(950);expect(lampPhase(spec.lamp!,s.lamp!,950)).toBe('scanning');expect(s.carry!.contacts[0].open).toBe(false);
+ for(const c of s.carry!.contacts){
+  now=s.lamp!.startedAt!+1850;tick(now);expect(c.open).toBe(true);
+  const x=c.rect.x-54;s.carry!.item.state='resting';s.carry!.item.position={x,y:312};
+  expect(actWorld(spec,s,{x,y:320},body(x,320),1,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},body(x,320),1,now)?.action).toBe('throw');
+  for(let n=0;n<60&&!c.active;n++){now+=16;tick(now);}
+  expect(c.active).toBe(true);expect(lampPhase(spec.lamp!,s.lamp!,now)).toBe('warning');expect(s.carry!.contacts.every(c=>!c.open)).toBe(true);
+ }
+ expect(worldReady(spec,s)).toBe(true);expect(s.carry!.ledger).toEqual(['desktop-line-01','desktop-line-02']);tick(now+10000);expect(s.carry!.ledger).toHaveLength(2);
 });

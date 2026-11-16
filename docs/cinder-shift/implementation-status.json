@@ -1098,5 +1098,24 @@
     "resume": "Restore a source-capable environment and sync this runtime or its report-only successor. Preserve the original worktree and the checked alpha.2 artifact; do not continue an older checkout blindly.",
     "engineering_verified_runtime": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
+  },
+  "active_iteration": {
+    "version": "0.8.0-alpha.4",
+    "status": "IMPLEMENTED_LOCAL_CHECKS_PASS_CI_PENDING",
+    "scope": [
+      "ART-01: isolated robot composition and static silhouette halo",
+      "SW02-C: timed external paper tray with warning, lower bypass and collision-safe return",
+      "SW02-D: two sequential reflector scans with changing lamp coverage"
+    ],
+    "last_verified_runtime": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "local_checks": {
+      "build": "PASS_LOCAL_DIRTY_SNAPSHOT",
+      "typecheck": "PASS",
+      "art_contracts": "PASS",
+      "environment_and_world_models": 50
+    },
+    "browser_checks": "PENDING_CI_LOCAL_LISTEN_AND_BROWSER_BLOCKED",
+    "accepted": false,
+    "deployed": false
   }
 }
