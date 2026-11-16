@@ -5,7 +5,7 @@ import type {WorldRoomId,WorldMissionId} from './session/new-campaign-content';
 /** Authored collision/action data; the design registry keeps the matching intent and acceptance. */
 export type WorldRoomSpec={
  carry?:{kind:CarryKind;spawn:Point;contacts:{id:string;rect:Rect;window?:boolean}[]};
- switches?:Point[];powerObjects?:PowerObject[];sequence?:Circuit[];
+ switches?:Point[];powerObjects?:PowerObject[];sequence?:Circuit[];sequenceTargets?:Point[];
  pulse?:{x:number;width:number;cycle:number;warning:number;active:number};
  repair?:Point;landmark:string;wind?:number;
 };
@@ -40,7 +40,7 @@ const authored:Authored[]=[
  {id:'SW05-D',solids:[cover(152,32,40),platform(272,244,88),cover(448,32,40)],world:{landmark:'beacon',carry:carry('conductor',112,contact('beacon-final-01',240,280,true),contact('beacon-final-02',400,280,true),contact('beacon-final-03',548,280,true)),pulse:{x:352,width:56,cycle:4400,warning:1400,active:800}}},
  {id:'YU01-A',solids:[cover(184,32,48),platform(328,256,88)],world:{landmark:'courtyard',switches:[{x:112,y:320}],powerObjects:[power('entrance-B','A',468,264,16,56)],sequence:['B']}},
  {id:'YU01-B',solids:[platform(144,280,64),platform(460,280,72)],world:{landmark:'exchange',switches:[{x:112,y:320},{x:536,y:320}],powerObjects:[power('stairs-A','A',248,248,80),power('bridge-B','B',360,252,80)],sequence:['B','A']}},
- {id:'YU01-C',solids:[platform(144,260,104),platform(376,244,96),cover(528,32)],world:{landmark:'rooftop',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[power('screen-A','A',312,268,24,52)],sequence:['B']},enemies:[enemy('yu01c-anomaly',440)],cache:{x:416,y:244}},
+ {id:'YU01-C',solids:[platform(144,260,104),platform(376,244,96),cover(528,32)],world:{landmark:'rooftop',switches:[{x:112,y:320},{x:568,y:320}],sequenceTargets:[{x:584,y:320}],powerObjects:[power('screen-A','A',312,268,24,52)],sequence:['B']},enemies:[enemy('yu01c-anomaly',440)],cache:{x:416,y:244}},
  {id:'YU01-D',solids:[cover(168,32,40),platform(312,244,88)],world:{landmark:'transmitter',switches:[{x:112,y:320},{x:448,y:320}],powerObjects:[power('tx-screen-A','A',496,268,20,52)],sequence:['B','A','B'],pulse:{x:240,width:56,cycle:5200,warning:1600,active:700}}},
  {id:'YU02-A',solids:[cover(152,40,64),platform(344,252,96)],world:{landmark:'warehouse',switches:[{x:112,y:320},{x:548,y:320}],powerObjects:[power('warehouse-A','A',264,268,20,52),power('lift-B','B',448,220,88)],sequence:['B']},cache:{x:488,y:220}},
  {id:'YU02-B',solids:[platform(144,276,88),platform(436,276,88)],world:{landmark:'crane',switches:[{x:112,y:320},{x:552,y:320}],powerObjects:[power('crane-A','A',272,240,96),power('crane-B','B',320,276,96)],sequence:['B','A'],pulse:{x:380,width:40,cycle:5600,warning:1800,active:700}}},

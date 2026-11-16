@@ -1,3 +1,5 @@
+import {powerTarget} from '../games/cinder-shift/src/session/world-runtime';
+import {rooms} from '../games/cinder-shift/src/room-data';
 import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
@@ -23,7 +25,7 @@ async function walk(page:Page,target:number){
   previous=p.x;await page.waitForTimeout(80);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
-async function face(page:Page,f:number){await page.keyboard.press(f>0?'d':'a');}
+async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>Math.abs((window as any).__CINDER__().player.vx)<1);}
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
@@ -46,7 +48,7 @@ async function solveRoom(page:Page){
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
   for(let phase=0;phase<sequence.length;phase++){
    s=await state(page);if(s.world.power.circuit!==sequence[phase]){await walk(page,112);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);}
-   const x=sequence.length===1?552:sequence.length===2?(phase===0?300:552):[264,408,552][phase];await walk(page,x);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
+   const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');const x=target.x;await walk(page,x);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
   }
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}

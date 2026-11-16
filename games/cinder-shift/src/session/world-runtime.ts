@@ -6,7 +6,7 @@ export function createWorldState(id:string,spec:WorldRoomSpec):WorldRoomState{
  return{phase:0,repaired:false,ledger:[],carry:spec.carry?createCarryRoom(id,spec.carry.kind,spec.carry.spawn,spec.carry.contacts.map(c=>({...c,active:false,open:!c.window}))):undefined,power:spec.powerObjects?createPowerRoom(spec.powerObjects):undefined};
 }
 export function worldPulse(spec:WorldRoomSpec,now:number){const p=spec.pulse;if(!p)return'safe' as const;const phase=now%p.cycle;return phase<p.warning?'warning' as const:phase<p.warning+p.active?'active' as const:'safe' as const;}
-export function powerTarget(spec:WorldRoomSpec,state:WorldRoomState):Point|null{const seq=spec.sequence;if(!seq||state.phase>=seq.length)return null;return{x:seq.length===1?552:seq.length===2?(state.phase===0?300:552):[264,408,552][state.phase],y:320};}
+export function powerTarget(spec:WorldRoomSpec,state:WorldRoomState):Point|null{const seq=spec.sequence;if(!seq||state.phase>=seq.length)return null;if(spec.sequenceTargets?.[state.phase])return{...spec.sequenceTargets[state.phase]};return{x:seq.length===1?552:seq.length===2?(state.phase===0?300:552):[264,408,552][state.phase],y:320};}
 export function worldReady(spec:WorldRoomSpec,state:WorldRoomState){return (!state.carry||state.carry.contacts.every(c=>c.active))&&(!spec.sequence||state.phase>=spec.sequence.length);}
 export function worldSolids(spec:WorldRoomSpec,state:WorldRoomState){return state.power?circuitSolids(state.power):[];}
 export function worldContext(spec:WorldRoomSpec,state:WorldRoomState,player:Point,now:number,allowRepair=true):'pickup'|'throw'|'switch'|'activate'|'repair'|null{
