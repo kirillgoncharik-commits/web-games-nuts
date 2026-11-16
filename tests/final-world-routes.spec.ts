@@ -14,7 +14,7 @@ async function unlocked(page:Page){
 }
 async function walk(page:Page,target:number){
  let previous=NaN;for(let n=0;n<120;n++){
-  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<7){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>Math.abs((window as any).__CINDER__().player.vx)<1);return;}
+  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<7){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';await page.keyboard.up(f>0?'a':'d');await page.keyboard.down(dir);const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);
   if(head)await page.keyboard.down('s');else await page.keyboard.up('s');
@@ -37,7 +37,7 @@ async function solveRoom(page:Page){
  await combat(page);let s=await state(page);
  if(s.world.carry){for(let n=0;n<4;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
-  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');await walk(page,contact.rect.x-52);await face(page,1);
+  await walk(page,s.world.carry.item.position.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids;const launch=[contact.rect.x-52,contact.rect.x+52].find(x=>x>32&&x<610&&!ground.some((r:any)=>r.y>=276&&r.y<320&&r.x<x+14&&r.x+r.width>x-14));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open;});await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.carry.contacts.find((c:any)=>c.id===contact.id).active).toBe(true);
  }}
@@ -57,7 +57,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
  for(let mission=1;mission<=5;mission++){
   await page.getByTestId('map-prepare').click();await page.getByTestId('briefing').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
   for(let room=0;room<4;room++){
-   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.player?.vy===0;});const before=await state(page);visited.push(before.room);try{await solveRoom(page);}catch(error){await info.attach('route-failure.json',{body:JSON.stringify(await state(page),null,2),contentType:'application/json'});throw error;}
+   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.player?.vy===0;});const before=await state(page);visited.push(before.room);try{await solveRoom(page);}catch(error){const failed=await state(page);console.error('ROUTE_FAILURE '+JSON.stringify({visited,room:failed.room,state:failed.state,player:failed.player,hp:failed.hp,world:failed.world,solids:failed.solids,enemies:failed.enemies}));await info.attach('route-failure.json',{body:JSON.stringify(await state(page),null,2),contentType:'application/json'});throw error;}
   }
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
