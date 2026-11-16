@@ -4,7 +4,9 @@
 
 Production: `0.8.0-alpha.1`, build `cinder-v1.b1.a1`, runtime `ffa3df5f24d155df95daaafd2c127c5fc97d0a29`, site merge `f9f31a615ed05fc206a93eef24cb78d2fc67bb4c`. [Live evidence](sprint-3-production-release-2026-11-16.json). Live в этом проходе не менялся.
 
-Разработка: `0.8.0-alpha.2`, runtime `9017044`, `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10). Выбранный инженерный gate PASS: 5 проверок турелей, 29 прежних, 50 targeted world checks и оба полных маршрута по 20 комнат/5 миссий с финалом и reload сохранённого результата. Собран immutable alpha.2 `cinder-v1.b18.a1`; это не RC. Отключённые турели и подсказка брони исправлены; случай неподвижной E пока не воспроизведён. Подробные production-механизмы, art/audio и M-RW4/человеческая приёмка остаются открытыми.
+Последний полностью проверенный срез: `0.8.0-alpha.2`, runtime `9017044`, `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10). Выбранный инженерный gate PASS: 5 проверок турелей, 29 прежних, 50 targeted world checks и оба полных маршрута по 20 комнат/5 миссий с финалом и reload сохранённого результата. Собран immutable alpha.2 `cinder-v1.b18.a1`; это не RC. Отключённые турели и подсказка брони исправлены; случай неподвижной E пока не воспроизведён. Подробные production-механизмы, art/audio и M-RW4/человеческая приёмка остаются открытыми.
+
+Активная следующая версия — `0.8.0-alpha.3`, source `0117a79`: физические клавиши SW02-A, 64 локальные модели и 86 CI runtime/input checks PASS; C02 PASS, C03 выполняется. Рабочая среда отключилась после сохранения исходников; новые screenshots пока не просмотрены. [Отчёт продолжения](rw3-environment-production.ru.md). На бой эта версия не публиковалась.
 
 | Этап | Фактический результат | Остаток |
 | --- | --- | --- |

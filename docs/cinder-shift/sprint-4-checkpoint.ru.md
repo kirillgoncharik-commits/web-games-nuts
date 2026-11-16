@@ -2,11 +2,17 @@
 
 **INCOMPLETE / NOT RC / NOT ACCEPTED.** Вход M-RW4 выявил незавершённый M-RW3. Выполнена следующая производственная итерация M-RW3; сравнительный M-COMPARE не запускался.
 
-## Точное состояние
+## Активная alpha.3 после проверенного среза
+
+Source `0117a79a53e114e9246ad6114d2c603a436f8ae7`, tree `4666be1cbf90021864624cda913c174b0f674adc`, локальный эквивалент `eb77d1c`. SW02-A теперь содержит настоящие нажимаемые клавиши с физическим снижением соседней опоры и безопасным возвратом. Build/typecheck/i18n и 64 локальные модели PASS. На [CI 43901074700](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700) прошли 86 runtime/input checks (включая клавиатуру и два touch-контакта Chromium) и полный C02; C03 ещё выполняется. После синхронизации source среда стала unavailable; новые screenshot/JSON evidence не просмотрены. [Подробный checkpoint](rw3-environment-production.ru.md).
+
+Проверенный alpha.2 artifact ниже сохраняется как отдельный baseline. Alpha.3 не считается RC/принятой/опубликованной; полный производственный объём остаётся открытым.
+
+## Точное состояние предыдущего проверенного среза
 
 Ветка `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10), база — `codex/cinder-shift-m-rework` / PR9. Исходный remote `487b6757e60f1b7152e566503139d9cd425f57eb` перед началом сверён через compare: identical.
 
-Текущий runtime source: `90170441b9742ce6a2f0dee5cf6a71e689b46935`. Точный отчёт — [sprint-4-verification.json](sprint-4-verification.json); каталог новых комнат — [new-world-runtime-registry.json](new-world-runtime-registry.json).
+Последний полностью проверенный runtime source: `90170441b9742ce6a2f0dee5cf6a71e689b46935`. Точный отчёт — [sprint-4-verification.json](sprint-4-verification.json); каталог новых комнат — [new-world-runtime-registry.json](new-world-runtime-registry.json).
 
 Первая поставка remote `1fba2c9f1452c457f0a4d5833b526215049b586f` совпадала с локальным `0d3f38a6772320c867482706bb3edf5c1f307722` по tree `6f7d31b5895c3eb1bc7314805e27359cfda23775`. Затем локальная среда отключилась. Последующие исправления сохранены через GitHub и проверялись своим CI. Среда исходников восстановлена: свежая локальная копия `cinder-shift-final-continue`, commit `37a2df9`, совпадает с remote runtime по tree `3f5572e3eb0f7b1d09274539237bcb25768e6b81`. Старая копия `cinder-shift-final` и её незакоммиченные документы сохранены; продолжать её без сверки нельзя.
 

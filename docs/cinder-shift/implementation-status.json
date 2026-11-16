@@ -2,14 +2,15 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-16",
-  "reference": "Final-stage entry remains incomplete: selected runtime gate PASS (84 checks and both complete world routes), immutable alpha.2 candidate saved. Production mechanics/art/audio and RW4/human gates remain open; E inactivity not reproduced.",
+  "reference": "Verified alpha.2 remains pinned; active alpha.3 implements physical SW02-A keys. CI runtime/input checks and full C02 pass; C03 and visual review pending. Source environment unavailable again; no production deployment.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
-    "code_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "code_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Runtime 9017044 passes build/typecheck, 5 turret + 29 prior + 50 world checks and both 20-room/5-mission routes with persisted result reload. Artifact cinder-v1.b18.a1 is pinned. The documentation/report-export successor changes no game files; export-only delta typechecked. No alpha.2 deployment or RC approval.",
+    "working_tree": "Alpha.3 source fully saved remotely before the host disconnected. Local build/typecheck and 64 models passed; CI 86 runtime/input checks and C02 passed. New screenshots not reviewed. Continue from the fresh synchronized branch after recovery.",
     "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "test_source_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
+    "test_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "last_fully_verified_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
     "version": "0.8.0-alpha.1",
@@ -1019,13 +1020,13 @@
     "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
   },
   "final_stage_entry": {
-    "status": "INCOMPLETE_PRODUCTION_BRIEF_AND_RW4_OPEN",
-    "version": "0.8.0-alpha.2",
+    "status": "INCOMPLETE_ALPHA3_CI_VISUAL_REVIEW_PENDING_ENV_UNAVAILABLE",
+    "version": "0.8.0-alpha.3",
     "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
     "verification": "docs/cinder-shift/sprint-4-verification.json",
     "accepted": false,
     "published": false,
-    "current_runtime_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
+    "current_runtime_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7"
   },
   "historical_rw3_a0_workstream": {
     "milestone": "M-RW3",
@@ -1043,5 +1044,47 @@
     "publication_scope": "A0 foundation published and live-verified; two production campaigns remain in development",
     "production_url": "https://nuts.bid/games/cinder-shift/",
     "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
+  },
+  "active_development_successor": {
+    "version": "0.8.0-alpha.3",
+    "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "runtime_tree_sha": "4666be1cbf90021864624cda913c174b0f674adc",
+    "branch": "codex/cinder-shift-final",
+    "status": "KEYBOARD_RUNTIME_INPUT_PASS_VISUAL_REVIEW_PENDING_ENVIRONMENT_UNAVAILABLE",
+    "scope": "SW02-A physical keyboard; remaining production brief is still incomplete",
+    "local_checks": {
+      "build": "PASS_LOCAL_SNAPSHOT",
+      "typecheck": "PASS",
+      "i18n_keys": 885,
+      "model_checks": 64
+    },
+    "ci": {
+      "run_id": 43901074700,
+      "runtime_job_id": 133417515994,
+      "checks": {
+        "passed": 86,
+        "failed": 0,
+        "packs": [
+          7,
+          29,
+          50
+        ]
+      },
+      "world_routes": {
+        "c02-small-world": {
+          "job_id": 133417516220,
+          "status": "PASS"
+        },
+        "c03-adriatic-1986": {
+          "job_id": 133417516279,
+          "status": "IN_PROGRESS"
+        }
+      },
+      "game_artifact": "PENDING"
+    },
+    "last_fully_verified_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935",
+    "visual_review": "New keyboard screenshots NOT VIEWED; host became unavailable after source sync. Physical phones NOT RUN.",
+    "report": "docs/cinder-shift/rw3-environment-production.ru.md",
+    "resume": "Restore a source-capable environment and sync this runtime or its report-only successor. Preserve the original worktree and the checked alpha.2 artifact; do not continue an older checkout blindly."
   }
 }
