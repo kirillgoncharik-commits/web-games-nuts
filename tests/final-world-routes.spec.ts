@@ -14,9 +14,14 @@ async function unlocked(page:Page){
  await page.evaluate(record=>new Promise<void>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onsuccess=()=>{const db=r.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put(record,'campaign');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};}),record);
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();
 }
-async function walk(page:Page,target:number){
- let previous=NaN;for(let n=0;n<120;n++){
-  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
+async function walk(page:Page,target:number,allowExit=false){
+ const origin=(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
+  const s=await state(page);if(allowExit&&(s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
+   // Releasing direction mid-jump still carries horizontal momentum until the
+   // next ticks. Validate the landing, rather than accepting the airborne x.
+   if(Math.abs((await state(page)).player.x-target)<7)return;
+   previous=NaN;continue;
+  }
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
   if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=s.simMs%pulse.cycle;
@@ -34,9 +39,11 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
-  const candidates=[en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60].filter(x=>x>40&&x<600&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));
+  const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
+  const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
+  const candidates=[en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&(!pulse||x+14<pulse.x||x-14>pulse.x+pulse.width)&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>200&&r.x<x+14&&r.x+r.width>x-14));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
-  await walk(page,at);await face(page,en.x>at?1:-1);await page.keyboard.down('j');
+  await walk(page,at);await expect.poll(async()=>(await state(page)).player.y+22).toBe(320);await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
  }
 }
@@ -57,8 +64,8 @@ async function solveRoom(page:Page){
   }
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}
- s=await state(page);const repair=rooms[s.room as keyof typeof rooms].world?.repair;if(repair&&s.hp<s.maxHp&&!s.world.repaired){await walk(page,Math.min(608,repair.x+16));await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);}
- await walk(page,600);const before=s.room;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
+ s=await state(page);const repair=rooms[s.room as keyof typeof rooms].world?.repair;if(repair&&s.hp<s.maxHp&&!s.world.repaired){await walk(page,repair.x);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);}
+ const before=s.room;await walk(page,600,true);s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
 }
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
  test.setTimeout(600000);await unlocked(page);await page.getByTestId('menu-campaigns').click();await page.getByTestId('world-'+world).click();const visited:string[]=[];

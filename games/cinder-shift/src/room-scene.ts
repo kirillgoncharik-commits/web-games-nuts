@@ -203,11 +203,13 @@ export class RoomScene extends Phaser.Scene{
   else if(a.missionId==='airlock'){key=def.id==='C'?(a.objective?'mission.objective.exit':'mission.objective.power'):'airlock.objective.'+def.id;if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='foundry.objective.salvage';params.action='interact';}}
   else if(a.missionId==='cargo'){
    key=a.cellInstalled?'cargo.objective.exit':a.cellCollected?'cargo.objective.install':def.id==='M2A'?'cargo.objective.gallery':def.id==='M2B'?'cargo.objective.salvageRoute':def.id==='M2C'?'cargo.objective.routePower':def.id==='M2D'?'cargo.equipment.'+a.cargoCircuit:'cargo.objective.cell';
+   const storageTurret=saved.enemies.find(enemy=>enemy.id==='f-event-turret');
+   if(def.id==='F'&&storageTurret&&storageTurret.hp>0&&!a.enemyPowered(storageTurret)&&!a.cellCollected)key=def.terminal&&!saved.terminal?'cargo.objective.turretRestore':'cargo.objective.turretOff';
    if(def.powerSwitch&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)){key='cargo.powerSwitch.'+a.cargoCircuit;params={action:'interact'};}
    if(def.cache&&!saved.cacheUsed&&cacheInReach(this.player.x,this.player.feet,def.cache)){key='foundry.objective.salvage';params.action='interact';}
    if(def.cell&&!a.cellCollected&&Math.abs(this.player.x-def.cell.x)<38){key='cargo.objective.take';params.action='interact';}
    if(def.id==='F'&&hasEvent(a.eventPlan,'E01')&&!saved.terminal&&Math.abs(this.player.x-88)<34){key='cargo.objective.restore';params.action='interact';}
-   const teachingTurret=saved.enemies.find(enemy=>enemy.id==='e-turret');if(def.id==='E'&&teachingTurret&&a.tutorial.has('turret_hint')&&!a.tutorial.has('turret_hit'))key='cargo.objective.turretHint';
+   const teachingTurret=saved.enemies.find(enemy=>enemy.id==='e-turret');if(def.id==='E'&&teachingTurret&&teachingTurret.hp>0)key=turretPresentation(teachingTurret,a.enemyPowered(teachingTurret)).damageable?'cargo.objective.turretHint':'cargo.objective.turretArmor';
   }
   else if(a.missionId==='foundry'){
    key='foundry.objective.'+def.id;

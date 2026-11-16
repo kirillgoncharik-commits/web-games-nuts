@@ -16,6 +16,10 @@ for(const event of [false,true])test(`Cargo E fires and can be destroyed, E01 ${
  await encounter(page,{mission:'cargo',room:'E',seed:seedForPowerEvent(event),nodes:['D1','D2']});
  await jump(page,130,224);await ground(page,320);
  await until(page,()=>{const s=(window as any).__CINDER__();return s.projectiles.some((p:any)=>p.team==='enemy'&&p.source==='turret-shot');},null,'E turret fires a real projectile');
+ await until(page,()=>{const s=(window as any).__CINDER__();return s.enemies.find((e:any)=>e.id==='e-turret').turret.state==='exposed';},null,'E recovery window');
+ await expect(page.locator('#objective')).toContainText(/Броня турели раскрыта|Turret armor open/);
+ await until(page,()=>{const s=(window as any).__CINDER__();return s.enemies.find((e:any)=>e.id==='e-turret').turret.state!=='exposed';},null,'E armor closes');
+ await expect(page.locator('#objective')).toContainText(/Турель бронирована|turret is armored/);
  await page.keyboard.down('s');await clear(page,['e-turret']);await page.keyboard.up('s');
  const s=await state(page);expect(s.enemies.find((e:any)=>e.id==='e-turret').turret.state).toBe('destroyed');expect(s.exitOpen).toBe(true);
  await info.attach('turret-state.json',{body:JSON.stringify(s,null,2),contentType:'application/json'});await page.screenshot({path:info.outputPath('cargo-E-destroyed.png')});
