@@ -1,3 +1,15 @@
+# Текущая контрольная точка: alpha.4, 16.11.2026
+
+**INCOMPLETE / NOT RC.** Доработаны SW02-C (бумажная платформа), SW02-D (два скана лампы) и ART-01 (видимый робот со статичным свечением).
+
+Source `ce0e946a261f01f9928ad57a9c6fcd9702f57390`, build `cinder-v1.b23.a1`, [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10). Выбранный gate: 102 PASS, оба полных маршрута C02/C03 PASS, immutable archive. Cross-browser: Chromium 64 PASS, Firefox/WebKit по 63 PASS + 1 явно обозначенный touch SKIP; models 117 PASS.
+
+Актуальные [подробный отчёт](alpha4-desktop-and-menu.ru.md), [verification](alpha4-verification.json) и [room registry](new-world-runtime-registry.json) заменяют старые CURRENT/FULL_INPUT_FAIL ниже. Все шесть RW3 требований остаются PARTIAL; полного production art/audio и RW4/RC ещё нет. На production зарегистрирована alpha.3; alpha.4 не опубликована.
+
+Продолжить SW03/SW04 и оставшееся производство по brief. Среда unavailable; все изменения сохранены в remote. Сначала синхронизировать свежий HEAD, сохранив старые локальные checkout и возможный незакоммиченный draft отчёта.
+
+<details><summary>Исторический checkpoint до alpha.4</summary>
+
 # Финальный этап Cinder Shift — checkpoint 16.11.2026
 
 **INCOMPLETE / NOT RC / NOT ACCEPTED.** Вход M-RW4 выявил незавершённый M-RW3. Выполнена следующая производственная итерация M-RW3; сравнительный M-COMPARE не запускался.
@@ -65,3 +77,6 @@ M-RW4 после выхода RW3: пять испытаний с приняты
 Все шесть исходных M-RW3 ID — PARTIAL. 80 canonical IDs, 54 aliases и три RW3-ADD сохранены. Субъективная приёмка, human timing и физические телефоны — NOT RUN. Недостающие переводы не заменены копиями EN.
 
 Production в этой задаче не менялся: справочная alpha.1 / `ffa3df5...`, build `cinder-v1.b1.a1`, site `f9f31a615ed05fc206a93eef24cb78d2fc67bb4c`. Публикация и одобрение RC не заявлены.
+
+
+</details>

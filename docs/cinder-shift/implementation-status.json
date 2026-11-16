@@ -2,26 +2,27 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-16",
-  "reference": "Alpha.3 selected engineering gate PASS: 86 checks, both complete world routes and immutable build. New keyboard screenshots/human/device acceptance remain unreviewed; environment unavailable. No production deployment.",
+  "reference": "Alpha.4 selected engineering gate PASS: 102 checks, both full world routes and immutable build. Chromium/Firefox/WebKit regression PASS; menu before/after visually reviewed. Full RW3 production and RW4 remain incomplete.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
-    "code_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "code_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "All alpha.3 game source is saved remotely. Exact source passes CI build/typecheck, 86 checks and both full 20-room/five-mission routes with persisted results. Keyboard screenshots not reviewed after host disconnect. Formal production/art/human gates remain open.",
-    "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "test_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "working_tree": "Final source and all test fixes are saved remotely. Selected gate and cross-browser regression pass. Local source environment unavailable; preserve the older checkout and any local draft before syncing remote.",
+    "published_game_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "test_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
-    "version": "0.8.0-alpha.1",
-    "build_id": "cinder-v1.b1.a1",
-    "source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "version": "0.8.0-alpha.3",
+    "build_id": "cinder-v1.b19.a1",
+    "source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "url": "https://nuts.bid/games/cinder-shift/",
-    "site_main_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
-    "site_pr": 16,
-    "deployment_id": "1a6f2ae0-cc17-4364-8ce6-9fecf28b2d28",
-    "status": "PUBLISHED_AND_LIVE_VERIFIED",
-    "evidence": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
+    "site_main_sha": "022ed15f05e18441d66368bd2c7e4273419a932d",
+    "site_pr": 17,
+    "deployment_id": "c7fd7975-6843-46ba-905e-03fc07a0bef6",
+    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
+    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json",
+    "changed_by_this_iteration": false
   },
   "release_register": [
     {
@@ -544,19 +545,19 @@
   ],
   "active_workstream": {
     "milestone": "M-RW3_BEFORE_M_RW4",
-    "status": "ALPHA2_RUNTIME_DRAFT_FULL_INPUT_FAILED",
-    "version": "0.8.0-alpha.2",
+    "status": "ALPHA4_SELECTED_AND_CROSS_BROWSER_GATES_PASS_RW3_PARTIAL",
+    "version": "0.8.0-alpha.4",
     "coverage": "docs/cinder-shift/rework-coverage.json",
-    "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
-    "verification_report": "docs/cinder-shift/sprint-4-verification.json",
+    "checkpoint": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "verification_report": "docs/cinder-shift/alpha4-verification.json",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "No alpha.2 production deployment in this task.",
-    "runtime_source_sha": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
+    "publication_scope": "Alpha.3 remains deployed; alpha.4 is an unpublished candidate.",
+    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1020,13 +1021,13 @@
     "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
   },
   "final_stage_entry": {
-    "status": "INCOMPLETE_VISUAL_PRODUCTION_RW4_GATES_ENV_UNAVAILABLE",
-    "version": "0.8.0-alpha.3",
-    "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
-    "verification": "docs/cinder-shift/sprint-4-verification.json",
+    "status": "INCOMPLETE_RW3_PRODUCTION_RW4_NOT_RC",
+    "version": "0.8.0-alpha.4",
+    "checkpoint": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "verification": "docs/cinder-shift/alpha4-verification.json",
     "accepted": false,
     "published": false,
-    "current_runtime_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7"
+    "current_runtime_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
   },
   "historical_rw3_a0_workstream": {
     "milestone": "M-RW3",
@@ -1046,6 +1047,130 @@
     "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   },
   "active_development_successor": {
+    "version": "0.8.0-alpha.4",
+    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "runtime_tree_sha": "62f3fa023706061f01021f82e052e49653a07595",
+    "branch": "codex/cinder-shift-final",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL",
+    "scope": "SW02-C paper tray, SW02-D reflector scans, isolated menu robot with static glow",
+    "local_checks": {
+      "build": "PASS_INITIAL_RUNTIME_TREE",
+      "typecheck": "PASS_885_EN_RU_KEYS",
+      "art_contracts": "PASS",
+      "regression_models": 117,
+      "world_id_placement_action_models": 42
+    },
+    "ci": {
+      "run_id": 43919699944,
+      "status": "SUCCESS_ALL_FOUR_JOBS_SELECTED_ENGINEERING_GATE",
+      "runtime_job_id": 133483362093,
+      "checks": {
+        "passed": 102,
+        "failed": 0,
+        "packs": [
+          9,
+          8,
+          6,
+          29,
+          50
+        ]
+      },
+      "world_routes": {
+        "c02-small-world": {
+          "job_id": 133483361803,
+          "status": "PASS",
+          "artifact_id": 14253791713,
+          "rooms": 20,
+          "missions": 5
+        },
+        "c03-adriatic-1986": {
+          "job_id": 133483362165,
+          "status": "PASS",
+          "artifact_id": 14253292366,
+          "rooms": 20,
+          "missions": 5
+        }
+      },
+      "game_artifact": {
+        "id": 14253897643,
+        "name": "cinder-shift-23-1",
+        "build_id": "cinder-v1.b23.a1",
+        "source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+        "zip_bytes": 4548188,
+        "zip_sha256_from_github": "c3e51f509068765311d15735540b39744b7f060899bb65ea2ef414577d5b8754",
+        "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43919699944/artifacts/14253897643",
+        "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
+        "deployed": false
+      }
+    },
+    "visual_review": "Exact ce0e946 before/after RU sheet viewed at desktop, portrait, short landscape. RU/EN normal/reduced readability, silhouette bounds, overlap, button visibility/clickability PASS in all three browser engines. Pixel-identical normal/reduced layout is not a product requirement; WebKit may resize the illustration while preserving all acceptance bounds.",
+    "report": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "resume": "Fetch current remote successor; local environment became unavailable after the first source sync. Preserve alpha.3 published archive and alpha.2 rollback evidence.",
+    "engineering_verified_runtime": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "cross_browser": {
+      "run_id": 43919699918,
+      "status": "SUCCESS_ALL_FOUR_JOBS",
+      "merge_source_sha": "579ac1253818ad90a7c7f8fded14372ccad9024d",
+      "comparison_with_runtime_sha": "GitHub compare ahead by one merge commit, files=[]; same source files as ce0e946.",
+      "models": {
+        "job_id": 133483555121,
+        "passed": 117
+      },
+      "browsers": {
+        "chromium": {
+          "job_id": 133483554417,
+          "passed": 64,
+          "failed": 0,
+          "skipped": 0
+        },
+        "firefox": {
+          "job_id": 133483554935,
+          "passed": 63,
+          "failed": 0,
+          "skipped": 1
+        },
+        "webkit": {
+          "job_id": 133483555039,
+          "passed": 63,
+          "failed": 0,
+          "skipped": 1
+        }
+      },
+      "skip_reason": "The Chromium CDP two-contact touch case is intentionally skipped outside Chromium. Physical phones remain NOT RUN."
+    }
+  },
+  "active_iteration": {
+    "version": "0.8.0-alpha.4",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS",
+    "scope": [
+      "ART-01: isolated robot composition and static silhouette halo",
+      "SW02-C: timed external paper tray with warning, lower bypass and collision-safe return",
+      "SW02-D: two sequential reflector scans with changing lamp coverage"
+    ],
+    "last_verified_runtime": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "local_checks": {
+      "build": "PASS_LOCAL_DIRTY_SNAPSHOT",
+      "typecheck": "PASS",
+      "art_contracts": "PASS",
+      "environment_and_world_models": 50
+    },
+    "browser_checks": "PASS_CHROMIUM_FIREFOX_WEBKIT_WITH_EXPLICIT_TOUCH_SKIPS",
+    "accepted": false,
+    "deployed": false,
+    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+  },
+  "previous_production_alpha1": {
+    "version": "0.8.0-alpha.1",
+    "build_id": "cinder-v1.b1.a1",
+    "source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "site_main_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
+    "site_pr": 16,
+    "deployment_id": "1a6f2ae0-cc17-4364-8ce6-9fecf28b2d28",
+    "status": "PUBLISHED_AND_LIVE_VERIFIED",
+    "evidence": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
+  },
+  "verified_alpha3_development": {
     "version": "0.8.0-alpha.3",
     "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "runtime_tree_sha": "4666be1cbf90021864624cda913c174b0f674adc",
@@ -1099,23 +1224,66 @@
     "engineering_verified_runtime": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
-  "active_iteration": {
+  "verified_alpha4_initial": {
     "version": "0.8.0-alpha.4",
-    "status": "IMPLEMENTED_LOCAL_CHECKS_PASS_CI_PENDING",
-    "scope": [
-      "ART-01: isolated robot composition and static silhouette halo",
-      "SW02-C: timed external paper tray with warning, lower bypass and collision-safe return",
-      "SW02-D: two sequential reflector scans with changing lamp coverage"
-    ],
-    "last_verified_runtime": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "runtime_source_sha": "ddfa1ea9ce32fbc242cef767acb4c3b14a38f089",
+    "runtime_tree_sha": "e32daf4fde488a73ca6c554adab377893fca0f0e",
+    "branch": "codex/cinder-shift-final",
+    "status": "SELECTED_ENGINEERING_GATE_PASS_RW3_PARTIAL",
+    "scope": "SW02-C paper tray, SW02-D reflector scans, isolated menu robot with static glow",
     "local_checks": {
-      "build": "PASS_LOCAL_DIRTY_SNAPSHOT",
-      "typecheck": "PASS",
+      "build": "PASS_INITIAL_RUNTIME_TREE",
+      "typecheck": "PASS_885_EN_RU_KEYS",
       "art_contracts": "PASS",
-      "environment_and_world_models": 50
+      "regression_models": 117,
+      "world_id_placement_action_models": 42
     },
-    "browser_checks": "PENDING_CI_LOCAL_LISTEN_AND_BROWSER_BLOCKED",
-    "accepted": false,
-    "deployed": false
+    "ci": {
+      "run_id": 43915855984,
+      "status": "SUCCESS_SELECTED_ENGINEERING_GATE",
+      "runtime_job_id": 133469873440,
+      "checks": {
+        "passed": 102,
+        "failed": 0,
+        "packs": [
+          9,
+          8,
+          6,
+          29,
+          50
+        ]
+      },
+      "world_routes": {
+        "c02-small-world": {
+          "job_id": 133469873974,
+          "status": "PASS",
+          "artifact_id": 14250451737,
+          "rooms": 20,
+          "missions": 5
+        },
+        "c03-adriatic-1986": {
+          "job_id": 133469874132,
+          "status": "PASS",
+          "artifact_id": 14251081423,
+          "rooms": 20,
+          "missions": 5
+        }
+      },
+      "game_artifact": {
+        "id": 14250137263,
+        "name": "cinder-shift-22-1",
+        "build_id": "cinder-v1.b22.a1",
+        "source_sha": "ddfa1ea9ce32fbc242cef767acb4c3b14a38f089",
+        "zip_bytes": 4547015,
+        "zip_sha256_from_github": "93243e42c71f29ee06ee487f49736991c04fc7980fd66d4c499ecb2705f18522",
+        "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43915855984/artifacts/14250137263",
+        "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
+        "deployed": false
+      }
+    },
+    "visual_review": "RU exact-source before/after contact sheet inspected: desktop, portrait, short landscape. Automated normal/reduced geometry and controls passed RU/EN. Formal acceptance and physical phones NOT RUN.",
+    "report": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "resume": "Fetch current remote successor; local environment became unavailable after the first source sync. Preserve alpha.3 published archive and alpha.2 rollback evidence.",
+    "engineering_verified_runtime": "ddfa1ea9ce32fbc242cef767acb4c3b14a38f089"
   }
 }
