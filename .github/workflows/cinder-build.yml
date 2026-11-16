@@ -9,9 +9,9 @@ concurrency:
 permissions:
   contents: read
 jobs:
-  artifact:
+  runtime-checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,13 +25,52 @@ jobs:
       - run: npm run build
       - name: Verify reported Cargo turret encounters
         run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/cargo-turrets.spec.ts --output=test-results/cargo-turrets
-      - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium
-      - run: npx playwright test --config=playwright.final.config.ts --project=chromium
+      - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium --output=test-results/sprint3
+      - run: npx playwright test --config=playwright.final.config.ts --project=chromium tests/final-worlds.spec.ts --output=test-results/final-worlds
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: cinder-sprint3-checks
+          name: cinder-runtime-checks
           path: test-results
+  world-routes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    strategy:
+      fail-fast: false
+      matrix:
+        world: [c02-small-world, c03-adriatic-1986]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Verify all twenty rooms with ordinary input
+        run: npx playwright test --config=playwright.final.config.ts --project=chromium tests/final-world-routes.spec.ts --grep '${{ matrix.world }}' --output=test-results/${{ matrix.world }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-route-${{ matrix.world }}
+          path: test-results
+  artifact:
+    needs: [runtime-checks, world-routes]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build
       - name: Hash this immutable artifact
         run: |
           tar -czf cinder-shift-artifact.tar.gz -C dist/cinder-shift .

@@ -5,6 +5,8 @@ import {rooms} from '../games/cinder-shift/src/room-data';
 import {newCampaignRegistry,newCampaignIds,newCampaignMissions,type WorldMissionId} from '../games/cinder-shift/src/session/new-campaign-content';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
+import {createEnemy,enemyRect} from '../games/cinder-shift/src/enemies';
+import {intersects} from '../games/cinder-shift/src/geometry';
 import {createWorldState,actWorld,stepWorld,worldReady,worldContext,powerTarget} from '../games/cinder-shift/src/session/world-runtime';
 import {validateWorldSave,validateSave} from '../games/cinder-shift/src/session/save';
 import {state} from './helpers';
@@ -23,6 +25,12 @@ test('40 authored runtime rooms retain stable IDs, distinct geometry and complet
  for(const design of newCampaignRegistry.rooms){const room=rooms[design.room_id as keyof typeof rooms];expect(room.id).toBe(design.room_id);expect(room.world).toBeTruthy();expect(room.nameKey).toBe('worlds.room.'+design.room_id);expect(room.solids[0]).toMatchObject({x:0,y:320,width:640});geometries.add(JSON.stringify(room.solids));}
  expect(geometries.size).toBeGreaterThanOrEqual(35);
  for(const id of newCampaignIds)for(const mission of newCampaignMissions[id]){expect(missions[mission as WorldMissionId].rooms).toHaveLength(4);expect(missionChain(mission as WorldMissionId)).toEqual(newCampaignMissions[id]);}
+});
+test('world enemy spawns clear fixed geometry and ground units rest on a surface',()=>{
+ for(const design of newCampaignRegistry.rooms){const room=rooms[design.room_id as keyof typeof rooms];for(const definition of room.enemies){
+  const enemy=createEnemy(definition);expect(room.solids.some(solid=>intersects(enemyRect(enemy),solid)),room.id+':'+enemy.id+' spawn overlap').toBe(false);
+  if(enemy.kind!=='drone')expect(room.solids.some(solid=>Math.abs(solid.y-enemy.y-15)<1&&enemy.x>solid.x&&enemy.x<solid.x+solid.width),room.id+':'+enemy.id+' ground support').toBe(true);
+ }}
 });
 for(const design of newCampaignRegistry.rooms)test(`model contract ${design.room_id}: reachable actions, bounded ledger and objective`,()=>{
  const room=rooms[design.room_id as keyof typeof rooms],spec=room.world!,s=createWorldState(room.id,spec);

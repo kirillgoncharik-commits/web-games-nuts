@@ -12,7 +12,7 @@ export type WorldRoomSpec={
 const floor:Rect={x:0,y:320,width:640,height:40};
 const platform=(x:number,y:number,width:number,height=12):Rect=>({x,y,width,height});
 const cover=(x:number,height:number,width=32):Rect=>platform(x,320-height,width,height);
-const enemy=(id:string,x:number,kind:'walker'|'drone'|'turret'='drone',y=292):EnemyDefinition=>({id,kind,preset:kind==='walker'?'walker_service':kind==='turret'?'turret_cycle':'drone_service',x,y,end:{x:x+(kind==='turret'?0:32),y},activateX:Math.max(120,x-160),first:true});
+const enemy=(id:string,x:number,kind:'walker'|'drone'|'turret'='drone',y=kind==='drone'?292:305):EnemyDefinition=>({id,kind,preset:kind==='walker'?'walker_service':kind==='turret'?'turret_cycle':'drone_service',x,y,end:{x:x+(kind==='turret'?0:32),y},activateX:Math.max(120,x-160),first:true});
 const contact=(id:string,x:number,y=280,window=false)=>({id,rect:{x,y,width:24,height:28},window});
 const carry=(kind:CarryKind,x:number,...contacts:ReturnType<typeof contact>[]):WorldRoomSpec['carry']=>({kind,spawn:{x,y:292},contacts});
 const power=(id:string,circuit:Circuit,x:number,y:number,w:number,h=12):PowerObject=>({id,solidOn:circuit,rect:platform(x,y,w,h)});
@@ -25,7 +25,7 @@ const authored:Authored[]=[
  {id:'SW02-A',solids:[cover(160,24,64),cover(272,48,64),cover(384,24,64),platform(464,240,88)],world:{landmark:'keys'},enemies:[enemy('sw02a-scanner',488)]},
  {id:'SW02-B',solids:[platform(160,276,88),platform(292,240,112),platform(448,268,80)],world:{landmark:'cable',carry:carry('spool',112,contact('cable-latch-01',536))},enemies:[enemy('sw02b-service',448)],cache:{x:344,y:240}},
  {id:'SW02-C',solids:[platform(132,276,88),platform(276,244,88),platform(420,276,100)],world:{landmark:'printer',pulse:{x:244,width:40,cycle:5000,warning:1600,active:700}}},
- {id:'SW02-D',solids:[cover(152,32,40),platform(256,252,88),cover(432,32,48)],world:{landmark:'desktop-node',carry:carry('block',112,contact('desktop-line-01',380),contact('desktop-line-02',548))},enemies:[enemy('sw02d-turret',488,'turret')]},
+ {id:'SW02-D',solids:[cover(152,32,40),platform(256,252,88),cover(432,32,48)],world:{landmark:'desktop-node',carry:carry('block',112,contact('desktop-line-01',380),contact('desktop-line-02',548))},enemies:[enemy('sw02d-turret',504,'turret')]},
  {id:'SW03-A',solids:[platform(128,276,96),platform(264,242,96),platform(416,276,80)],world:{landmark:'cloth',carry:carry('block',112,contact('cloth-catch-01',548))}},
  {id:'SW03-B',solids:[cover(160,32,48),platform(280,248,88),cover(480,32,48)],world:{landmark:'washer',carry:carry('spool',112,contact('washer-lock-01',552)),pulse:{x:392,width:56,cycle:5600,warning:1800,active:800}},enemies:[enemy('sw03b-scanner',424)]},
  {id:'SW03-C',solids:[platform(144,280,88),platform(280,244,88),platform(416,212,88)],world:{landmark:'vent',wind:1,repair:{x:552,y:320}},cache:{x:452,y:212}},
