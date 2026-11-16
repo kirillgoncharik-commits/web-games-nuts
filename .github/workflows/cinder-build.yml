@@ -45,6 +45,9 @@ jobs:
           CINDER_BASE_URL: http://127.0.0.1:4175
       - name: Verify robot composition and static glow at all control sizes
         run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/rework-ui.spec.ts --grep 'ART-01' --output=test-results/menu-art
+      - name: Report exact menu comparison images
+        if: always()
+        run: node scripts/report-menu-art.mjs
       - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium --output=test-results/sprint3
       - run: npx playwright test --config=playwright.final.config.ts --project=chromium tests/final-worlds.spec.ts --output=test-results/final-worlds
       - uses: actions/upload-artifact@v4

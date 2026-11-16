@@ -33,6 +33,7 @@ for(const size of [{width:1440,height:900},{width:390,height:844},{width:667,hei
    const buttons=[...panel.querySelectorAll('button')].map(el=>{const r=el.getBoundingClientRect();return {id:el.id,inside:r.left>=0&&r.top>=0&&r.right<=innerWidth&&r.bottom<=innerHeight,clickable:el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))};});
    const image=svg.querySelector('image')!;return {robot,overlaps,buttons,artWidth:svg.clientWidth,href:image.getAttribute('href'),horizontalOverflow:panel.scrollWidth>panel.clientWidth+1};
   });
+  console.log('Menu geometry',JSON.stringify({size,locale,...result}));
   expect(result.robot.left).toBeGreaterThan(0);expect(result.robot.top).toBeGreaterThan(0);expect(result.robot.right).toBeLessThan(size.width);expect(result.robot.bottom).toBeLessThan(size.height);
   expect(result.overlaps).toBe(false);expect(result.horizontalOverflow).toBe(false);expect(result.buttons.every(b=>b.inside&&b.clickable)).toBe(true);
   const response=await page.request.get('/games/cinder-shift/'+result.href);expect(response.ok()).toBe(true);return result;
