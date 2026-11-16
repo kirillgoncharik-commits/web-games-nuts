@@ -30,7 +30,7 @@ for(const design of newCampaignRegistry.rooms)test(`model contract ${design.room
    s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,3500)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,3500)?.action).toBe('throw');
    for(let i=0;i<60&&!c.active;i++)stepWorld(spec,s,{x,y:320},1,3500+i*16,16,[]);expect(c.active).toBe(true);
   }expect(new Set(s.carry.ledger).size).toBe(spec.carry!.contacts.length);}
- if(s.power){for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,3500)?.action).toBe('switch');const x=powerTarget(spec,s)!.x;expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,3500)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
+ if(s.power){for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,3500)?.action).toBe('switch');const target=powerTarget(spec,s)!;expect(actWorld(spec,s,target,{x:target.x-11,y:target.y-44,width:22,height:44},1,3500)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
  expect(worldReady(spec,s)).toBe(true);const before=JSON.stringify(s.ledger);stepWorld(spec,s,{x:64,y:320},1,10000,16,[]);expect(JSON.stringify(s.ledger)).toBe(before);
 });
 for(const world of newCampaignIds)test(`${world}: isolated economy, entry, Retry and completed-save validation`,()=>{
@@ -54,9 +54,9 @@ test('ordinary YU01-A real input: circuit changes real collision geometry and ac
  await page.keyboard.down('d');await page.waitForFunction(()=>(window as any).__CINDER__().player.x>150);await page.keyboard.press('Space',{delay:500});await page.waitForFunction(()=>(window as any).__CINDER__().player.x>250);await page.keyboard.up('d');await settle(page);await move(page,550);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await page.screenshot({path:info.outputPath('yu01-a-production.png')});
 });
 
-test('all authored power contacts have a grounded interaction position outside fixed solids',()=>{
+test('all authored power contacts have a standing position outside fixed and active circuit solids',()=>{
  for(const design of newCampaignRegistry.rooms){
   const room=rooms[design.room_id as keyof typeof rooms],spec=room.world!;if(!spec.sequence)continue;const world=createWorldState(room.id,spec);
-  for(let phase=0;phase<spec.sequence.length;phase++){world.phase=phase;const target=powerTarget(spec,world)!;const body={x:target.x-11,y:target.y-44,width:22,height:44};expect(room.solids.filter(r=>r.y<320).some(r=>body.x<r.x+r.width&&body.x+body.width>r.x&&body.y<r.y+r.height&&body.y+body.height>r.y),room.id+':phase-'+phase).toBe(false);}
+  for(let phase=0;phase<spec.sequence.length;phase++){world.phase=phase;const target=powerTarget(spec,world)!;const body={x:target.x-11,y:target.y-44,width:22,height:44};const solidTargets=[...room.solids.filter(r=>r.y<320),...(spec.powerObjects||[]).filter(o=>o.solidOn===spec.sequence![phase]).map(o=>o.rect)];expect(solidTargets.some(r=>body.x<r.x+r.width&&body.x+body.width>r.x&&body.y<r.y+r.height&&body.y+body.height>r.y),room.id+':phase-'+phase).toBe(false);}
  }
 });
