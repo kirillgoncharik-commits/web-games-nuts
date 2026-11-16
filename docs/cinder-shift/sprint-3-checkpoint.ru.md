@@ -14,9 +14,9 @@
 - Модели carry/throw, потери/возврата предмета, одноразовой защиты, контактов, A/B и препятствия внутри игрока. Модель независимого прогресса двух миров, последовательности комнат, ledger и трёх fragment IDs.
 - Два внутренних образца SW01-A/YU01-B используют реальный Controls/Player и физику базовой Миры. Проверяются реальным keyboard/touch вводом, сохраняют контакт/circuit при reload. Эти graybox fixtures собираются вне `dist/`, не являются поставкой двух кампаний, не доказывают обычное открытие через C01 и не заменяют арт/аудио.
 
-Опубликован A0 preview: https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/ . Версия `0.8.0-alpha.1`, сборка `cinder-v1.b1.a1`, runtime `ffa3df5f24d155df95daaafd2c127c5fc97d0a29`. CI artifact workflow SUCCESS; 72 локальные проверки и 10 проверок внешнего preview PASS. Остальная общая регрессия выполняется; после исправления устаревшего номера в generated registry нужна повторная CI-проверка.
+Опубликован A0 preview: https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/ . Версия `0.8.0-alpha.1`, сборка `cinder-v1.b1.a1`, runtime `ffa3df5f24d155df95daaafd2c127c5fc97d0a29`. CI artifact workflow SUCCESS; 72 локальные проверки и 10 проверок внешнего preview PASS. На successor `8de1372` все восемь workflow завершились SUCCESS, включая все 12 разделов общей регрессии. Номер generated registry исправлен; геометрия и runtime не менялись.
 
-Локальные проверки и точный runtime SHA после фиксации — в `sprint-3-verification.json`. Не переносить PASS C3 на изменённый runtime. Полная C01, Foundry-ветки и все маршруты новых миров требуют новой интеграционной проверки. Старое доказательство RW1/RW2 сохранено отдельно.
+Локальные проверки и точный runtime SHA после фиксации — в `sprint-3-verification.json`. Не переносить PASS C3 на изменённый runtime. Текущие C01/Foundry/Regulator/Cargo/Archive/Reactor маршруты прошли successor CI. Маршруты новых миров требуют production-интеграции. Старое доказательство RW1/RW2 сохранено отдельно.
 
 ## Следующий производственный шаг
 
@@ -31,4 +31,4 @@
 3. Dedicated workflow выпускает clean-source preview artifact. Внутренние sample assets и debug entry не входят в production `dist`.
 4. Продолжить указанный следующий шаг без дополнительного общего согласования. При изменении уже опубликованной alpha.1 перейти на alpha.2.
 
-Human timing, субъективная art/music приёмка и физические устройства: NOT RUN, сохраняются за M-RW4 по прежнему решению. M-RW3 и M-REWORK не объявлены завершёнными. Production C3 в этом checkpoint не меняется.
+Human timing, субъективная art/music приёмка и физические устройства: NOT RUN, сохраняются за M-RW4 по прежнему решению. M-RW3 и M-REWORK не объявлены завершёнными. 16 ноября по запросу «деплоим на лив» A0 опубликована на nuts.bid, site PR16 / merge f9f31a6. Production и site CI SUCCESS; live manifest и все 61 хэша совпали с артефактом. Реальное сохранение C3 с D1 пережило обновление; бой на 8 HP и однократные notes проверены. Полный отчёт: sprint-3-production-release-2026-11-16.json. Предыдущая C3 / site b7573456 — точка отката.
