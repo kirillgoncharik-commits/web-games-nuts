@@ -16,7 +16,7 @@ async function unlocked(page:Page){
 }
 async function walk(page:Page,target:number){
  let previous=NaN;for(let n=0;n<120;n++){
-  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<2){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
+  const s=await state(page);if(s.state!=='playing')throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
   if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=s.simMs%pulse.cycle;
@@ -27,7 +27,7 @@ async function walk(page:Page,target:number){
   if(head)await page.keyboard.down('s');else await page.keyboard.up('s');
   const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}
-  previous=p.x;await page.waitForTimeout(80);
+  previous=p.x;await page.waitForTimeout(Math.abs(target-p.x)<48?20:80);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
 async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
@@ -69,5 +69,5 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
   }
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
- await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);await info.attach('input-route.json',{body:JSON.stringify({source:'legacy C01 unlock fixture; all world input real',visited,final},null,2),contentType:'application/json'});
+ await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);await info.attach('input-route.json',{body:JSON.stringify({source:'legacy C01 unlock fixture; all world input real',visited,final},null,2),contentType:'application/json'});
 });
