@@ -19,7 +19,7 @@
   "candidate": {
     "build_id": "0.7.0-rw2.c3",
     "stage": "M_RW2_C3_ENGINEERING_CHECKPOINT_VERIFIED",
-    "published": false,
+    "published": true,
     "accepted": false,
     "verification": {
       "build": "PASS_EXACT_SOURCE_CI",
@@ -1212,7 +1212,39 @@
         }
       ]
     },
-    "production_published": false
+    "production_published": true,
+    "production_deployment": {
+      "date": "2026-11-16",
+      "timezone": "Europe/Podgorica",
+      "status": "PUBLISHED",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "build_id": "0.7.0-rw2.c3",
+      "game_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+      "site_merge_sha": "b7573456a19730f04d34499a423bafab4dda6944",
+      "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/15",
+      "site_branch": "main",
+      "cloudflare_deployment_id": "e7018101-85d2-4c86-8e90-bd03d67b0658",
+      "cloudflare_check": "SUCCESS",
+      "cloudflare_check_id": 133223254337,
+      "site_verify": "SUCCESS",
+      "site_verify_check_id": 133223009075,
+      "manifest_blob": "c5677e4181fe15f59dcfa5aeb4be9f0f13c82009",
+      "manifest_matches_verified_preview": true,
+      "verification_scope": "Cloudflare production-branch deployment succeeded; site CI succeeded; main manifest matches verified preview C3 exactly. Direct live JSON fetch via web tool was unavailable; no new browser/playtest claimed.",
+      "upstream_regression": "331/331 on exact C3 source; seven main workflows succeeded; existing results re-read",
+      "previous_production": {
+        "build_id": "0.7.0-rw1.b6",
+        "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",
+        "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4"
+      },
+      "acceptance_complete": false,
+      "remaining": [
+        "50 locales/RTL: M-RW4",
+        "Final combined-flash and physical-device audit: M-RW4",
+        "Formal human acceptance deferred"
+      ],
+      "authorization": "Kirill: обнови версию на бою"
+    }
   },
   "requirements": [
     {
@@ -1236,7 +1268,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1277,7 +1309,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1320,7 +1352,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1359,7 +1391,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1406,7 +1438,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1453,7 +1485,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1495,7 +1527,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1537,7 +1569,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1578,7 +1610,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1620,7 +1652,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1662,7 +1694,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1715,7 +1747,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1760,7 +1792,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1810,7 +1842,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1861,7 +1893,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1918,7 +1950,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -1967,7 +1999,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2010,7 +2042,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2054,7 +2086,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2096,7 +2128,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2141,7 +2173,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2183,7 +2215,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2225,7 +2257,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2266,7 +2298,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2309,7 +2341,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2353,7 +2385,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2396,7 +2428,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -2435,7 +2467,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -2479,7 +2511,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -2527,7 +2559,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2573,7 +2605,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -2618,7 +2650,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2664,7 +2696,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -2710,7 +2742,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -2757,7 +2789,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2825,7 +2857,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2875,7 +2907,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2924,7 +2956,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2969,7 +3001,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3015,7 +3047,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "CURRENT_UX_IMPLEMENTED; 50_LOCALES_RTL_OPEN_M_RW4",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3060,7 +3092,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3107,7 +3139,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3153,7 +3185,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3197,7 +3229,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3244,7 +3276,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3291,7 +3323,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3339,7 +3371,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3388,7 +3420,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3433,7 +3465,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3479,7 +3511,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3529,7 +3561,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3576,7 +3608,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3623,7 +3655,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3676,7 +3708,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "implementation_status": "complete",
       "sprint_owner": "M-RW1",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -3715,7 +3747,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3772,7 +3804,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -3810,7 +3842,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3856,7 +3888,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3903,7 +3935,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -3969,7 +4001,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_SEPARATE_PREVIEW; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -4144,7 +4176,7 @@
         "docs/cinder-shift/sprint-1-b6-verification.json",
         "docs/cinder-shift/sprint-1-b6-release-notes.ru.md"
       ],
-      "publication": "C3_CURRENT_RUNTIME_REGRESSION; PRODUCTION_B6",
+      "publication": "C3_PRODUCTION; CURRENT_RUNTIME_REGRESSION",
       "sprint_owner": "M-RW1",
       "implementation_status": "complete",
       "verification_status": "VERIFIED_ENGINEERING_B6",
@@ -4213,6 +4245,16 @@
     }
   ],
   "production_preview": {
+    "build_id": "0.7.0-rw2.c3",
+    "game_source_sha": "c7a4b1cd519bd917bc738b581c1ce485dcd1c650",
+    "site_merge_sha": "b7573456a19730f04d34499a423bafab4dda6944",
+    "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/15",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "acceptance_complete": false,
+    "verification": "C3 Cloudflare production-branch deployment and site CI SUCCESS; main manifest equals verified C3 preview. See docs/cinder-shift/sprint-2-production-release-2026-11-16.json",
+    "cloudflare_deployment_id": "e7018101-85d2-4c86-8e90-bd03d67b0658"
+  },
+  "previous_production_preview": {
     "build_id": "0.7.0-rw1.b6",
     "game_source_sha": "a390b80e4488e0cde4596ba64631098c030843d4",
     "site_merge_sha": "46ee58b70b101f7f85b93594f142741fac7c5c21",

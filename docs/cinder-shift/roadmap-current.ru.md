@@ -2,7 +2,7 @@
 
 Статус общего майлстоуна: IN_PROGRESS. Актуальная разработка — `codex/cinder-shift-m-rework`, draft [PR9](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9). Контрольная сборка — `0.7.0-rw2.c3`, runtime `c7a4b1cd519bd917bc738b581c1ce485dcd1c650`; проверенный CI merge — `53a9e1074fe2eec6b9d419ed2c9834442adc2667`. Документальный HEAD до этого обновления — `eac92cba25f856064568493f9c2d51f85235a31c`.
 
-[Превью C3](https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/) опубликовано отдельно через draft [site PR15](https://github.com/kirillgoncharik-commits/nutsbid/pull/15). На [nuts.bid](https://nuts.bid/games/cinder-shift/) остаётся B6: `0.7.0-rw1.b6`, runtime `a390b80e4488e0cde4596ba64631098c030843d4`, site merge `46ee58b70b101f7f85b93594f142741fac7c5c21`.
+[Превью C3](https://6f6fa95d.nuts-games.pages.dev/games/cinder-shift/) было опубликовано отдельно через [site PR15](https://github.com/kirillgoncharik-commits/nutsbid/pull/15). На [nuts.bid](https://nuts.bid/games/cinder-shift/) по запросу Кирилла 16 ноября опубликована C3: `0.7.0-rw2.c3`, runtime `c7a4b1cd519bd917bc738b581c1ce485dcd1c650`, site merge `b7573456a19730f04d34499a423bafab4dda6944`. Site PR15 слит; Cloudflare Pages и CI завершились SUCCESS. Предыдущая production B6 (`46ee58b70b101f7f85b93594f142741fac7c5c21`) — точка отката. [Отчёт публикации](sprint-2-production-release-2026-11-16.json).
 
 | Этап | Текущий результат | Остаток |
 | --- | --- | --- |
