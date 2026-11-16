@@ -2,14 +2,14 @@
   "version": 2,
   "kind": "implementation_status_and_release_register",
   "updated_at": "2026-11-16",
-  "reference": "M-RW3 A0 foundation started; checkpoint A and complete campaigns remain open",
+  "reference": "Final-stage entry remains incomplete: alpha.2 runtime draft, 29 previous and 49 targeted CI checks pass; two full world input routes fail; local environment unavailable.",
   "source_checkout": {
-    "branch": "codex/cinder-shift-m-rework",
-    "code_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/9",
-    "working_tree": "RW3 A0 published and live-verified. Runtime SHA remains ffa3df5; subsequent report commits change documentation only.",
+    "branch": "codex/cinder-shift-final",
+    "code_sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "working_tree": "Remote PR10 contains the latest source. The former local environment is unavailable and behind. Current CI passes build/typecheck, 29 old checks and 49 targeted checks; 2 full world routes FAIL. No alpha.2 deployment or RC approval.",
     "published_game_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "test_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29"
+    "test_source_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
   },
   "production": {
     "version": "0.8.0-alpha.1",
@@ -542,21 +542,20 @@
     }
   ],
   "active_workstream": {
-    "milestone": "M-RW3",
-    "status": "A0_FOUNDATION_IN_PROGRESS",
-    "version": "0.8.0-alpha.1",
+    "milestone": "M-RW3_BEFORE_M_RW4",
+    "status": "ALPHA2_RUNTIME_DRAFT_FULL_INPUT_FAILED",
+    "version": "0.8.0-alpha.2",
     "coverage": "docs/cinder-shift/rework-coverage.json",
-    "checkpoint": "docs/cinder-shift/sprint-3-checkpoint.ru.md",
-    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
-    "published": true,
+    "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+    "verification_report": "docs/cinder-shift/sprint-4-verification.json",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
-    "internal_mechanics_fixtures": 2,
-    "build_id": "cinder-v1.b1.a1",
-    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/",
-    "publication_scope": "A0 foundation published and live-verified; two production campaigns remain in development",
-    "production_url": "https://nuts.bid/games/cinder-shift/",
-    "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
+    "authored_runtime_rooms": 40,
+    "production_art_audio_complete": false,
+    "publication_scope": "No alpha.2 production deployment in this task.",
+    "runtime_source_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1018,5 +1017,31 @@
     "site_pr": 15,
     "evidence": "docs/cinder-shift/sprint-2-production-release-2026-11-16.json",
     "verification": "Prior confirmed deployment report; not rechecked or changed by RW3 A0"
+  },
+  "final_stage_entry": {
+    "status": "INCOMPLETE_ENVIRONMENT_UNAVAILABLE_FULL_INPUT_FAILED",
+    "version": "0.8.0-alpha.2",
+    "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+    "verification": "docs/cinder-shift/sprint-4-verification.json",
+    "accepted": false,
+    "published": false,
+    "current_runtime_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+  },
+  "historical_rw3_a0_workstream": {
+    "milestone": "M-RW3",
+    "status": "A0_FOUNDATION_IN_PROGRESS",
+    "version": "0.8.0-alpha.1",
+    "coverage": "docs/cinder-shift/rework-coverage.json",
+    "checkpoint": "docs/cinder-shift/sprint-3-checkpoint.ru.md",
+    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
+    "published": true,
+    "accepted": false,
+    "complete_campaigns_delivered": 0,
+    "internal_mechanics_fixtures": 2,
+    "build_id": "cinder-v1.b1.a1",
+    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/",
+    "publication_scope": "A0 foundation published and live-verified; two production campaigns remain in development",
+    "production_url": "https://nuts.bid/games/cinder-shift/",
+    "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   }
 }

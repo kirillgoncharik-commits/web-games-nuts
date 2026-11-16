@@ -32,3 +32,8 @@
 4. Продолжить указанный следующий шаг без дополнительного общего согласования. При изменении уже опубликованной alpha.1 перейти на alpha.2.
 
 Human timing, субъективная art/music приёмка и физические устройства: NOT RUN, сохраняются за M-RW4 по прежнему решению. M-RW3 и M-REWORK не объявлены завершёнными. 16 ноября по запросу «деплоим на лив» A0 опубликована на nuts.bid, site PR16 / merge f9f31a6. Production и site CI SUCCESS; live manifest и все 61 хэша совпали с артефактом. Реальное сохранение C3 с D1 пережило обновление; бой на 8 HP и однократные notes проверены. Полный отчёт: sprint-3-production-release-2026-11-16.json. Предыдущая C3 / site b7573456 — точка отката.
+
+
+## Продолжение 16 ноября: alpha.2 перед M-RW4
+
+После A0 начата production-итерация в [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10), `codex/cinder-shift-final`. 40 комнат теперь подключены к обычному runtime, но production brief и полные маршруты не сданы. Текущий exact-source CI: 29 прежних + 49 targeted PASS, 2 full input FAIL; локальная среда unavailable. Актуальные остаток и команда возобновления — [sprint-4-checkpoint.ru.md](sprint-4-checkpoint.ru.md), доказательства — [sprint-4-verification.json](sprint-4-verification.json). Этот исторический A0-отчёт не является текущим статусом alpha.2.

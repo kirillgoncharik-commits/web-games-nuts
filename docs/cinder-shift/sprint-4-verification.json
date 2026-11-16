@@ -1,0 +1,245 @@
+{
+  "milestone": "M-RW4_ENTRY_WITH_M_RW3_PRODUCTION",
+  "status": "INCOMPLETE_LOCAL_ENVIRONMENT_UNAVAILABLE_FULL_INPUT_GATES_FAILED",
+  "version": "0.8.0-alpha.2",
+  "date": "2026-11-16",
+  "timezone": "Europe/Podgorica",
+  "source": {
+    "branch": "codex/cinder-shift-final",
+    "pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "first_runtime_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "current_runtime_sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "tree_sha": "1961fa69b1f43ec4e9fbc474c41e40f625d6f881"
+  },
+  "production": {
+    "changed_by_this_task": false,
+    "reference_version": "0.8.0-alpha.1",
+    "reference_runtime_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "site_merge_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c"
+  },
+  "local": {
+    "source_equivalent_remote_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "local_sha": "0d3f38a6772320c867482706bb3edf5c1f307722",
+    "identical_tree_sha": "6f7d31b5895c3eb1bc7314805e27359cfda23775",
+    "build": "PASS",
+    "typecheck": "PASS",
+    "i18n": "PASS_882_EN_RU_KEYS",
+    "art_contracts": "PASS_EXISTING_ART_ANCHOR_RIG_CONTRACTS_NOT_NEW_WORLD_PRODUCTION_ACCEPTANCE",
+    "model_checks": {
+      "selected_core_and_world_pack": 121,
+      "additional_ballistics_input_feedback_pack": 43,
+      "failed": 0
+    },
+    "browser": "NOT_RUN_LOCAL_SERVER_LISTEN_EPERM",
+    "availability": "LOCAL_ENVIRONMENT_BECAME_UNAVAILABLE_DURING_CI; subsequent fixes are remote and require their own CI"
+  },
+  "ci_history": [
+    {
+      "sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+      "run_id": 43866276785,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 45,
+      "new_pack_fail": 1,
+      "issue": "Test incorrectly awaited x626 after a transition at x620; replaced with room/state transition assertion."
+    },
+    {
+      "sha": "de428a77f2ea47e9dbb55bae9307005e2d47215c",
+      "run_id": 43867022166,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 46,
+      "new_pack_fail": 2,
+      "full_world_routes": "FAILED; grounded interaction and throw positioning diagnosed"
+    },
+    {
+      "sha": "a749d2505fc51ba546942f71fd4b2e96cc2b9ad0",
+      "run_id": 43868223071,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 46,
+      "new_pack_fail": 2,
+      "full_world_routes": "FAILED at SW01-B and YU01-C",
+      "diagnostics": [
+        "SW01-B: zero-duration facing tap did not change facing before a leftward throw. Input driver now holds direction and verifies facing.",
+        "YU01-C: authored goal x552 overlapped a low fixed cover. Goal moved to grounded x584; added all-target collision model check."
+      ]
+    },
+    {
+      "sha": "e46a2424228d066e6fe394848fd3b1b9bece3dcd",
+      "run_id": 43869457985,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 47,
+      "new_pack_fail": 2,
+      "full_world_routes": "FAILED at SW01-C repair approach and YU03-B powered-platform contact",
+      "fixes": [
+        "Moved repair to a clear standing pocket.",
+        "Anchored train contact to y288 on the B platform; visual marker follows authored target height.",
+        "Added contact checks against fixed plus required-circuit colliders."
+      ]
+    },
+    {
+      "sha": "38fdb9e977016c4e9cafec495fa36b97dd4e012e",
+      "run_id": 43870725461,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 49,
+      "new_pack_fail": 2,
+      "full_world_routes": "FAILED at SW01-D and YU01-C",
+      "diagnostics": [
+        "Input driver did not recover a mandatory lid dropped after absorbing a pulse.",
+        "A firing approach stopped on the edge of an elevated collider and missed the drone; driver now checks standing clearance, direction, grounding and visible safe crossing intervals."
+      ],
+      "limits": "These are explicit expert input-driver changes; no progress, damage or objective state is injected."
+    },
+    {
+      "sha": "8a5bb266e38d7e9dc228090e5ecb9288c128eb42",
+      "run_id": 43872214086,
+      "old_rw3_pass": 29,
+      "new_pack_pass": 49,
+      "new_pack_fail": 2,
+      "full_world_routes": "FAILED due input-driver overshoot during room transitions; adaptive approach added."
+    }
+  ],
+  "current_ci": {
+    "sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "artifact_run_id": 43873344613,
+    "job_id": 133319919429,
+    "status": "FAILURE",
+    "build": "PASS",
+    "typecheck": "PASS",
+    "old_rw3_pack": {
+      "passed": 29,
+      "failed": 0
+    },
+    "new_targeted_pack": {
+      "passed": 49,
+      "failed": 0
+    },
+    "full_world_routes": {
+      "passed": 0,
+      "failed": 2,
+      "issues": [
+        {
+          "world": "c02-small-world",
+          "room": "SW01-C",
+          "observed": "All contact actions completed, but repair interaction was attempted at x603 with a repair point x572 and radius28."
+        },
+        {
+          "world": "c03-adriatic-1986",
+          "room": "YU01-C",
+          "observed": "Input driver fired from an upper platform (feet244) at a lower drone (y292); no accepted ground firing line/full route yet."
+        }
+      ],
+      "interpretation": "Observed expert-driver positions do not establish a game softlock. Full real-input proof remains failed; resume with a playable local view."
+    },
+    "game_artifact_id": null,
+    "game_artifact_status": "NOT_ISSUED_BECAUSE_INPUT_GATE_FAILED",
+    "test_evidence_artifact": {
+      "id": 14228767961,
+      "name": "cinder-sprint3-checks",
+      "bytes": 276206,
+      "sha256": "2930101cdd20efcf74b9a7b47fc2033a0669cee0b3b2c59d57ded2cd7fce2665",
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613/artifacts/14228767961",
+      "kind": "TEST_EVIDENCE_ZIP_NOT_GAME_ARTIFACT"
+    }
+  },
+  "runtime_inventory": {
+    "new_rooms": 40,
+    "new_missions": 10,
+    "base_rooms": 44,
+    "new_locale_keys": 131,
+    "total_en_ru_keys": 882,
+    "procedural_music_themes": 14,
+    "production_art_manifest_complete": false,
+    "production_audio_brief_complete": false
+  },
+  "evidence_limits": {
+    "unlock_setup_for_new_world_input_tests": "Labelled legacy C01 completion fixture; all C02/C03 input thereafter uses ordinary keyboard controls.",
+    "fresh_C01_to_both_worlds": "NOT_RUN_ON_CURRENT_CANDIDATE",
+    "blind_playtests": "NOT_RUN",
+    "physical_phones": "NOT_RUN",
+    "human_timing_minutes": "NOT_MEASURED",
+    "current_full_routes": "FAILED_2; NO_FULL_WORLD_ACCEPTANCE"
+  },
+  "internal_open": [
+    "Resolve the two exact-source real-input routes with an available playable/debugging environment, then verify all 40 rooms and Retry/reload/touch/build variants.",
+    "Complete production art/animation/VFX manifest and full audio stems/stinger/SFX/export brief.",
+    "Accepted new content in five challenge flows; existing challenge catalog remains unchanged.",
+    "48 additional complete locale catalogs and RTL integration; English copies were not added.",
+    "Current exact-source full regression, storage/update/channel/performance/flash/audio matrices.",
+    "One immutable RC preview after the engineering exit of RW3."
+  ],
+  "external_not_run": [
+    "Independent first-play campaign observations and duration measurements.",
+    "Physical iPhone/Safari and Android/Chrome checks.",
+    "Subjective art/music acceptance and Kirill's final product acceptance.",
+    "Native platform SDK and allowed analytics delivery where real channel access is required."
+  ],
+  "workflow_snapshot": [
+    {
+      "id": 43873349237,
+      "name": "Cinder Shift check",
+      "status": "queued",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344853,
+      "name": "Cinder Shift reachable build curve",
+      "status": "queued",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344953,
+      "name": "Cinder Shift rework candidate",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344774,
+      "name": "Cinder Shift Sprint 2 runtime media",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344857,
+      "name": "Cinder Shift full routes and saves",
+      "status": "queued",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344613,
+      "name": "Cinder Shift artifact",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344586,
+      "name": "Cinder Shift Sprint 2 presentation",
+      "status": "completed",
+      "conclusion": "success",
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    },
+    {
+      "id": 43873344679,
+      "name": "Cinder Shift rework combat flow",
+      "status": "in_progress",
+      "conclusion": null,
+      "head_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
+    }
+  ],
+  "resume": {
+    "source_branch": "codex/cinder-shift-final",
+    "source_head": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "required_action": "Create a fresh checkout of this remote HEAD when the environment is restored; do not continue the old local 7a69ad8 worktree without synchronization.",
+    "first_checks": [
+      "npm ci --ignore-scripts",
+      "npm run build",
+      "npm run art:check",
+      "npx playwright test --config=playwright.final.config.ts --project=chromium"
+    ],
+    "next_gate": "Resolve input-driver positioning and inspect actual game behavior, keeping failing tests and all previous evidence."
+  }
+}

@@ -1,6 +1,6 @@
 {
   "milestone": "M-REWORK",
-  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_C3_ENGINEERING_VERIFIED_WITH_M_RW4_SUBSCOPES; M_RW3_A0_STARTED",
+  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_WITH_RW4_SUBSCOPES; M_RW3_ALPHA2_RUNTIME_DRAFT; M_RW4_ENTRY_INCOMPLETE",
   "started_at": "2026-11-12",
   "source": "https://trello.com/c/AqZ78Mjo",
   "requirements_source": {
@@ -1247,20 +1247,15 @@
     }
   },
   "candidate": {
-    "version": "0.8.0-alpha.1",
-    "milestone": "M-RW3",
-    "checkpoint": "A0_FOUNDATION",
-    "status": "IN_PROGRESS",
-    "published": true,
+    "version": "0.8.0-alpha.2",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "40ef862630f80948c2c2375700a6e39aee036fc6",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+    "status": "DEVELOPMENT_FULL_INPUT_FAILED_NOT_RC",
+    "published": false,
     "accepted": false,
-    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
-    "limitations": "Not checkpoint A: SW01/YU01 full vertical slices and all 40 production rooms/art/audio remain open. Two internal fixtures are not campaign delivery.",
-    "build_id": "cinder-v1.b1.a1",
-    "runtime_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "publication_scope": "A0 foundation production; original full RW3 scope remains open",
-    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/",
-    "production_url": "https://nuts.bid/games/cinder-shift/",
-    "general_ci": "ALL_8_WORKFLOWS_SUCCESS"
+    "runtime_source_sha": "40ef862630f80948c2c2375700a6e39aee036fc6"
   },
   "requirements": [
     {
@@ -2841,19 +2836,37 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-progress.ts",
-        "games/cinder-shift/src/ui/application.ts"
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-06.05",
@@ -2861,19 +2874,37 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-progress.ts",
-        "games/cinder-shift/src/session/save.ts"
+        "games/cinder-shift/src/session/save.ts",
+        "games/cinder-shift/src/ui/application.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-07.01",
@@ -4124,19 +4155,38 @@
       "status": "PARTIAL",
       "implementation": [
         "docs/cinder-shift/new-campaigns/",
-        "games/cinder-shift/content/new-campaigns/"
+        "games/cinder-shift/content/new-campaigns/",
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-12.02",
@@ -4144,39 +4194,104 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-mechanics.ts",
-        "tests/world-mechanics-harness.ts"
+        "tests/world-mechanics-harness.ts",
+        "games/cinder-shift/src/world-rooms.ts",
+        "games/cinder-shift/src/session/world-runtime.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/world-rooms.ts",
+          "games/cinder-shift/src/session/world-runtime.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-12.03",
       "requirement": "Подключить ранее согласованные art/music пакеты обоих миров, все состояния и необходимые анимации/VFX по общему стандарту переработки; отдельные каталоги файлов без runtime-интеграции не считаются сдачей.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "sprint_owner": "M-RW3"
+      "status": "PARTIAL",
+      "implementation": [
+        "games/cinder-shift/src/art/world-art.ts",
+        "audio/m06/synth.mjs"
+      ],
+      "verification": [
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
+      ],
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
+      "sprint_owner": "M-RW3",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/world-art.ts",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-12.04",
       "requirement": "Принять путь fresh→финал первой→открытие обоих миров→reload→Start/Continue/Replay каждого. Переключение не стирает соседний прогресс.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "sprint_owner": "M-RW3"
+      "status": "PARTIAL",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
+      ],
+      "verification": [
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json"
+      ],
+      "publication": "ALPHA2_NOT_PUBLISHED; ALPHA1_FOUNDATION_LIVE",
+      "sprint_owner": "M-RW3",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; TARGETED_CI_PASS; FULL_INPUT_FAIL",
+      "sprint_3_scope_remaining": "Full world input routes, detailed room mechanisms, production art/audio and fresh C01 earned-unlock integration remain open; see sprint-4-checkpoint.ru.md.",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md"
+        ],
+        "limits": "Runtime draft. Models and targeted UI do not prove full production/first-run timing."
+      }
     },
     {
       "id": "RW-12.05",
