@@ -7,6 +7,8 @@ const root='games/cinder-shift/';
 const configText=await readFile(root+'game.config.json','utf8'),config=JSON.parse(configText);
 const inputs=await Promise.all(['src/room-data.ts','src/session/missions.ts','src/boss.ts','src/enemies.ts','src/cargo-equipment.ts','src/mission.ts','src/session/threat-activation.ts'].map(path=>readFile(root+path,'utf8')));
 async function dataModule(source){
+ // This registry is C01's frozen 44-room projection. World source is audited separately.
+ source=source.replace(/^import \{worldRooms,.*?;\n/m,'').replace(/^import \{isWorldMission,.*?;\n/m,'').replace(/^const worldDefinitions=.*?;\n/m,'const worldDefinitions={};\n').replace(/^ \.\.\.worldRooms,\n/m,'').replace(/^ \.\.\.worldDefinitions,\n/m,'');
  const replaced=source.replace(/^import config from .*?;\s*/m,'const config='+JSON.stringify(config)+';\n');
  assert.notEqual(replaced,source,'Expected the explicit game config import');
  const code=stripTypeScriptTypes(replaced,{mode:'strip'});
@@ -61,7 +63,7 @@ const examples={
 };
 const roles={walker_service:'line holder: use cover or crouch',walker_security:'pursuer: break sight or move outside its leash',drone_service:'landing control: change firing height',turret_cycle:'burst line: use cover, then fire during exposure',ram_charge:'displacement: jump the charge, then counter exposed recovery'};
 const budgets={airlock:240000,cargo:360000,foundry:360000,archive:360000,reactor:480000};
-const campaignRooms=Object.values(missions).flatMap(m=>m.rooms);
+const campaignRooms=['airlock','cargo','foundry','archive','reactor'].flatMap(id=>missions[id].rooms);
 assert.equal(new Set(campaignRooms).size,config.campaign.room_count);
 const registry={
  schema_version:1,build_id:JSON.parse(await readFile('package.json','utf8')).version,

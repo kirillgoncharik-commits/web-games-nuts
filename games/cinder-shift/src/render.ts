@@ -171,15 +171,16 @@ export class SceneArt{
   }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
-    this.environment.draw(attempt,reducedFlashes);
+    if(!room.world)this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
     this.bossHpLast=attempt.bossHp;
-    this.landmarks(room);
+    if(!room.world)this.landmarks(room);
     const pose=miraRigPose(now,player.body.velocity.x,y,player.crouching);
     const hit=now<attempt.damageFlashUntil;
     const hero=(id:AssetId,px:number,py:number)=>{
       const s=this.sprite(id,px,py,6,f);
       // Recoil is a visual offset; the rig anchors and projectile muzzle stay fixed.
+      if(id==='mira-cutter'&&state.world?.carry?.item.state==='held')s.setVisible(false);
       if(id==='mira-cutter'&&!reducedFlashes&&now<this.recoilUntil)s.setX(s.x-f*2);
       if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };

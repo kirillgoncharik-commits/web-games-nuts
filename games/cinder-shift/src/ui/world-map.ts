@@ -1,3 +1,5 @@
+import {isWorldMission,worldForMission} from '../session/new-campaign-content';
+import {missionChain} from '../session/missions';
 import type{I18n}from'../i18n';
 import type{CampaignData}from'../session/campaign';
 import{missionIds,missions,unlocked,type MissionId}from'../session/missions';
@@ -23,6 +25,11 @@ function routePath(from:MissionId,to:MissionId){
 }
 
 export function worldMap(i:I18n,ui:Panels,d:CampaignData,selected:MissionId,select:(id:MissionId)=>void){
+ if(isWorldMission(d.mission_id)){
+  const chain=missionChain(d.mission_id),world=worldForMission(d.mission_id),label=world==='c02-small-world'?'world.c02':'world.c03';
+  const cards=chain.map(id=>{const def=missions[id],status=mapStatus(d,id);return '<article class="world-mission '+status+'"><img src="./assets/worlds/'+id+'.svg" alt="" loading="lazy"/><div>'+ui.button('map-pin-'+id,String(def.number).padStart(2,'0')+' · '+e(i.t(def.nameKey)),()=>select(id),{html:true,pressed:selected===id})+'<p>'+e(i.t('map.status.'+status))+'</p></div></article>';}).join('');
+  return '<p class="map-context">'+e(i.t(label))+'</p><div class="world-mission-map">'+cards+'</div><section class="map-detail"><h3>'+e(i.t(missions[selected].nameKey))+'</h3><p>'+e(i.t(missions[selected].goalKey))+'</p></section>';
+ }
  const lines=worldMapDefinition.connections.map(edge=>{
   const travelled=(d.completed_missions as readonly string[]).includes(edge.from),current=d.location_id===edge.from||d.location_id===edge.to;
   return`<path d="${routePath(edge.from,edge.to)}" class="map-connection ${travelled?'travelled':''} ${current?'current':''}"/>`;

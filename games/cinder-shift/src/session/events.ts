@@ -30,6 +30,7 @@ export function eventAllowed(id:EventId,variant:string){
  return false;
 }
 export function planEvents(seed:number,mission:PlayableMissionId='airlock'):EventPlan{
+ if(/^(SW|YU)/.test(mission))return[];
  const random=randomStream(seed),plan:EventPlan=[];
  const events=(mission==='airlock'?['E02','E03']:mission==='cargo'?['E01']:mission==='foundry'?['E04']:mission==='archive'?['E05']:['E06']) as EventId[];
  for(const event_id of events){const def=eventDefinitions[event_id],candidates=[...def.variants].filter(v=>eventAllowed(event_id,v));const roll=random();if(candidates.length&&roll<eventConfig[event_id].probability)plan.push({event_id,definition_version:def.version,room_id:def.room,variant:candidates[0] as EventEntry['variant']});}return plan;

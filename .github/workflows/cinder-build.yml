@@ -24,6 +24,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run build
       - run: npx playwright test --config=playwright.sprint3.config.ts --project=chromium
+      - run: npx playwright test --config=playwright.final.config.ts --project=chromium
       - uses: actions/upload-artifact@v4
         if: always()
         with:
