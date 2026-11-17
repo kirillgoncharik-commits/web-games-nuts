@@ -1,6 +1,6 @@
 # Продолжение 17.11.2026 - alpha.5
 
-Актуальные [отчёт](alpha5-laundry-balcony.ru.md) и [доказательства](alpha5-verification.json). Source `c7f3b87`, build `cinder-v1.b28.a1`: selected gate 114 checks + C02/C03 full routes PASS; Chromium/Firefox/WebKit PASS. Механизмы SW03/SW04 подключены и проверены. Все шесть RW3 ID PARTIAL; production pack и RW4 остаются открытыми. Эта итерация production не меняла.
+Актуальные [отчёт](alpha5-laundry-balcony.ru.md) и [доказательства](alpha5-verification.json). Source `c7f3b87`, build `cinder-v1.b28.a1`: selected gate 114 checks + C02/C03 full routes PASS; Chromium/Firefox/WebKit PASS. Механизмы SW03/SW04 подключены и проверены. Все шесть RW3 ID PARTIAL; production pack и RW4 остаются открытыми. По отдельной команде Кирилла alpha.5 опубликована; [manifest и 71 файл проверены live](alpha5-production-release-2026-11-17.json).
 
 ## Исторический checkpoint
 

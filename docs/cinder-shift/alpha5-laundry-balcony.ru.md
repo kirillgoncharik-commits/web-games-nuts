@@ -33,4 +33,4 @@ Selected gate и три браузера не означают PASS всех wor
 
 Все шесть M-RW3 IDs PARTIAL. Остальные подробные комнаты, полный production art/animation/VFX/audio, earned fresh C01 unlock и M-RW4 остаются открытыми. Cargo E inactivity не воспроизведён и не закрыт. Human timing, формальная приёмка и физические телефоны NOT RUN. M-COMPARE сохраняет отдельный следующий этап.
 
-Последний зарегистрированный production: alpha.3 / cinder-v1.b19.a1. Эта итерация production не меняла; alpha.5 не опубликована.
+По отдельной команде Кирилла alpha.5 опубликована на https://nuts.bid/games/cinder-shift/ 17.11.2026. Build cinder-v1.b28.a1; manifest и 71 файл совпадают с проверенным артефактом. Предыдущие ресурсы сохранены. [Отчёт публикации](alpha5-production-release-2026-11-17.json). Общий статус приёмки и оставшегося production scope не меняется.

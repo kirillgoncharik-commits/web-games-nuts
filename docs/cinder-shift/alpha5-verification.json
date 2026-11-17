@@ -106,8 +106,8 @@
     "zip_bytes": 4551491,
     "github_zip_digest": "sha256:b53e2a193dea2b8e3f099c284c2683d4e77a3ee885fea0874370a837e3a11179",
     "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132/artifacts/14351855067",
-    "local_download_checksum": "NOT_RUN",
-    "deployed": false
+    "local_download_checksum": "PASS_ZIP_TAR_AND_ALL_71_MANIFEST_FILES",
+    "deployed": true
   },
   "visual_review": {
     "exact_menu_contact_sheet": "REVIEWED_RU_ALPHA3_VS_ALPHA5",
@@ -210,10 +210,12 @@
     }
   },
   "production": {
-    "changed_by_this_iteration": false,
-    "last_registered_version": "0.8.0-alpha.3",
-    "last_registered_build": "cinder-v1.b19.a1",
-    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json"
+    "version": "0.8.0-alpha.5",
+    "build_id": "cinder-v1.b28.a1",
+    "changed_by_publication_request": true,
+    "report": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "site_merge_sha": "1d9dc3418a2a0084bb4d693718a491389b8d6ff7",
+    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED"
   },
   "limits": [
     "All six original RW3 IDs remain PARTIAL; production art/animation/VFX/audio pack remains incomplete.",
@@ -222,5 +224,24 @@
     "Cargo E inactivity remains unreproduced/open.",
     "Remaining detailed rooms and M-RW4 localization, storage/update/rollback, performance/device/channel gates remain open.",
     "M-COMPARE stays a separate later stage."
-  ]
+  ],
+  "development_production_snapshot": {
+    "changed_by_this_iteration": false,
+    "last_registered_version": "0.8.0-alpha.3",
+    "last_registered_build": "cinder-v1.b19.a1",
+    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json"
+  },
+  "publication": {
+    "report": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "live_verification": {
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "verified_at": "2026-11-17T17:23:33.464Z",
+      "version": "0.8.0-alpha.5",
+      "build_id": "cinder-v1.b28.a1",
+      "manifest_exact": true,
+      "current_files_verified": 71,
+      "prior_bundle_files_verified": 2,
+      "failures": []
+    }
+  }
 }

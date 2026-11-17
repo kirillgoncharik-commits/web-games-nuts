@@ -8,21 +8,21 @@
     "code_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "working_tree": "Alpha.5 source saved remotely; equivalent local tree verified. Selected and cross-browser engineering gates PASS. Reports are successors of the immutable runtime source.",
-    "published_game_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "published_game_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "test_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
-    "version": "0.8.0-alpha.3",
-    "build_id": "cinder-v1.b19.a1",
-    "source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "version": "0.8.0-alpha.5",
+    "build_id": "cinder-v1.b28.a1",
+    "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "url": "https://nuts.bid/games/cinder-shift/",
-    "site_main_sha": "022ed15f05e18441d66368bd2c7e4273419a932d",
-    "site_pr": 17,
-    "deployment_id": "c7fd7975-6843-46ba-905e-03fc07a0bef6",
+    "site_main_sha": "1d9dc3418a2a0084bb4d693718a491389b8d6ff7",
+    "site_pr": 18,
+    "deployment_id": "8e28ce6c-9060-427a-88b7-8e43d364ea24",
     "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
-    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json",
-    "changed_by_this_iteration": false
+    "evidence": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "changed_by_publication_request": true
   },
   "release_register": [
     {
@@ -551,12 +551,12 @@
     "checkpoint": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "verification_report": "docs/cinder-shift/alpha5-verification.json",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "published": false,
+    "published": true,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "Alpha.5 is a verified unpublished candidate. This iteration did not change production.",
+    "publication_scope": "Alpha.5 published at Kirill request; manifest and all 71 current files verified live. This remains an alpha; acceptance and remaining scope are open.",
     "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04"
   },
   "historical_source_checkout": {
@@ -1066,7 +1066,7 @@
     "browser_checks": "PASS_CHROMIUM_67_FIREFOX_66_WEBKIT_66_EXPLICIT_TOUCH_SKIPS",
     "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "accepted": false,
-    "deployed": false,
+    "deployed": true,
     "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "verification_report": "docs/cinder-shift/alpha5-verification.json",
     "last_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
@@ -1159,7 +1159,7 @@
       "github_zip_digest": "sha256:b53e2a193dea2b8e3f099c284c2683d4e77a3ee885fea0874370a837e3a11179",
       "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132/artifacts/14351855067",
       "local_download_checksum": "NOT_RUN",
-      "deployed": false
+      "deployed": true
     },
     "engineering_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "resume": "Continue remaining room designs and production art/audio/VFX, then RW4. Preserve exact alpha.5 artifact. Broader CI and mobile 48px issue remain open."
@@ -1184,7 +1184,7 @@
     "browser_checks": "PASS_CHROMIUM_67_FIREFOX_66_WEBKIT_66_EXPLICIT_TOUCH_SKIPS",
     "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "accepted": false,
-    "deployed": false,
+    "deployed": true,
     "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "verification_report": "docs/cinder-shift/alpha5-verification.json",
     "last_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04"
@@ -1408,5 +1408,17 @@
       },
       "skip_reason": "The Chromium CDP two-contact touch case is intentionally skipped outside Chromium. Physical phones remain NOT RUN."
     }
+  },
+  "previous_production_alpha3": {
+    "version": "0.8.0-alpha.3",
+    "build_id": "cinder-v1.b19.a1",
+    "source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "site_main_sha": "022ed15f05e18441d66368bd2c7e4273419a932d",
+    "site_pr": 17,
+    "deployment_id": "c7fd7975-6843-46ba-905e-03fc07a0bef6",
+    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
+    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json",
+    "changed_by_this_iteration": false
   }
 }
