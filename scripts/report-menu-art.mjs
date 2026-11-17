@@ -5,6 +5,7 @@ const root=resolve('test-results/menu-art'),before=resolve('test-results/menu-be
 async function walk(dir){const out=[];for(const item of await readdir(dir,{withFileTypes:true})){const p=join(dir,item.name);if(item.isDirectory())out.push(...await walk(p));else out.push(p);}return out;}
 const files=(await walk(root)).filter(p=>p.endsWith('menu-art-evidence.json')),metadata=JSON.parse(await readFile(join(before,'baseline.json'),'utf8'));
 const records=await Promise.all(files.map(async file=>({...JSON.parse(await readFile(file,'utf8')),dir:dirname(file)})));
+const current=JSON.parse(await readFile('dist/cinder-shift/build-manifest.json','utf8'));
 const output=resolve('test-results/menu-comparison');await mkdir(output,{recursive:true});
 for(const locale of ['ru','en']){
  const layers=[],cells=[],width=1200,rowHeight=430;let row=0;
@@ -12,7 +13,7 @@ for(const locale of ['ru','en']){
   const record=records.find(r=>r.locale===locale&&r.size.width===viewport);
   const old=metadata.captures.find(r=>r.locale===locale&&r.size.width===viewport);
   if(!record||!old)throw Error('Missing exact-source menu evidence '+locale+' '+viewport);
-  const label=Buffer.from('<svg width="1200" height="30"><rect width="1200" height="30" fill="#142731"/><text x="16" y="21" fill="#edf1ec" font-family="sans-serif" font-size="16">'+viewport+' x '+record.size.height+' / '+locale.toUpperCase()+' / alpha.3 BEFORE (left) / alpha.4 AFTER (right)</text></svg>');
+  const label=Buffer.from('<svg width="1200" height="30"><rect width="1200" height="30" fill="#142731"/><text x="16" y="21" fill="#edf1ec" font-family="sans-serif" font-size="16">'+viewport+' x '+record.size.height+' / '+locale.toUpperCase()+' / '+metadata.manifest.version+' BEFORE (left) / '+current.version+' AFTER (right)</text></svg>');
   layers.push({input:label,left:0,top:row*rowHeight});
   for(const [col,file]of [join(before,old.file),join(record.dir,'menu-normal.png')].entries()){
    const img=await sharp(file).resize({width:590,height:390,fit:'inside'}).png().toBuffer(),size=await sharp(img).metadata();
