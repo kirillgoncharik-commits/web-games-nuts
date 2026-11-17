@@ -1,4 +1,5 @@
-import {actWorld,stepWorld,stepWorldEnvironment,worldCanFire,worldPulse,worldReady} from './session/world-runtime';
+import {actWorld,stepWorld,stepWorldEnvironment,worldCanFire,worldPulse,worldReady,worldAirVelocity} from './session/world-runtime';
+import {airPhase} from './session/world-environment';
 import {WorldArt} from './art/world-art';
 import Phaser from 'phaser';
 import config from '../game.config.json' with {type:'json'};
@@ -44,7 +45,7 @@ export class RoomScene extends Phaser.Scene{
   this.events.on(Phaser.Scenes.Events.PAUSE,this.clearFeedback,this);
   this.readyAnnounced=false;this.hold=0;this.transition=null;this.deathMs=0;this.modalOpened=false;this.pendingPressed.clear();this.pendingReleased.clear();this.hazardCycles.clear();this.projectiles=new Projectiles();this.solidRemovers.clear();
   const a=this.attempt,id=a.current,def=a.definition(),saved=a.room();this.physics.world.setBounds(0,40,640,280);const platforms=this.platforms=this.physics.add.staticGroup();
-  def.solids.forEach(s=>{const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0xffffff,0);this.physics.add.existing(r,true);platforms.add(r);if(s.id)this.solidRemovers.set(s.id,()=>{(r.body as Phaser.Physics.Arcade.StaticBody).destroy();r.destroy();});});
+  def.solids.forEach((s,index)=>{const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0xffffff,0);this.physics.add.existing(r,true);platforms.add(r);r.setData('worldSolidId',s.id||'fixed-'+index);if(s.id)this.solidRemovers.set(s.id,()=>{(r.body as Phaser.Physics.Arcade.StaticBody).destroy();r.destroy();});});
   this.player=new Player(this,this.entry==='right'?584:64);this.player.dashReady=a.abilityReadyAt;this.player.chargeReady=a.abilityReadyAt;this.physics.add.collider(this.player.sprite,platforms,undefined,(_player,platform)=>{if(this.attempt.clock.now>=this.player.dashUntil||!a.build.wallMove&&!a.build.phaseDash)return true;const object=platform as Phaser.GameObjects.Rectangle;return !def.solids.some(s=>(s.material==='wall'&&a.build.wallMove||s.material==='phase'&&a.build.phaseDash)&&Math.abs(s.x+s.width/2-object.x)<1&&Math.abs(s.y+s.height/2-object.y)<1);});this.art=new SceneArt(this,def,a.eventPlan,this.hooks.debug);this.worldArt=def.world?new WorldArt(this,def):undefined;
   this.hooks.effects.startWorld(musicTheme(a.missionId,id));if(def.boss)void this.hooks.effects.unlock().then(()=>this.hooks.effects.play('boss_intro','boss-intro:'+a.id));this.hooks.controls.setScope(this.hooks.playAllowed()?'play':'menu');a.clock.clear();this.hooks.transition(false);this.hooks.emit('room_enter',{revisit:Number(saved.visited)});saved.visited=true;if(!this.hooks.playAllowed())this.scene.pause();
   this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.clearFeedback();this.events.off(Phaser.Scenes.Events.PAUSE,this.clearFeedback,this);for(const enemy of a.room(id).enemies)suspendEnemy(enemy);this.hooks.effects.clearCombat();this.projectiles.clear();this.hooks.controls.clear();});
@@ -62,7 +63,7 @@ export class RoomScene extends Phaser.Scene{
  private removeSolid(id:string){this.solidRemovers.get(id)?.();this.solidRemovers.delete(id);}
  private step(ms:number,frame:Frame){
   const attempt=this.attempt,now=attempt.clock.now,saved=attempt.room();let def=attempt.definition();attempt.activeMs+=ms;
-  if(def.world&&saved.world){const pressed=saved.world.keyboard?.pressed;if(stepWorldEnvironment(def.world,saved.world,this.player.rect(),this.player.feet,now)){this.rebuildWorldSolids();def=attempt.definition();}if(!pressed&&saved.world.keyboard?.pressed)this.hooks.effects.play('power_restore');}
+  if(def.world&&saved.world){const pressed=saved.world.keyboard?.pressed;if(stepWorldEnvironment(def.world,saved.world,this.player.rect(),this.player.feet,now,def.solids,this.player.body.velocity.y>=0&&!frame.pressed.has('jump'))){this.rebuildWorldSolids();def=attempt.definition();}const dx=saved.world.cloth?.riderDx||0;if(dx){this.player.sprite.x+=dx;this.player.body.updateFromGameObject();}if(!pressed&&saved.world.keyboard?.pressed)this.hooks.effects.play('power_restore');}
 
   const oldVy=this.player.body.velocity.y,wasDashing=now<this.player.dashUntil;
   this.player.step(frame,now,ms,def.solids,attempt.mode==='training'||attempt.build.active==='M1',attempt.build.airDash);
@@ -70,9 +71,10 @@ export class RoomScene extends Phaser.Scene{
   if(oldVy>=0&&this.player.body.velocity.y< -200)this.hooks.effects.play('jump');
   if(!wasDashing&&now<this.player.dashUntil){this.art.cue('ability',{x:this.player.x,y:this.player.feet-24},now,this.player.facing);this.hooks.effects.play('dash');this.hooks.emit('ability_used',{ability:'M1',airborne:Number(!this.player.body.blocked.down)});}
   const groundSpeed=this.player.body.velocity.x,beltSpeed=conveyorSurfaceSpeed(def.conveyor,this.player.rect(),this.player.feet,this.player.body.blocked.down||this.player.body.touching.down,this.player.body.velocity.y,now<this.player.dashUntil);
-  if(beltSpeed)this.player.body.setVelocityX(groundSpeed+beltSpeed);
+  const windSpeed=def.world&&saved.world?worldAirVelocity(def.world,saved.world,this.player.rect(),now,this.player.crouching):0;
+  if(beltSpeed||windSpeed)this.player.body.setVelocityX(groundSpeed+beltSpeed+windSpeed);
   this.physics.world.update(now,ms);this.physics.world.postUpdate();
-  if(beltSpeed&&!this.player.body.blocked.left&&!this.player.body.blocked.right)this.player.body.setVelocityX(groundSpeed);if(oldVy>30&&(this.player.body.blocked.down||this.player.body.touching.down))this.hooks.effects.play('land');
+  if((beltSpeed||windSpeed)&&!this.player.body.blocked.left&&!this.player.body.blocked.right)this.player.body.setVelocityX(groundSpeed);if(oldVy>30&&(this.player.body.blocked.down||this.player.body.touching.down))this.hooks.effects.play('land');
   if(attempt.current==='E'&&this.player.x>272&&(this.player.body.blocked.down||this.player.body.touching.down)&&(Math.abs(this.player.feet-256)<2||Math.abs(this.player.feet-224)<2))saved.route='service';
   const muzzle=this.player.muzzle,targets=[...(def.target&&saved.targetHp>0?[{x:def.target.x-10,y:def.target.y-18,width:20,height:36}]:[]),...(def.boss&&attempt.bossHp>0?[regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height)]:[]),...saved.enemies.filter(e=>e.hp>0).map(enemyRect)].map(r=>expand(r,4,1.5));
   const auto=this.hooks.controls.device==='touch'&&this.hooks.autoFire()&&targets.some(t=>(t.x+t.width/2-this.player.x)*this.player.facing>0&&muzzle.y>=t.y&&muzzle.y<=t.y+t.height&&clearLine(muzzle,{x:t.x+t.width/2,y:muzzle.y},def.solids));
@@ -81,8 +83,9 @@ export class RoomScene extends Phaser.Scene{
   if(def.world&&saved.world){
    const ids=stepWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.facing===-1?-1:1,now,ms,def.solids);
    for(const id of ids){attempt.scoreLedger?.goal(attempt.current+':'+id);this.art.cue('charge',saved.world.carry!.item.position,now);this.hooks.effects.play('power_restore');this.hooks.emit('mission_objective',{objective:attempt.current+':'+id});}
-   const pulse=def.world.pulse,phase=worldPulse(def.world,now);if(pulse&&phase==='warning'){const cycle=Math.floor(now/pulse.cycle),key='world-pulse';if(this.hazardCycles.get(key)!==cycle){this.hazardCycles.set(key,cycle);this.hooks.effects.play('warn_turret');}}
-   if(pulse&&phase==='active'&&intersects(this.player.rect(),{x:pulse.x,y:274,width:pulse.width,height:46}))this.damage('world-pulse',this.player.x<pulse.x?-1:1);
+   const air=def.world.air;if(air&&airPhase(air,now,saved.world.damperClosedAt!==null)==='warning'){const cycle=Math.floor(now/air.cycleMs);if(this.hazardCycles.get('world-air')!==cycle){this.hazardCycles.set('world-air',cycle);this.hooks.effects.play('warn_drone');}}
+   const pulse=def.world.pulse,phase=worldPulse(def.world,now);if(pulse&&phase==='warning'){const cycle=Math.floor(now/pulse.cycle),key='world-pulse';if(this.hazardCycles.get(key)!==cycle){this.hazardCycles.set(key,cycle);this.hooks.effects.play(pulse.kind==='water'?'warn_drone':'warn_turret');}}
+   if(pulse&&phase==='active'&&intersects(this.player.rect(),{x:pulse.x,y:274,width:pulse.width,height:46}))this.damage(pulse.kind==='water'?'world-water':'world-pulse',this.player.x<pulse.x?-1:1);
    if(attempt.hp<=0)return;
   }
   const inSafePocket=Boolean(def.safeZones?.some(zone=>intersects(this.player.rect(),zone)));
@@ -176,8 +179,14 @@ export class RoomScene extends Phaser.Scene{
   }else this.hold=0;
  }
  private rebuildWorldSolids(){
-  this.platforms.clear(true,true);this.solidRemovers.clear();
-  for(const s of this.attempt.definition().solids){const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0,0);this.physics.add.existing(r,true);this.platforms.add(r);}
+  // Reconcile bodies instead of destroying the whole room for every cloth tick.
+  const existing=new Map(this.platforms.getChildren().map(child=>{const r=child as Phaser.GameObjects.Rectangle;return[r.getData('worldSolidId') as string,r];}));
+  this.attempt.definition().solids.forEach((s,index)=>{
+   const id=s.id||'fixed-'+index;let r=existing.get(id);existing.delete(id);
+   if(!r){r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0,0);this.physics.add.existing(r,true);this.platforms.add(r);r.setData('worldSolidId',id);}
+   else if(r.x!==s.x+s.width/2||r.y!==s.y+s.height/2||r.width!==s.width||r.height!==s.height){r.setPosition(s.x+s.width/2,s.y+s.height/2).setSize(s.width,s.height);(r.body as Phaser.Physics.Arcade.StaticBody).updateFromGameObject();}
+  });
+  for(const r of existing.values())this.platforms.remove(r,true,true);
  }
  private beginTransition(to:RoomId,entry:'left'|'right'){this.transition={to,entry,remaining:config.combat.transition_ms};this.hold=0;this.player.body.setVelocity(0,0);this.projectiles.clear();this.hooks.controls.setScope('menu');this.hooks.transition(true);}
  private tutorial(){

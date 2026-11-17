@@ -3,7 +3,7 @@ import {rooms} from '../games/cinder-shift/src/room-data';
 import {intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
-import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase} from '../games/cinder-shift/src/session/world-environment';
+import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
 import {createWorldState,stepWorld,actWorld,worldReady} from '../games/cinder-shift/src/session/world-runtime';
 
 const spec=rooms['SW02-A'].world!.keyboard!;
@@ -65,4 +65,63 @@ test('lamp requires a fresh scan for each reflector position and awards each con
   expect(c.active).toBe(true);expect(lampPhase(spec.lamp!,s.lamp!,now)).toBe('warning');expect(s.carry!.contacts.every(c=>!c.open)).toBe(true);
  }
  expect(worldReady(spec,s)).toBe(true);expect(s.carry!.ledger).toEqual(['desktop-line-01','desktop-line-02']);tick(now+10000);expect(s.carry!.ledger).toHaveLength(2);
+});
+
+
+const cloth=rooms['SW03-B'].world!.cloth!;
+test('cloth uses one deterministic collider, carries a rider and freezes when simulation time freezes',()=>{
+ const s=createClothState();stepCloth(cloth,s,body(310,248),248,0,[]);
+ const before=clothSolid(cloth,s);expect(stepCloth(cloth,s,body(310,248),248,1200,[])).toBe(true);
+ expect(s.riderDx).toBeCloseTo(16);expect(clothSolid(cloth,s).x-before.x).toBeCloseTo(s.riderDx);
+ const paused=structuredClone(s);stepCloth(cloth,s,body(326,248),248,1200,[]);expect(s.offset).toBe(paused.offset);expect(s.riderDx).toBe(0);
+});
+test('cloth waits before side collisions and never carries a rider into a wall',()=>{
+ const s=createClothState();stepCloth(cloth,s,body(310,248),248,0,[]);
+ expect(stepCloth(cloth,s,body(310,248),248,1200,[{x:330,y:190,width:16,height:58}])).toBe(false);
+ expect(s.offset).toBe(0);expect(s.riderDx).toBe(0);
+ const below=body(380,276);expect(stepCloth(cloth,s,below,276,2400,[])).toBe(false);expect(intersects(clothSolid(cloth,s),below)).toBe(false);
+ stepCloth(cloth,s,body(100,320),320,2400,[]);expect(s.offset).toBe(32);expect(s.riderDx).toBe(0);
+});
+test('jumping releases the cloth instead of towing an airborne Mira',()=>{
+ const s=createClothState();stepCloth(cloth,s,body(310,248),248,0,[]);
+ stepCloth(cloth,s,body(310,248),248,1200,[],false);expect(s.offset).toBeCloseTo(16);expect(s.riderDx).toBe(0);
+});
+test('cloth cycles and reset stay identical at 30 and 60 render FPS',()=>{
+ const run=(fps:number)=>{const s=createClothState(),clock=new SimulationClock(),positions:number[]=[];for(let f=0;f<fps*6;f++)clock.advance(1000/fps,()=>{stepCloth(cloth,s,body(64,320),320,clock.now,rooms['SW03-B'].solids);positions.push(s.offset);});return{s,positions};};expect(run(30)).toEqual(run(60));
+ const entry={mission_id:'SW03' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]};
+ const a=new MissionAttempt('mission',entry);stepCloth(cloth,a.room('SW03-B').world!.cloth!,body(64,320),320,0,[]);stepCloth(cloth,a.room('SW03-B').world!.cloth!,body(64,320),320,1200,[]);
+ expect(a.definition('SW03-B').solids.find(s=>s.id?.startsWith('world-cloth:'))!.x).toBeCloseTo(296);
+ expect(new MissionAttempt('mission',entry).room('SW03-B').world!.cloth).toEqual(createClothState());
+});
+test('a caught spool lowers a persistent strap only after the proposed surface is clear',()=>{
+ const bridge=rooms['SW03-A'].world!.bridge!,s=createBridgeState();
+ expect(stepBridge(bridge,s,false,body(64,320))).toBe(false);expect(bridgeSolids(bridge,s)).toEqual([]);
+ expect(stepBridge(bridge,s,true,body(300,260))).toBe(false);expect(s.visible).toBe(false);
+ expect(stepBridge(bridge,s,true,body(300,320))).toBe(true);expect(bridgeSolids(bridge,s)[0]).toMatchObject(bridge.platform);
+ expect(stepBridge(bridge,s,true,body(300,242))).toBe(false);expect(s.visible).toBe(true);
+});
+test('gusts have quiet and warning phases, preserve crouch control and do not change vertical velocity',()=>{
+ const air=rooms['SW03-C'].world!.air!,inside=body(320,320);
+ expect(airPhase(air,0)).toBe('quiet');expect(airPhase(air,1600)).toBe('warning');expect(airVelocity(air,inside,1800)).toBe(0);
+ expect(airPhase(air,2600)).toBe('gust');expect(airVelocity(air,inside,2600)).toBe(24);expect(airVelocity(air,inside,2600,false,true)).toBe(0);
+ expect(airVelocity(air,body(100,320),2600)).toBe(0);expect(airPhase(air,4200)).toBe('quiet');expect(airPhase(air,2600,true)).toBe('closed');expect(airVelocity(air,inside,2600,true)).toBe(0);
+ const balcony=rooms['SW04-A'].world!.air!;expect(airVelocity(balcony,body(320,320),3000)).toBe(0);expect(airVelocity(balcony,body(320,256),3000)).toBe(24);
+});
+test('closing the vent stops air, exposes the second contact after a short settle and never repeats the fragment',()=>{
+ const spec=rooms['SW03-D'].world!,s=createWorldState('SW03-D',spec);let now=100;
+ const tick=(time:number)=>stepWorld(spec,s,{x:228,y:320},1,time,16,rooms['SW03-D'].solids);
+ tick(now);s.carry!.item.position={x:228,y:292};s.carry!.item.state='held';
+ expect(actWorld(spec,s,{x:228,y:320},body(228,320),1,now)?.action).toBe('throw');
+ while(!s.carry!.contacts[0].active&&now<1000){now+=16;tick(now);}
+ expect(s.damperClosedAt).toBe(now);expect(airPhase(spec.air!,now,true)).toBe('closed');expect(s.carry!.contacts[1].open).toBe(false);
+ tick(now+899);expect(s.carry!.contacts[1].open).toBe(false);tick(now+900);expect(s.carry!.contacts[1].open).toBe(true);
+ s.carry!.item.state='held';actWorld(spec,s,{x:496,y:320},body(496,320),1,now+900);
+ for(let n=0;n<60;n++)stepWorld(spec,s,{x:496,y:320},1,now+916+n*16,16,rooms['SW03-D'].solids);
+ expect(worldReady(spec,s)).toBe(true);expect(s.carry!.ledger).toEqual(['damper-close-01','vent-fragment-02']);
+ tick(now+10000);expect(s.carry!.ledger).toHaveLength(2);
+});
+test('rain gutter retains dry approaches, one lid contact and the full warning before a short water pulse',()=>{
+ const room=rooms['SW04-C'],p=room.world!.pulse!;expect(p.kind).toBe('water');expect(p.warning).toBeGreaterThanOrEqual(1400);expect(p.active).toBeLessThan(1000);
+ expect(room.world!.carry!.contacts).toHaveLength(1);expect(room.world!.carry!.kind).toBe('lid');expect(room.solids[0]).toMatchObject({x:0,y:320,width:640});
+ for(const x of [p.x-24,p.x+p.width+24])expect(intersects(body(x,320),{x:p.x,y:274,width:p.width,height:46})).toBe(false);
 });

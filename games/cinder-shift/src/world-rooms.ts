@@ -1,17 +1,18 @@
 import type {RoomDefinition,Rect,Point,EnemyDefinition,HazardDefinition} from './room-data';
 import type {CarryKind,PowerObject,Circuit} from './session/world-mechanics';
 import type {WorldRoomId,WorldMissionId} from './session/new-campaign-content';
-import type {KeyboardSpec,PaperSpec,LampSpec} from './session/world-environment';
+import type {KeyboardSpec,PaperSpec,LampSpec,ClothSpec,BridgeSpec,AirSpec} from './session/world-environment';
 
 /** Authored collision/action data; the design registry keeps the matching intent and acceptance. */
 export type WorldRoomSpec={
  carry?:{kind:CarryKind;spawn:Point;contacts:{id:string;rect:Rect;window?:boolean}[]};
  switches?:Point[];powerObjects?:PowerObject[];sequence?:Circuit[];sequenceTargets?:Point[];
- pulse?:{x:number;width:number;cycle:number;warning:number;active:number};
+ pulse?:{x:number;width:number;cycle:number;warning:number;active:number;kind?:'water'};
  repair?:Point;landmark:string;wind?:number;
  keyboard?:KeyboardSpec;
  paper?:PaperSpec;
  lamp?:LampSpec;
+ cloth?:ClothSpec;bridge?:BridgeSpec;air?:AirSpec;
 };
 const floor:Rect={x:0,y:320,width:640,height:40};
 const platform=(x:number,y:number,width:number,height=12):Rect=>({x,y,width,height});
@@ -30,14 +31,14 @@ const authored:Authored[]=[
  {id:'SW02-B',solids:[platform(160,276,88),platform(292,240,112),platform(448,268,80)],world:{landmark:'cable',carry:carry('spool',112,contact('cable-latch-01',536))},enemies:[enemy('sw02b-service',448)],cache:{x:344,y:240}},
  {id:'SW02-C',solids:[platform(132,276,88),platform(420,276,100)],world:{landmark:'printer',paper:{id:'c02-small-world:SW02-C:printer-tray-01',platform:platform(276,244,104,8),cycleMs:4800,warningMs:1000,extendedMs:2600,returnWarningMs:700}}},
  {id:'SW02-D',solids:[cover(152,32,40),platform(256,252,88),cover(432,32,48)],world:{landmark:'desktop-node',lamp:{origin:{x:344,y:104},cycleMs:5000,warningMs:900,scanMs:900},carry:carry('block',112,contact('desktop-line-01',380),contact('desktop-line-02',548))},enemies:[enemy('sw02d-turret',504,'turret')]},
- {id:'SW03-A',solids:[platform(128,276,96),platform(264,242,96),platform(416,276,80)],world:{landmark:'cloth',carry:carry('block',112,contact('cloth-catch-01',548))}},
- {id:'SW03-B',solids:[cover(160,32,48),platform(280,248,88),cover(480,32,48)],world:{landmark:'washer',carry:carry('spool',112,contact('washer-lock-01',552)),pulse:{x:392,width:56,cycle:5600,warning:1800,active:800}},enemies:[enemy('sw03b-scanner',424)]},
- {id:'SW03-C',solids:[platform(144,280,88),platform(280,244,88),platform(416,212,88)],world:{landmark:'vent',wind:1,repair:{x:552,y:320}},cache:{x:452,y:212}},
- {id:'SW03-D',solids:[platform(144,248,96),cover(312,32,48),platform(440,248,88)],world:{landmark:'damper',carry:carry('block',112,contact('damper-close-01',280),contact('vent-fragment-02',548,280,true)),pulse:{x:368,width:64,cycle:5200,warning:1600,active:700}}},
- {id:'SW04-A',solids:[cover(144,32,64),platform(272,256,88),cover(440,32,72)],world:{landmark:'garden',wind:1},cache:{x:308,y:256}},
- {id:'SW04-B',solids:[platform(144,280,80),platform(264,248,88),platform(408,280,96)],world:{landmark:'towel',wind:-1,pulse:{x:364,width:40,cycle:5200,warning:1600,active:700}}},
- {id:'SW04-C',solids:[platform(128,244,104),platform(296,264,80),platform(440,244,88)],world:{landmark:'gutter',carry:carry('lid',112,contact('gutter-lock-01',548)),pulse:{x:240,width:48,cycle:4800,warning:1400,active:700},repair:{x:580,y:320}}},
- {id:'SW04-D',solids:[cover(144,32,40),platform(272,248,88),cover(448,32,40)],world:{landmark:'weathervane',carry:carry('lid',112,contact('vane-phase-01',240),contact('vane-phase-02',400,280,true),contact('vane-fragment-03',548,280,true)),pulse:{x:488,width:48,cycle:5000,warning:1500,active:800}}},
+ {id:'SW03-A',solids:[platform(128,276,96),platform(416,276,80),platform(512,242,64)],world:{landmark:'cloth',bridge:{id:'c02-small-world:SW03-A:strap-01',platform:platform(264,242,96),contactId:'cloth-catch-01'},carry:carry('spool',112,contact('cloth-catch-01',252))},cache:{x:544,y:242}},
+ {id:'SW03-B',solids:[cover(160,32,48),cover(232,48,40),cover(480,32,48)],world:{landmark:'washer',cloth:{id:'c02-small-world:SW03-B:cloth-01',platform:platform(280,248,88),travel:32,cycleMs:4800},carry:carry('lid',112,contact('washer-lock-01',552))},enemies:[enemy('sw03b-scanner',424)]},
+ {id:'SW03-C',solids:[platform(144,280,88),platform(280,244,88),platform(416,212,88)],world:{landmark:'vent',air:{area:{x:248,y:180,width:144,height:140},direction:1,speed:24,cycleMs:5200,quietMs:1600,warningMs:1000,activeMs:1600},repair:{x:552,y:320}},cache:{x:452,y:212}},
+ {id:'SW03-D',solids:[platform(144,248,96),cover(312,32,48),platform(440,248,88)],world:{landmark:'damper',carry:carry('block',112,contact('damper-close-01',280),contact('vent-fragment-02',548,280,true)),air:{area:{x:368,y:190,width:64,height:130},direction:-1,speed:24,cycleMs:5200,quietMs:1600,warningMs:1000,activeMs:1600,damperContact:'damper-close-01'}}},
+ {id:'SW04-A',solids:[cover(144,32,64),platform(272,256,88),cover(440,32,72)],world:{landmark:'garden',air:{area:{x:224,y:144,width:192,height:128},direction:1,speed:24,cycleMs:5200,quietMs:1800,warningMs:1000,activeMs:1400}},cache:{x:308,y:256}},
+ {id:'SW04-B',solids:[platform(144,280,80),platform(408,280,96)],world:{landmark:'towel',cloth:{id:'c02-small-world:SW04-B:towel-01',platform:platform(264,248,88),travel:32,cycleMs:5200},air:{area:{x:232,y:160,width:152,height:124},direction:-1,speed:22,cycleMs:5200,quietMs:1800,warningMs:1000,activeMs:1400}}},
+ {id:'SW04-C',solids:[platform(128,244,104),platform(296,264,80),platform(440,244,88)],world:{landmark:'gutter',carry:carry('lid',112,contact('gutter-lock-01',548)),pulse:{x:240,width:48,cycle:4800,warning:1400,active:700,kind:'water'},repair:{x:580,y:320}}},
+ {id:'SW04-D',solids:[cover(144,32,40),platform(272,248,88),cover(448,32,40)],world:{landmark:'weathervane',air:{area:{x:248,y:128,width:176,height:144},direction:1,speed:22,cycleMs:5000,quietMs:1600,warningMs:900,activeMs:1400},carry:carry('lid',112,contact('vane-phase-01',240),contact('vane-phase-02',400,280,true),contact('vane-fragment-03',548,280,true)),pulse:{x:488,width:48,cycle:5000,warning:1500,active:800}}},
  {id:'SW05-A',solids:[platform(136,280,80),platform(256,244,80),platform(376,208,80),platform(496,244,80)],world:{landmark:'books'},cache:{x:416,y:208}},
  {id:'SW05-B',solids:[platform(136,260,96),cover(296,32,40),platform(416,244,104)],world:{landmark:'router-cable',carry:carry('conductor',112,contact('beacon-feed-01',552))},enemies:[enemy('sw05b-service',450)]},
  {id:'SW05-C',solids:[platform(128,248,72),platform(272,248,88),platform(448,248,72)],world:{landmark:'beacon-board',carry:carry('conductor',112,contact('beacon-part-01',240),contact('beacon-part-02',404),contact('beacon-part-03',548)),repair:{x:584,y:320}}},

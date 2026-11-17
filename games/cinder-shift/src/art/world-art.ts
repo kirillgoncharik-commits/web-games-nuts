@@ -3,7 +3,7 @@ import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
 import {powerTarget,worldReady,worldPulse} from '../session/world-runtime';
-import {keyboardSolids,keyboardPhase,paperPhase,lampPhase} from '../session/world-environment';
+import {keyboardSolids,keyboardPhase,paperPhase,lampPhase,clothSolid,airPhase} from '../session/world-environment';
 
 const palettes={
  SW01:[0x382932,0xc98551,0xf2d39b,0x6a5264],SW02:[0x242f42,0x526887,0xf0c577,0x85929c],SW03:[0x344753,0x8f9cac,0xd5c9bd,0x7470a0],SW04:[0x294747,0xa56347,0xc7c98b,0x628d6e],SW05:[0x282d4a,0x715166,0xf2c97b,0x827b9c],
@@ -67,7 +67,7 @@ export class WorldArt{
   }
   // Visible lip/material at every real collision surface, including the safe lower route.
   const materials=scene.add.graphics().setDepth(2.2);
-  for(const s of room.solids){if(s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
+  for(const s of room.solids){if(s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
   this.ink=scene.add.graphics().setDepth(6.5);this.environment=scene.add.graphics().setDepth(3.2);
   if(room.world?.switches)for(const point of room.world.switches)this.labels.push(scene.add.text(point.x,point.y-62,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae',backgroundColor:'#172533'}).setOrigin(.5).setDepth(6.6));
   if(room.world?.keyboard)for(const text of ['I','II'])this.keyLabels.push(scene.add.text(0,0,text,{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae'}).setOrigin(.5,0).setDepth(3.3));
@@ -114,8 +114,33 @@ export class WorldArt{
    for(let n=0;n<contacts.length;n++){h.fillStyle(contacts[n].active?0x8ddab2:0x65758b).fillRect(x-18+n*22,y+18,14,5);}
    h.fillStyle(!target||phase==='open'?0x8ddab2:0xf0c577).fillCircle(x,y,5);
   }
+  if(spec.cloth&&world.cloth){
+   const r=clothSolid(spec.cloth,world.cloth),base=spec.cloth.platform;
+   h.lineStyle(1,0x83948b,.5).lineBetween(base.x-12,base.y-32,base.x+base.width+spec.cloth.travel+12,base.y-32);
+   for(const x of [r.x+10,r.x+r.width-10]){h.lineStyle(1,0xcbd7be).lineBetween(x,r.y-32,x,r.y);h.fillStyle(0xe8c792).fillRect(x-3,r.y-36,6,10);}
+   h.fillStyle(0x6fa5a4).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0xd0ded0).lineBetween(r.x,r.y,r.x+r.width,r.y);
+   for(let x=r.x+8;x<r.x+r.width;x+=12)h.lineStyle(1,0x284b60,.65).lineBetween(x,r.y+3,x+3,r.y+r.height);
+  }
+  if(spec.bridge&&world.bridge){const r=spec.bridge.platform;
+   h.lineStyle(2,world.bridge.visible?0xa6d8bd:0x858c9c,.9);
+   if(world.bridge.visible){h.fillStyle(0x718d82).fillRect(r.x,r.y,r.width,r.height);h.lineBetween(r.x,r.y,r.x+r.width,r.y);}
+   else{h.lineBetween(r.x,r.y-r.width/2,r.x,r.y);for(let x=r.x;x<r.x+r.width;x+=12)h.lineBetween(x,r.y,x+5,r.y);}
+  }
+  if(spec.air){const air=spec.air,phase=airPhase(air,now,world.damperClosedAt!==null),r=air.area,c=phase==='closed'?0x91d9c6:phase==='warning'?0xf0c577:0xc0deda;
+   const x=air.direction===1?r.x:r.x+r.width,y=r.y+18;
+   h.lineStyle(3,0x6f899a).strokeRect(x-10,y-12,20,24);for(let n=0;n<3;n++)h.lineBetween(x-6,y-7+n*7,x+6,y-7+n*7);
+   const flag=phase==='gust'?22:phase==='warning'?14:7;h.lineStyle(2,c).lineBetween(x,y-16,x,y-40);h.fillStyle(c).fillTriangle(x,y-40,x+air.direction*flag,y-36,x,y-29);
+   if(phase==='closed'){h.lineStyle(3,c).lineBetween(x-8,y-10,x+8,y+10).lineBetween(x+8,y-10,x-8,y+10);}
+   if(phase==='gust'||phase==='warning'){const drift=reduced?0:(now/65)%20;h.lineStyle(phase==='gust'?2:1,c,phase==='gust'?.55:.3);for(let n=0;n<4;n++){const ax=r.x+16+n*30+drift*air.direction,ay=r.y+50+n%2*24;h.lineBetween(ax,ay,ax+air.direction*16,ay).lineBetween(ax+air.direction*16,ay,ax+air.direction*11,ay-4);}}
+   // The complete boundary stays readable with effects and motion reduced.
+   h.lineStyle(1,c,.22).strokeRect(r.x,r.y,r.width,r.height);
+  }
   if(spec.wind){const drift=reduced?0:(now/60)%24;h.lineStyle(1,0xd9e3c4,.18);for(let n=0;n<5;n++)h.lineBetween(48+n*128+drift*spec.wind,116+n%3*28,76+n*128+drift*spec.wind,116+n%3*28);}
-  const pulse=worldPulse(spec,now),p=spec.pulse;if(p){h.fillStyle(pulse==='active'?0xff985f:0xffc67a,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(p.x,274,p.width,46);h.lineStyle(2,pulse==='active'?0xff985f:0xe7bb77,pulse==='safe'?.22:.8).strokeRect(p.x,274,p.width,46);if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}}
+  const pulse=worldPulse(spec,now),p=spec.pulse;if(p){const water=p.kind==='water',active=water?0x76c6e5:0xff985f,warning=water?0xa7d8e7:0xffc67a;
+   h.fillStyle(pulse==='active'?active:warning,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(p.x,274,p.width,46);h.lineStyle(2,pulse==='active'?active:warning,pulse==='safe'?.22:.8).strokeRect(p.x,274,p.width,46);
+   if(water){for(let n=0;n<3;n++){const y=282+n*12;h.lineBetween(p.x+4,y,p.x+12,y+3).lineBetween(p.x+12,y+3,p.x+20,y).lineBetween(p.x+20,y,p.x+p.width-4,y+3);}h.fillStyle(warning).fillTriangle(p.x-12,316,p.x-4,316,p.x-8,308);h.fillTriangle(p.x+p.width+4,316,p.x+p.width+12,316,p.x+p.width+8,308);}
+   else if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}
+  }
   if(world.carry){const carry=world.carry,item=carry.item;for(const c of carry.contacts){g.fillStyle(0x132532).fillRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);g.lineStyle(c.open?3:2,c.active?0x8ddab2:c.open?0xf3ce8e:0x797d94).strokeRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);if(c.active){g.lineBetween(c.rect.x+4,c.rect.y+14,c.rect.x+10,c.rect.y+21);g.lineBetween(c.rect.x+10,c.rect.y+21,c.rect.x+20,c.rect.y+6);}else if(c.open)g.fillStyle(0xf3ce8e).fillRect(c.rect.x+8,c.rect.y+8,8,12);else g.lineBetween(c.rect.x+4,c.rect.y+4,c.rect.x+20,c.rect.y+24);}
    const {x,y}=item.position;g.fillStyle(item.kind==='conductor'?0x91d9c6:0xf2ce94);if(item.kind==='lid'){g.fillEllipse(x,y,26,12);g.lineStyle(2,0x6c6a70).strokeEllipse(x,y,26,12);}else{g.fillRoundedRect(x-10,y-10,20,20,3);g.lineStyle(2,0x655b67).strokeRoundedRect(x-10,y-10,20,20,3);}
    if(spec.lamp){g.fillStyle(0xc8e4dc).fillTriangle(x-7,y+7,x+7,y-7,x+7,y+7);g.lineStyle(2,0x6d919c).lineBetween(x-7,y+7,x+7,y-7);}

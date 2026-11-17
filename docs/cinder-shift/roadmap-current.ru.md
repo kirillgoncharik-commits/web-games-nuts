@@ -1,3 +1,9 @@
+# Текущий этап - production M-RW3, alpha.5
+
+17.11.2026. [Текущая итерация](alpha5-laundry-balcony.ru.md): физические ткань/ремешок, поток/заслонка и ветер/вода подключены. Build, 141 регрессионная модель, 40 room action models и art contracts PASS. Browser CI ожидается; общий RC и приёмка открыты. Последний production остаётся alpha.3. Следующий объём: проверка новой среды, остальные подробные комнаты и полный production art/audio/VFX, затем M-RW4.
+
+## Проверенная база alpha.4 (история)
+
 # Текущий этап — production M-RW3, alpha.4
 
 16.11.2026. Общий статус **IN_PROGRESS / NOT RC**. [Текущий отчёт](alpha4-desktop-and-menu.ru.md), [доказательства](alpha4-verification.json).

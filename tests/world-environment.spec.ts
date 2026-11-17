@@ -55,3 +55,41 @@ test('reflector waits for two lamp scans and opens the desktop exit through ordi
  await to(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');expect((await state(page)).world.carry.ledger).toEqual(['desktop-line-01','desktop-line-02']);await capture('lamp-exit-ready');
  await writeFile(info.outputPath('lamp-evidence.json'),JSON.stringify({fixture:'one labelled SW02-D entry with combat cleared; reflector, scans and exit use ordinary input; full campaign routes test combat separately',samples},null,2));
 });
+
+test('moving towel carries a rider, pauses with the game and leaves the lower bypass open',async({page},info)=>{
+ await encounter(page,{mission:'SW04',room:'SW04-B'});
+ await jump(page,120,184);await ground(page,280);await to(page,210);await ground(page,280);
+ // Launch near the fixed ledge; the cloth is reachable with the base jump.
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.world.cloth.offset<12;});
+ await standingJump(page,322);await ground(page,248);
+ const first=await state(page),start=first.simMs;await page.waitForFunction(start=>(window as any).__CINDER__().simMs>start+350,start);
+ const moved=await state(page);expect(Math.abs(moved.player.x-first.player.x)).toBeGreaterThan(1);expect(moved.player.y+22).toBe(248);expect(moved.hp).toBe(6);
+ await page.screenshot({path:info.outputPath('towel-rider.png')});
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world.cloth).toEqual(paused.world.cloth);await page.getByTestId('resume').click();
+ await to(page,398);await ground(page,320);expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('towel-evidence.json'),JSON.stringify({fixture:'one SW04-B entry, ordinary keyboard afterwards',first,moved,paused,lower:await state(page)},null,2));
+});
+
+test('vent flag warns before physical drift and crouch protects the waiting pocket',async({page},info)=>{
+ await encounter(page,{mission:'SW03',room:'SW03-C'});await to(page,258);await ground(page,320);
+ await page.waitForFunction(()=>{const t=(window as any).__CINDER__().simMs%5200;return t>=2600&&t<2900;});
+ const first=await state(page);await page.waitForFunction(t=>(window as any).__CINDER__().simMs>=t+300,first.simMs);const gust=await state(page);
+ expect(gust.player.x-first.player.x).toBeGreaterThan(3);expect(gust.player.y+22).toBe(320);expect(gust.hp).toBe(6);
+ await page.keyboard.down('s');await expect.poll(async()=>(await state(page)).player.crouching).toBe(true);const sheltered=await state(page);
+ await page.waitForFunction(t=>(window as any).__CINDER__().simMs>=t+300,sheltered.simMs);expect(Math.abs((await state(page)).player.x-sheltered.player.x)).toBeLessThan(.5);
+ await page.screenshot({path:info.outputPath('vent-shelter.png')});await page.keyboard.up('s');
+ await writeFile(info.outputPath('vent-evidence.json'),JSON.stringify({fixture:'one SW03-C entry, ordinary keyboard afterwards',first,gust,sheltered},null,2));
+});
+
+test('the laundry damper closes through a carried weight before the fragment contact opens',async({page},info)=>{
+ await encounter(page,{mission:'SW03',room:'SW03-D'});await to(page,108);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+ await to(page,228);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ const closed=await state(page);expect(closed.world.damperClosedAt).not.toBeNull();expect(closed.world.carry.contacts[1].open).toBe(false);
+ await page.screenshot({path:info.outputPath('damper-closed.png')});
+ await to(page,276);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+ await jump(page,284,380);await ground(page,320);await to(page,496);await ground(page,320);
+ await page.waitForFunction(()=>(window as any).__CINDER__().world.carry.contacts[1].open);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+ await to(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');
+ expect((await state(page)).world.carry.ledger).toEqual(['damper-close-01','vent-fragment-02']);
+ await writeFile(info.outputPath('damper-evidence.json'),JSON.stringify({fixture:'one SW03-D entry, all contacts and exit earned with keyboard',closed,final:await state(page)},null,2));
+});

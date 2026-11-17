@@ -1,13 +1,13 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-16",
+  "updated_at": "2026-11-17",
   "reference": "Alpha.4 selected engineering gate PASS: 102 checks, both full world routes and immutable build. Chromium/Firefox/WebKit regression PASS; menu before/after visually reviewed. Full RW3 production and RW4 remain incomplete.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
     "code_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Final source and all test fixes are saved remotely. Selected gate and cross-browser regression pass. Local source environment unavailable; preserve the older checkout and any local draft before syncing remote.",
+    "working_tree": "Synchronized all changed files from remote 7b99f6c; older local draft preserved. Alpha.5 implementation, local build/models/art PASS; browser CI pending.",
     "published_game_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
     "test_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
@@ -545,19 +545,19 @@
   ],
   "active_workstream": {
     "milestone": "M-RW3_BEFORE_M_RW4",
-    "status": "ALPHA4_SELECTED_AND_CROSS_BROWSER_GATES_PASS_RW3_PARTIAL",
-    "version": "0.8.0-alpha.4",
+    "status": "ALPHA5_LOCAL_CHECKS_PASS_BROWSER_CI_PENDING_RW3_PARTIAL",
+    "version": "0.8.0-alpha.5",
     "coverage": "docs/cinder-shift/rework-coverage.json",
-    "checkpoint": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
-    "verification_report": "docs/cinder-shift/alpha4-verification.json",
+    "checkpoint": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
+    "verification_report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "Alpha.3 remains deployed; alpha.4 is an unpublished candidate.",
-    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+    "publication_scope": "Published alpha.3 retained. Alpha.5 is an unpublished development successor.",
+    "runtime_source_sha": null
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1047,117 +1047,48 @@
     "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   },
   "active_development_successor": {
-    "version": "0.8.0-alpha.4",
-    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
-    "runtime_tree_sha": "62f3fa023706061f01021f82e052e49653a07595",
-    "branch": "codex/cinder-shift-final",
-    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL",
-    "scope": "SW02-C paper tray, SW02-D reflector scans, isolated menu robot with static glow",
-    "local_checks": {
-      "build": "PASS_INITIAL_RUNTIME_TREE",
-      "typecheck": "PASS_885_EN_RU_KEYS",
-      "art_contracts": "PASS",
-      "regression_models": 117,
-      "world_id_placement_action_models": 42
-    },
-    "ci": {
-      "run_id": 43919699944,
-      "status": "SUCCESS_ALL_FOUR_JOBS_SELECTED_ENGINEERING_GATE",
-      "runtime_job_id": 133483362093,
-      "checks": {
-        "passed": 102,
-        "failed": 0,
-        "packs": [
-          9,
-          8,
-          6,
-          29,
-          50
-        ]
-      },
-      "world_routes": {
-        "c02-small-world": {
-          "job_id": 133483361803,
-          "status": "PASS",
-          "artifact_id": 14253791713,
-          "rooms": 20,
-          "missions": 5
-        },
-        "c03-adriatic-1986": {
-          "job_id": 133483362165,
-          "status": "PASS",
-          "artifact_id": 14253292366,
-          "rooms": 20,
-          "missions": 5
-        }
-      },
-      "game_artifact": {
-        "id": 14253897643,
-        "name": "cinder-shift-23-1",
-        "build_id": "cinder-v1.b23.a1",
-        "source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
-        "zip_bytes": 4548188,
-        "zip_sha256_from_github": "c3e51f509068765311d15735540b39744b7f060899bb65ea2ef414577d5b8754",
-        "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43919699944/artifacts/14253897643",
-        "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
-        "deployed": false
-      }
-    },
-    "visual_review": "Exact ce0e946 before/after RU sheet viewed at desktop, portrait, short landscape. RU/EN normal/reduced readability, silhouette bounds, overlap, button visibility/clickability PASS in all three browser engines. Pixel-identical normal/reduced layout is not a product requirement; WebKit may resize the illustration while preserving all acceptance bounds.",
-    "report": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
-    "resume": "Fetch current remote successor; local environment became unavailable after the first source sync. Preserve alpha.3 published archive and alpha.2 rollback evidence.",
-    "engineering_verified_runtime": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
-    "cross_browser": {
-      "run_id": 43919699918,
-      "status": "SUCCESS_ALL_FOUR_JOBS",
-      "merge_source_sha": "579ac1253818ad90a7c7f8fded14372ccad9024d",
-      "comparison_with_runtime_sha": "GitHub compare ahead by one merge commit, files=[]; same source files as ce0e946.",
-      "models": {
-        "job_id": 133483555121,
-        "passed": 117
-      },
-      "browsers": {
-        "chromium": {
-          "job_id": 133483554417,
-          "passed": 64,
-          "failed": 0,
-          "skipped": 0
-        },
-        "firefox": {
-          "job_id": 133483554935,
-          "passed": 63,
-          "failed": 0,
-          "skipped": 1
-        },
-        "webkit": {
-          "job_id": 133483555039,
-          "passed": 63,
-          "failed": 0,
-          "skipped": 1
-        }
-      },
-      "skip_reason": "The Chromium CDP two-contact touch case is intentionally skipped outside Chromium. Physical phones remain NOT RUN."
-    }
-  },
-  "active_iteration": {
-    "version": "0.8.0-alpha.4",
-    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS",
+    "version": "0.8.0-alpha.5",
+    "status": "LOCAL_CHECKS_PASS_BROWSER_CI_PENDING",
     "scope": [
-      "ART-01: isolated robot composition and static silhouette halo",
-      "SW02-C: timed external paper tray with warning, lower bypass and collision-safe return",
-      "SW02-D: two sequential reflector scans with changing lamp coverage"
+      "SW03 strap and physical cloth",
+      "SW03 vent and closeable damper",
+      "SW04 physical towel, wind and gutter water"
     ],
-    "last_verified_runtime": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
     "local_checks": {
-      "build": "PASS_LOCAL_DIRTY_SNAPSHOT",
+      "build": "PASS_DIRTY_SNAPSHOT",
       "typecheck": "PASS",
-      "art_contracts": "PASS",
-      "environment_and_world_models": 50
+      "i18n_keys": 885,
+      "regression_models": 141,
+      "world_action_models": 40,
+      "art_contracts": "PASS"
     },
-    "browser_checks": "PASS_CHROMIUM_FIREFOX_WEBKIT_WITH_EXPLICIT_TOUCH_SKIPS",
+    "browser_checks": "PENDING_CI_LOCAL_LISTEN_EPERM",
+    "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "accepted": false,
     "deployed": false,
-    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+    "branch": "codex/cinder-shift-final",
+    "verified_parent_runtime_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+  },
+  "active_iteration": {
+    "version": "0.8.0-alpha.5",
+    "status": "LOCAL_CHECKS_PASS_BROWSER_CI_PENDING",
+    "scope": [
+      "SW03 strap and physical cloth",
+      "SW03 vent and closeable damper",
+      "SW04 physical towel, wind and gutter water"
+    ],
+    "local_checks": {
+      "build": "PASS_DIRTY_SNAPSHOT",
+      "typecheck": "PASS",
+      "i18n_keys": 885,
+      "regression_models": 141,
+      "world_action_models": 40,
+      "art_contracts": "PASS"
+    },
+    "browser_checks": "PENDING_CI_LOCAL_LISTEN_EPERM",
+    "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
+    "accepted": false,
+    "deployed": false
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",
@@ -1285,5 +1216,98 @@
     "report": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
     "resume": "Fetch current remote successor; local environment became unavailable after the first source sync. Preserve alpha.3 published archive and alpha.2 rollback evidence.",
     "engineering_verified_runtime": "ddfa1ea9ce32fbc242cef767acb4c3b14a38f089"
+  },
+  "verified_alpha4_development": {
+    "version": "0.8.0-alpha.4",
+    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "runtime_tree_sha": "62f3fa023706061f01021f82e052e49653a07595",
+    "branch": "codex/cinder-shift-final",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL",
+    "scope": "SW02-C paper tray, SW02-D reflector scans, isolated menu robot with static glow",
+    "local_checks": {
+      "build": "PASS_INITIAL_RUNTIME_TREE",
+      "typecheck": "PASS_885_EN_RU_KEYS",
+      "art_contracts": "PASS",
+      "regression_models": 117,
+      "world_id_placement_action_models": 42
+    },
+    "ci": {
+      "run_id": 43919699944,
+      "status": "SUCCESS_ALL_FOUR_JOBS_SELECTED_ENGINEERING_GATE",
+      "runtime_job_id": 133483362093,
+      "checks": {
+        "passed": 102,
+        "failed": 0,
+        "packs": [
+          9,
+          8,
+          6,
+          29,
+          50
+        ]
+      },
+      "world_routes": {
+        "c02-small-world": {
+          "job_id": 133483361803,
+          "status": "PASS",
+          "artifact_id": 14253791713,
+          "rooms": 20,
+          "missions": 5
+        },
+        "c03-adriatic-1986": {
+          "job_id": 133483362165,
+          "status": "PASS",
+          "artifact_id": 14253292366,
+          "rooms": 20,
+          "missions": 5
+        }
+      },
+      "game_artifact": {
+        "id": 14253897643,
+        "name": "cinder-shift-23-1",
+        "build_id": "cinder-v1.b23.a1",
+        "source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+        "zip_bytes": 4548188,
+        "zip_sha256_from_github": "c3e51f509068765311d15735540b39744b7f060899bb65ea2ef414577d5b8754",
+        "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43919699944/artifacts/14253897643",
+        "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
+        "deployed": false
+      }
+    },
+    "visual_review": "Exact ce0e946 before/after RU sheet viewed at desktop, portrait, short landscape. RU/EN normal/reduced readability, silhouette bounds, overlap, button visibility/clickability PASS in all three browser engines. Pixel-identical normal/reduced layout is not a product requirement; WebKit may resize the illustration while preserving all acceptance bounds.",
+    "report": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "resume": "Fetch current remote successor; local environment became unavailable after the first source sync. Preserve alpha.3 published archive and alpha.2 rollback evidence.",
+    "engineering_verified_runtime": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "cross_browser": {
+      "run_id": 43919699918,
+      "status": "SUCCESS_ALL_FOUR_JOBS",
+      "merge_source_sha": "579ac1253818ad90a7c7f8fded14372ccad9024d",
+      "comparison_with_runtime_sha": "GitHub compare ahead by one merge commit, files=[]; same source files as ce0e946.",
+      "models": {
+        "job_id": 133483555121,
+        "passed": 117
+      },
+      "browsers": {
+        "chromium": {
+          "job_id": 133483554417,
+          "passed": 64,
+          "failed": 0,
+          "skipped": 0
+        },
+        "firefox": {
+          "job_id": 133483554935,
+          "passed": 63,
+          "failed": 0,
+          "skipped": 1
+        },
+        "webkit": {
+          "job_id": 133483555039,
+          "passed": 63,
+          "failed": 0,
+          "skipped": 1
+        }
+      },
+      "skip_reason": "The Chromium CDP two-contact touch case is intentionally skipped outside Chromium. Physical phones remain NOT RUN."
+    }
   }
 }
