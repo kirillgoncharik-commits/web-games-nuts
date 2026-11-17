@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {rooms} from '../games/cinder-shift/src/room-data';
-import {intersects} from '../games/cinder-shift/src/geometry';
+import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
@@ -124,4 +124,14 @@ test('rain gutter retains dry approaches, one lid contact and the full warning b
  const room=rooms['SW04-C'],p=room.world!.pulse!;expect(p.kind).toBe('water');expect(p.warning).toBeGreaterThanOrEqual(1400);expect(p.active).toBeLessThan(1000);
  expect(room.world!.carry!.contacts).toHaveLength(1);expect(room.world!.carry!.kind).toBe('lid');expect(room.solids[0]).toMatchObject({x:0,y:320,width:640});
  for(const x of [p.x-24,p.x+p.width+24])expect(intersects(body(x,320),{x:p.x,y:274,width:p.width,height:46})).toBe(false);
+});
+
+test('laundry pegs leave a stable floor firing pocket before the moving cloth',()=>{
+ const room=rooms['SW03-B'],enemy=room.enemies[0];
+ // A baseline player needs a standing pocket, not a perch above a ground-level target.
+ const pockets=Array.from({length:145},(_,i)=>32+i*4).filter(x=>Math.abs(x-enemy.x)>=60&&Math.abs(x-enemy.x)<=220
+  &&room.solids.every(r=>r.y>=320||r.x>=x+20||r.x+r.width<=x-20)
+  &&!intersects(body(x,320),clothSolid(cloth,createClothState()))
+  &&clearLine({x:x+Math.sign(enemy.x-x)*19,y:292},{x:enemy.x,y:enemy.y},room.solids));
+ expect(pockets.length).toBeGreaterThan(0);
 });
