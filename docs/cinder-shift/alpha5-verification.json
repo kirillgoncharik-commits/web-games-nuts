@@ -1,0 +1,226 @@
+{
+  "version": "0.8.0-alpha.5",
+  "date": "2026-11-17",
+  "timezone": "Europe/Podgorica",
+  "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
+  "source": {
+    "branch": "codex/cinder-shift-final",
+    "sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "tree": "922bd78930ae450a7594b13aa4cac926ce5f928a",
+    "pr": 10,
+    "local_equivalent": "93eb2b9",
+    "same_tree_verified": true
+  },
+  "local": {
+    "build": "PASS_FINAL_GAME_FILES_DIRTY_SNAPSHOT",
+    "typecheck": "PASS",
+    "i18n_keys": 885,
+    "art_contracts": "PASS",
+    "regression_models": 142,
+    "world_registry_and_action_models": 43,
+    "preview": "NOT_RUN_LISTEN_EPERM"
+  },
+  "selected_gate": {
+    "run_id": 44131732132,
+    "status": "SUCCESS_ALL_FOUR_JOBS",
+    "checks": {
+      "passed": 114,
+      "failed": 0,
+      "packs": [
+        {
+          "name": "cargo_and_environment_input",
+          "passed": 12
+        },
+        {
+          "name": "environment_models",
+          "passed": 17
+        },
+        {
+          "name": "menu_art_ru_en",
+          "passed": 6
+        },
+        {
+          "name": "previous_rw3",
+          "passed": 29
+        },
+        {
+          "name": "world_models_and_ui",
+          "passed": 50
+        }
+      ]
+    },
+    "world_routes": {
+      "c02-small-world": {
+        "job_id": 134210435977,
+        "status": "PASS",
+        "rooms": 20,
+        "missions": 5,
+        "final_fact_and_reload": "PASS",
+        "artifact_id": 14351171061
+      },
+      "c03-adriatic-1986": {
+        "job_id": 134210435320,
+        "status": "PASS",
+        "rooms": 20,
+        "missions": 5,
+        "final_fact_and_reload": "PASS",
+        "artifact_id": 14350277644
+      }
+    },
+    "runtime_evidence_artifact": 14349394859
+  },
+  "cross_browser": {
+    "run_id": 44131732154,
+    "status": "SUCCESS_ALL_FOUR_JOBS",
+    "source_merge": "db975f8086b8ae4e68ae08c865adee604adc98fd",
+    "comparison_with_runtime": "GitHub compare ahead by one merge commit; files=[]",
+    "models": {
+      "job_id": 134210352761,
+      "passed": 126
+    },
+    "chromium": {
+      "job_id": 134210352206,
+      "passed": 67,
+      "failed": 0,
+      "skipped": 0
+    },
+    "firefox": {
+      "job_id": 134210352847,
+      "passed": 66,
+      "failed": 0,
+      "skipped": 1
+    },
+    "webkit": {
+      "job_id": 134210352799,
+      "passed": 66,
+      "failed": 0,
+      "skipped": 1
+    },
+    "skip_reason": "Chromium CDP two-contact touch case; physical phones remain NOT RUN"
+  },
+  "artifact": {
+    "id": 14351855067,
+    "name": "cinder-shift-28-1",
+    "build_id": "cinder-v1.b28.a1",
+    "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "zip_bytes": 4551491,
+    "github_zip_digest": "sha256:b53e2a193dea2b8e3f099c284c2683d4e77a3ee885fea0874370a837e3a11179",
+    "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132/artifacts/14351855067",
+    "local_download_checksum": "NOT_RUN",
+    "deployed": false
+  },
+  "visual_review": {
+    "exact_menu_contact_sheet": "REVIEWED_RU_ALPHA3_VS_ALPHA5",
+    "sizes": [
+      "1440x900",
+      "390x844",
+      "667x300"
+    ],
+    "robot": "VISIBLE_WITH_GLOW_NO_CONTROL_OVERLAP",
+    "en_and_reduced": "AUTOMATED_BOUNDS_AND_CONTROLS_PASS",
+    "new_room_screenshots": "CAPTURED_BY_INPUT_TESTS_NOT_MANUALLY_REVIEWED",
+    "formal_art_acceptance": false
+  },
+  "history": [
+    {
+      "source": "5d33685533a16ad59190e95df1a1199d788c7e0f",
+      "run": 44128159592,
+      "c03": "PASS",
+      "c02": "FAIL_NO_FLOOR_FIRING_LANE_SW03_B",
+      "environment_input": "10_PASS_2_FAIL",
+      "reason": "Towel test stepped onto neighboring peg; vent test approached a low shelf standing. Ordinary crouch/floor approaches corrected."
+    },
+    {
+      "source": "dde4965e7ac83e918a1fe4586226e886e09fb713",
+      "run": 44130050356,
+      "runtime": "113_PASS_PRE_POCKET_MODEL_ADDITION",
+      "c03": "FAIL_DRIVER_SELECTED_UPPER_PERCH_YU02_C",
+      "c02": "CANCELLED",
+      "reason": "Restored established combat approach and moved SW03-B peg to leave a safe firing pocket."
+    },
+    {
+      "source": "60facba360b166a03b3bf409944dc3deeec03763",
+      "run": 44131096280,
+      "c02": "FAIL_DRIVER_CARRY_CLEARANCE_SW01_A",
+      "reason": "An over-broad test replacement touched the throw-lane rule; restored the entire proven full-route test byte-for-byte."
+    }
+  ],
+  "workflow_snapshot": [
+    {
+      "id": 44131732060,
+      "name": "Cinder Shift check",
+      "status": "queued",
+      "conclusion": null
+    },
+    {
+      "id": 44131732053,
+      "name": "Cinder Shift reachable build curve",
+      "status": "queued",
+      "conclusion": null
+    },
+    {
+      "id": 44131732093,
+      "name": "Cinder Shift full routes and saves",
+      "status": "queued",
+      "conclusion": null
+    },
+    {
+      "id": 44131732059,
+      "name": "Cinder Shift Sprint 2 presentation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 44131732132,
+      "name": "Cinder Shift artifact",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 44131732331,
+      "name": "Cinder Shift rework combat flow",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 44131732201,
+      "name": "Cinder Shift Sprint 2 runtime media",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 44131732154,
+      "name": "Cinder Shift rework candidate",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "broader_regression": {
+    "status": "NO_OVERALL_WORKFLOW_PASS_CLAIM",
+    "latest_general_run": 44131732060,
+    "last_observed": "QUEUED",
+    "known_mobile_button_issue": {
+      "observed_height": 44,
+      "required_height": 48,
+      "baseline_alpha4_run": 43919700070,
+      "baseline_job": 133483601176,
+      "initial_alpha5_run": 44128159318,
+      "initial_alpha5_job": 134197561858,
+      "status": "OPEN_CONFIRMED_ON_BASELINE_AND_ALPHA5_PARENT"
+    }
+  },
+  "production": {
+    "changed_by_this_iteration": false,
+    "last_registered_version": "0.8.0-alpha.3",
+    "last_registered_build": "cinder-v1.b19.a1",
+    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json"
+  },
+  "limits": [
+    "All six original RW3 IDs remain PARTIAL; production art/animation/VFX/audio pack remains incomplete.",
+    "Full world routes start from a labelled legacy C01 unlock fixture. Earned fresh C01 unlock NOT RUN.",
+    "Human timing/acceptance and physical phones NOT RUN.",
+    "Cargo E inactivity remains unreproduced/open.",
+    "Remaining detailed rooms and M-RW4 localization, storage/update/rollback, performance/device/channel gates remain open.",
+    "M-COMPARE stays a separate later stage."
+  ]
+}

@@ -1,3 +1,9 @@
+# Продолжение 17.11.2026 - alpha.5
+
+Актуальные [отчёт](alpha5-laundry-balcony.ru.md) и [доказательства](alpha5-verification.json). Source `c7f3b87`, build `cinder-v1.b28.a1`: selected gate 114 checks + C02/C03 full routes PASS; Chromium/Firefox/WebKit PASS. Механизмы SW03/SW04 подключены и проверены. Все шесть RW3 ID PARTIAL; production pack и RW4 остаются открытыми. Эта итерация production не меняла.
+
+## Исторический checkpoint
+
 # Текущая контрольная точка: alpha.4, 16.11.2026
 
 **INCOMPLETE / NOT RC.** Доработаны SW02-C (бумажная платформа), SW02-D (два скана лампы) и ART-01 (видимый робот со статичным свечением).

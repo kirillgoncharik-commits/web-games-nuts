@@ -5,11 +5,11 @@
   "reference": "Alpha.4 selected engineering gate PASS: 102 checks, both full world routes and immutable build. Chromium/Firefox/WebKit regression PASS; menu before/after visually reviewed. Full RW3 production and RW4 remain incomplete.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
-    "code_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "code_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Synchronized all changed files from remote 7b99f6c; older local draft preserved. Alpha.5 implementation, local build/models/art PASS; browser CI pending.",
+    "working_tree": "Alpha.5 source saved remotely; equivalent local tree verified. Selected and cross-browser engineering gates PASS. Reports are successors of the immutable runtime source.",
     "published_game_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
-    "test_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "test_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
@@ -545,19 +545,19 @@
   ],
   "active_workstream": {
     "milestone": "M-RW3_BEFORE_M_RW4",
-    "status": "ALPHA5_LOCAL_CHECKS_PASS_BROWSER_CI_PENDING_RW3_PARTIAL",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
     "version": "0.8.0-alpha.5",
     "coverage": "docs/cinder-shift/rework-coverage.json",
     "checkpoint": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
-    "verification_report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
+    "verification_report": "docs/cinder-shift/alpha5-verification.json",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "Published alpha.3 retained. Alpha.5 is an unpublished development successor.",
-    "runtime_source_sha": null
+    "publication_scope": "Alpha.5 is a verified unpublished candidate. This iteration did not change production.",
+    "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1048,47 +1048,146 @@
   },
   "active_development_successor": {
     "version": "0.8.0-alpha.5",
-    "status": "LOCAL_CHECKS_PASS_BROWSER_CI_PENDING",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
     "scope": [
       "SW03 strap and physical cloth",
       "SW03 vent and closeable damper",
       "SW04 physical towel, wind and gutter water"
     ],
     "local_checks": {
-      "build": "PASS_DIRTY_SNAPSHOT",
+      "build": "PASS_FINAL_GAME_FILES_DIRTY_SNAPSHOT",
       "typecheck": "PASS",
       "i18n_keys": 885,
-      "regression_models": 141,
-      "world_action_models": 40,
-      "art_contracts": "PASS"
+      "art_contracts": "PASS",
+      "regression_models": 142,
+      "world_registry_and_action_models": 43,
+      "preview": "NOT_RUN_LISTEN_EPERM"
     },
-    "browser_checks": "PENDING_CI_LOCAL_LISTEN_EPERM",
+    "browser_checks": "PASS_CHROMIUM_67_FIREFOX_66_WEBKIT_66_EXPLICIT_TOUCH_SKIPS",
     "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "accepted": false,
     "deployed": false,
+    "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "verification_report": "docs/cinder-shift/alpha5-verification.json",
+    "last_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "branch": "codex/cinder-shift-final",
-    "verified_parent_runtime_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+    "runtime_tree_sha": "922bd78930ae450a7594b13aa4cac926ce5f928a",
+    "ci": {
+      "run_id": 44131732132,
+      "status": "SUCCESS_ALL_FOUR_JOBS",
+      "checks": {
+        "passed": 114,
+        "failed": 0,
+        "packs": [
+          {
+            "name": "cargo_and_environment_input",
+            "passed": 12
+          },
+          {
+            "name": "environment_models",
+            "passed": 17
+          },
+          {
+            "name": "menu_art_ru_en",
+            "passed": 6
+          },
+          {
+            "name": "previous_rw3",
+            "passed": 29
+          },
+          {
+            "name": "world_models_and_ui",
+            "passed": 50
+          }
+        ]
+      },
+      "world_routes": {
+        "c02-small-world": {
+          "job_id": 134210435977,
+          "status": "PASS",
+          "rooms": 20,
+          "missions": 5,
+          "final_fact_and_reload": "PASS",
+          "artifact_id": 14351171061
+        },
+        "c03-adriatic-1986": {
+          "job_id": 134210435320,
+          "status": "PASS",
+          "rooms": 20,
+          "missions": 5,
+          "final_fact_and_reload": "PASS",
+          "artifact_id": 14350277644
+        }
+      },
+      "runtime_evidence_artifact": 14349394859
+    },
+    "cross_browser": {
+      "run_id": 44131732154,
+      "status": "SUCCESS_ALL_FOUR_JOBS",
+      "source_merge": "db975f8086b8ae4e68ae08c865adee604adc98fd",
+      "comparison_with_runtime": "GitHub compare ahead by one merge commit; files=[]",
+      "models": {
+        "job_id": 134210352761,
+        "passed": 126
+      },
+      "chromium": {
+        "job_id": 134210352206,
+        "passed": 67,
+        "failed": 0,
+        "skipped": 0
+      },
+      "firefox": {
+        "job_id": 134210352847,
+        "passed": 66,
+        "failed": 0,
+        "skipped": 1
+      },
+      "webkit": {
+        "job_id": 134210352799,
+        "passed": 66,
+        "failed": 0,
+        "skipped": 1
+      },
+      "skip_reason": "Chromium CDP two-contact touch case; physical phones remain NOT RUN"
+    },
+    "artifact": {
+      "id": 14351855067,
+      "name": "cinder-shift-28-1",
+      "build_id": "cinder-v1.b28.a1",
+      "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+      "zip_bytes": 4551491,
+      "github_zip_digest": "sha256:b53e2a193dea2b8e3f099c284c2683d4e77a3ee885fea0874370a837e3a11179",
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132/artifacts/14351855067",
+      "local_download_checksum": "NOT_RUN",
+      "deployed": false
+    },
+    "engineering_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "resume": "Continue remaining room designs and production art/audio/VFX, then RW4. Preserve exact alpha.5 artifact. Broader CI and mobile 48px issue remain open."
   },
   "active_iteration": {
     "version": "0.8.0-alpha.5",
-    "status": "LOCAL_CHECKS_PASS_BROWSER_CI_PENDING",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
     "scope": [
       "SW03 strap and physical cloth",
       "SW03 vent and closeable damper",
       "SW04 physical towel, wind and gutter water"
     ],
     "local_checks": {
-      "build": "PASS_DIRTY_SNAPSHOT",
+      "build": "PASS_FINAL_GAME_FILES_DIRTY_SNAPSHOT",
       "typecheck": "PASS",
       "i18n_keys": 885,
-      "regression_models": 141,
-      "world_action_models": 40,
-      "art_contracts": "PASS"
+      "art_contracts": "PASS",
+      "regression_models": 142,
+      "world_registry_and_action_models": 43,
+      "preview": "NOT_RUN_LISTEN_EPERM"
     },
-    "browser_checks": "PENDING_CI_LOCAL_LISTEN_EPERM",
+    "browser_checks": "PASS_CHROMIUM_67_FIREFOX_66_WEBKIT_66_EXPLICIT_TOUCH_SKIPS",
     "report": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
     "accepted": false,
-    "deployed": false
+    "deployed": false,
+    "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "verification_report": "docs/cinder-shift/alpha5-verification.json",
+    "last_verified_runtime": "c7f3b87f979b5531e883aac0d1fea21cd0512a04"
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",

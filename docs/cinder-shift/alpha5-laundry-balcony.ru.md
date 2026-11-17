@@ -11,17 +11,26 @@
 - SW04-A/B/D: направленный ветер в обозначенных верхних зонах; защищённый нижний путь и знакомые контакты. SW04-C: синий водяной импульс с предупреждением 1400 ms, активной фазой 700 ms и видимыми сухими сторонами.
 - Рисунок ткани и физические столкновения используют одну геометрию; статические тела обновляются на месте. Пауза использует прежние часы симуляции; новая попытка сбрасывает механизм. EN/RU подсказки и история обновлений обновлены.
 
-## Проверено локально
+## Итоговая проверка
 
-- Build/typecheck: PASS, 885 EN/RU ключей PASS.
-- 141 регрессионная модель PASS, включая 16 environment models; отдельно 40 room action models PASS. Повторные прогоны не складываются в новые тесты.
-- Art/source/animation contracts PASS. Это проверка существующих ассетов, а не сдача всего production art pack.
-- HTTP preview недоступен: listen EPERM. Browser/input, новые кадры, полные маршруты и cross-browser на alpha.5 ожидают CI. Исторический PASS alpha.4 не считается результатом alpha.5.
+Кандидат `0.8.0-alpha.5`, source `c7f3b87f979b5531e883aac0d1fea21cd0512a04`, tree `922bd78930ae450a7594b13aa4cac926ce5f928a`, build `cinder-v1.b28.a1`. [Полная ведомость](alpha5-verification.json).
 
-## Следующие gates
+- Build/typecheck, 885 EN/RU ключей и прежние art/source/animation contracts PASS. Локально 142 регрессионные модели и 43 проверки world registry/actions/placement PASS. В состав 142 уже входят 17 environment models; повторные прогоны не суммируются.
+- [Selected gate 44131732132](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132): все четыре job PASS. 114 проверок = 12 Cargo/environment input + 17 environment models + 6 ART-01 RU/EN + 29 прежних RW3 + 50 world models/UI.
+- Оба полных маршрута C02/C03 PASS: по 20 комнат и 5 миссий, финал, факты и reload результата. Начальный unlock - помеченная legacy C01 fixture. Все последующие действия в мирах выполнены обычным вводом; fresh C01 earned unlock этим не проверен.
+- [Cross-browser 44131732154](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732154): все четыре job PASS. 126 моделей; Chromium 67 PASS, Firefox/WebKit по 66 PASS и 1 явному SKIP Chromium CDP two-touch. Merge source `db975f8086b8ae4e68ae08c865adee604adc98fd`; compare с runtime возвращает files=[]. Физические телефоны не проверены.
+- Точный RU contact sheet alpha.3/alpha.5 просмотрен: 1440x900, 390x844, 667x300. Робот и ореол видны; кнопки его не закрывают. RU/EN normal/reduced границы и действия проверены автоматикой. Новые комнатные кадры сохранены input-тестами, отдельная визуальная арт-приёмка не выполнена.
 
-Три новых проверки обычным вводом: ткань/пауза/нижний путь, ветер/приседание, заслонка/два контакта/выход. Повторить прежние механизмы, оба C02/C03 маршрута и Chromium/Firefox/WebKit. Физические телефоны и человеческая длительность остаются NOT RUN.
+## Сборка
 
-Все шесть M-RW3 IDs PARTIAL. Остальные подробные комнаты, полный production art/animation/VFX/audio, earned fresh C01 unlock и M-RW4 остаются открытыми. Cargo E inactivity не воспроизведён и не закрыт. M-COMPARE сохраняет отдельный следующий этап.
+[Immutable artifact cinder-v1.b28.a1](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44131732132/artifacts/14351855067), 4 551 491 bytes. GitHub ZIP SHA256 `b53e2a193dea2b8e3f099c284c2683d4e77a3ee885fea0874370a837e3a11179`. Повторное локальное скачивание/checksum NOT RUN. Пакет собран тем же source; последующий commit меняет только отчёты и не заменяет ревизию архива.
 
-Production: последняя зарегистрированная alpha.3 / cinder-v1.b19.a1. Alpha.5 не опубликована.
+## Исправления и ограничения
+
+SW03-B получил безопасный карман между прищепками перед тканью; узкая опора не перекрывает позицию для боя на нижнем уровне. Добавлена модель этой позиции. Первые input-проверки неверно сходили с ткани на соседнюю опору и пытались пройти под низкой полкой стоя; подходы исправлены обычным вводом. Попытка обобщить driver выбирала верхнюю позицию в YU02-C. При возврате был затронут throw-clearance; полный route test восстановлен байт-в-байт с проверенной базы. Все прежние FAIL/CANCELLED сохранены в ведомости, assertions не удалялись.
+
+Selected gate и три браузера не означают PASS всех workflow. Общий check ещё был queued при фиксации. Дефект мобильной высоты кнопок 44 px при требовании 48 px подтверждён и на alpha.4: run 43919700070/job 133483601176; на alpha.5 parent - run 44128159318/job 134197561858. Он остаётся открытым для финального UI gate.
+
+Все шесть M-RW3 IDs PARTIAL. Остальные подробные комнаты, полный production art/animation/VFX/audio, earned fresh C01 unlock и M-RW4 остаются открытыми. Cargo E inactivity не воспроизведён и не закрыт. Human timing, формальная приёмка и физические телефоны NOT RUN. M-COMPARE сохраняет отдельный следующий этап.
+
+Последний зарегистрированный production: alpha.3 / cinder-v1.b19.a1. Эта итерация production не меняла; alpha.5 не опубликована.
