@@ -48,6 +48,21 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
 }
+async function approachContext(page:Page,action:'switch'|'activate',point:{x:number;y:number}){
+ const x=contextPoint(await state(page),action,point);await walk(page,x);
+ const landed=await state(page),feet=landed.player.y+22;
+ if(feet<point.y-2){
+  // Reaching the right x on an optional upper shelf is not reaching the contact.
+  // Walk around a real edge, descend through clear space, then return below it.
+  const drops=Array.from({length:139},(_,i)=>40+i*4).filter(at=>at<=600
+   &&landed.solids.some((r:any)=>Math.abs(r.y-point.y)<1&&at-20>=r.x&&at+20<=r.x+r.width)
+   &&!landed.solids.some((r:any)=>r.y>=feet-1&&r.y<point.y&&r.x<at+20&&r.x+r.width>at-20))
+   .sort((a,b)=>Math.abs(a-landed.player.x)+Math.abs(a-x)/4-Math.abs(b-landed.player.x)-Math.abs(b-x)/4);
+  if(!drops.length)throw Error('no physical descent to contact '+JSON.stringify({room:landed.room,point,player:landed.player}));
+  await walk(page,drops[0]);await walk(page,x);
+ }
+ const actual=await state(page);expect(Math.abs(actual.player.y+22-point.y),'actual contact standing height').toBeLessThan(2);
+}
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
@@ -78,12 +93,12 @@ async function solveRoom(page:Page){
    s=await state(page);if(s.world.power.circuit!==sequence[phase]){
     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;
     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
-    await walk(page,contextPoint(s,'switch',point));await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);
+    await approachContext(page,'switch',point);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);
    }
    const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
    // Reuse the local switch on the current side of an A wall. Returning to the
    // entrance switch can close the route before reaching the next contact.
-   await walk(page,contextPoint(current,'activate',target));await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
+   await approachContext(page,'activate',target);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
   }
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}
