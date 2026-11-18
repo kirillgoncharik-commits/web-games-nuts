@@ -7,7 +7,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createEnemy,enemyRect} from '../games/cinder-shift/src/enemies';
 import {intersects} from '../games/cinder-shift/src/geometry';
-import {createWorldState,actWorld,stepWorld,worldReady,worldContext,powerTarget} from '../games/cinder-shift/src/session/world-runtime';
+import {createWorldState,actWorld,stepWorld,worldReady,worldContext,powerTarget,worldSolids,stepWorldEnvironment} from '../games/cinder-shift/src/session/world-runtime';
 import {validateWorldSave,validateSave} from '../games/cinder-shift/src/session/save';
 import {state} from './helpers';
 
@@ -34,11 +34,12 @@ test('world enemy spawns clear fixed geometry and ground units rest on a surface
 });
 for(const design of newCampaignRegistry.rooms)test(`model contract ${design.room_id}: reachable actions, bounded ledger and objective`,()=>{
  const room=rooms[design.room_id as keyof typeof rooms],spec=room.world!,s=createWorldState(room.id,spec);
- if(s.carry){let now=3500;for(const target of spec.carry!.contacts){const c=s.carry.contacts.find(c=>c.id===target.id)!;const x=target.rect.x-54; // Same swept flight as runtime; no direct activation.
+ const tick=(x:number,now:number)=>{stepWorldEnvironment(spec,s,{x:x-11,y:276,width:22,height:44},320,now,[...room.solids,...worldSolids(spec,s)]);return stepWorld(spec,s,{x,y:320},1,now,16,[]);};
+ if(s.carry){let now=3500;for(const target of spec.carry!.contacts){const c=s.carry.contacts.find(c=>c.id===target.id)!;const stageCover=spec.encounter?.stages.find(stage=>stage.contactId===target.id)?.cover,blockers=[...room.solids,...(stageCover?[stageCover]:[])];const x=[target.rect.x-54,target.rect.x+54].find(x=>blockers.every(r=>!intersects({x:x-11,y:276,width:22,height:44},r)))!;expect(x).toBeDefined();const facing=x<target.rect.x?1:-1; // Same swept flight as runtime; no direct activation.
    // Model time follows the authored warning/scan; contacts are never forced open.
-   stepWorld(spec,s,{x,y:320},1,now,16,[]);for(let n=0;n<400&&!c.open;n++){now+=16;stepWorld(spec,s,{x,y:320},1,now,16,[]);}expect(c.open).toBe(true);
-   s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},1,now)?.action).toBe('throw');
-   for(let i=0;i<60&&!c.active;i++){now+=16;stepWorld(spec,s,{x,y:320},1,now,16,[]);}expect(c.active).toBe(true);
+   tick(x,now);for(let n=0;n<400&&!c.open;n++){now+=16;tick(x,now);}expect(c.open).toBe(true);
+   s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},facing,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},facing,now)?.action).toBe('throw');
+   for(let i=0;i<60&&!c.active;i++){now+=16;tick(x,now);}expect(c.active).toBe(true);
   }expect(new Set(s.carry.ledger).size).toBe(spec.carry!.contacts.length);}
  if(s.power){for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,3500)?.action).toBe('switch');const target=powerTarget(spec,s)!;expect(actWorld(spec,s,target,{x:target.x-11,y:target.y-44,width:22,height:44},1,3500)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
  expect(worldReady(spec,s)).toBe(true);const before=JSON.stringify(s.ledger);stepWorld(spec,s,{x:64,y:320},1,10000,16,[]);expect(JSON.stringify(s.ledger)).toBe(before);

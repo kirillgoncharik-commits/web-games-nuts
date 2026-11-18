@@ -1,3 +1,4 @@
+import type {EncounterSpec,LatchSpec} from './session/world-encounter';
 import type {RoomDefinition,Rect,Point,EnemyDefinition,HazardDefinition} from './room-data';
 import type {CarryKind,PowerObject,Circuit} from './session/world-mechanics';
 import type {WorldRoomId,WorldMissionId} from './session/new-campaign-content';
@@ -7,8 +8,9 @@ import type {KeyboardSpec,PaperSpec,LampSpec,ClothSpec,BridgeSpec,AirSpec} from 
 export type WorldRoomSpec={
  carry?:{kind:CarryKind;spawn:Point;contacts:{id:string;rect:Rect;window?:boolean}[]};
  switches?:Point[];powerObjects?:PowerObject[];sequence?:Circuit[];sequenceTargets?:Point[];
- pulse?:{x:number;width:number;cycle:number;warning:number;active:number;kind?:'water'};
+ pulse?:{x:number;width:number;cycle:number;warning:number;active:number;y?:number;height?:number;shelters?:Rect[];kind?:'water'|'steam'};
  repair?:Point;landmark:string;wind?:number;
+ encounter?:EncounterSpec;latch?:LatchSpec;
  keyboard?:KeyboardSpec;
  paper?:PaperSpec;
  lamp?:LampSpec;
@@ -23,10 +25,14 @@ const carry=(kind:CarryKind,x:number,...contacts:ReturnType<typeof contact>[]):W
 const power=(id:string,circuit:Circuit,x:number,y:number,w:number,h=12):PowerObject=>({id,solidOn:circuit,rect:platform(x,y,w,h)});
 type Authored={id:WorldRoomId;solids:Rect[];world:WorldRoomSpec;enemies?:EnemyDefinition[];hazards?:HazardDefinition[];cache?:Point};
 const authored:Authored[]=[
- {id:'SW01-A',solids:[platform(174,226,16,52),platform(174,220,90,10),platform(332,260,72)],world:{landmark:'mug',carry:carry('lid',112,contact('drawer-lock-01',294))},cache:{x:366,y:260}},
- {id:'SW01-B',solids:[platform(150,236,112),platform(332,246,96),cover(484,32)],world:{landmark:'plates',carry:carry('lid',112,contact('rack-lock-01',552)),pulse:{x:276,width:56,cycle:5400,warning:1400,active:800}},enemies:[enemy('sw01b-scanner',430)]},
+ {id:'SW01-A',solids:[platform(174,226,16,52),platform(174,220,90,10),platform(332,260,72)],world:{landmark:'mug',latch:{id:'c02-small-world:SW01-A:drawer-01',gate:platform(456,272,20,48),contactId:'drawer-lock-01'},carry:carry('lid',112,contact('drawer-lock-01',294))},cache:{x:366,y:260}},
+ {id:'SW01-B',solids:[platform(150,236,112),platform(332,246,96),cover(484,32)],world:{landmark:'plates',carry:carry('lid',112,contact('rack-lock-01',552)),pulse:{x:276,y:196,width:56,height:124,cycle:5400,warning:1400,active:800,kind:'steam',shelters:[{x:264,y:292,width:80,height:28}]}},enemies:[enemy('sw01b-scanner',430)]},
  {id:'SW01-C',solids:[platform(116,248,90),platform(250,276,72),platform(398,248,72),cover(520,32)],world:{landmark:'drawer',repair:{x:572,y:320},carry:carry('lid',340,contact('drawer-dock-01',470))}},
- {id:'SW01-D',solids:[platform(132,244,92),cover(300,32,40),platform(450,244,80)],world:{landmark:'lidar',carry:carry('lid',112,contact('dock-phase-01',264,280,true),contact('dock-phase-02',408,280,true),contact('dock-phase-03',548,280,true)),pulse:{x:352,width:56,cycle:4800,warning:1400,active:700}}},
+ {id:'SW01-D',solids:[platform(132,244,92),platform(450,244,80)],world:{landmark:'lidar',carry:carry('lid',112,contact('dock-phase-01',264,280,true),contact('dock-phase-02',408,280,true),contact('dock-phase-03',548,280,true)),encounter:{id:'c02-small-world:SW01-D:lidar-01',stages:[
+  {contactId:'dock-phase-01',origin:{x:600,y:292},beam:platform(96,288,480,8),cover:cover(300,32,40),warningMs:1500,scanMs:700,openMs:2800},
+  {contactId:'dock-phase-02',origin:{x:600,y:292},beam:platform(96,288,480,8),cover:cover(432,32,32),warningMs:1200,scanMs:800,openMs:2600},
+  {contactId:'dock-phase-03',origin:{x:624,y:292},beam:platform(96,288,512,8),cover:cover(580,32,24),warningMs:1000,scanMs:900,openMs:2600}
+ ]}}},
  {id:'SW02-A',solids:[cover(384,24,64),platform(464,240,88)],world:{landmark:'keys',keyboard:{id:'c02-small-world:SW02-A:key-pair-01',trigger:cover(160,24,64),target:cover(272,48,64),travel:16,returnDelayMs:1800}},enemies:[enemy('sw02a-scanner',488)]},
  {id:'SW02-B',solids:[platform(160,276,88),platform(292,240,112),platform(448,268,80)],world:{landmark:'cable',carry:carry('spool',112,contact('cable-latch-01',536))},enemies:[enemy('sw02b-service',448)],cache:{x:344,y:240}},
  {id:'SW02-C',solids:[platform(132,276,88),platform(420,276,100)],world:{landmark:'printer',paper:{id:'c02-small-world:SW02-C:printer-tray-01',platform:platform(276,244,104,8),cycleMs:4800,warningMs:1000,extendedMs:2600,returnWarningMs:700}}},
@@ -42,7 +48,11 @@ const authored:Authored[]=[
  {id:'SW05-A',solids:[platform(136,280,80),platform(256,244,80),platform(376,208,80),platform(496,244,80)],world:{landmark:'books'},cache:{x:416,y:208}},
  {id:'SW05-B',solids:[platform(136,260,96),cover(296,32,40),platform(416,244,104)],world:{landmark:'router-cable',carry:carry('conductor',112,contact('beacon-feed-01',552))},enemies:[enemy('sw05b-service',450)]},
  {id:'SW05-C',solids:[platform(128,248,72),platform(272,248,88),platform(448,248,72)],world:{landmark:'beacon-board',carry:carry('conductor',112,contact('beacon-part-01',240),contact('beacon-part-02',404),contact('beacon-part-03',548)),repair:{x:584,y:320}}},
- {id:'SW05-D',solids:[cover(152,32,40),platform(272,244,88),cover(448,32,40)],world:{landmark:'beacon',carry:carry('conductor',112,contact('beacon-final-01',240,280,true),contact('beacon-final-02',400,280,true),contact('beacon-final-03',548,280,true)),pulse:{x:352,width:56,cycle:4400,warning:1400,active:800}}},
+ {id:'SW05-D',solids:[platform(136,244,80),platform(432,228,64)],world:{landmark:'beacon',carry:carry('conductor',112,contact('beacon-final-01',240,280,true),contact('beacon-final-02',400,280,true),contact('beacon-final-03',548,280,true)),encounter:{id:'c02-small-world:SW05-D:beacon-01',stages:[
+  {contactId:'beacon-final-01',origin:{x:600,y:292},beam:platform(96,288,480,8),cover:cover(272,32,40),warningMs:1400,scanMs:700,openMs:2800},
+  {contactId:'beacon-final-02',origin:{x:40,y:292},beam:platform(64,288,512,8),cover:cover(316,32,32),warningMs:2600,scanMs:800,openMs:2600},
+  {contactId:'beacon-final-03',origin:{x:624,y:292},beam:platform(96,288,512,8),cover:cover(580,32,24),warningMs:1000,scanMs:900,openMs:2500}
+ ]}}},
  {id:'YU01-A',solids:[cover(184,32,48),platform(328,256,88)],world:{landmark:'courtyard',switches:[{x:112,y:320}],powerObjects:[power('entrance-B','A',468,264,16,56)],sequence:['B']}},
  {id:'YU01-B',solids:[platform(144,280,64),platform(460,280,72)],world:{landmark:'exchange',switches:[{x:112,y:320},{x:536,y:320}],powerObjects:[power('stairs-A','A',248,248,80),power('bridge-B','B',360,252,80)],sequence:['B','A']}},
  {id:'YU01-C',solids:[platform(144,260,104),platform(376,244,96),cover(528,32)],world:{landmark:'rooftop',switches:[{x:112,y:320},{x:568,y:320}],sequenceTargets:[{x:584,y:320}],powerObjects:[power('screen-A','A',312,268,24,52)],sequence:['B']},enemies:[enemy('yu01c-anomaly',440)],cache:{x:416,y:244}},

@@ -93,3 +93,43 @@ test('the laundry damper closes through a carried weight before the fragment con
  expect((await state(page)).world.carry.ledger).toEqual(['damper-close-01','vent-fragment-02']);
  await writeFile(info.outputPath('damper-evidence.json'),JSON.stringify({fixture:'one SW03-D entry, all contacts and exit earned with keyboard',closed,final:await state(page)},null,2));
 });
+
+test('drawer contact opens its real gate through normal carry and throw input',async({page},info)=>{
+ await encounter(page,{mission:'SW01',room:'SW01-A'});
+ expect((await state(page)).solids.some((r:any)=>r.id?.startsWith('world-latch:'))).toBe(true);
+ await to(page,108);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+ await page.keyboard.down('s');await to(page,240);await ground(page,320);await page.keyboard.up('s');await expect.poll(async()=>(await state(page)).player.crouching).toBe(false);
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.latch.open).toBe(true);
+ const after=await state(page);expect(after.world.carry.ledger).toEqual(['drawer-lock-01']);expect(after.solids.some((r:any)=>r.id?.startsWith('world-latch:'))).toBe(false);expect(after.hp).toBe(6);
+ await page.screenshot({path:info.outputPath('drawer-gate-open.png')});await writeFile(info.outputPath('drawer-gate-evidence.json'),JSON.stringify({fixture:'one SW01-A entry; gate earned through ordinary input',world:after.world,solids:after.solids,player:after.player,hp:after.hp},null,2));
+});
+
+test('kitchen lower shelter protects crouching Mira during the same live steam pulse that hits a standing Mira',async({page},info)=>{
+ await encounter(page,{mission:'SW01',room:'SW01-B',cleared:true});await to(page,248);await ground(page,320);await page.keyboard.down('s');await to(page,304);await ground(page,320);
+ await page.waitForFunction(()=>{const t=(window as any).__CINDER__().simMs%5400;return t>=1400&&t<1550;});const before=await state(page);
+ await page.waitForFunction(t=>(window as any).__CINDER__().simMs>=t+250,before.simMs);const protectedState=await state(page);expect(protectedState.hp).toBe(6);expect(protectedState.player.crouching).toBe(true);
+ await page.screenshot({path:info.outputPath('steam-lower-shelter.png')});await page.keyboard.up('s');await expect.poll(async()=>(await state(page)).hp).toBeLessThan(6);
+ await writeFile(info.outputPath('steam-shelter-evidence.json'),JSON.stringify({fixture:'one SW01-B entry with combat cleared; ordinary movement, crouch and release afterwards',before:{time:before.simMs,hp:before.hp,player:before.player},protected:{time:protectedState.simMs,hp:protectedState.hp,player:protectedState.player},standing:{time:(await state(page)).simMs,hp:(await state(page)).hp}},null,2));
+});
+
+for(const mission of ['SW01','SW05'] as const)test(mission+' has three earned scan/contact phases with changing physical cover and a working exit',async({page},info)=>{
+ test.setTimeout(75000);await encounter(page,{mission,room:mission+'-D'});const samples:any[]=[];
+ const capture=async(label:string)=>{const s=await state(page);samples.push({label,simMs:s.simMs,hp:s.hp,player:s.player,world:s.world,solids:s.solids,timing:s.worldEncounter});await page.screenshot({path:info.outputPath(label+'.png')});};
+ await to(page,108);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+ for(let stage=0;stage<3;stage++){
+  const launch=mission==='SW01'?[212,356,496][stage]:[188,452,496][stage];
+  if(stage>0){await to(page,mission==='SW05'&&stage===2?424:mission==='SW01'?[0,264,408][stage]:240);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');}
+  if(mission==='SW05'&&stage===1){await jump(page,284,374);await ground(page,320);}
+  await to(page,launch);await ground(page,320);
+  if(mission==='SW05'&&stage===1){await page.keyboard.down('a');await page.waitForFunction(()=>(window as any).__CINDER__().player.facing===-1);await page.keyboard.up('a');await ground(page,320);}
+  await page.waitForFunction(()=>(window as any).__CINDER__().worldEncounter?.phase==='scan');const coveredHp=(await state(page)).hp;await capture('phase-'+stage+'-scan');
+  if(stage===0){await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world.encounter).toEqual(paused.world.encounter);await page.getByTestId('resume').click();}
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldEncounter?.phase==='open'&&s.worldEncounter.remaining>1200&&s.world.carry.contacts.find((c:any)=>!c.active)?.open;});
+  expect((await state(page)).hp).toBe(coveredHp);await capture('phase-'+stage+'-open');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
+  expect((await state(page)).world.encounter.stage).toBe(stage+1);
+ }
+ await expect.poll(async()=>(await state(page)).solids.filter((r:any)=>r.id?.startsWith('world-encounter:')).length).toBe(0);
+ await to(page,584);await ground(page,320);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');
+ const final=await state(page);expect(final.world.carry.ledger).toEqual(mission==='SW01'?['dock-phase-01','dock-phase-02','dock-phase-03']:['beacon-final-01','beacon-final-02','beacon-final-03']);expect(final.hp).toBeGreaterThan(0);await capture('phase-final-exit');
+ await writeFile(info.outputPath('phased-encounter-evidence.json'),JSON.stringify({fixture:'one labelled mission finale entry; carry, every phase and exit earned through ordinary input',mission,samples},null,2));
+});

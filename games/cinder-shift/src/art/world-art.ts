@@ -1,8 +1,9 @@
+import {encounterTiming,encounterSolids} from '../session/world-encounter';
 import type Phaser from 'phaser';
 import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
-import {powerTarget,worldReady,worldPulse} from '../session/world-runtime';
+import {powerTarget,worldReady,worldPulse,worldPulseArea} from '../session/world-runtime';
 import {keyboardSolids,keyboardPhase,paperPhase,lampPhase,clothSolid,airPhase} from '../session/world-environment';
 
 const palettes={
@@ -67,7 +68,7 @@ export class WorldArt{
   }
   // Visible lip/material at every real collision surface, including the safe lower route.
   const materials=scene.add.graphics().setDepth(2.2);
-  for(const s of room.solids){if(s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
+  for(const s of room.solids){if(s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:')||s.id?.startsWith('world-encounter:')||s.id?.startsWith('world-latch:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
   this.ink=scene.add.graphics().setDepth(6.5);this.environment=scene.add.graphics().setDepth(3.2);
   if(room.world?.switches)for(const point of room.world.switches)this.labels.push(scene.add.text(point.x,point.y-62,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae',backgroundColor:'#172533'}).setOrigin(.5).setDepth(6.6));
   if(room.world?.keyboard)for(const text of ['I','II'])this.keyLabels.push(scene.add.text(0,0,text,{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae'}).setOrigin(.5,0).setDepth(3.3));
@@ -114,6 +115,24 @@ export class WorldArt{
    for(let n=0;n<contacts.length;n++){h.fillStyle(contacts[n].active?0x8ddab2:0x65758b).fillRect(x-18+n*22,y+18,14,5);}
    h.fillStyle(!target||phase==='open'?0x8ddab2:0xf0c577).fillCircle(x,y,5);
   }
+  if(spec.latch&&world.latch){const r=spec.latch.gate,c=world.latch.open?0x91d9c6:0xe7bb77;
+   h.lineStyle(2,c).strokeRect(r.x-4,r.y-6,r.width+8,r.height+6);
+   if(!world.latch.open){h.fillStyle(0x566c77).fillRect(r.x,r.y,r.width,r.height);for(let y=r.y+6;y<r.y+r.height;y+=10)h.lineBetween(r.x+3,y,r.x+r.width-3,y);}
+   else h.lineBetween(r.x-6,r.y-10,r.x+r.width+6,r.y-10);
+   h.fillStyle(c).fillCircle(r.x+r.width/2,r.y-16,4);
+  }
+  if(spec.encounter&&world.encounter){const e=spec.encounter,state=world.encounter,t=encounterTiming(e,state,now),stage=e.stages[state.stage],c=t.phase==='complete'||t.phase==='open'?0x91d9c6:t.phase==='scan'?0xe9a36f:0xf0c577;
+   for(const r of encounterSolids(e,state)){h.fillStyle(0x435b6a).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0x91b7b9).strokeRect(r.x,r.y,r.width,r.height);for(let y=r.y+8;y<r.y+r.height;y+=10)h.lineBetween(r.x+4,y,r.x+r.width-4,y);}
+   h.fillStyle(0x172c3c).fillRoundedRect(536,154,96,102,8);h.lineStyle(2,c).strokeRoundedRect(536,154,96,102,8);
+   for(let n=0;n<e.stages.length;n++){h.fillStyle(n<state.stage?0x91d9c6:n===state.stage?c:0x526b7b).fillCircle(556+n*24,173,5);}
+   const open=t.phase==='open',split=open?18:3;h.fillStyle(0x52757b).fillRect(548,188,32-split,48);h.fillRect(584+split,188,36-split,48);h.lineStyle(2,c).strokeRect(548,188,72,48);
+   if(stage){const {origin,beam}=stage,right=origin.x>beam.x+beam.width/2;let end=right?beam.x:beam.x+beam.width;
+    for(const r of a.definition().solids){if(r.y<=origin.y&&r.y+r.height>origin.y&&(right?r.x<origin.x&&r.x+r.width>end:r.x+r.width>origin.x&&r.x<end))end=right?Math.max(end,r.x+r.width):Math.min(end,r.x);}
+    h.fillStyle(c).fillCircle(origin.x,origin.y,5);h.lineStyle(t.phase==='scan'?6:1,c,t.phase==='scan'?.8:.22).lineBetween(origin.x,origin.y,end,origin.y);
+    h.lineStyle(1,c,.35).strokeRect(beam.x,beam.y,beam.width,beam.height);
+    if(t.phase==='settling'){const r=stage.cover;for(let x=r.x;x<r.x+r.width;x+=8)h.lineStyle(1,c,.6).lineBetween(x,r.y,x+4,r.y);}
+   }
+  }
   if(spec.cloth&&world.cloth){
    const r=clothSolid(spec.cloth,world.cloth),base=spec.cloth.platform;
    h.lineStyle(1,0x83948b,.5).lineBetween(base.x-12,base.y-32,base.x+base.width+spec.cloth.travel+12,base.y-32);
@@ -136,9 +155,12 @@ export class WorldArt{
    h.lineStyle(1,c,.22).strokeRect(r.x,r.y,r.width,r.height);
   }
   if(spec.wind){const drift=reduced?0:(now/60)%24;h.lineStyle(1,0xd9e3c4,.18);for(let n=0;n<5;n++)h.lineBetween(48+n*128+drift*spec.wind,116+n%3*28,76+n*128+drift*spec.wind,116+n%3*28);}
-  const pulse=worldPulse(spec,now),p=spec.pulse;if(p){const water=p.kind==='water',active=water?0x76c6e5:0xff985f,warning=water?0xa7d8e7:0xffc67a;
-   h.fillStyle(pulse==='active'?active:warning,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(p.x,274,p.width,46);h.lineStyle(2,pulse==='active'?active:warning,pulse==='safe'?.22:.8).strokeRect(p.x,274,p.width,46);
+  const pulse=worldPulse(spec,now),p=spec.pulse;if(p){const water=p.kind==='water',steam=p.kind==='steam',area=worldPulseArea(spec)!,active=water?0x76c6e5:steam?0xd5e4de:0xff985f,warning=water?0xa7d8e7:steam?0xa6ccbd:0xffc67a;
+   h.fillStyle(pulse==='active'?active:warning,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(area.x,area.y,area.width,area.height);h.lineStyle(2,pulse==='active'?active:warning,pulse==='safe'?.22:.8).strokeRect(area.x,area.y,area.width,area.height);
    if(water){for(let n=0;n<3;n++){const y=282+n*12;h.lineBetween(p.x+4,y,p.x+12,y+3).lineBetween(p.x+12,y+3,p.x+20,y).lineBetween(p.x+20,y,p.x+p.width-4,y+3);}h.fillStyle(warning).fillTriangle(p.x-12,316,p.x-4,316,p.x-8,308);h.fillTriangle(p.x+p.width+4,316,p.x+p.width+12,316,p.x+p.width+8,308);}
+   else if(steam){for(let n=0;n<4;n++){const y=area.y+16+n*25;h.lineStyle(2,active,pulse==='active'?.65:.25).lineBetween(area.x+8,y,area.x+18,y-6).lineBetween(area.x+18,y-6,area.x+32,y);}
+    for(const r of p.shelters||[]){h.fillStyle(0x152d38).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0x91d9c6).lineBetween(r.x,r.y,r.x+r.width,r.y);h.lineBetween(r.x+r.width/2-5,r.y+8,r.x+r.width/2,r.y+14).lineBetween(r.x+r.width/2,r.y+14,r.x+r.width/2+7,r.y+5);}
+   }
    else if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}
   }
   if(world.carry){const carry=world.carry,item=carry.item;for(const c of carry.contacts){g.fillStyle(0x132532).fillRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);g.lineStyle(c.open?3:2,c.active?0x8ddab2:c.open?0xf3ce8e:0x797d94).strokeRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);if(c.active){g.lineBetween(c.rect.x+4,c.rect.y+14,c.rect.x+10,c.rect.y+21);g.lineBetween(c.rect.x+10,c.rect.y+21,c.rect.x+20,c.rect.y+6);}else if(c.open)g.fillStyle(0xf3ce8e).fillRect(c.rect.x+8,c.rect.y+8,8,12);else g.lineBetween(c.rect.x+4,c.rect.y+4,c.rect.x+20,c.rect.y+24);}

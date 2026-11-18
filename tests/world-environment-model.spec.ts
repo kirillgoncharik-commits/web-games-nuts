@@ -1,10 +1,11 @@
+import {createEncounterState,encounterCompleted,stepEncounter,encounterSolids,encounterTiming,encounterThreat,syncEncounterStage,encounterThrowReserveMs} from '../games/cinder-shift/src/session/world-encounter';
 import {test,expect} from '@playwright/test';
 import {rooms} from '../games/cinder-shift/src/room-data';
 import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
-import {createWorldState,stepWorld,actWorld,worldReady} from '../games/cinder-shift/src/session/world-runtime';
+import {createWorldState,stepWorld,actWorld,worldReady,worldSolids,stepWorldEnvironment,worldPulseHits} from '../games/cinder-shift/src/session/world-runtime';
 
 const spec=rooms['SW02-A'].world!.keyboard!;
 const body=(x:number,feet:number)=>({x:x-11,y:feet-44,width:22,height:44});
@@ -134,4 +135,68 @@ test('laundry pegs leave a stable floor firing pocket before the moving cloth',(
   &&!intersects(body(x,320),clothSolid(cloth,createClothState()))
   &&clearLine({x:x+Math.sign(enemy.x-x)*19,y:292},{x:enemy.x,y:enemy.y},room.solids));
  expect(pockets.length).toBeGreaterThan(0);
+});
+
+
+const dock=rooms['SW01-D'].world!.encounter!;
+test('dock phase has a complete warning, a real scan and a bounded safe throw window',()=>{
+ const s=createEncounterState();stepEncounter(dock,s,0,body(64,320),320,100);
+ expect(encounterTiming(dock,s,1599).phase).toBe('warning');expect(encounterTiming(dock,s,1600).phase).toBe('scan');
+ expect(encounterTiming(dock,s,2300).phase).toBe('open');expect(encounterTiming(dock,s,4401).phase).toBe('closing');
+ expect(encounterTiming(dock,s,5100).phase).toBe('warning');expect(encounterTiming(dock,s,4400).remaining).toBe(encounterThrowReserveMs);
+ const solids=[...rooms['SW01-D'].solids,...encounterSolids(dock,s)];expect(encounterThreat(dock,s,body(200,320),1700,solids)).toBe(false);expect(encounterThreat(dock,s,body(400,320),1700,solids)).toBe(true);
+ expect(encounterThreat(dock,s,body(400,280),1700,solids)).toBe(false);expect(encounterThreat(dock,s,body(400,320),1200,solids)).toBe(false);
+});
+test('changing encounter cover waits for a clear body and a rider without starting a hidden scan',()=>{
+ const s=createEncounterState();stepEncounter(dock,s,0,body(64,320),320,100);
+ expect(stepEncounter(dock,s,1,body(444,320),320,5000)).toBe(false);expect(s).toMatchObject({stage:1,solidStage:0,startedAt:null});expect(encounterTiming(dock,s,9000).phase).toBe('settling');
+ expect(stepEncounter(dock,s,1,body(320,288),288,9100)).toBe(false);expect(s.solidStage).toBe(0);
+ expect(stepEncounter(dock,s,1,body(380,320),320,9200)).toBe(true);expect(s).toMatchObject({stage:1,solidStage:1,startedAt:9200});expect(encounterTiming(dock,s,9200).phase).toBe('warning');
+ expect(encounterSolids(dock,s)[0]).toMatchObject(dock.stages[1].cover);
+});
+test('encounter completion follows canonical contact IDs and an ordered prefix',()=>{
+ expect(encounterCompleted(dock,[{id:'not-a-dock-contact',active:true}])).toBe(0);
+ expect(encounterCompleted(dock,[{id:'dock-phase-03',active:true}])).toBe(0);
+ expect(encounterCompleted(dock,[{id:'dock-phase-01',active:true},{id:'dock-phase-02',active:true},{id:'wrong',active:true}])).toBe(2);
+});
+for(const id of ['SW01-D','SW05-D'] as const)test(id+' earns three phases through actual throws and awards each original contact once',()=>{
+ const room=rooms[id],spec=room.world!,s=createWorldState(id,spec);let now=0;
+ const tick=(x:number)=>{stepWorldEnvironment(spec,s,body(x,320),320,now,[...room.solids,...worldSolids(spec,s)]);return stepWorld(spec,s,{x,y:320},1,now,16,[...room.solids,...worldSolids(spec,s)]);};
+ for(const target of spec.encounter!.stages){
+  const c=s.carry!.contacts.find(c=>c.id===target.contactId)!;
+  const launch=[c.rect.x-54,c.rect.x+54].find(x=>room.solids.concat([target.cover]).every(r=>!intersects(body(x,320),r)))!;expect(launch).toBeDefined();
+  for(let n=0;n<700&&!c.open;n++){now+=16;tick(launch);}expect(c.open).toBe(true);
+  s.carry!.item.state='resting';s.carry!.item.position={x:launch,y:312};
+  const facing=launch<c.rect.x?1:-1;expect(actWorld(spec,s,{x:launch,y:320},body(launch,320),facing,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x:launch,y:320},body(launch,320),facing,now)?.action).toBe('throw');
+  for(let n=0;n<60&&!c.active;n++){now+=16;tick(launch);}expect(c.active).toBe(true);expect(encounterTiming(spec.encounter!,s.encounter!,now).phase).toBe(s.phase===3?'complete':'settling');
+ }
+ expect(worldReady(spec,s)).toBe(true);expect(s.carry!.ledger).toEqual(spec.carry!.contacts.map(c=>c.id));
+ for(let n=0;n<600;n++){now+=16;tick(64);}expect(s.carry!.ledger).toHaveLength(3);expect(encounterSolids(spec.encounter!,s.encounter!)).toEqual([]);
+});
+test('encounter cycles remain deterministic at 30 and 60 render FPS and reset on Retry',()=>{
+ const run=(fps:number)=>{const s=createEncounterState(),clock=new SimulationClock(),phases:string[]=[];for(let n=0;n<fps*7;n++)clock.advance(1000/fps,()=>{stepEncounter(dock,s,0,body(64,320),320,clock.now);phases.push(encounterTiming(dock,s,clock.now).phase);});return{s,phases};};expect(run(30)).toEqual(run(60));
+ const entry={mission_id:'SW01' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]},a=new MissionAttempt('mission',entry);syncEncounterStage(dock,a.room('SW01-D').world!.encounter!,2);
+ expect(new MissionAttempt('mission',entry).room('SW01-D').world!.encounter).toEqual(createEncounterState());
+});
+test('all dock and beacon covers fit the base jump and leave their live contact clear',()=>{
+ for(const id of ['SW01-D','SW05-D'] as const){const room=rooms[id];for(const stage of room.world!.encounter!.stages){
+  expect(stage.cover.height).toBeLessThan(50);expect(room.solids.some(r=>intersects(stage.cover,r))).toBe(false);
+  expect(intersects(stage.cover,room.world!.carry!.contacts.find(c=>c.id===stage.contactId)!.rect)).toBe(false);
+  expect(stage.origin.y).toBe(stage.beam.y+stage.beam.height/2);expect(stage.openMs).toBeGreaterThan(encounterThrowReserveMs+1500);
+ }}
+});
+test('the drawer latch opens only after the original contact and a fresh attempt restores its gate',()=>{
+ const spec=rooms['SW01-A'].world!,s=createWorldState('SW01-A',spec);expect(worldSolids(spec,s).some(r=>r.id?.startsWith('world-latch:'))).toBe(true);
+ s.carry!.item.state='resting';s.carry!.item.position={x:240,y:292};stepWorld(spec,s,{x:240,y:320},1,0,16,rooms['SW01-A'].solids);
+ actWorld(spec,s,{x:240,y:320},body(240,320),1,0);actWorld(spec,s,{x:240,y:320},body(240,320),1,0);
+ for(let n=1;n<=60;n++)stepWorld(spec,s,{x:240,y:320},1,n*16,16,rooms['SW01-A'].solids);
+ expect(s.carry!.ledger).toEqual(['drawer-lock-01']);stepWorldEnvironment(spec,s,body(240,320),320,1000);expect(s.latch!.open).toBe(true);expect(worldSolids(spec,s).some(r=>r.id?.startsWith('world-latch:'))).toBe(false);
+ expect(createWorldState('SW01-A',spec).latch!.open).toBe(false);
+});
+test('the kitchen steam warns before rising and only a fully sheltered crouch avoids the plume',()=>{
+ const spec=rooms['SW01-B'].world!;
+ expect(worldPulseHits(spec,body(304,320),1000)).toBe(false);expect(worldPulseHits(spec,body(304,320),1500)).toBe(true);
+ expect(worldPulseHits(spec,{x:293,y:294,width:22,height:26},1500)).toBe(false);
+ expect(worldPulseHits(spec,{x:260,y:294,width:22,height:26},1500)).toBe(true);
+ expect(worldPulseHits(spec,body(304,244),1500)).toBe(true);expect(worldPulseHits(spec,body(360,320),1500)).toBe(false);
 });
