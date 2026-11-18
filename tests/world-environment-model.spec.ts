@@ -279,3 +279,12 @@ test('tunnel signal pockets stay outside the real pulse in either circuit and re
  actWorld(spec,s,{x:112,y:320},body(112,320),1,0);expect(spec.pulse!.signals).toHaveLength(2);expect(worldPulseHits(spec,body(256,320),1800,s)).toBe(true);
  expect(spec.repair!.x).toBeGreaterThan(spec.pulse!.x+spec.pulse!.width);expect(room.enemies.map(e=>e.id)).toEqual(['yu03c-drone']);
 });
+
+test('a closed contact window never falls through to an adjacent switch in the correct circuit',()=>{
+ const spec=rooms['YU02-D'].world!,s=createWorldState('YU02-D',spec);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,0);actWorld(spec,s,{x:264,y:320},body(264,320),1,3000);
+ expect(s.phase).toBe(1);actWorld(spec,s,{x:416,y:320},body(416,320),1,3100);expect(s.power!.circuit).toBe('A');
+ const before=structuredClone(s);expect(worldContext(spec,s,{x:408,y:320},spec.pulse!.cycle+100)).toBeNull();
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,spec.pulse!.cycle+100)).toBeNull();expect(s).toEqual(before);
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,spec.pulse!.cycle+3000)?.action).toBe('activate');expect(s.phase).toBe(2);expect(s.power!.switches).toBe(2);
+});

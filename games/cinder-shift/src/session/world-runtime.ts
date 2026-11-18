@@ -44,7 +44,7 @@ export function stepWorldEnvironment(spec:WorldRoomSpec,state:WorldRoomState,bod
 export const worldAirVelocity=(spec:WorldRoomSpec,state:WorldRoomState,body:Rect,now:number,crouching=false)=>spec.air?airVelocity(spec.air,body,now,state.damperClosedAt!==null,crouching):0;
 export function worldContext(spec:WorldRoomSpec,state:WorldRoomState,player:Point,now:number,allowRepair=true):'pickup'|'throw'|'switch'|'activate'|'repair'|null{
  if(state.carry&&(state.carry.item.state==='held'||canPickUp(state.carry,{x:player.x,y:player.y-28})))return state.carry.item.state==='held'?'throw':'pickup';
- const target=powerTarget(spec,state);if(target&&Math.abs(player.x-target.x)<32&&Math.abs(player.y-target.y)<30&&state.power?.circuit===spec.sequence?.[state.phase]&&worldPulse(spec,now,state)==='safe')return'activate';
+ const target=powerTarget(spec,state);if(target&&Math.abs(player.x-target.x)<32&&Math.abs(player.y-target.y)<30&&state.power?.circuit===spec.sequence?.[state.phase])return worldPulse(spec,now,state)==='safe'?'activate':null;
  // Adjacent repair pockets must not steal an interaction at the switch itself.
  const switchDistance=Math.min(Infinity,...(spec.switches||[]).filter(p=>Math.abs(player.x-p.x)<32&&Math.abs(player.y-p.y)<30).map(p=>Math.hypot(player.x-p.x,player.y-p.y)));
  const repair=spec.repair,repairDistance=allowRepair&&repair&&!state.repaired&&Math.abs(player.x-repair.x)<28&&Math.abs(player.y-repair.y)<30?Math.hypot(player.x-repair.x,player.y-repair.y):Infinity;

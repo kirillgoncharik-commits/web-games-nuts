@@ -98,7 +98,8 @@ async function solveRoom(page:Page){
    const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
    // Reuse the local switch on the current side of an A wall. Returning to the
    // entrance switch can close the route before reaching the next contact.
-   await approachContext(page,'activate',target);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
+   await approachContext(page,'activate',target);const pulse=rooms[current.room as keyof typeof rooms].world!.pulse;
+   await page.waitForFunction(pulse=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&(!pulse||pulse.cycle-(s.worldPulseElapsed??s.simMs)%pulse.cycle>600);},pulse);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
   }
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}

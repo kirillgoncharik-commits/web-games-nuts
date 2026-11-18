@@ -195,3 +195,15 @@ test('substation earns traction isolation before its fresh pulse warning and con
  expect((await state(page)).world.ledger).toEqual(['isolator:phase-0','isolator:phase-1','isolator:phase-2']);expect((await state(page)).hp).toBe(6);
  await writeFile(info.outputPath('substation-evidence.json'),JSON.stringify({fixture:'one YU03-D entry; all switching, preparation and transmission use ordinary keyboard input',samples},null,2));
 });
+
+test('a closed transmitter contact beside a lever keeps the selected circuit when interact is pressed',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-D'});
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,128,216);await ground(page,320);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%4800<3000;});
+ await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
+ await to(page,408);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='warning');
+ const before=await state(page);await page.keyboard.press('e');const blocked=await state(page);expect(blocked.world.phase).toBe(1);expect(blocked.world.power.circuit).toBe('A');expect(blocked.world.power.switches).toBe(2);await page.screenshot({path:info.outputPath('closed-contact-preserves-circuit.png')});
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%4800<3400;});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).world.power.circuit).toBe('A');
+ await writeFile(info.outputPath('closed-contact-evidence.json'),JSON.stringify({fixture:'one YU02-D entry; real switching and confirmation, including a deliberate press during a closed window',before,blocked,confirmed:await state(page)},null,2));
+});
