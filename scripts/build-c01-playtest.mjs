@@ -3,10 +3,11 @@ import {cp,mkdir,rm,readFile,writeFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 
 const pair=resolve('dist/c01-playtest');
+const builtAt=process.env.CINDER_BUILT_AT||execFileSync('git',['show','-s','--format=%cI','HEAD'],{encoding:'utf8'}).trim();
 await rm(pair,{recursive:true,force:true});await mkdir(pair,{recursive:true});
 const manifests=[];
 for(const variant of ['A','B']){
- execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit',env:{...process.env,CINDER_TARGET:'web',CINDER_C01_PLAYTEST:variant}});
+ execFileSync(process.execPath,['scripts/build.mjs'],{stdio:'inherit',env:{...process.env,CINDER_BUILT_AT:builtAt,CINDER_TARGET:'web',CINDER_C01_PLAYTEST:variant}});
  const manifest=JSON.parse(await readFile('dist/cinder-shift/build-manifest.json','utf8'));
  if(manifest.source_dirty)throw Error('playtest_pair_requires_clean_commit');
  manifests.push(manifest);

@@ -21,7 +21,7 @@ export default defineConfig({
     transformIndexHtml: {
       order: 'pre',
       handler(html) {
-        if(playtest!=='off')return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/,'');
+        if(playtest!=='off')return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/,'').replace('href="/games/"','href="../../../"').replace('<head>','<head><meta name="robots" content="noindex,nofollow">');
         if (target === 'web') return html;
         return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
           .replace('href="/games/"', 'href="https://nuts.bid/games/"');
