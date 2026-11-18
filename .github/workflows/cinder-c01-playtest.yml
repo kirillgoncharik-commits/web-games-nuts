@@ -9,7 +9,7 @@ permissions:
   contents: read
 jobs:
   compare:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +25,7 @@ jobs:
         run: npx playwright test --config=playwright.c01.config.ts --reporter=line,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/c01-playtest.json
+          CINDER_C01_MEDIA: '1'
       - name: Print browser failure context
         if: failure()
         run: find test-results -name error-context.md -exec cat {} \;

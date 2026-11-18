@@ -19,7 +19,7 @@ export class Panels{
       if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)&&!(e.target instanceof HTMLSelectElement)&&!(e.target instanceof HTMLTextAreaElement)&&!(e.target instanceof HTMLInputElement&&e.target.type!=='checkbox')){e.preventDefault();this.move(['ArrowLeft','ArrowUp'].includes(e.key)?-1:1);return;}
       if(e.repeat&&(e.key==='Enter'||e.key===' '))e.preventDefault();
     },true);
-    document.addEventListener('focusin',e=>{if(this.visible&&!root.contains(e.target as Node))this.focus();else if(this.visible){const el=e.target as HTMLElement,id=el.dataset.focus||el.id;if(id&&id!==this.previousFocus){this.previousFocus=id;this.onSound('ui_focus');}}});
+    document.addEventListener('focusin',e=>{if(this.visible&&!root.contains(e.target as Node)&&!(e.target as Element).closest('#playtest-controls'))this.focus();else if(this.visible){const el=e.target as HTMLElement,id=el.dataset.focus||el.id;if(id&&id!==this.previousFocus){this.previousFocus=id;this.onSound('ui_focus');}}});
   }
   button(id:string,content:string,action:()=>void,options:ButtonOptions={}){this.actions.set(id,action);return `<button type="button" data-command="${escape(id)}" data-sound="${options.sound||'confirm'}" data-testid="${escape(id)}" data-focus="${escape(id)}" class="${options.kind||'secondary'} ${options.className||''}" ${options.label?`aria-label="${escape(options.label)}"`:''} ${options.busy?'aria-busy="true"':''} ${options.disabled?'disabled':''} ${options.pressed===undefined?'':`aria-pressed="${options.pressed}"`}>${options.html?content:escape(content)}</button>`;}
   change(id:string,callback:(value:string,checked:boolean)=>void){this.changes.set(id,callback);}
@@ -29,7 +29,7 @@ export class Panels{
     this.actions.clear();this.changes.clear();this.back=back;this.root.innerHTML=build();this.root.hidden=false;this.visible=true;this.syncPad();this.focus(focusId||previous);const content=this.root.querySelector('.panel-content');if(content)content.scrollTop=this.scrollPositions.get(scopeKey)||0;
   }
   hide(){this.visible=false;this.root.hidden=true;this.root.replaceChildren();this.actions.clear();this.changes.clear();}
-  private items(){return [...this.root.querySelectorAll<HTMLElement>('button:not(:disabled),select:not(:disabled),input:not(:disabled),textarea:not(:disabled),summary,a[href]')].filter(el=>el.getClientRects().length>0);}
+  private items(){return [...this.root.querySelectorAll<HTMLElement>('button:not(:disabled),select:not(:disabled),input:not(:disabled),textarea:not(:disabled),summary,a[href]'),...document.querySelectorAll<HTMLElement>('#playtest-controls a[href],#playtest-controls button:not(:disabled)')].filter(el=>el.getClientRects().length>0);}
   focus(id?:string){const target=id?this.items().find(el=>el.dataset.focus===id||el.id===id):undefined;(target||this.items()[0])?.focus({preventScroll:true});}
   private move(direction:number){
     const items=this.items(),at=items.indexOf(document.activeElement as HTMLElement);
