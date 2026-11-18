@@ -10,7 +10,7 @@ test('courtyard lever opens its real entrance and the optional alcove is reachab
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  expect((await state(page)).solids.some((r:any)=>r.id==='world-power:entrance-B')).toBe(false);await page.screenshot({path:info.outputPath('courtyard-B-lights-and-door.png')});
  await jump(page,152,208);await ground(page,288);await to(page,226);await ground(page,288);await standingJump(page,304);await ground(page,256);
- await to(page,336);await ground(page,256);await page.keyboard.press('e');expect((await state(page)).roomStates['YU01-A'].cacheUsed).toBe(true);
+ await to(page,336);await ground(page,256);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU01-A'].cacheUsed).toBe(true);
  await page.screenshot({path:info.outputPath('courtyard-optional-alcove.png')});await to(page,430);await ground(page,320);await to(page,552);await ground(page,320);await page.keyboard.press('e');
  await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
  await writeFile(info.outputPath('courtyard-evidence.json'),JSON.stringify({fixture:'one YU01-A entry; lever, upper salvage and contact earned with ordinary keyboard and base movement',before,final:await state(page)},null,2));
@@ -35,7 +35,7 @@ test('roof screen swaps to lower cover and the upper cache is earned with ordina
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  const lower=await state(page);expect(lower.solids.some((r:any)=>r.id==='world-power:screen-A')).toBe(false);expect(lower.solids.some((r:any)=>r.id==='world-power:roof-shelter-B')).toBe(true);
  await to(page,104);await ground(page,320);await jump(page,104,160);await ground(page,288);await to(page,184);await ground(page,288);await standingJump(page,248);await ground(page,256);
- await to(page,296);await ground(page,256);await standingJump(page,408);await ground(page,244);await to(page,416);await ground(page,244);await page.keyboard.press('e');expect((await state(page)).roomStates['YU01-C'].cacheUsed).toBe(true);
+ await to(page,296);await ground(page,256);await standingJump(page,408);await ground(page,244);await to(page,416);await ground(page,244);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU01-C'].cacheUsed).toBe(true);
  await page.screenshot({path:info.outputPath('rooftop-upper-salvage.png')});expect((await state(page)).hp).toBe(6);
  await writeFile(info.outputPath('rooftop-evidence.json'),JSON.stringify({fixture:'one YU01-C entry with drone explicitly cleared for route geometry; real drone combat remains in full C03 route',lower,upper:await state(page)},null,2));
 });
