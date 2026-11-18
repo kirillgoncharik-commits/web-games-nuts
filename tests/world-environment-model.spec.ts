@@ -5,7 +5,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
-import {createWorldState,stepWorld,actWorld,worldReady,worldSolids,stepWorldEnvironment,worldPulseHits} from '../games/cinder-shift/src/session/world-runtime';
+import {createWorldState,stepWorld,actWorld,worldReady,worldSolids,stepWorldEnvironment,worldPulseHits,worldContext} from '../games/cinder-shift/src/session/world-runtime';
 
 const spec=rooms['SW02-A'].world!.keyboard!;
 const body=(x:number,feet:number)=>({x:x-11,y:feet-44,width:22,height:44});
@@ -199,4 +199,14 @@ test('the kitchen steam warns before rising and only a fully sheltered crouch av
  expect(worldPulseHits(spec,{x:293,y:294,width:22,height:26},1500)).toBe(false);
  expect(worldPulseHits(spec,{x:260,y:294,width:22,height:26},1500)).toBe(true);
  expect(worldPulseHits(spec,body(304,244),1500)).toBe(true);expect(worldPulseHits(spec,body(360,320),1500)).toBe(false);
+});
+
+test('adjacent power switches and repair pockets choose the nearest eligible object',()=>{
+ for(const id of ['YU02-C','YU03-C'] as const){
+  const spec=rooms[id].world!,s=createWorldState(id,spec),point=spec.switches!.at(-1)!;
+  expect(worldContext(spec,s,{x:point.x+4,y:320},0,true)).toBe('switch');
+  expect(worldContext(spec,s,spec.repair!,0,true)).toBe('repair');
+  expect(worldContext(spec,s,{x:point.x+4,y:320},0,false)).toBe('switch');
+ }
+ const spec=rooms['YU03-C'].world!,s=createWorldState('YU03-C',spec);expect(worldContext(spec,s,{x:556.57,y:320},0,true)).toBe('switch');expect(worldContext(spec,s,{x:568,y:320},0,true)).toBe('repair');
 });
