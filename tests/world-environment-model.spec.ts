@@ -10,6 +10,67 @@ import {createPowerRoom,circuitSolids,switchCircuit} from '../games/cinder-shift
 
 const spec=rooms['SW02-A'].world!.keyboard!;
 const body=(x:number,feet:number)=>({x:x-11,y:feet-44,width:22,height:44});
+test('courtyard power opens the physical door before the first contact without introducing a live hazard',()=>{
+ const spec=rooms['YU01-A'].world!,state=createWorldState('YU01-A',spec);
+ expect(worldSolids(spec,state).some(r=>r.id==='world-power:entrance-B')).toBe(true);
+ expect(spec.powerLight?.on).toBe('B');expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,0)).toBeNull();
+ expect(actWorld(spec,state,{x:112,y:320},body(112,320),1,0)?.action).toBe('switch');
+ expect(worldSolids(spec,state).some(r=>r.id==='world-power:entrance-B')).toBe(false);
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,100)?.action).toBe('activate');
+ expect(worldReady(spec,state)).toBe(true);expect(state.ledger).toEqual(['entrance:phase-0']);
+ expect(rooms['YU01-A'].cache?.y).toBe(256);
+});
+test('switchboard requires the real bridge height and retains reachable switches in both circuits',()=>{
+ const spec=rooms['YU01-B'].world!,state=createWorldState('YU01-B',spec);
+ actWorld(spec,state,{x:112,y:320},body(112,320),1,0);
+ expect(worldContext(spec,state,{x:324,y:320},100)).toBeNull();
+ const bridge=worldSolids(spec,state).find(r=>r.id==='world-power:bridge-B')!;
+ expect(bridge.y).toBe(280);expect(bridge.x).toBeLessThan(324);expect(bridge.x+bridge.width).toBeGreaterThan(324);
+ expect(actWorld(spec,state,{x:324,y:280},body(324,280),1,100)?.action).toBe('activate');
+ expect(switchCircuit(state.power!,body(324,280))).toBe(false);
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,200)?.action).toBe('switch');
+ expect(state.power!.circuit).toBe('A');expect(worldSolids(spec,state).filter(r=>r.id?.startsWith('world-power:stairs-'))).toHaveLength(2);
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,300)?.action).toBe('activate');
+ expect(state.ledger).toEqual(['stairs:phase-0','stairs:phase-1']);expect(worldReady(spec,state)).toBe(true);
+ for(const circuit of ['A','B'] as const){state.power!.circuit=circuit;for(const point of spec.switches!){expect([...rooms['YU01-B'].solids,...worldSolids(spec,state)].some(r=>intersects(body(point.x,point.y),r))).toBe(false);}}
+});
+test('rooftop circuit swaps a screen for real lower cover while the upper salvage route stays reachable',()=>{
+ const spec=rooms['YU01-C'].world!,state=createWorldState('YU01-C',spec);
+ expect(clearLine({x:440,y:292},{x:280,y:292},worldSolids(spec,state))).toBe(false);
+ actWorld(spec,state,{x:112,y:320},body(112,320),1,0);
+ const cover=worldSolids(spec,state).find(r=>r.id==='world-power:roof-shelter-B')!;
+ expect(cover).toMatchObject({x:340,y:288,height:32});
+ expect(clearLine({x:440,y:292},{x:320,y:292},worldSolids(spec,state))).toBe(false);
+ expect(rooms['YU01-C'].enemies).toHaveLength(1);expect(rooms['YU01-C'].cache).toMatchObject({x:416,y:244});
+ expect(rooms['YU01-C'].solids.some(r=>r.x===224&&r.y===256&&r.width===80)).toBe(true);
+ expect(worldSolids(spec,state).some(r=>r.id==='world-power:screen-A')).toBe(false);
+});
+test('first transmission earns both preparations before a fresh pulse warning and preserves the original contact IDs',()=>{
+ const spec=rooms['YU01-D'].world!,state=createWorldState('YU01-D',spec);
+ stepWorldEnvironment(spec,state,body(64,320),320,15000);expect(worldPulse(spec,15000,state)).toBe('safe');
+ actWorld(spec,state,{x:112,y:320},body(112,320),1,15000);
+ actWorld(spec,state,{x:264,y:320},body(264,320),1,15100);
+ expect(state.phase).toBe(1);expect(state.pulseStartedAt).toBeNull();
+ actWorld(spec,state,{x:448,y:320},body(448,320),1,15200);
+ actWorld(spec,state,{x:408,y:320},body(408,320),1,15300);
+ expect(state.phase).toBe(2);expect(state.pulseStartedAt).toBe(15300);expect(worldPulse(spec,15300,state)).toBe('warning');
+ actWorld(spec,state,{x:448,y:320},body(448,320),1,15400);
+ expect(worldContext(spec,state,{x:552,y:320},15500)).toBeNull();
+ expect(worldPulseHits(spec,body(552,320),17000,state)).toBe(true);
+ expect(worldPulseHits(spec,body(448,320),17000,state)).toBe(false);expect(worldPulseHits(spec,body(584,320),17000,state)).toBe(false);
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,17700)?.action).toBe('activate');
+ expect(state.ledger).toEqual(['tx:phase-0','tx:phase-1','tx:phase-2']);expect(worldReady(spec,state)).toBe(true);
+ expect(actWorld(spec,state,{x:552,y:320},body(552,320),1,17800)).toBeNull();expect(state.ledger).toHaveLength(3);
+});
+test('first transmission pause, room revisit and Retry keep distinct state ownership',()=>{
+ const entry={mission_id:'YU01' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]};
+ const attempt=new MissionAttempt('mission',entry),state=attempt.room('YU01-D').world!,spec=rooms['YU01-D'].world!;
+ actWorld(spec,state,{x:112,y:320},body(112,320),1,100);actWorld(spec,state,{x:264,y:320},body(264,320),1,200);
+ const snapshot=structuredClone(state);stepWorldEnvironment(spec,state,body(448,320),320,200);expect(state).toEqual(snapshot);
+ expect(attempt.room('YU01-D').world).toBe(state);expect(state.phase).toBe(1);
+ expect(new MissionAttempt('mission',entry).room('YU01-D').world).toEqual(createWorldState('YU01-D',spec));
+});
 test('standing on the first key lowers the second and release restores both physical surfaces',()=>{
  const state=createKeyboardState(),before=keyboardSolids(spec,state);expect(stepKeyboard(spec,state,body(192,296),296,100)).toBe(true);
  const down=keyboardSolids(spec,state);expect(down[0].y-before[0].y).toBe(4);expect(down[1].y-before[1].y).toBe(16);expect(down.map(r=>r.y+r.height)).toEqual([320,320]);

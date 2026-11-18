@@ -4,6 +4,60 @@ import {encounter} from './encounter-helpers';
 import {state} from './helpers';
 import {jump,standingJump,to,ground,until} from './route-helpers';
 
+test('courtyard lever opens its real entrance and the optional alcove is reachable with the base jump',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU01',room:'YU01-A'});
+ const before=await state(page);expect(before.solids.some((r:any)=>r.id==='world-power:entrance-B')).toBe(true);
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ expect((await state(page)).solids.some((r:any)=>r.id==='world-power:entrance-B')).toBe(false);await page.screenshot({path:info.outputPath('courtyard-B-lights-and-door.png')});
+ await jump(page,152,208);await ground(page,288);await to(page,226);await ground(page,288);await standingJump(page,304);await ground(page,256);
+ await to(page,336);await ground(page,256);await page.keyboard.press('e');expect((await state(page)).roomStates['YU01-A'].cacheUsed).toBe(true);
+ await page.screenshot({path:info.outputPath('courtyard-optional-alcove.png')});await to(page,430);await ground(page,320);await to(page,552);await ground(page,320);await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
+ await writeFile(info.outputPath('courtyard-evidence.json'),JSON.stringify({fixture:'one YU01-A entry; lever, upper salvage and contact earned with ordinary keyboard and base movement',before,final:await state(page)},null,2));
+});
+
+test('switchboard earns its elevated bridge contact and returns over the A stairs with both levers reachable',async({page},info)=>{
+ test.setTimeout(60000);await encounter(page,{mission:'YU01',room:'YU01-B'});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,120,176);await ground(page,288);await to(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
+ await to(page,324);await ground(page,280);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await capture('exchange-B-bridge-connected');
+ await to(page,394);await ground(page,280);await standingJump(page,456);await ground(page,280);await to(page,552);await ground(page,320);
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);await capture('exchange-A-exit-connected');
+ await to(page,544);await ground(page,320);await standingJump(page,488);await ground(page,280);await to(page,440);await ground(page,280);await standingJump(page,384);await ground(page,256);
+ await to(page,348);await ground(page,256);await standingJump(page,280);await ground(page,288);await to(page,260);await ground(page,288);await standingJump(page,184);await ground(page,288);await to(page,112);await ground(page,320);
+ const final=await state(page);expect(final.hp).toBe(6);expect(final.world.ledger).toEqual(['stairs:phase-0','stairs:phase-1']);expect(final.exitOpen).toBe(true);await capture('exchange-A-physical-return');
+ await writeFile(info.outputPath('exchange-evidence.json'),JSON.stringify({fixture:'one YU01-B entry; bridge, far lever, both contacts and A-stair return use ordinary keyboard input',samples},null,2));
+});
+
+test('roof screen swaps to lower cover and the upper cache is earned with ordinary base jumps',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU01',room:'YU01-C',cleared:true});
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ const lower=await state(page);expect(lower.solids.some((r:any)=>r.id==='world-power:screen-A')).toBe(false);expect(lower.solids.some((r:any)=>r.id==='world-power:roof-shelter-B')).toBe(true);
+ await to(page,104);await ground(page,320);await jump(page,104,160);await ground(page,288);await to(page,184);await ground(page,288);await standingJump(page,248);await ground(page,256);
+ await to(page,296);await ground(page,256);await standingJump(page,408);await ground(page,244);await to(page,416);await ground(page,244);await page.keyboard.press('e');expect((await state(page)).roomStates['YU01-C'].cacheUsed).toBe(true);
+ await page.screenshot({path:info.outputPath('rooftop-upper-salvage.png')});expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('rooftop-evidence.json'),JSON.stringify({fixture:'one YU01-C entry with drone explicitly cleared for route geometry; real drone combat remains in full C03 route',lower,upper:await state(page)},null,2));
+});
+
+for(const reduced of [false,true])test('first transmission prepares both feeds before the warned pulse, '+(reduced?'reduced':'normal')+' effects',async({page},info)=>{
+ test.setTimeout(60000);await encounter(page,{mission:'YU01',room:'YU01-D',reduced});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ expect((await state(page)).world.pulseStartedAt).toBeNull();expect((await state(page)).worldPulse).toBe('safe');
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,136,224);await ground(page,320);await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).world.pulseStartedAt).toBeNull();
+ await to(page,448);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await to(page,408);await ground(page,320);
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).worldPulse).toBe('warning');await capture('first-line-two-preparations');
+ await to(page,448);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world).toEqual(paused.world);await page.getByTestId('resume').click();
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');expect((await state(page)).hp).toBe(6);await capture('first-line-wait-outside-pulse');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5200<2700;});
+ await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(3);
+ await to(page,584);await ground(page,320);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');
+ const final=await state(page);expect(final.hp).toBe(6);expect(final.world.ledger).toEqual(['tx:phase-0','tx:phase-1','tx:phase-2']);await capture('first-line-transmission-map-lit');
+ await writeFile(info.outputPath('first-line-evidence.json'),JSON.stringify({fixture:'one YU01-D entry; two preparations, pulse wait, third contact and terminal earned by ordinary keyboard input',reduced,samples},null,2));
+});
+
 for(const touch of [false,true])test(`SW02 keyboard moves real colliders and waits for Mira, ${touch?'two-touch':'keyboard'} input`,async({page,browserName},info)=>{
  test.skip(touch&&browserName!=='chromium','Two-contact CDP emulation is Chromium-only; physical devices remain a separate gate.');test.setTimeout(45000);
  // One labelled SW02 entry fixture. The safe first key is before scanner activation.

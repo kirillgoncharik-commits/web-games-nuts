@@ -75,6 +75,25 @@ export class WorldArt{
  }
  render(player:Player,a:MissionAttempt,state:RoomState,reduced:boolean){
   const spec=this.room.world!,world=state.world!,g=this.ink,h=this.environment,now=a.clock.now;g.clear();h.clear();
+  for(const wire of spec.powerWires||[]){
+   const on=world.power?.circuit===wire.on,c=wire.on==='A'?0xefc778:0x8bd8c1;
+   h.lineStyle(on?2:1,c,on?.8:.2);
+   for(let n=1;n<wire.points.length;n++){const a=wire.points[n-1],b=wire.points[n];h.lineBetween(a.x,a.y,b.x,b.y);}
+   const end=wire.points.at(-1);if(end){for(let n=0;n<(wire.on==='A'?1:2);n++)h.fillStyle(c,on?1:.25).fillRect(end.x-5+n*8,end.y-5,4,4);}
+  }
+  if(spec.transmissionMap){
+   const {panel:r,nodes}=spec.transmissionMap,done=state.terminal;
+   h.fillStyle(0x182e3b).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0x678192).strokeRect(r.x,r.y,r.width,r.height);
+   // The physical map follows earned preparation contacts and the actual terminal.
+   for(let n=0;n<nodes.length;n++){
+    const point=nodes[n],earned=n<world.phase,c=earned?0x8ddab2:0x728496;
+    if(n){const previous=nodes[n-1];h.lineStyle(earned?3:1,c,earned?.9:.35).lineBetween(previous.x,previous.y,point.x,point.y);}
+    h.fillStyle(c).fillRect(point.x-5,point.y-5,10,10);
+    if(earned)h.lineStyle(1,0x172533).lineBetween(point.x-3,point.y,point.x-1,point.y+2).lineBetween(point.x-1,point.y+2,point.x+3,point.y-3);
+   }
+   h.lineStyle(2,done?0x8ddab2:0xefc778).strokeRect(r.x+8,r.y+r.height-16,r.width-16,8);
+   if(done){h.fillStyle(0x8ddab2).fillRect(r.x+10,r.y+r.height-14,r.width-20,4);h.lineStyle(2,0x8ddab2).lineBetween(r.x+r.width+3,r.y+28,r.x+r.width+15,r.y+28).lineBetween(r.x+r.width+10,r.y+23,r.x+r.width+15,r.y+28).lineBetween(r.x+r.width+10,r.y+33,r.x+r.width+15,r.y+28);}
+  }
   if(spec.keyboard&&world.keyboard){
    const keys=keyboardSolids(spec.keyboard,world.keyboard),phase=keyboardPhase(world.keyboard,now);
    for(const [i,k]of keys.entries()){

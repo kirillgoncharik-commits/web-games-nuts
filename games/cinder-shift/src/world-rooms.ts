@@ -11,6 +11,9 @@ export type WorldRoomSpec={
  pulse?:{x:number;width:number;cycle:number;warning:number;active:number;y?:number;height?:number;shelters?:Rect[];kind?:'water'|'steam';fromPhase?:number;signals?:Point[]};
  powerField?:{id:string;area:Rect;liveOn:Circuit;warningMs:number;untilPhase?:number};
  powerLight?:{area:Rect;on:Circuit};
+ powerWires?:{on:Circuit;points:Point[]}[];
+ transmissionMap?:{panel:Rect;nodes:Point[]};
+ sequenceHints?:string[];
  repair?:Point;landmark:string;wind?:number;
  encounter?:EncounterSpec;latch?:LatchSpec;
  keyboard?:KeyboardSpec;
@@ -55,10 +58,10 @@ const authored:Authored[]=[
   {contactId:'beacon-final-02',origin:{x:40,y:292},beam:platform(64,288,512,8),cover:cover(316,32,32),warningMs:2600,scanMs:800,openMs:2600},
   {contactId:'beacon-final-03',origin:{x:624,y:292},beam:platform(96,288,512,8),cover:cover(580,32,24),warningMs:1000,scanMs:900,openMs:2500}
  ]}}},
- {id:'YU01-A',solids:[cover(184,32,48),platform(328,256,88)],world:{landmark:'courtyard',switches:[{x:112,y:320}],powerObjects:[power('entrance-B','A',468,264,16,56)],sequence:['B']}},
- {id:'YU01-B',solids:[platform(144,280,64),platform(460,280,72)],world:{landmark:'exchange',switches:[{x:112,y:320},{x:536,y:320}],powerObjects:[power('stairs-A','A',248,248,80),power('bridge-B','B',360,252,80)],sequence:['B','A']}},
- {id:'YU01-C',solids:[platform(144,260,104),platform(376,244,96),cover(528,32)],world:{landmark:'rooftop',switches:[{x:112,y:320},{x:568,y:320}],sequenceTargets:[{x:584,y:320}],powerObjects:[power('screen-A','A',312,268,24,52)],sequence:['B']},enemies:[enemy('yu01c-anomaly',440)],cache:{x:416,y:244}},
- {id:'YU01-D',solids:[cover(168,32,40),platform(312,244,88)],world:{landmark:'transmitter',switches:[{x:112,y:320},{x:448,y:320}],powerObjects:[power('tx-screen-A','A',496,268,20,52)],sequence:['B','A','B'],pulse:{x:240,width:56,cycle:5200,warning:1600,active:700}}},
+ {id:'YU01-A',solids:[cover(184,32,48),platform(280,256,112)],world:{landmark:'courtyard',switches:[{x:112,y:320}],powerObjects:[{...power('entrance-B','A',468,264,16,56),role:'door'}],powerLight:{area:platform(292,196,200,36),on:'B'},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:338},{x:476,y:338},{x:476,y:260}]}],sequence:['B']},cache:{x:336,y:256}},
+ {id:'YU01-B',solids:[cover(144,32,64),cover(432,40,80)],world:{landmark:'exchange',switches:[{x:112,y:320},{x:552,y:320}],powerObjects:[power('stairs-A','A',248,288,64),power('stairs-upper-A','A',336,256,64),power('bridge-B','B',248,280,152)],sequence:['B','A'],sequenceTargets:[{x:324,y:280},{x:552,y:320}],sequenceHints:['worlds.exchange.bridge','worlds.exchange.return'],powerWires:[{on:'A',points:[{x:112,y:278},{x:112,y:334},{x:368,y:334},{x:368,y:268}]},{on:'B',points:[{x:552,y:278},{x:552,y:342},{x:324,y:342},{x:324,y:292}]}]}},
+ {id:'YU01-C',solids:[cover(128,32,64),platform(224,256,80),platform(376,244,96),cover(528,32)],world:{landmark:'rooftop',switches:[{x:112,y:320},{x:568,y:320}],sequenceTargets:[{x:584,y:320}],powerObjects:[{...power('screen-A','A',312,268,24,52),role:'door'},power('roof-shelter-B','B',340,288,24,32)],powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:338},{x:352,y:338},{x:352,y:320}]}],sequence:['B']},enemies:[enemy('yu01c-anomaly',440)],cache:{x:416,y:244}},
+ {id:'YU01-D',solids:[cover(168,32,40),platform(312,244,88)],world:{landmark:'transmitter',switches:[{x:112,y:320},{x:448,y:320}],powerObjects:[{...power('tx-screen-A','A',496,268,20,52),role:'door'}],sequence:['B','A','B'],sequenceHints:['worlds.firstLine.0','worlds.firstLine.1','worlds.firstLine.2'],pulse:{x:488,width:80,cycle:5200,warning:1600,active:700,fromPhase:2,signals:[{x:464,y:222},{x:592,y:222}]},transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:338},{x:264,y:338},{x:264,y:312}]},{on:'A',points:[{x:448,y:278},{x:448,y:342},{x:408,y:342},{x:408,y:312}]}]}},
  {id:'YU02-A',solids:[cover(152,40,64),platform(344,252,96)],world:{landmark:'warehouse',switches:[{x:112,y:320},{x:548,y:320}],powerObjects:[power('warehouse-A','A',264,268,20,52),power('lift-B','B',448,220,88)],sequence:['B']},cache:{x:488,y:220}},
  {id:'YU02-B',solids:[platform(144,276,88),platform(436,276,88)],world:{landmark:'crane',switches:[{x:112,y:320},{x:552,y:320}],powerObjects:[power('crane-A','A',272,240,96),power('crane-B','B',320,276,96)],sequence:['B','A'],pulse:{x:380,width:40,cycle:5600,warning:1800,active:700}}},
  {id:'YU02-C',solids:[platform(144,248,104),cover(320,32,48),platform(448,248,80)],world:{landmark:'quay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[power('light-screen-A','A',400,272,20,48)],sequence:['B'],repair:{x:584,y:320}},enemies:[enemy('yu02c-drone',464)],cache:{x:480,y:248}},
