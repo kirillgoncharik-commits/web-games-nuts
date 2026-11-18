@@ -10,7 +10,12 @@ export function createWorldState(id:string,spec:WorldRoomSpec):WorldRoomState{
 }
 export function worldPulse(spec:WorldRoomSpec,now:number){const p=spec.pulse;if(!p)return'safe' as const;const phase=now%p.cycle;return phase<p.warning?'warning' as const:phase<p.warning+p.active?'active' as const:'safe' as const;}
 export function worldPulseArea(spec:WorldRoomSpec):Rect|null{const p=spec.pulse;return p?{x:p.x,y:p.y??274,width:p.width,height:p.height??46}:null;}
-export function worldPulseHits(spec:WorldRoomSpec,body:Rect,now:number){const area=worldPulseArea(spec);return Boolean(area&&worldPulse(spec,now)==='active'&&intersects(body,area)&&!spec.pulse?.shelters?.some(r=>body.x>=r.x&&body.x+body.width<=r.x+r.width&&body.y>=r.y&&body.y+body.height<=r.y+r.height));}
+export function worldPulseHits(spec:WorldRoomSpec,body:Rect,now:number){
+ const area=worldPulseArea(spec);if(!area||worldPulse(spec,now)!=='active'||!intersects(body,area))return false;
+ // Only the part actually in the plume needs shelter; entering from dry ground is safe.
+ const left=Math.max(body.x,area.x),top=Math.max(body.y,area.y),right=Math.min(body.x+body.width,area.x+area.width),bottom=Math.min(body.y+body.height,area.y+area.height);
+ return !spec.pulse?.shelters?.some(r=>left>=r.x&&right<=r.x+r.width&&top>=r.y&&bottom<=r.y+r.height);
+}
 export function powerTarget(spec:WorldRoomSpec,state:WorldRoomState):Point|null{const seq=spec.sequence;if(!seq||state.phase>=seq.length)return null;if(spec.sequenceTargets?.[state.phase])return{...spec.sequenceTargets[state.phase]};return{x:seq.length===1?552:seq.length===2?(state.phase===0?300:552):[264,408,552][state.phase],y:320};}
 export function worldReady(spec:WorldRoomSpec,state:WorldRoomState){return (!state.carry||state.carry.contacts.every(c=>c.active))&&(!spec.sequence||state.phase>=spec.sequence.length);}
 export function worldSolids(spec:WorldRoomSpec,state:WorldRoomState){return [...(state.power?circuitSolids(state.power):[]),...(spec.keyboard&&state.keyboard?keyboardSolids(spec.keyboard,state.keyboard):[]),...(spec.paper&&state.paper?paperSolids(spec.paper,state.paper):[]),...(spec.cloth&&state.cloth?[clothSolid(spec.cloth,state.cloth)]:[]),...(spec.bridge&&state.bridge?bridgeSolids(spec.bridge,state.bridge):[]),...(spec.encounter&&state.encounter?encounterSolids(spec.encounter,state.encounter):[]),...(spec.latch&&state.latch?latchSolids(spec.latch,state.latch):[])];}

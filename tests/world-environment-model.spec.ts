@@ -193,11 +193,12 @@ test('the drawer latch opens only after the original contact and a fresh attempt
  expect(s.carry!.ledger).toEqual(['drawer-lock-01']);stepWorldEnvironment(spec,s,body(240,320),320,1000);expect(s.latch!.open).toBe(true);expect(worldSolids(spec,s).some(r=>r.id?.startsWith('world-latch:'))).toBe(false);
  expect(createWorldState('SW01-A',spec).latch!.open).toBe(false);
 });
-test('the kitchen steam warns before rising and only a fully sheltered crouch avoids the plume',()=>{
+test('kitchen steam warns before rising and the lower shelter stays safe at both edges',()=>{
  const spec=rooms['SW01-B'].world!;
  expect(worldPulseHits(spec,body(304,320),1000)).toBe(false);expect(worldPulseHits(spec,body(304,320),1500)).toBe(true);
  expect(worldPulseHits(spec,{x:293,y:294,width:22,height:26},1500)).toBe(false);
- expect(worldPulseHits(spec,{x:260,y:294,width:22,height:26},1500)).toBe(true);
+ expect(worldPulseHits(spec,{x:260,y:294,width:22,height:26},1500)).toBe(false);expect(worldPulseHits(spec,{x:330,y:294,width:22,height:26},1500)).toBe(false);
+ expect(worldPulseHits(spec,{x:293,y:290,width:22,height:26},1500)).toBe(true);
  expect(worldPulseHits(spec,body(304,244),1500)).toBe(true);expect(worldPulseHits(spec,body(360,320),1500)).toBe(false);
 });
 

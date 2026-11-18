@@ -21,6 +21,8 @@ Build/typecheck, 895 EN/RU ключей, art/source/animation contracts PASS. 15
 
 Source d4fe1c8: selected runtime gate 127 PASS; полный C02 20 комнат/5 миссий, финал и reload PASS. C03 дошёл до YU03-C и остановился: нажатие у рубильника x556.57 попало в радиус ремонта x584 и починило героя вместо смены контура. Исправлен выбор ближайшего доступного repair/switch; добавлена модель для YU02-C/YU03-C. Проверки нового source ожидаются. Route driver и assertions не изменены.
 
+Повтор source 4afbae6: оба полных C02/C03 PASS. Новая проверка пара выявила урон на входной границе кармана: вся фигура ещё не внутри shelter, хотя её часть в plume уже укрыта. Исправлен расчёт пересечения hazard/body; сухая часть тела вне струи не требует shelter. Добавлены проверки обоих краёв и выступающей над укрытием головы. Assertions реального ввода сохранены, новый gate ожидается.
+
 ## Остаток
 
 Все шесть исходных M-RW3 IDs остаются PARTIAL. Далее - подробные ситуации остальных комнат, особенно C03, затем production art/animation/VFX/audio и M-RW4. Fresh C01 earned unlock, физические телефоны и human timing остаются отдельными проверками. Cargo E inactivity unreproduced/open; мобильные кнопки 44/48 px - открытый UI gate. M-COMPARE остаётся после RW4.
