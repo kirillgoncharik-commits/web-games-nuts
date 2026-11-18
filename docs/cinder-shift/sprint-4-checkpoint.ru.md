@@ -1,3 +1,11 @@
+# Продолжение 18.11.2026 - alpha.6
+
+Актуальные [отчёт](alpha6-kitchen-encounters.ru.md) и [доказательства](alpha6-verification.json). Source `20b908046e1266fc12a1ebb03ce206608dc96980`, build `cinder-v1.b31.a1`: 128 selected checks, оба полных C02/C03 маршрута и Chromium/Firefox/WebKit регрессия PASS. Реализованы физическая заслонка SW01-A, паровой карман SW01-B и три фазы SW01-D/SW05-D. Исправлены выбор repair/switch и границы парового укрытия. Архив и все 71 файла сверены; шесть статических кадров просмотрены. Route driver не изменялся.
+
+Все шесть RW3 IDs остаются PARTIAL; продолжать остальные подробные комнаты, особенно C03, затем production art/audio/VFX и RW4. Общий regression сохраняет дефект mobile button 44/48 px, Cargo E inactivity unreproduced/open, dedicated fresh earned unlock и физические устройства открыты. Alpha.6 сохранена в PR10 и не опубликована; live остаётся alpha.5 / `cinder-v1.b28.a1`. Report-only successor не меняет проверенный runtime source.
+
+## История alpha.5
+
 # Продолжение 17.11.2026 - alpha.5
 
 Актуальные [отчёт](alpha5-laundry-balcony.ru.md) и [доказательства](alpha5-verification.json). Source `c7f3b87`, build `cinder-v1.b28.a1`: selected gate 114 checks + C02/C03 full routes PASS; Chromium/Firefox/WebKit PASS. Механизмы SW03/SW04 подключены и проверены. Все шесть RW3 ID PARTIAL; production pack и RW4 остаются открытыми. По отдельной команде Кирилла alpha.5 опубликована; [manifest и 71 файл проверены live](alpha5-production-release-2026-11-17.json).

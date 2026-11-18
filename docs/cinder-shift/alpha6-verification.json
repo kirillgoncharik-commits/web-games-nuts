@@ -1,0 +1,370 @@
+{
+  "version": "0.8.0-alpha.6",
+  "date": "2026-11-18",
+  "timezone": "Europe/Podgorica",
+  "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
+  "source": {
+    "branch": "codex/cinder-shift-final",
+    "sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "tree": "c9ecca1a1d400f7ae7964d79678d7b7245d61099",
+    "pr": 10,
+    "local_equivalent": "5cf9df204e9ca031c80a1c0f1e8f104743327c92",
+    "same_tree_verified": true
+  },
+  "local": {
+    "build": "PASS_FINAL_GAME_FILES_DIRTY_SNAPSHOT",
+    "typecheck": "PASS",
+    "i18n_keys": 895,
+    "art_contracts": "PASS",
+    "regression_models": 152,
+    "targeted_room_and_encounter_models": 50,
+    "preview": "NOT_RUN_LISTEN_EPERM",
+    "counts_overlap": true
+  },
+  "selected_gate": {
+    "run_id": 44288900099,
+    "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900099",
+    "status": "SUCCESS_ALL_FOUR_JOBS",
+    "runtime_job_id": 134748660654,
+    "artifact_job_id": 134752965647,
+    "checks": {
+      "passed": 128,
+      "failed": 0,
+      "packs": [
+        {
+          "name": "cargo_and_environment_input",
+          "passed": 16
+        },
+        {
+          "name": "environment_models",
+          "passed": 27
+        },
+        {
+          "name": "menu_art_ru_en",
+          "passed": 6
+        },
+        {
+          "name": "previous_rw3",
+          "passed": 29
+        },
+        {
+          "name": "world_models_and_ui",
+          "passed": 50
+        }
+      ]
+    },
+    "world_routes": {
+      "c02-small-world": {
+        "job_id": 134748660469,
+        "status": "PASS",
+        "rooms": 20,
+        "missions": 5,
+        "final_fact_and_reload": "PASS",
+        "artifact_id": 14419834386
+      },
+      "c03-adriatic-1986": {
+        "job_id": 134748660482,
+        "status": "PASS",
+        "rooms": 20,
+        "missions": 5,
+        "final_fact_and_reload": "PASS",
+        "artifact_id": 14419529470
+      }
+    },
+    "runtime_evidence_artifact": 14420911652
+  },
+  "cross_browser": {
+    "run_id": 44288899858,
+    "status": "SUCCESS_ALL_FOUR_JOBS",
+    "source_merge": "913dbc59fd678a7ceb1329eeb3bc698e248851c9",
+    "comparison_with_runtime": "GitHub compare ahead by one merge commit; files=[]",
+    "models": {
+      "job_id": 134748819377,
+      "passed": 136
+    },
+    "chromium": {
+      "job_id": 134748820072,
+      "passed": 71,
+      "failed": 0,
+      "skipped": 0
+    },
+    "firefox": {
+      "job_id": 134748819719,
+      "passed": 70,
+      "failed": 0,
+      "skipped": 1
+    },
+    "webkit": {
+      "job_id": 134748819974,
+      "passed": 70,
+      "failed": 0,
+      "skipped": 1
+    },
+    "skip_reason": "Existing Chromium CDP two-contact touch case; physical phones remain NOT RUN",
+    "scope": "Existing encounter, equipment, feedback and UI regression; four new phase/environment input cases run in selected Chromium gate."
+  },
+  "artifact": {
+    "id": 14421726063,
+    "name": "cinder-shift-31-1",
+    "build_id": "cinder-v1.b31.a1",
+    "source_sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "source_dirty": false,
+    "zip_bytes": 4549558,
+    "github_zip_digest": "sha256:a4e8d1b39453e4afaa780a087e465c0027112fa86dc9752293545d8bd41ed6d0",
+    "tar_sha256": "0ceeba0f003bab1accbedbb6e3d19d82575a18375a492708b013da1df6b1410e",
+    "manifest_sha256": "de62093c5fd315ccc0f2ba1d2dd0c548b149d83bc62adcdf6f52ac8f7f3b63b1",
+    "manifest_files": 71,
+    "manifest_resource_bytes": 6578018,
+    "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900099/artifacts/14421726063",
+    "local_download_checksum": "PASS_ZIP_TAR_AND_ALL_71_MANIFEST_FILES",
+    "deployed": false
+  },
+  "evidence_artifacts": [
+    {
+      "id": 14421726063,
+      "name": "cinder-shift-31-1",
+      "digest": "sha256:a4e8d1b39453e4afaa780a087e465c0027112fa86dc9752293545d8bd41ed6d0",
+      "zip_bytes": 4549558
+    },
+    {
+      "id": 14420911652,
+      "name": "cinder-runtime-checks",
+      "digest": "sha256:8d5a9bb6f7ffdab5ef9efaec5a241683ed2e572d3d47a208ea9f2680d30b4162",
+      "zip_bytes": 17829237
+    },
+    {
+      "id": 14419834386,
+      "name": "cinder-route-c02-small-world",
+      "digest": "sha256:644854ff201f1475a3f0a9de65d7e1fe677b76fffff08897ac4a04cbd564c77c",
+      "zip_bytes": 2558
+    },
+    {
+      "id": 14419529470,
+      "name": "cinder-route-c03-adriatic-1986",
+      "digest": "sha256:278d071862a9f41cfaa9cf2d8c0a8e4877aee46cf688d293d91e0803e89796d5",
+      "zip_bytes": 2562
+    }
+  ],
+  "visual_review": {
+    "source_sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "environment_frames": "REVIEWED_EXACT_SOURCE_SIX_FRAME_CONTACT_SHEET",
+    "frames": [
+      "SW01-A open drawer gate",
+      "SW01-B crouching lower steam shelter",
+      "SW01-D first scan and current physical cover",
+      "SW01-D second scan and shifted cover",
+      "SW05-D reversed second scan",
+      "SW05-D all three contacts and open panel"
+    ],
+    "limits": "Static frames reviewed. Human animation, audio, timing and formal art acceptance NOT RUN.",
+    "formal_art_acceptance": false
+  },
+  "history": [
+    {
+      "source": "d4fe1c8e943088919cbb134914aa21a522292e8f",
+      "result": "127 selected checks and C02 PASS; C03 stopped at YU03-C because repair intercepted switch interaction.",
+      "fix": "Select the nearest eligible repair or switch; added YU02-C/YU03-C model coverage. Full route driver and assertions unchanged."
+    },
+    {
+      "source": "4afbae654c7ca0ecba7bcf63efca9d75d27b9a81",
+      "result": "Both full C02/C03 routes PASS; selected input pack failed at steam shelter entry edge.",
+      "fix": "Shelter only needs to contain the hazardous intersection with the body; dry body portion outside the plume requires no shelter. Added both edge and exposed-head models; real-input assertion retained."
+    },
+    {
+      "source": "20b908046e1266fc12a1ebb03ce206608dc96980",
+      "result": "128 selected checks, C02/C03 full routes and cross-browser regression PASS. Immutable artifact emitted."
+    }
+  ],
+  "workflow_snapshot": {
+    "observed_at": "2026-11-18T11:14:17.579Z",
+    "runs": [
+      {
+        "id": 44288899884,
+        "name": "Cinder Shift Sprint 2 presentation",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 43,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899884/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899884/logs",
+        "workflow_id": 419130287
+      },
+      {
+        "id": 44288899858,
+        "name": "Cinder Shift rework candidate",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 88,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899858/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899858/logs",
+        "workflow_id": 415845333
+      },
+      {
+        "id": 44288900099,
+        "name": "Cinder Shift artifact",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 31,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900099/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900099/logs",
+        "workflow_id": 420010610
+      },
+      {
+        "id": 44288900128,
+        "name": "Cinder Shift full routes and saves",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 78,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900128/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288900128/logs",
+        "workflow_id": 416416509
+      },
+      {
+        "id": 44288899783,
+        "name": "Cinder Shift check",
+        "status": "in_progress",
+        "conclusion": null,
+        "run_number": 217,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899783/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899783/logs",
+        "workflow_id": 408210173
+      },
+      {
+        "id": 44288899814,
+        "name": "Cinder Shift Sprint 2 runtime media",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 37,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899814/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899814/logs",
+        "workflow_id": 419194618
+      },
+      {
+        "id": 44288899941,
+        "name": "Cinder Shift reachable build curve",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 53,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899941/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899941/logs",
+        "workflow_id": 418218759
+      },
+      {
+        "id": 44288899890,
+        "name": "Cinder Shift rework combat flow",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 85,
+        "jobs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899890/jobs",
+        "logs_url": "https://api.github.com/repos/kirillgoncharik-commits/web-games-nuts/actions/runs/44288899890/logs",
+        "workflow_id": 415967937
+      }
+    ]
+  },
+  "broader_regression": {
+    "status": "NO_OVERALL_WORKFLOW_PASS_CLAIM",
+    "latest_general_run": 44288899783,
+    "jobs": [
+      {
+        "id": 134748828889,
+        "name": "check (1)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829204,
+        "name": "check (4)",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 134748829236,
+        "name": "check (2)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829267,
+        "name": "check (6)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829274,
+        "name": "check (11)",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 134748829365,
+        "name": "check (8)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829436,
+        "name": "check (7)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829450,
+        "name": "check (12)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829491,
+        "name": "check (3)",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 134748829533,
+        "name": "check (10)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829546,
+        "name": "check (9)",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 134748829604,
+        "name": "check (5)",
+        "status": "in_progress",
+        "conclusion": null
+      }
+    ],
+    "known_mobile_button_issue": {
+      "observed_height": 44,
+      "required_height": 48,
+      "current_failure_job": 134748829204,
+      "status": "OPEN_CONFIRMED_BASELINE_AND_ALPHA6",
+      "baseline_alpha5_run": 44131732060,
+      "baseline_alpha5_jobs": [
+        134210356750,
+        134210357476,
+        134210357596
+      ],
+      "current_failed_cases": 8,
+      "current_failed_file": "tests/m04-layout.spec.ts"
+    }
+  },
+  "production": {
+    "version": "0.8.0-alpha.5",
+    "build_id": "cinder-v1.b28.a1",
+    "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "changed": false
+  },
+  "limits": [
+    "All six original RW3 IDs remain PARTIAL; full production art/animation/VFX/audio remains incomplete.",
+    "Full C02/C03 routes begin with a labelled legacy C01 unlock fixture. Dedicated fresh earned-unlock proof remains NOT RUN.",
+    "Human timing/acceptance and physical phones NOT RUN.",
+    "Cargo E inactivity remains unreproduced/open.",
+    "Remaining detailed rooms, especially C03, and RW4 localization/storage/update/rollback/performance/device/channel gates remain open.",
+    "M-COMPARE stays a separate later stage."
+  ]
+}
