@@ -26,8 +26,8 @@ async function walk(page:Page,target:number,allowExit=false){
   if(allowExit&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
-  if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=s.simMs%pulse.cycle;
-   if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){await page.keyboard.up('a');await page.keyboard.up('d');await page.waitForFunction(({cycle,start,end})=>{const s=(window as any).__CINDER__(),p=s.simMs%cycle;return p>=start&&p<=end;},{cycle:pulse.cycle,start:pulse.warning+pulse.active,end:pulse.cycle-crossing});continue;}
+  if(pulse&&feetNow>274&&(pulse.fromPhase===undefined||s.world.phase>=pulse.fromPhase)){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
+   if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){await page.keyboard.up('a');await page.keyboard.up('d');await page.waitForFunction(({cycle,start,end})=>{const s=(window as any).__CINDER__(),p=(s.worldPulseElapsed??s.simMs)%cycle;return p>=start&&p<=end;},{cycle:pulse.cycle,start:pulse.warning+pulse.active,end:pulse.cycle-crossing});continue;}
   }
   const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);

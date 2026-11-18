@@ -7,7 +7,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createEnemy,enemyRect} from '../games/cinder-shift/src/enemies';
 import {intersects} from '../games/cinder-shift/src/geometry';
-import {createWorldState,actWorld,stepWorld,worldReady,worldContext,powerTarget,worldSolids,stepWorldEnvironment} from '../games/cinder-shift/src/session/world-runtime';
+import {createWorldState,actWorld,stepWorld,worldReady,worldContext,powerTarget,worldSolids,stepWorldEnvironment,worldPulse} from '../games/cinder-shift/src/session/world-runtime';
 import {validateWorldSave,validateSave} from '../games/cinder-shift/src/session/save';
 import {state} from './helpers';
 
@@ -41,7 +41,7 @@ for(const design of newCampaignRegistry.rooms)test(`model contract ${design.room
    s.carry.item.state='resting';s.carry.item.position={x,y:312};expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},facing,now)?.action).toBe('pickup');expect(actWorld(spec,s,{x,y:320},{x:x-11,y:276,width:22,height:44},facing,now)?.action).toBe('throw');
    for(let i=0;i<60&&!c.active;i++){now+=16;tick(x,now);}expect(c.active).toBe(true);
   }expect(new Set(s.carry.ledger).size).toBe(spec.carry!.contacts.length);}
- if(s.power){for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,3500)?.action).toBe('switch');const target=powerTarget(spec,s)!;expect(actWorld(spec,s,target,{x:target.x-11,y:target.y-44,width:22,height:44},1,3500)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
+ if(s.power){let now=3500;for(const [phase,wanted] of spec.sequence!.entries()){const switchPoint=spec.switches![0];if(s.power.circuit!==wanted)expect(actWorld(spec,s,switchPoint,{x:switchPoint.x-11,y:276,width:22,height:44},1,now)?.action).toBe('switch');const target=powerTarget(spec,s)!;for(let n=0;n<500&&worldPulse(spec,now,s)!=='safe';n++)now+=16;expect(worldPulse(spec,now,s)).toBe('safe');expect(actWorld(spec,s,target,{x:target.x-11,y:target.y-44,width:22,height:44},1,now)?.action).toBe('activate');}expect(s.ledger).toHaveLength(spec.sequence!.length);}
  expect(worldReady(spec,s)).toBe(true);const before=JSON.stringify(s.ledger);stepWorld(spec,s,{x:64,y:320},1,10000,16,[]);expect(JSON.stringify(s.ledger)).toBe(before);
 });
 for(const world of newCampaignIds)test(`${world}: isolated economy, entry, Retry and completed-save validation`,()=>{

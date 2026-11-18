@@ -5,7 +5,8 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
-import {createWorldState,stepWorld,actWorld,worldReady,worldSolids,stepWorldEnvironment,worldPulseHits,worldContext} from '../games/cinder-shift/src/session/world-runtime';
+import {createWorldState,stepWorld,actWorld,worldReady,worldSolids,stepWorldEnvironment,worldPulse,worldPulseElapsed,worldPulseHits,worldContext,worldPowerFieldPhase,worldPowerFieldHits,powerTarget} from '../games/cinder-shift/src/session/world-runtime';
+import {createPowerRoom,circuitSolids,switchCircuit} from '../games/cinder-shift/src/session/world-mechanics';
 
 const spec=rooms['SW02-A'].world!.keyboard!;
 const body=(x:number,feet:number)=>({x:x-11,y:feet-44,width:22,height:44});
@@ -210,4 +211,71 @@ test('adjacent power switches and repair pockets choose the nearest eligible obj
   expect(worldContext(spec,s,{x:point.x+4,y:320},0,false)).toBe('switch');
  }
  const spec=rooms['YU03-C'].world!,s=createWorldState('YU03-C',spec);expect(worldContext(spec,s,{x:556.57,y:320},0,true)).toBe('switch');expect(worldContext(spec,s,{x:568,y:320},0,true)).toBe('repair');
+});
+
+test('traction has a complete first warning, a bounded live area and an immediate physical disconnect',()=>{
+ const spec=rooms['YU03-A'].world!,s=createWorldState('YU03-A',spec);
+ stepWorldEnvironment(spec,s,body(64,320),320,100);
+ expect(worldPowerFieldPhase(spec,s,1699)).toBe('warning');expect(worldPowerFieldPhase(spec,s,1700)).toBe('live');
+ expect(worldPowerFieldHits(spec,s,body(248,320),1700)).toBe(true);
+ expect(worldPowerFieldHits(spec,s,body(220,320),1700)).toBe(false);expect(worldPowerFieldHits(spec,s,body(248,304),1700)).toBe(false);
+ expect(actWorld(spec,s,{x:112,y:320},body(112,320),1,1700)?.action).toBe('switch');
+ expect(worldPowerFieldPhase(spec,s,1700)).toBe('isolated');expect(worldPowerFieldHits(spec,s,body(248,320),1700)).toBe(false);
+ expect(worldSolids(spec,s).some(r=>r.id==='world-power:traction-A')).toBe(false);
+});
+test('turning traction back on starts a new warning instead of resuming a hidden live timer',()=>{
+ const spec=rooms['YU03-A'].world!,s=createWorldState('YU03-A',spec),p={x:112,y:320};stepWorldEnvironment(spec,s,body(64,320),320,0);
+ actWorld(spec,s,p,body(112,320),1,5000);expect(s.powerFieldArmedAt).toBeNull();
+ actWorld(spec,s,p,body(112,320),1,9000);expect(s.powerFieldArmedAt).toBe(9000);
+ expect(worldPowerFieldPhase(spec,s,10599)).toBe('warning');expect(worldPowerFieldPhase(spec,s,10600)).toBe('live');
+});
+test('circuit geometry has stable object IDs and a switch refuses both overlap and withdrawing a rider surface',()=>{
+ const s=createPowerRoom([{id:'upper-A',solidOn:'A',rect:{x:200,y:248,width:80,height:12}},{id:'lower-B',solidOn:'B',rect:{x:200,y:288,width:80,height:12}}]);
+ const before=structuredClone(s);expect(switchCircuit(s,body(240,248))).toBe(false);expect(s).toEqual(before);
+ expect(switchCircuit(s,body(240,300))).toBe(false);expect(s).toEqual(before);
+ expect(circuitSolids(s)).toEqual([{x:200,y:248,width:80,height:12,id:'world-power:upper-A'}]);
+ expect(switchCircuit(s,body(100,320))).toBe(true);expect(circuitSolids(s)).toEqual([{x:200,y:288,width:80,height:12,id:'world-power:lower-B'}]);
+ expect(switchCircuit(s,body(240,288))).toBe(false);expect(s.switches).toBe(1);expect(s.circuit).toBe('B');
+});
+test('train doors and target platforms change circuit while the permanent return line remains',()=>{
+ const room=rooms['YU03-B'],spec=room.world!,s=createWorldState(room.id,spec);
+ const fixed=structuredClone(room.solids);expect(worldSolids(spec,s).some(r=>r.id==='world-power:train-door-A')).toBe(true);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,100);expect(worldSolids(spec,s).some(r=>r.id==='world-power:train-door-B')).toBe(true);
+ expect(worldSolids(spec,s).some(r=>r.id==='world-power:train-door-A')).toBe(false);
+ expect(worldSolids(spec,s).find(r=>r.id==='world-power:train-B')?.y).toBe(288);expect(powerTarget(spec,s)).toEqual({x:300,y:288});
+ actWorld(spec,s,{x:300,y:288},body(300,288),1,200);actWorld(spec,s,{x:568,y:320},body(568,320),1,300);
+ expect(s.power!.circuit).toBe('A');expect(room.solids).toEqual(fixed);expect(room.solids[0]).toMatchObject({x:0,y:320,width:640});
+ expect(spec.switches).toEqual([{x:112,y:320},{x:568,y:320}]);expect(s.ledger).toEqual(['train:phase-0']);
+});
+test('substation secures traction before the pulse starts, then retains the exact three transmission IDs',()=>{
+ const spec=rooms['YU03-D'].world!,s=createWorldState('YU03-D',spec);stepWorldEnvironment(spec,s,body(64,320),320,100);
+ expect(worldPulse(spec,20000,s)).toBe('safe');expect(s.pulseStartedAt).toBeNull();
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,21000);
+ expect(actWorld(spec,s,{x:264,y:320},body(264,320),1,22000)?.ids).toEqual(['isolator:phase-0']);
+ expect(s.pulseStartedAt).toBe(22000);expect(worldPulse(spec,23799,s)).toBe('warning');expect(worldPulse(spec,23800,s)).toBe('active');expect(worldPulse(spec,24500,s)).toBe('safe');
+ expect(worldPulseHits(spec,body(264,320),23800,s)).toBe(true);expect(worldPulseHits(spec,body(308,320),23800,s)).toBe(false);
+ actWorld(spec,s,{x:448,y:320},body(448,320),1,22500);expect(s.power!.circuit).toBe('A');expect(worldPowerFieldPhase(spec,s,50000)).toBe('isolated');
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,23800)).toBeNull();
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,24500)?.action).toBe('activate');
+ actWorld(spec,s,{x:448,y:320},body(448,320),1,24600);actWorld(spec,s,{x:552,y:320},body(552,320),1,24700);
+ expect(worldReady(spec,s)).toBe(true);expect(s.ledger).toEqual(['isolator:phase-0','isolator:phase-1','isolator:phase-2']);
+ expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,24800)).toBeNull();expect(s.ledger).toHaveLength(3);
+});
+test('gated pulse and traction use deterministic simulation time and reset with the mission entry',()=>{
+ const spec=rooms['YU03-D'].world!;
+ const run=(fps:number)=>{const s=createWorldState('YU03-D',spec),clock=new SimulationClock(),phases:string[]=[];let switched=false,confirmed=false;
+  for(let n=0;n<fps*7;n++)clock.advance(1000/fps,()=>{stepWorldEnvironment(spec,s,body(64,320),320,clock.now);if(clock.now>=2000&&!switched){actWorld(spec,s,{x:112,y:320},body(112,320),1,clock.now);switched=true;}if(clock.now>=3000&&!confirmed){actWorld(spec,s,{x:264,y:320},body(264,320),1,clock.now);confirmed=true;}phases.push(worldPowerFieldPhase(spec,s,clock.now)+':'+worldPulse(spec,clock.now,s));});
+  const pause=structuredClone(s);stepWorldEnvironment(spec,s,body(64,320),320,clock.now);expect(s).toEqual(pause);expect(worldPulseElapsed(spec,clock.now,s)).toBe(clock.now-s.pulseStartedAt!);return{s,phases};};
+ expect(run(30)).toEqual(run(60));
+ const entry={mission_id:'YU03' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]};
+ const a=new MissionAttempt('mission',entry);a.room('YU03-D').world!.phase=1;stepWorldEnvironment(spec,a.room('YU03-D').world!,body(64,320),320,8000);
+ const fresh=new MissionAttempt('mission',entry);expect(fresh.room('YU03-D').world).toEqual(createWorldState('YU03-D',spec));expect(fresh.room().world!.power!.circuit).toBe('A');
+});
+test('tunnel signal pockets stay outside the real pulse in either circuit and repair is after the crossing',()=>{
+ const room=rooms['YU03-C'],spec=room.world!,s=createWorldState(room.id,spec);
+ expect(spec.pulse!.signals).toHaveLength(2);
+ for(const x of [216,344,584])for(const now of [1600,1800,2299])expect(worldPulseHits(spec,body(x,320),now,s)).toBe(false);
+ expect(worldPulseHits(spec,body(256,320),1800,s)).toBe(true);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,0);expect(spec.pulse!.signals).toHaveLength(2);expect(worldPulseHits(spec,body(256,320),1800,s)).toBe(true);
+ expect(spec.repair!.x).toBeGreaterThan(spec.pulse!.x+spec.pulse!.width);expect(room.enemies.map(e=>e.id)).toEqual(['yu03c-drone']);
 });

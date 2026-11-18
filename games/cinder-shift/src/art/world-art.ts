@@ -3,7 +3,7 @@ import type Phaser from 'phaser';
 import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
-import {powerTarget,worldReady,worldPulse,worldPulseArea} from '../session/world-runtime';
+import {powerTarget,worldReady,worldPulse,worldPulseArea,worldPowerFieldPhase} from '../session/world-runtime';
 import {keyboardSolids,keyboardPhase,paperPhase,lampPhase,clothSolid,airPhase} from '../session/world-environment';
 
 const palettes={
@@ -68,7 +68,7 @@ export class WorldArt{
   }
   // Visible lip/material at every real collision surface, including the safe lower route.
   const materials=scene.add.graphics().setDepth(2.2);
-  for(const s of room.solids){if(s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:')||s.id?.startsWith('world-encounter:')||s.id?.startsWith('world-latch:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
+  for(const s of room.solids){if(s.id?.startsWith('world-power:')||s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:')||s.id?.startsWith('world-encounter:')||s.id?.startsWith('world-latch:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
   this.ink=scene.add.graphics().setDepth(6.5);this.environment=scene.add.graphics().setDepth(3.2);
   if(room.world?.switches)for(const point of room.world.switches)this.labels.push(scene.add.text(point.x,point.y-62,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae',backgroundColor:'#172533'}).setOrigin(.5).setDepth(6.6));
   if(room.world?.keyboard)for(const text of ['I','II'])this.keyLabels.push(scene.add.text(0,0,text,{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae'}).setOrigin(.5,0).setDepth(3.3));
@@ -155,20 +155,33 @@ export class WorldArt{
    h.lineStyle(1,c,.22).strokeRect(r.x,r.y,r.width,r.height);
   }
   if(spec.wind){const drift=reduced?0:(now/60)%24;h.lineStyle(1,0xd9e3c4,.18);for(let n=0;n<5;n++)h.lineBetween(48+n*128+drift*spec.wind,116+n%3*28,76+n*128+drift*spec.wind,116+n%3*28);}
-  const pulse=worldPulse(spec,now),p=spec.pulse;if(p){const water=p.kind==='water',steam=p.kind==='steam',area=worldPulseArea(spec)!,active=water?0x76c6e5:steam?0xd5e4de:0xff985f,warning=water?0xa7d8e7:steam?0xa6ccbd:0xffc67a;
+  if(spec.powerLight){const r=spec.powerLight.area,on=world.power?.circuit===spec.powerLight.on;h.fillStyle(0xf0d3a1,on?.18:.03).fillRect(r.x,r.y,r.width,r.height);for(let x=r.x+16;x<r.x+r.width;x+=64){h.lineStyle(2,on?0xf0d3a1:0x8998a5,.8).lineBetween(x,r.y,x+24,r.y);}}
+  if(spec.powerField){const r=spec.powerField.area,phase=worldPowerFieldPhase(spec,world,now),c=phase==='isolated'?0x8ddab2:phase==='warning'?0xf3ce8e:0xff985f;
+   h.fillStyle(c,phase==='live'?.3:.08).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,c,.9).strokeRect(r.x,r.y,r.width,r.height);
+   for(let x=r.x+5;x<r.x+r.width-5;x+=12)h.lineBetween(x,r.y+3,x+5,r.y+r.height-3);
+   const x=r.x-18,y=r.y-36;h.fillStyle(0x172b38).fillRect(x-10,y-18,20,24);h.lineStyle(2,c).strokeRect(x-10,y-18,20,24);
+   if(phase==='isolated')h.lineBetween(x-6,y-6,x-1,y).lineBetween(x-1,y,x+7,y-12);
+   else h.lineBetween(x+3,y-14,x-4,y-6).lineBetween(x-4,y-6,x+4,y-6).lineBetween(x+4,y-6,x-3,y+2);
+  }
+  const pulse=worldPulse(spec,now,world),p=spec.pulse;if(p){const water=p.kind==='water',steam=p.kind==='steam',area=worldPulseArea(spec)!,active=water?0x76c6e5:steam?0xd5e4de:0xff985f,warning=water?0xa7d8e7:steam?0xa6ccbd:0xffc67a;
    h.fillStyle(pulse==='active'?active:warning,pulse==='active'?.32:pulse==='warning'?.16:.04).fillRect(area.x,area.y,area.width,area.height);h.lineStyle(2,pulse==='active'?active:warning,pulse==='safe'?.22:.8).strokeRect(area.x,area.y,area.width,area.height);
    if(water){for(let n=0;n<3;n++){const y=282+n*12;h.lineBetween(p.x+4,y,p.x+12,y+3).lineBetween(p.x+12,y+3,p.x+20,y).lineBetween(p.x+20,y,p.x+p.width-4,y+3);}h.fillStyle(warning).fillTriangle(p.x-12,316,p.x-4,316,p.x-8,308);h.fillTriangle(p.x+p.width+4,316,p.x+p.width+12,316,p.x+p.width+8,308);}
    else if(steam){for(let n=0;n<4;n++){const y=area.y+16+n*25;h.lineStyle(2,active,pulse==='active'?.65:.25).lineBetween(area.x+8,y,area.x+18,y-6).lineBetween(area.x+18,y-6,area.x+32,y);}
     for(const r of p.shelters||[]){h.fillStyle(0x152d38).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0x91d9c6).lineBetween(r.x,r.y,r.x+r.width,r.y);h.lineBetween(r.x+r.width/2-5,r.y+8,r.x+r.width/2,r.y+14).lineBetween(r.x+r.width/2,r.y+14,r.x+r.width/2+7,r.y+5);}
    }
    else if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}
+   for(const s of p.signals||[]){h.lineStyle(2,0x8998a5).lineBetween(s.x,s.y+25,s.x,320);h.fillStyle(0x172b38).fillRect(s.x-10,s.y-20,20,48);
+    for(const [n,c]of [0xff985f,0xf3ce8e,0x8ddab2].entries()){const on=n===(pulse==='active'?0:pulse==='warning'?1:2);h.fillStyle(c,on?1:.16).fillCircle(s.x,s.y-12+n*14,4);}
+    // Shape and lamp position remain readable when motion/flashes are reduced.
+    const y=s.y-12+(pulse==='active'?0:pulse==='warning'?1:2)*14;h.lineStyle(1,0xe8d6b2).strokeRect(s.x-6,y-6,12,12);
+   }
   }
   if(world.carry){const carry=world.carry,item=carry.item;for(const c of carry.contacts){g.fillStyle(0x132532).fillRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);g.lineStyle(c.open?3:2,c.active?0x8ddab2:c.open?0xf3ce8e:0x797d94).strokeRect(c.rect.x,c.rect.y,c.rect.width,c.rect.height);if(c.active){g.lineBetween(c.rect.x+4,c.rect.y+14,c.rect.x+10,c.rect.y+21);g.lineBetween(c.rect.x+10,c.rect.y+21,c.rect.x+20,c.rect.y+6);}else if(c.open)g.fillStyle(0xf3ce8e).fillRect(c.rect.x+8,c.rect.y+8,8,12);else g.lineBetween(c.rect.x+4,c.rect.y+4,c.rect.x+20,c.rect.y+24);}
    const {x,y}=item.position;g.fillStyle(item.kind==='conductor'?0x91d9c6:0xf2ce94);if(item.kind==='lid'){g.fillEllipse(x,y,26,12);g.lineStyle(2,0x6c6a70).strokeEllipse(x,y,26,12);}else{g.fillRoundedRect(x-10,y-10,20,20,3);g.lineStyle(2,0x655b67).strokeRoundedRect(x-10,y-10,20,20,3);}
    if(spec.lamp){g.fillStyle(0xc8e4dc).fillTriangle(x-7,y+7,x+7,y-7,x+7,y+7);g.lineStyle(2,0x6d919c).lineBetween(x-7,y+7,x+7,y-7);}
    if(item.state==='held'){const handY=player.feet-(player.crouching?16:27),f=player.facing;g.lineStyle(5,0x81b3c3).lineBetween(player.x+f*4,handY-4,x-f*7,y);g.fillStyle(0xe8c1a2).fillRect(x-f*10,y-3,5,5);}
   }
-  if(world.power){const power=world.power,c=power.circuit==='A'?0xefc778:0x8bd8c1;for(const obj of power.objects){const r=obj.rect,active=obj.solidOn===power.circuit;h.lineStyle(active?3:1,active?c:0x5d7186,active?1:.45);if(active)h.fillStyle(0x54747f,.8).fillRect(r.x,r.y,r.width,r.height);h.strokeRect(r.x,r.y,r.width,r.height);if(!active)for(let x=r.x;x<r.x+r.width;x+=12)h.lineBetween(x,r.y,x+4,r.y);}
+  if(world.power){const power=world.power,c=power.circuit==='A'?0xefc778:0x8bd8c1;for(const obj of power.objects){const r=obj.rect,active=obj.solidOn===power.circuit;h.lineStyle(active?3:1,active?c:0x5d7186,active?1:.45);if(active)h.fillStyle(0x54747f,.8).fillRect(r.x,r.y,r.width,r.height);h.strokeRect(r.x,r.y,r.width,r.height);if(obj.role==='door'){if(active){h.lineStyle(2,c).lineBetween(r.x+3,r.y+5,r.x+r.width-3,r.y+r.height-5).lineBetween(r.x+r.width-3,r.y+5,r.x+3,r.y+r.height-5);}else{h.lineStyle(2,0x8ddab2).lineBetween(r.x-7,r.y+r.height/2,r.x+r.width+7,r.y+r.height/2);h.lineBetween(r.x+r.width+2,r.y+r.height/2-4,r.x+r.width+7,r.y+r.height/2).lineBetween(r.x+r.width+2,r.y+r.height/2+4,r.x+r.width+7,r.y+r.height/2);}}else if(!active)for(let x=r.x;x<r.x+r.width;x+=12)h.lineBetween(x,r.y,x+4,r.y);}
    for(const s of spec.switches||[]){g.fillStyle(0x294759).fillRect(s.x-18,s.y-42,36,36);g.lineStyle(3,c).strokeRect(s.x-18,s.y-42,36,36);g.lineBetween(s.x,s.y-12,s.x+(power.circuit==='A'?-10:10),s.y-34);for(let n=0;n<(power.circuit==='A'?1:2);n++)g.fillStyle(c).fillCircle(s.x-6+n*12,s.y-50,3);}
    const target=powerTarget(spec,world);if(target){const wanted=spec.sequence![world.phase],cx=target.x;g.fillStyle(0x142c38).fillRect(cx-14,target.y-44,28,36);g.lineStyle(3,wanted===power.circuit&&pulse==='safe'?0x8ddab2:0xefc778).strokeRect(cx-14,target.y-44,28,36);for(let n=0;n<(wanted==='A'?1:2);n++)g.fillStyle(0xf1d8ae).fillCircle(cx-5+n*10,target.y-32,3);g.fillStyle(0xf1d8ae).fillTriangle(cx-5,target.y-21,cx+5,target.y-21,cx,target.y-15);}
    for(let n=0;n<(spec.sequence?.length||0);n++)g.fillStyle(n<world.phase?0x8ddab2:0x53647a).fillRect(298+n*16,66,10,5);

@@ -133,3 +133,65 @@ for(const mission of ['SW01','SW05'] as const)test(mission+' has three earned sc
  const final=await state(page);expect(final.world.carry.ledger).toEqual(mission==='SW01'?['dock-phase-01','dock-phase-02','dock-phase-03']:['beacon-final-01','beacon-final-02','beacon-final-03']);expect(final.hp).toBeGreaterThan(0);await capture('phase-final-exit');
  await writeFile(info.outputPath('phased-encounter-evidence.json'),JSON.stringify({fixture:'one labelled mission finale entry; carry, every phase and exit earned through ordinary input',mission,samples},null,2));
 });
+
+test('traction disconnect removes its real gate and makes the service crossing safe through ordinary input',async({page},info)=>{
+ await encounter(page,{mission:'YU03',room:'YU03-A'});await page.waitForFunction(()=>(window as any).__CINDER__().worldPowerField==='live');
+ const live=await state(page);expect(live.hp).toBe(6);expect(live.solids.some((r:any)=>r.id==='world-power:traction-A')).toBe(true);await page.screenshot({path:info.outputPath('traction-live-entry.png')});
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ const isolated=await state(page);expect(isolated.worldPowerField).toBe('isolated');expect(isolated.solids.some((r:any)=>r.id==='world-power:traction-A')).toBe(false);
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world).toEqual(paused.world);await page.getByTestId('resume').click();
+ await page.keyboard.down('s');await to(page,552);await ground(page,320);await page.keyboard.up('s');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ const crossed=await state(page);expect(crossed.hp).toBe(6);expect(crossed.exitOpen).toBe(true);expect(crossed.world.ledger).toEqual(['traction:phase-0']);await page.screenshot({path:info.outputPath('traction-safe-crossing.png')});
+ await writeFile(info.outputPath('traction-evidence.json'),JSON.stringify({fixture:'one YU03-A entry; power, crossing and contact use ordinary keyboard input',live,isolated,crossed},null,2));
+});
+
+test('a warned live traction section really damages Mira when she enters without disconnecting it',async({page},info)=>{
+ await encounter(page,{mission:'YU03',room:'YU03-A'});await to(page,220);await ground(page,320);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPowerField==='live');const before=await state(page);expect(before.hp).toBe(6);
+ await page.keyboard.down('d');await expect.poll(async()=>(await state(page)).hp).toBeLessThan(6);await page.keyboard.up('d');const hit=await state(page);
+ expect(hit.world.power.circuit).toBe('A');expect(hit.hp).toBeGreaterThan(0);await page.screenshot({path:info.outputPath('traction-live-hit.png')});
+ await writeFile(info.outputPath('traction-hit-evidence.json'),JSON.stringify({fixture:'one YU03-A entry; wait for warning, then ordinary movement into live rails',before,hit},null,2));
+});
+
+test('train doors, light and actual supports follow both earned circuit states without moving the world',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU03',room:'YU03-B'});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};await capture('train-A-entry');
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ expect((await state(page)).solids.some((r:any)=>r.id==='world-power:train-door-A')).toBe(false);expect((await state(page)).solids.some((r:any)=>r.id==='world-power:train-door-B')).toBe(true);
+ await jump(page,120,184);await ground(page,288);await to(page,210);await ground(page,288);await standingJump(page,300);await ground(page,288);await capture('train-B-bridge');
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).solids).toEqual(paused.solids);await page.getByTestId('resume').click();
+ await to(page,320);await ground(page,288);await standingJump(page,384);await ground(page,288);await to(page,436);await ground(page,288);await standingJump(page,500);await ground(page,244);await to(page,584);await ground(page,320);
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
+ expect((await state(page)).solids.some((r:any)=>r.id==='world-power:train-door-A')).toBe(true);expect((await state(page)).solids.some((r:any)=>r.id==='world-power:train-door-B')).toBe(false);
+ await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);await capture('train-A-return');
+ expect((await state(page)).world.ledger).toEqual(['train:phase-0','train:phase-1']);expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('train-evidence.json'),JSON.stringify({fixture:'one YU03-B entry; both switches, bridge crossing and contacts earned with keyboard',samples},null,2));
+});
+
+test('tunnel signals permit a warned crossing between dry pockets in either power circuit',async({page},info)=>{
+ await encounter(page,{mission:'YU03',room:'YU03-C',cleared:true});await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await to(page,216);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');const waiting=await state(page);expect(waiting.hp).toBe(6);await page.screenshot({path:info.outputPath('tunnel-red-signal.png')});
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5000<2800;});await standingJump(page,312);await ground(page,288);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');const pocket=await state(page);expect(pocket.hp).toBe(6);await page.screenshot({path:info.outputPath('tunnel-dry-pocket.png')});
+ await to(page,556);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ expect((await state(page)).world.repaired).toBe(false);expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('tunnel-evidence.json'),JSON.stringify({fixture:'one labelled YU03-C entry with its drone cleared; real combat remains in full C03 route; ordinary power and crossing input',waiting,pocket,final:await state(page)},null,2));
+});
+
+test('substation earns traction isolation before its fresh pulse warning and confirms all three original contacts',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU03',room:'YU03-D'});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ expect((await state(page)).worldPulse).toBe('safe');expect((await state(page)).world.pulseStartedAt).toBeNull();
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,136,224);await ground(page,320);await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ const armed=await state(page);expect(armed.worldPowerField).toBe('isolated');expect(armed.worldPulse).toBe('warning');expect(armed.world.pulseStartedAt).not.toBeNull();await capture('substation-crossing-secured');
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).world.pulseStartedAt).toBe(paused.world.pulseStartedAt);await page.getByTestId('resume').click();
+ await to(page,304);await ground(page,320);await to(page,448);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');expect((await state(page)).worldPowerField).toBe('isolated');
+ await to(page,408);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);await capture('substation-isolator-set');
+ await to(page,448);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await to(page,552);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(3);
+ await to(page,584);await ground(page,320);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');await capture('substation-transmission');
+ expect((await state(page)).world.ledger).toEqual(['isolator:phase-0','isolator:phase-1','isolator:phase-2']);expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('substation-evidence.json'),JSON.stringify({fixture:'one YU03-D entry; all switching, preparation and transmission use ordinary keyboard input',samples},null,2));
+});
