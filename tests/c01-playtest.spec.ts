@@ -3,9 +3,26 @@ import {state,roomA,x} from './helpers';
 import {airlockDriver} from './airlock-gameplay';
 import {installMediaCapture,startMedia,finishMedia} from './runtime-media';
 import {writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
 
 test.afterEach(async({page},info)=>{
  if(info.status!==info.expectedStatus)console.error('C01 failure state',JSON.stringify({url:page.url(),state:await state(page).catch(()=>null),body:await page.locator('body').innerText().catch(()=>null)}));
+});
+
+test('published A/B manifests identify the exact experiment and served bundles',async({request})=>{
+ test.skip(!process.env.CINDER_BASE_URL?.startsWith('https://'),'Only applies to an HTTPS deployment');
+ const comparison=await request.get('/comparison.json');expect(comparison.ok()).toBe(true);
+ const pair=await comparison.json();expect(pair.source_sha).toBe(process.env.CINDER_EXPECTED_SOURCE_SHA);expect(pair.base_sha).toBe('1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db');
+ const databases=[];
+ for(const variant of ['a','b']){
+  const response=await request.get(`/${variant}/games/cinder-shift/build-manifest.json`);expect(response.ok()).toBe(true);
+  expect(response.headers()['cache-control']).toContain('no-transform');expect(response.headers()['content-security-policy']).toContain("connect-src 'self'");
+  const manifest=await response.json();expect(manifest.source_sha).toBe(pair.source_sha);expect(manifest.source_dirty).toBe(false);expect(manifest.experiment.variant).toBe(variant.toUpperCase());databases.push(manifest.experiment.save_namespace);
+  for(const file of manifest.files.filter((f:any)=>f.path==='index.html'||/^assets\/index-.*\.(js|css)$/.test(f.path))){
+   const served=await request.get(`/${variant}/games/cinder-shift/${file.path}`);expect(served.ok()).toBe(true);expect(createHash('sha256').update(await served.body()).digest('hex')).toBe(file.sha256);
+  }
+ }
+ expect(new Set(databases).size).toBe(2);
 });
 
 async function start(page:Page,variant:'a'|'b',navigate=true){
