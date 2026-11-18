@@ -1,3 +1,11 @@
+# Продолжение 18.11.2026 - alpha.8
+
+18.11.2026. [Отчёт](alpha8-audio-and-touch.ru.md), [доказательства](alpha8-verification.json). Source `753f344`, build `cinder-v1.b37.a2`: 178 selected checks, оба полных маршрута и три браузера PASS. Общая регрессия 478/478; все восемь workflow / 50 latest jobs SUCCESS после targeted C03 повтора. Исправлены нулевая громкость при остановленном AudioContext и кнопки компактных меню 44/48 px. Первый C03 route failure сохранён; локальный и targeted CI повтор на тех же исходниках PASS. Архив и 71 файлов сверены. Alpha.8 не опубликована; production alpha.5 сохраняется.
+
+Все шесть RW3 IDs PARTIAL. Продолжить подробные ситуации C03 (YU01/YU02/YU04/YU05), production art/animation/VFX/audio и RW4. Стабильность C03 автопрохождения, Cargo E inactivity, dedicated fresh earned unlock, physical devices и human timing остаются открытыми. Отдельный C01 эксперимент не входит в эту итерацию. Снимок общего CI - в ведомости.
+
+## История alpha.7
+
 # Продолжение 18.11.2026 - alpha.7
 
 [Отчёт](alpha7-electric-train.ru.md), [ведомость](alpha7-verification.json). Source `1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db`, build `cinder-v1.b36.a1`: 142 selected checks, C02/C03 full routes и Chromium/Firefox/WebKit PASS. Реализованы ситуации YU03-A/B/C/D; стабильные power collider IDs, запрет смены опоры под героем, видимые за Мирой power controls и защита от переключения соседнего рубильника при закрытом контакте. Сверены архив и 71 файл, просмотрены exact-source кадры.
