@@ -1,7 +1,7 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-18",
+  "updated_at": "2026-11-18T15:39:54.095029+00:00",
   "reference": "Alpha.8 audio and compact touch-target fixes verified. Selected, both world routes and three-browser engineering gates PASS; first C03 route failure retained. RW3 production and RW4 remain incomplete.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
@@ -545,19 +545,19 @@
   ],
   "active_workstream": {
     "milestone": "M-RW3_BEFORE_M_RW4",
-    "status": "ENGINEERING_QA_PASS_RW3_PARTIAL_NOT_RC",
-    "version": "0.8.0-alpha.8",
+    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
+    "version": "0.8.0-alpha.9",
     "coverage": "docs/cinder-shift/rework-coverage.json",
-    "checkpoint": "docs/cinder-shift/alpha8-audio-and-touch.ru.md",
-    "verification_report": "docs/cinder-shift/alpha8-verification.json",
+    "checkpoint": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
+    "verification_report": "docs/cinder-shift/alpha9-verification.json",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "Alpha.5 remains published; verified alpha.8 development artifact is not deployed.",
-    "runtime_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
+    "publication_scope": "Alpha.5 remains published; alpha.9 is in development and browser CI is queued.",
+    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1047,317 +1047,106 @@
     "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   },
   "active_development_successor": {
-    "version": "0.8.0-alpha.8",
-    "status": "ENGINEERING_QA_PASS_RW3_PARTIAL_NOT_RC",
+    "version": "0.8.0-alpha.9",
+    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
     "scope": [
-      "Explicit zero audio bus level takes effect with a stopped render clock",
-      "Compact main menu and campaign map action targets remain at least 48px",
-      "Targeted audio and layout CI gates preserve previous thresholds"
+      "YU01-A entrance, powered stair lights and reachable upper salvage",
+      "YU01-B actual bridge contact and reversible stair/bridge geometry",
+      "YU01-C connected upper route and lower physical cover",
+      "YU01-D two safe preparations before fresh pulse warning, signals and physical transmission map"
     ],
-    "report": "docs/cinder-shift/alpha8-audio-and-touch.ru.md",
-    "verification_report": "docs/cinder-shift/alpha8-verification.json",
+    "report": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
+    "verification_report": "docs/cinder-shift/alpha9-verification.json",
     "local_checks": {
-      "build": "PASS_PRECOMMIT",
+      "build": "PASS_CLEAN_EQUIVALENT_TREE",
       "typecheck": "PASS",
-      "i18n_keys": 901,
-      "art_contracts": "PASS",
-      "chromium": {
-        "audio": 3,
-        "menu_layouts": 33,
-        "menu_art": 6,
-        "failed_after_fix": 0
+      "i18n_keys": 906,
+      "art_source_animation_contracts": "PASS",
+      "models": {
+        "passed": 149,
+        "failed": 0,
+        "log_sha256": "2f57b78256f8f3a6daa929be3204e7fa7316cf06b68bf1be6b7211e9957424bc"
       },
-      "source_dirty": true,
-      "source_note": "Local red/green snapshots before runtime commit; immutable exact-source CI is separate.",
-      "servers_closed": true,
-      "clean_equivalent_build": "PASS_AFTER_RUNTIME_COMMIT",
-      "c03_repeat": {
-        "status": "PASS",
-        "rooms": 20,
-        "missions": 5,
-        "facts": 5,
-        "final_and_reload": "PASS",
-        "source_sha": "5ad71242e307cabb0bb0d8fb291d0cb34389ff71",
-        "source_dirty": false,
-        "tree_equivalent_to_remote": true,
-        "seconds_approximate": 246,
-        "report_sha256": "d91463e41d63b9cf6e9144fd84d9fe7e2cce3aae5ce53bbd7b7a44587e33a19c"
-      }
+      "world_models": {
+        "passed": 86,
+        "failed": 0
+      },
+      "build_id": "local.20261118T153636991Z",
+      "source_sha": "970f518671576e1f93333c2b4f394e3c3005bbf8",
+      "source_dirty": false,
+      "manifest_files": 71,
+      "browser": "NOT_RUN_LOCAL_LISTEN_EPERM",
+      "browser_blocker": "sandbox denies listen 127.0.0.1:4175; model tests use CINDER_BASE_URL only to disable webServer, with no browser or network involved",
+      "candidate_artifact": false
     },
-    "browser_checks": "PASS_SELECTED_AND_THREE_BROWSER_REGRESSION",
-    "runtime_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
-    "runtime_tree_sha": "dc6a77ce44d731d6a7952a1247bd6983ed1a92f6",
+    "browser_checks": "PENDING_CI",
+    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
+    "runtime_tree_sha": "35fd408a2ef78a53312f97eb60b67d806391b148",
     "deployed": false,
     "accepted": false,
     "ci": {
-      "run_id": 44312276624,
-      "status": "SUCCESS_ALL_FOUR_JOBS_AFTER_TARGETED_C03_RETRY",
-      "runtime_job_id": 134829197495,
-      "checks": {
-        "passed": 178,
-        "failed": 0,
-        "packs": [
-          {
-            "name": "cargo_and_environment_input",
-            "passed": 22
-          },
-          {
-            "name": "audio_settings",
-            "passed": 3
-          },
-          {
-            "name": "menu_layouts",
-            "passed": 33
-          },
-          {
-            "name": "environment_models",
-            "passed": 35
-          },
-          {
-            "name": "menu_art_ru_en",
-            "passed": 6
-          },
-          {
-            "name": "previous_rw3",
-            "passed": 29
-          },
-          {
-            "name": "world_models_and_ui",
-            "passed": 50
-          }
-        ]
-      },
-      "runtime_evidence_artifact": 14430599022,
-      "world_routes": {
-        "c02-small-world": {
-          "job_id": 134829196658,
-          "status": "PASS",
-          "rooms": 20,
-          "missions": 5,
-          "final_fact_and_reload": "PASS",
-          "artifact_id": 14431306164,
-          "facts": 3,
-          "artifact_checksum": "PASS"
-        },
-        "c03-adriatic-1986": {
-          "first_job_id": 134829197442,
-          "first_status": "FAIL_WALK552_YU05B",
-          "retry_job_id": 134835507773,
-          "status": "PASS_ON_TARGETED_RETRY_SAME_SOURCE",
-          "rooms": 20,
-          "missions": 5,
-          "facts": 5,
-          "final_fact_and_reload": "PASS",
-          "artifact_id": 14432061526,
-          "artifact_checksum": "PASS"
-        }
-      },
-      "artifact_job_id": 134838380366,
-      "run_attempt": 2,
-      "runtime_checks_attempt": 1
+      "status": "IN_PROGRESS",
+      "artifact_run_id": 44337561152,
+      "cross_browser_run_id": 44337560933,
+      "full_regression_run_id": 44337561019,
+      "full_routes_run_id": 44337561002,
+      "workflow_results": "PENDING",
+      "ordinary_input": "PENDING",
+      "screenshots": "PENDING",
+      "immutable_artifact": "PENDING"
     },
-    "cross_browser": {
-      "run_id": 44312276611,
-      "status": "SUCCESS_ALL_FOUR_JOBS",
-      "source_merge": "0c37b537d2ec60277bf8685032c98178a81700ba",
-      "comparison_with_runtime": "GitHub compare ahead by one merge commit; files=[]",
-      "models": {
-        "job_id": 134829196395,
-        "passed": 144
-      },
-      "chromium": {
-        "job_id": 134829196639,
-        "passed": 80,
-        "failed": 0,
-        "skipped": 0
-      },
-      "firefox": {
-        "job_id": 134829196917,
-        "passed": 79,
-        "failed": 0,
-        "skipped": 1
-      },
-      "skip_reason": "Existing Chromium CDP two-contact touch case skipped in Firefox/WebKit; physical phones NOT RUN",
-      "webkit": {
-        "job_id": 134829196853,
-        "passed": 79,
-        "failed": 0,
-        "skipped": 1
-      }
-    },
-    "artifact": {
-      "id": 14432262437,
-      "name": "cinder-shift-37-2",
-      "build_id": "cinder-v1.b37.a2",
-      "source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
-      "source_dirty": false,
-      "zip_bytes": 4551803,
-      "github_zip_digest": "sha256:5274e5d56bb3c36072544dc77e0996193ef36fa0f7ec503dd146f28928bf10c4",
-      "tar_sha256": "d5761de03f46ed2be363fce7ea406a18273c38e3802a83f787eeb9d68c707619",
-      "manifest_sha256": "18a0cceceb7750a0f8e4a3a9e3f651627f1c8987d7a1bc80428a545c0628af55",
-      "manifest_files": 71,
-      "manifest_resource_bytes": 6585494,
-      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44312276624/artifacts/14432262437",
-      "local_download_checksum": "PASS_ZIP_TAR_AND_ALL_MANIFEST_FILES",
-      "deployed": false
-    },
-    "verified_parent_runtime_sha": "1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db"
+    "verified_parent_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
   },
   "active_iteration": {
-    "version": "0.8.0-alpha.8",
-    "status": "ENGINEERING_QA_PASS_RW3_PARTIAL_NOT_RC",
+    "version": "0.8.0-alpha.9",
+    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
     "scope": [
-      "Explicit zero audio bus level takes effect with a stopped render clock",
-      "Compact main menu and campaign map action targets remain at least 48px",
-      "Targeted audio and layout CI gates preserve previous thresholds"
+      "YU01-A entrance, powered stair lights and reachable upper salvage",
+      "YU01-B actual bridge contact and reversible stair/bridge geometry",
+      "YU01-C connected upper route and lower physical cover",
+      "YU01-D two safe preparations before fresh pulse warning, signals and physical transmission map"
     ],
-    "report": "docs/cinder-shift/alpha8-audio-and-touch.ru.md",
-    "verification_report": "docs/cinder-shift/alpha8-verification.json",
+    "report": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
+    "verification_report": "docs/cinder-shift/alpha9-verification.json",
     "local_checks": {
-      "build": "PASS_PRECOMMIT",
+      "build": "PASS_CLEAN_EQUIVALENT_TREE",
       "typecheck": "PASS",
-      "i18n_keys": 901,
-      "art_contracts": "PASS",
-      "chromium": {
-        "audio": 3,
-        "menu_layouts": 33,
-        "menu_art": 6,
-        "failed_after_fix": 0
+      "i18n_keys": 906,
+      "art_source_animation_contracts": "PASS",
+      "models": {
+        "passed": 149,
+        "failed": 0,
+        "log_sha256": "2f57b78256f8f3a6daa929be3204e7fa7316cf06b68bf1be6b7211e9957424bc"
       },
-      "source_dirty": true,
-      "source_note": "Local red/green snapshots before runtime commit; immutable exact-source CI is separate.",
-      "servers_closed": true,
-      "clean_equivalent_build": "PASS_AFTER_RUNTIME_COMMIT",
-      "c03_repeat": {
-        "status": "PASS",
-        "rooms": 20,
-        "missions": 5,
-        "facts": 5,
-        "final_and_reload": "PASS",
-        "source_sha": "5ad71242e307cabb0bb0d8fb291d0cb34389ff71",
-        "source_dirty": false,
-        "tree_equivalent_to_remote": true,
-        "seconds_approximate": 246,
-        "report_sha256": "d91463e41d63b9cf6e9144fd84d9fe7e2cce3aae5ce53bbd7b7a44587e33a19c"
-      }
+      "world_models": {
+        "passed": 86,
+        "failed": 0
+      },
+      "build_id": "local.20261118T153636991Z",
+      "source_sha": "970f518671576e1f93333c2b4f394e3c3005bbf8",
+      "source_dirty": false,
+      "manifest_files": 71,
+      "browser": "NOT_RUN_LOCAL_LISTEN_EPERM",
+      "browser_blocker": "sandbox denies listen 127.0.0.1:4175; model tests use CINDER_BASE_URL only to disable webServer, with no browser or network involved",
+      "candidate_artifact": false
     },
-    "browser_checks": "PASS_SELECTED_AND_THREE_BROWSER_REGRESSION",
-    "runtime_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
-    "runtime_tree_sha": "dc6a77ce44d731d6a7952a1247bd6983ed1a92f6",
+    "browser_checks": "PENDING_CI",
+    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
+    "runtime_tree_sha": "35fd408a2ef78a53312f97eb60b67d806391b148",
     "deployed": false,
     "accepted": false,
     "ci": {
-      "run_id": 44312276624,
-      "status": "SUCCESS_ALL_FOUR_JOBS_AFTER_TARGETED_C03_RETRY",
-      "runtime_job_id": 134829197495,
-      "checks": {
-        "passed": 178,
-        "failed": 0,
-        "packs": [
-          {
-            "name": "cargo_and_environment_input",
-            "passed": 22
-          },
-          {
-            "name": "audio_settings",
-            "passed": 3
-          },
-          {
-            "name": "menu_layouts",
-            "passed": 33
-          },
-          {
-            "name": "environment_models",
-            "passed": 35
-          },
-          {
-            "name": "menu_art_ru_en",
-            "passed": 6
-          },
-          {
-            "name": "previous_rw3",
-            "passed": 29
-          },
-          {
-            "name": "world_models_and_ui",
-            "passed": 50
-          }
-        ]
-      },
-      "runtime_evidence_artifact": 14430599022,
-      "world_routes": {
-        "c02-small-world": {
-          "job_id": 134829196658,
-          "status": "PASS",
-          "rooms": 20,
-          "missions": 5,
-          "final_fact_and_reload": "PASS",
-          "artifact_id": 14431306164,
-          "facts": 3,
-          "artifact_checksum": "PASS"
-        },
-        "c03-adriatic-1986": {
-          "first_job_id": 134829197442,
-          "first_status": "FAIL_WALK552_YU05B",
-          "retry_job_id": 134835507773,
-          "status": "PASS_ON_TARGETED_RETRY_SAME_SOURCE",
-          "rooms": 20,
-          "missions": 5,
-          "facts": 5,
-          "final_fact_and_reload": "PASS",
-          "artifact_id": 14432061526,
-          "artifact_checksum": "PASS"
-        }
-      },
-      "artifact_job_id": 134838380366,
-      "run_attempt": 2,
-      "runtime_checks_attempt": 1
+      "status": "IN_PROGRESS",
+      "artifact_run_id": 44337561152,
+      "cross_browser_run_id": 44337560933,
+      "full_regression_run_id": 44337561019,
+      "full_routes_run_id": 44337561002,
+      "workflow_results": "PENDING",
+      "ordinary_input": "PENDING",
+      "screenshots": "PENDING",
+      "immutable_artifact": "PENDING"
     },
-    "cross_browser": {
-      "run_id": 44312276611,
-      "status": "SUCCESS_ALL_FOUR_JOBS",
-      "source_merge": "0c37b537d2ec60277bf8685032c98178a81700ba",
-      "comparison_with_runtime": "GitHub compare ahead by one merge commit; files=[]",
-      "models": {
-        "job_id": 134829196395,
-        "passed": 144
-      },
-      "chromium": {
-        "job_id": 134829196639,
-        "passed": 80,
-        "failed": 0,
-        "skipped": 0
-      },
-      "firefox": {
-        "job_id": 134829196917,
-        "passed": 79,
-        "failed": 0,
-        "skipped": 1
-      },
-      "skip_reason": "Existing Chromium CDP two-contact touch case skipped in Firefox/WebKit; physical phones NOT RUN",
-      "webkit": {
-        "job_id": 134829196853,
-        "passed": 79,
-        "failed": 0,
-        "skipped": 1
-      }
-    },
-    "artifact": {
-      "id": 14432262437,
-      "name": "cinder-shift-37-2",
-      "build_id": "cinder-v1.b37.a2",
-      "source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
-      "source_dirty": false,
-      "zip_bytes": 4551803,
-      "github_zip_digest": "sha256:5274e5d56bb3c36072544dc77e0996193ef36fa0f7ec503dd146f28928bf10c4",
-      "tar_sha256": "d5761de03f46ed2be363fce7ea406a18273c38e3802a83f787eeb9d68c707619",
-      "manifest_sha256": "18a0cceceb7750a0f8e4a3a9e3f651627f1c8987d7a1bc80428a545c0628af55",
-      "manifest_files": 71,
-      "manifest_resource_bytes": 6585494,
-      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44312276624/artifacts/14432262437",
-      "local_download_checksum": "PASS_ZIP_TAR_AND_ALL_MANIFEST_FILES",
-      "deployed": false
-    }
+    "verified_parent_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",

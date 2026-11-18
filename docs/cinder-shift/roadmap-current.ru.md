@@ -1,4 +1,12 @@
-# Текущая разработка - alpha.8, аудио и компактные меню
+# Текущая разработка — alpha.9, Дом связи
+
+18.11.2026. [Отчёт](alpha9-house-of-communications.ru.md), [ведомость](alpha9-verification.json). Runtime `1f865d1`, tree `35fd408`: четыре комнаты YU01, настоящая высота контакта моста, крыша и подготовка первой передачи. Чистая локальная сборка, 906 EN/RU ключей, art contracts, 149 моделей и 86 world/environment models PASS. Browser input, screenshots, полные маршруты и immutable artifact **PENDING CI**. Локальный сервер запрещён sandbox (`listen EPERM`). Production остаётся alpha.5.
+
+Все шесть RW3 IDs PARTIAL. После проверки YU01 продолжить подробные YU02/YU04/YU05, production art/animation/VFX/audio и RW4. C01 эксперимент ведётся отдельно.
+
+## Последняя полностью проверенная итерация
+
+# Alpha.8, аудио и компактные меню
 
 18.11.2026. [Отчёт](alpha8-audio-and-touch.ru.md), [доказательства](alpha8-verification.json). Source `753f344`, build `cinder-v1.b37.a2`: 178 selected checks, оба полных маршрута и три браузера PASS. Общая регрессия 478/478; все восемь workflow / 50 latest jobs SUCCESS после targeted C03 повтора. Исправлены нулевая громкость при остановленном AudioContext и кнопки компактных меню 44/48 px. Первый C03 route failure сохранён; локальный и targeted CI повтор на тех же исходниках PASS. Архив и 71 файлов сверены. Alpha.8 не опубликована; production alpha.5 сохраняется.
 

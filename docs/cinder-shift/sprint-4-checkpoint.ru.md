@@ -1,3 +1,11 @@
+# Продолжение 18.11.2026 — alpha.9, Дом связи
+
+[Отчёт](alpha9-house-of-communications.ru.md), [ведомость](alpha9-verification.json). Remote runtime `1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320`, local `970f518671576e1f93333c2b4f394e3c3005bbf8`, точный общий tree `35fd408a2ef78a53312f97eb60b67d806391b148`. Чистая локальная сборка, contracts и 149 моделей PASS; 86 world/environment models PASS. Четыре комнаты YU01 подключены; проверка ввода, screenshots, оба полных маршрута и designated artifact **PENDING CI**. Обычный C03 route использует настоящий подъём на мост, не ослабляя проверку высоты контакта.
+
+Далее: получить результаты artifact/cross-browser CI `44337561152` / `44337560933`, исправить найденное и осмотреть кадры. Затем YU02/YU04/YU05 и production pack. Локальный браузерный сервер запрещён sandbox; исходники сохранены в PR10. Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5. Отдельный C01 эксперимент не переносился.
+
+## История alpha.8
+
 # Продолжение 18.11.2026 - alpha.8
 
 18.11.2026. [Отчёт](alpha8-audio-and-touch.ru.md), [доказательства](alpha8-verification.json). Source `753f344`, build `cinder-v1.b37.a2`: 178 selected checks, оба полных маршрута и три браузера PASS. Общая регрессия 478/478; все восемь workflow / 50 latest jobs SUCCESS после targeted C03 повтора. Исправлены нулевая громкость при остановленном AudioContext и кнопки компактных меню 44/48 px. Первый C03 route failure сохранён; локальный и targeted CI повтор на тех же исходниках PASS. Архив и 71 файлов сверены. Alpha.8 не опубликована; production alpha.5 сохраняется.
