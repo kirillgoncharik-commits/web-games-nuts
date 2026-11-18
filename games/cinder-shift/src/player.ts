@@ -1,3 +1,4 @@
+import {movementProfile} from './playtest/profile';
 import type Phaser from 'phaser';
 import config from '../game.config.json' with {type:'json'};
 import type {Frame} from './input';
@@ -13,8 +14,8 @@ export class Player{
   get feet(){return this.sprite.y+22;}
   get muzzle(){return {x:this.x+this.facing*19,y:this.feet-(this.crouching?15:28)};}
   rect():Rect{return {x:this.body.x,y:this.body.y,width:this.body.width,height:this.body.height};}
-  step(frame:Frame,now:number,ms:number,solids:Rect[],dashAllowed:boolean,airDash=false){
-    const b=this.body,m=config.movement,grounded=b.blocked.down||b.touching.down;
+  step(frame:Frame,now:number,ms:number,solids:Rect[],dashAllowed:boolean,airDash=false,experiment=false){
+    const b=this.body,grounded=b.blocked.down||b.touching.down,m=movementProfile(experiment,grounded,config.movement);
     if(grounded){this.lastGrounded=now;this.jumpConsumed=false;}
     if(frame.pressed.has('jump'))this.jumpQueued=now;
     const standing={x:this.x-11,y:this.feet-m.standing_height,width:22,height:m.standing_height-.1};

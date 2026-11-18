@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import {buildMetadata} from './scripts/build-metadata.mjs';
+const playtest=process.env.CINDER_C01_PLAYTEST||'off';
+if(!['off','A','B'].includes(playtest))throw Error('invalid_c01_playtest_variant');
 const metadata=process.env.CINDER_BUILD_META?JSON.parse(process.env.CINDER_BUILD_META):buildMetadata();
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
@@ -19,12 +21,13 @@ export default defineConfig({
     transformIndexHtml: {
       order: 'pre',
       handler(html) {
+        if(playtest!=='off')return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/,'');
         if (target === 'web') return html;
         return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
           .replace('href="/games/"', 'href="https://nuts.bid/games/"');
       }
     }
   }],
-  define: { __BUILD_META__:JSON.stringify(metadata), __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
+  define: { __C01_PLAYTEST__:JSON.stringify(playtest), __BUILD_META__:JSON.stringify(metadata), __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
   build: { outDir: '../../dist/cinder-shift', emptyOutDir: true, chunkSizeWarningLimit: 1600 },
 });
