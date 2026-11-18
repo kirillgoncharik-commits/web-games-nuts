@@ -25,6 +25,9 @@ jobs:
         run: npx playwright test --config=playwright.c01.config.ts --reporter=line,json
         env:
           PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/c01-playtest.json
+      - name: Print browser failure context
+        if: failure()
+        run: find test-results -name error-context.md -exec cat {} \;
       - uses: actions/upload-artifact@v4
         if: always()
         with:
