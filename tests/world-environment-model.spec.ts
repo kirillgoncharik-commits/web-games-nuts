@@ -37,6 +37,9 @@ test('switchboard requires the real bridge height and retains reachable switches
 });
 test('rooftop circuit swaps a screen for real lower cover while the upper salvage route stays reachable',()=>{
  const spec=rooms['YU01-C'].world!,state=createWorldState('YU01-C',spec);
+ const gate=worldSolids(spec,state).find(r=>r.id==='world-power:screen-A')!;
+ const launchColumn={x:gate.x-23,y:gate.y-44,width:22,height:320-gate.y+44};
+ expect(rooms['YU01-C'].solids.filter(r=>r.y<320).some(r=>intersects(launchColumn,r))).toBe(false);
  expect(clearLine({x:440,y:292},{x:280,y:292},worldSolids(spec,state))).toBe(false);
  actWorld(spec,state,{x:112,y:320},body(112,320),1,0);
  const cover=worldSolids(spec,state).find(r=>r.id==='world-power:roof-shelter-B')!;

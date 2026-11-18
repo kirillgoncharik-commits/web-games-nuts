@@ -6,6 +6,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
+import {standingJump,ground} from './route-helpers';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -49,6 +50,12 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
 }
 async function approachContext(page:Page,action:'switch'|'activate',point:{x:number;y:number}){
+ // This contact now sits on a working bridge above a crouchable underpass.
+ // Follow its visible entry ledge; horizontal walking alone stays below it.
+ const entry=await state(page);
+ if(entry.room==='YU01-B'&&point.y===280&&entry.player.y+22>282){
+  await walk(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
+ }
  const x=contextPoint(await state(page),action,point);await walk(page,x);
  const landed=await state(page),feet=landed.player.y+22;
  if(feet<point.y-2){
