@@ -15,5 +15,7 @@ export function buildMetadata(){
     channel==='verification'?`verify.${process.env.GITHUB_RUN_ID}.a${process.env.GITHUB_RUN_ATTEMPT}`:
     `local.${built_at_utc.replace(/[-:.]/g,'')}${source_dirty?'.dirty':''}`;
   if(designated&&source_dirty)throw Error('candidate_requires_clean_source');
-  return {version,release_id:version,milestone:'M-RW3',source_sha,source_dirty,build_id,built_at_utc,channel,notes_id:version};
+  const variant=process.env.CINDER_C01_PLAYTEST||'off';
+  if(!['off','A','B'].includes(variant))throw Error('invalid_c01_playtest_variant');
+  return {...(variant!=='off'?{experiment:{id:'c01-gate-v1',variant,base_sha:'1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db',rooms:['A'],end_room:'B',analytics:'local-only',save_namespace:'cinder-shift-r01.c01-gate-v1.'+variant}}:{}),version,release_id:version,milestone:'M-RW3',source_sha,source_dirty,build_id:variant==='off'?build_id:build_id+'.c01-'+variant,built_at_utc,channel,notes_id:version};
 }

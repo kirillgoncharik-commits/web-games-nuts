@@ -2,15 +2,15 @@ import type Phaser from 'phaser';
 import type {Point} from '../room-data';
 import {signals} from './lighting';
 
-export type CombatCue='muzzle'|'wall'|'armour'|'hit'|'shield'|'charge'|'shutdown'|'ability'|'ready';
+export type CombatCue='land'|'muzzle'|'wall'|'armour'|'hit'|'shield'|'charge'|'shutdown'|'ability'|'ready';
 
 type Cue=Point&{kind:CombatCue;born:number;direction:number};
 const color={
-  muzzle:signals.shot,wall:signals.warning,armour:signals.shot,hit:signals.damage,
+  land:signals.energy,muzzle:signals.shot,wall:signals.warning,armour:signals.shot,hit:signals.damage,
   shield:signals.energy,charge:signals.repair,shutdown:signals.warning,ability:signals.violet,ready:signals.energy
 } satisfies Record<CombatCue,number>;
-const lifetimes={muzzle:66,wall:126,armour:145,hit:130,shield:195,charge:210,shutdown:310,ability:240,ready:320};
-const priorities={muzzle:0,wall:0,armour:1,hit:2,shield:3,charge:3,shutdown:3,ability:2,ready:2};
+const lifetimes={land:150,muzzle:66,wall:126,armour:145,hit:130,shield:195,charge:210,shutdown:310,ability:240,ready:320};
+const priorities={land:0,muzzle:0,wall:0,armour:1,hit:2,shield:3,charge:3,shutdown:3,ability:2,ready:2};
 
 export class CombatEffects{
   private cues:Cue[]=[];
@@ -30,7 +30,9 @@ export class CombatEffects{
     for(const cue of this.cues){
       const progress=Math.max(0,(now-cue.born)/lifetimes[cue.kind]),alpha=.9*(1-progress);
       const x=Math.round(cue.x),y=Math.round(cue.y);
-      if(cue.kind==='muzzle'){
+      if(cue.kind==='land'){
+        if(!reduced){const spread=4+progress*12;graphics.lineStyle(1,color.land,alpha*.6).lineBetween(x-spread,y-1,x-3,y-1).lineBetween(x+3,y-1,x+spread,y-1);}
+      }else if(cue.kind==='muzzle'){
         graphics.fillStyle(color.muzzle,alpha).fillRect(x-2,y-2,5,4);
         if(!reduced)graphics.lineStyle(1,color.muzzle,alpha).lineBetween(x,y,x+cue.direction*9,y);
       }else if(cue.kind==='armour'){
