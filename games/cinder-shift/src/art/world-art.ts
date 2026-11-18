@@ -188,6 +188,17 @@ export class WorldArt{
    else if(steam){for(let n=0;n<4;n++){const y=area.y+16+n*25;h.lineStyle(2,active,pulse==='active'?.65:.25).lineBetween(area.x+8,y,area.x+18,y-6).lineBetween(area.x+18,y-6,area.x+32,y);}
     for(const r of p.shelters||[]){h.fillStyle(0x152d38).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0x91d9c6).lineBetween(r.x,r.y,r.x+r.width,r.y);h.lineBetween(r.x+r.width/2-5,r.y+8,r.x+r.width/2,r.y+14).lineBetween(r.x+r.width/2,r.y+14,r.x+r.width/2+7,r.y+5);}
    }
+   else if(p.kind==='load'){
+    // The complete load lane and its suspended silhouette remain visible with
+    // the lamps off and with reduced motion; the hazard uses this same area.
+    const bottom=area.y+area.height,loadY=pulse==='active'?bottom-24:area.y;
+    h.lineStyle(2,0x9aafbd,.8).lineBetween(area.x-5,area.y-18,area.x+area.width+5,area.y-18);
+    for(const x of [area.x+5,area.x+area.width-5])h.lineBetween(x,area.y-18,x,loadY);
+    h.fillStyle(0x927a62).fillRect(area.x,loadY,area.width,24);h.lineStyle(pulse==='warning'?3:2,warning).strokeRect(area.x,loadY,area.width,24);
+    h.lineBetween(area.x+4,loadY+4,area.x+area.width-4,loadY+20).lineBetween(area.x+area.width-4,loadY+4,area.x+4,loadY+20);
+    for(let x=area.x-8;x<area.x+area.width+8;x+=8)h.lineStyle(2,warning,.9).lineBetween(x,bottom,x+4,bottom-6);
+    h.lineStyle(1,warning,.65).lineBetween(area.x,area.y+24,area.x,bottom).lineBetween(area.x+area.width,area.y+24,area.x+area.width,bottom);
+   }
    else if(pulse!=='safe'){h.lineBetween(p.x,274,p.x+p.width,320);h.lineBetween(p.x+p.width,274,p.x,320);}
    for(const s of p.signals||[]){h.lineStyle(2,0x8998a5).lineBetween(s.x,s.y+25,s.x,320);h.fillStyle(0x172b38).fillRect(s.x-10,s.y-20,20,48);
     for(const [n,c]of [0xff985f,0xf3ce8e,0x8ddab2].entries()){const on=n===(pulse==='active'?0:pulse==='warning'?1:2);h.fillStyle(c,on?1:.16).fillCircle(s.x,s.y-12+n*14,4);}

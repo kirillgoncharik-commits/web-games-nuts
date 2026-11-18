@@ -4,6 +4,65 @@ import {encounter} from './encounter-helpers';
 import {state} from './helpers';
 import {jump,standingJump,to,ground,until} from './route-helpers';
 
+test('warehouse lift joins the optional salvage route and opens the gate without a first-show threat',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-A'});
+ const before=await state(page);expect(before.enemies).toHaveLength(0);expect(before.solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(true);
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ expect((await state(page)).solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(false);
+ await jump(page,124,180);await ground(page,288);await to(page,204);await ground(page,288);await standingJump(page,288);await ground(page,256);
+ await to(page,324);await ground(page,256);await standingJump(page,400);await ground(page,224);await to(page,432);await ground(page,224);await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).roomStates['YU02-A'].cacheUsed).toBe(true);await page.screenshot({path:info.outputPath('warehouse-upper-salvage.png')});
+ await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ expect((await state(page)).exitOpen).toBe(true);expect((await state(page)).hp).toBe(6);
+ await writeFile(info.outputPath('warehouse-evidence.json'),JSON.stringify({fixture:'one YU02-A entry; all switching, base jumps, salvage and contact use ordinary keyboard input',before,final:await state(page)},null,2));
+});
+
+for(const reduced of [false,true])test(`crane platform, suspended load and far exit circuit use ordinary input, ${reduced?'reduced':'normal'} effects`,async({page},info)=>{
+ test.setTimeout(60000);await encounter(page,{mission:'YU02',room:'YU02-B',reduced});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,120,176);await ground(page,288);await to(page,216);await ground(page,288);await standingJump(page,328);await ground(page,276);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ await to(page,368);await ground(page,276);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='warning');await capture('crane-load-warning');
+ await page.locator('#hud-pause').click();const paused=await state(page);await page.waitForTimeout(250);expect((await state(page)).simMs).toBe(paused.simMs);await page.getByTestId('resume').click();
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');expect((await state(page)).hp).toBe(6);await capture('crane-load-active-safe-pocket');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.simMs%5600<3100;});
+ await standingJump(page,460);await ground(page,276);await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
+ expect((await state(page)).solids.some((r:any)=>r.id==='world-power:crane-door-B')).toBe(false);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+ expect((await state(page)).exitOpen).toBe(true);expect((await state(page)).hp).toBe(6);await capture('crane-exit-open');
+ await writeFile(info.outputPath('crane-evidence.json'),JSON.stringify({fixture:'one YU02-B entry; all platform, load wait, crossing, switching and exit contacts use ordinary keyboard input',reduced,samples},null,2));
+});
+
+for(const reduced of [false,true])test(`quay water signals survive lights off and the upper salvage route stays reachable, ${reduced?'reduced':'normal'} effects`,async({page},info)=>{
+ test.setTimeout(60000);await encounter(page,{mission:'YU02',room:'YU02-C',cleared:true,reduced});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ await capture('quay-A-lamps');await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,108,144);await ground(page,288);await to(page,176);await ground(page,320);await to(page,224);await ground(page,320);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='warning');await capture('quay-B-lamps-off-visible-water-warning');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.simMs%5600<3100;});await to(page,304);await ground(page,320);
+ await jump(page,304,344);await ground(page,288);await to(page,352);await ground(page,288);await standingJump(page,392);await ground(page,272);await standingJump(page,480);await ground(page,248);
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU02-C'].cacheUsed).toBe(true);await capture('quay-upper-salvage');
+ await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
+ await writeFile(info.outputPath('quay-evidence.json'),JSON.stringify({fixture:'one YU02-C entry with drone explicitly cleared for geometry and lighting; full C03 route keeps real combat. All subsequent movement is ordinary keyboard input',reduced,samples},null,2));
+});
+
+test('port relay earns the elevated platform feed before its fresh warning, shield feed and real transmission',async({page},info)=>{
+ test.setTimeout(60000);await encounter(page,{mission:'YU02',room:'YU02-D'});const samples:any[]=[];
+ const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ expect((await state(page)).world.pulseStartedAt).toBeNull();expect((await state(page)).worldPulse).toBe('safe');
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+ await jump(page,124,176);await ground(page,288);await standingJump(page,264);await ground(page,288);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ expect((await state(page)).worldPulse).toBe('warning');await capture('port-relay-cargo-feed');
+ await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await to(page,408);await ground(page,320);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+ await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');await to(page,448);await ground(page,320);
+ await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');expect((await state(page)).hp).toBe(6);await capture('port-relay-dry-pocket');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5200<3000;});await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(3);
+ await to(page,584);await ground(page,320);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');
+ const final=await state(page);expect(final.hp).toBe(6);expect(final.world.ledger).toEqual(['relay:phase-0','relay:phase-1','relay:phase-2']);await capture('port-relay-map-lit');
+ await writeFile(info.outputPath('port-relay-evidence.json'),JSON.stringify({fixture:'one YU02-D entry; all three different contacts, platform approach, waiting and terminal hold use ordinary keyboard input',samples},null,2));
+});
+
 test('courtyard lever opens its real entrance and the optional alcove is reachable with the base jump',async({page},info)=>{
  test.setTimeout(45000);await encounter(page,{mission:'YU01',room:'YU01-A'});
  const before=await state(page);expect(before.solids.some((r:any)=>r.id==='world-power:entrance-B')).toBe(true);

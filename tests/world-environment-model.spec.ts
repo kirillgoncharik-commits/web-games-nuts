@@ -346,9 +346,68 @@ test('tunnel signal pockets stay outside the real pulse in either circuit and re
 
 test('a closed contact window never falls through to an adjacent switch in the correct circuit',()=>{
  const spec=rooms['YU02-D'].world!,s=createWorldState('YU02-D',spec);
- actWorld(spec,s,{x:112,y:320},body(112,320),1,0);actWorld(spec,s,{x:264,y:320},body(264,320),1,3000);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,0);actWorld(spec,s,{x:264,y:288},body(264,288),1,3000);
  expect(s.phase).toBe(1);actWorld(spec,s,{x:416,y:320},body(416,320),1,3100);expect(s.power!.circuit).toBe('A');
- const before=structuredClone(s);expect(worldContext(spec,s,{x:408,y:320},spec.pulse!.cycle+100)).toBeNull();
- expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,spec.pulse!.cycle+100)).toBeNull();expect(s).toEqual(before);
- expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,spec.pulse!.cycle+3000)?.action).toBe('activate');expect(s.phase).toBe(2);expect(s.power!.switches).toBe(2);
+ const start=s.pulseStartedAt!,before=structuredClone(s);expect(worldContext(spec,s,{x:408,y:320},start+spec.pulse!.cycle+100)).toBeNull();
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,start+spec.pulse!.cycle+100)).toBeNull();expect(s).toEqual(before);
+ expect(actWorld(spec,s,{x:408,y:320},body(408,320),1,start+spec.pulse!.cycle+3000)?.action).toBe('activate');expect(s.phase).toBe(2);expect(s.power!.switches).toBe(2);
+});
+
+test('warehouse power opens the real gate and joins two fixed steps to the optional lift salvage',()=>{
+ const room=rooms['YU02-A'],spec=room.world!,s=createWorldState(room.id,spec);
+ expect(room.enemies).toHaveLength(0);expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
+ expect(worldSolids(spec,s).some(r=>r.id==='world-power:warehouse-A')).toBe(true);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,0);
+ expect(worldSolids(spec,s).some(r=>r.id==='world-power:warehouse-A')).toBe(false);
+ const lift=worldSolids(spec,s).find(r=>r.id==='world-power:lift-B')!;
+ expect(lift.y).toBe(room.cache!.y);expect(room.cache!.x).toBeGreaterThan(lift.x+11);expect(room.cache!.x).toBeLessThan(lift.x+lift.width-11);
+ const steps=[...room.solids.filter(r=>r.y<320),lift].sort((a,b)=>a.x-b.x);
+ expect(steps.map(r=>r.y)).toEqual([288,256,224]);
+ for(let n=1;n<steps.length;n++){expect(steps[n-1].y-steps[n].y).toBeLessThanOrEqual(32);expect(steps[n].x-steps[n-1].x-steps[n-1].width).toBeLessThanOrEqual(48);}
+ expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,200)?.ids).toEqual(['warehouse:phase-0']);expect(worldReady(spec,s)).toBe(true);
+});
+test('crane contact requires its working platform and the far lever restores the real exit door',()=>{
+ const room=rooms['YU02-B'],spec=room.world!,s=createWorldState(room.id,spec);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,2500);
+ expect(worldContext(spec,s,{x:328,y:320},2600)).toBeNull();
+ expect(actWorld(spec,s,{x:328,y:276},body(328,276),1,2600)?.ids).toEqual(['crane:phase-0']);
+ expect(switchCircuit(s.power!,body(328,276))).toBe(false);expect(worldSolids(spec,s).some(r=>r.id==='world-power:crane-door-B')).toBe(true);
+ expect(spec.pulse).toMatchObject({kind:'load',y:208,height:112});
+ for(const x of [368,456,552])expect(worldPulseHits(spec,body(x,320),1900,s)).toBe(false);
+ expect(worldPulseHits(spec,body(412,276),1799,s)).toBe(false);expect(worldPulseHits(spec,body(412,276),1800,s)).toBe(true);expect(worldPulseHits(spec,body(412,276),2500,s)).toBe(false);
+ actWorld(spec,s,{x:552,y:320},body(552,320),1,2700);expect(s.power!.circuit).toBe('A');
+ expect(worldSolids(spec,s).some(r=>r.id==='world-power:crane-door-B')).toBe(false);
+ expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,2800)?.ids).toEqual(['crane:phase-1']);expect(worldReady(spec,s)).toBe(true);
+});
+test('quay lighting never controls water visibility, timing, collision or its waiting pockets',()=>{
+ const room=rooms['YU02-C'],spec=room.world!,s=createWorldState(room.id,spec);expect(spec.powerLight?.on).toBe('A');
+ const pulse=structuredClone(spec.pulse),danger=worldPulseHits(spec,body(272,320),1900,s);
+ expect(danger).toBe(true);expect(spec.pulse!.signals).toHaveLength(2);
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,100);
+ expect(s.power!.circuit).toBe('B');expect(spec.pulse).toEqual(pulse);expect(worldPulseHits(spec,body(272,320),1900,s)).toBe(danger);
+ for(const circuit of ['A','B'] as const){s.power!.circuit=circuit;for(const x of [232,304,584])expect(worldPulseHits(spec,body(x,320),1900,s)).toBe(false);}
+ expect(room.enemies.map(e=>e.id)).toEqual(['yu02c-drone']);expect(room.cache).toMatchObject({x:480,y:248});
+});
+test('port relay starts a fresh warning only after the elevated cargo feed and retains three distinct IDs',()=>{
+ const spec=rooms['YU02-D'].world!,s=createWorldState('YU02-D',spec);stepWorldEnvironment(spec,s,body(64,320),320,20000);
+ expect(worldPulse(spec,20000,s)).toBe('safe');expect(s.pulseStartedAt).toBeNull();
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,20000);
+ expect(actWorld(spec,s,{x:264,y:320},body(264,320),1,20100)).toBeNull();
+ actWorld(spec,s,{x:264,y:288},body(264,288),1,20200);expect(s.phase).toBe(1);expect(s.pulseStartedAt).toBe(20200);expect(worldPulse(spec,20200,s)).toBe('warning');
+ expect(switchCircuit(s.power!,body(264,288))).toBe(false);
+ actWorld(spec,s,{x:416,y:320},body(416,320),1,20300);expect(worldSolids(spec,s).some(r=>r.id==='world-power:relay-platform-B')).toBe(false);
+ actWorld(spec,s,{x:408,y:320},body(408,320),1,22700);actWorld(spec,s,{x:416,y:320},body(416,320),1,22800);
+ expect(worldPulseHits(spec,body(448,320),22000,s)).toBe(false);expect(worldPulseHits(spec,body(552,320),22000,s)).toBe(true);
+ actWorld(spec,s,{x:552,y:320},body(552,320),1,22900);expect(s.ledger).toEqual(['relay:phase-0','relay:phase-1','relay:phase-2']);expect(worldReady(spec,s)).toBe(true);
+ actWorld(spec,s,{x:552,y:320},body(552,320),1,23000);expect(s.ledger).toHaveLength(3);
+});
+test('every harbor switch and contact has collision-safe standing space, and Retry resets earned state',()=>{
+ for(const id of ['YU02-A','YU02-B','YU02-C','YU02-D'] as const){const room=rooms[id],spec=room.world!,s=createWorldState(id,spec);
+  for(const circuit of ['A','B'] as const){s.power!.circuit=circuit;for(const p of spec.switches!)expect([...room.solids,...worldSolids(spec,s)].some(r=>intersects(body(p.x,p.y),r)),id+' '+circuit).toBe(false);}
+ }
+ const entry={mission_id:'YU02' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]};
+ const a=new MissionAttempt('mission',entry),spec=rooms['YU02-D'].world!,s=a.room('YU02-D').world!;
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,100);actWorld(spec,s,{x:264,y:288},body(264,288),1,200);
+ expect(a.room('YU02-D').world!.phase).toBe(1);const paused=structuredClone(s);stepWorldEnvironment(spec,s,body(416,320),320,200);expect(s).toEqual(paused);
+ expect(new MissionAttempt('mission',entry).room('YU02-D').world).toEqual(createWorldState('YU02-D',spec));
 });
