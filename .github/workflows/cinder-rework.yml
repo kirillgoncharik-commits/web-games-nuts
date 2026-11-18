@@ -52,6 +52,8 @@ jobs:
         run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/world-environment.spec.ts tests/cargo-turrets.spec.ts tests/cargo-jump-precision.spec.ts tests/rw1-final-combat.spec.ts --output=test-results/final-combat
       - name: Verify existing UI, equipment and combat feedback
         run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/rework-ui.spec.ts tests/cargo-equipment.spec.ts tests/archive-equipment.spec.ts tests/rw1-equipment.spec.ts tests/feedback-ui.spec.ts tests/aimed-guard.spec.ts --output=test-results/encounters
+      - name: Verify explicit silence, warning restore and the real music slider
+        run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/audio-settings.spec.ts tests/sprint2-details.spec.ts --grep 'music volume|real music slider' --output=test-results/audio-settings
       - name: Capture exact-source combat feedback contact sheet
         if: always() && matrix.browser == 'chromium'
         run: node scripts/report-feedback-evidence.mjs

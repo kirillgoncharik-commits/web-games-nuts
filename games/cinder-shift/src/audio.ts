@@ -18,7 +18,11 @@ export class AudioService{
  get muted(){return this.mute;}
  set muted(value:boolean){this.mute=value;if(this.master)this.master.gain.setValueAtTime(value?0:.32,this.context!.currentTime);if(value){this.stopVoices(()=>true);this.stopMusic();}else this.syncMusic();}
  configure(settings:AudioLevels&{muted:boolean}){this.levels={musicVolume:settings.musicVolume,sfxVolume:settings.sfxVolume,uiVolume:settings.uiVolume};this.muted=settings.muted;this.applyLevels();}
- private applyLevels(){if(!this.context)return;for(const [node,value]of [[this.musicBus,this.levels.musicVolume],[this.sfxBus,this.levels.sfxVolume],[this.uiBus,this.levels.uiVolume]] as const){if(node){node.gain.cancelScheduledValues(this.context.currentTime);node.gain.setTargetAtTime(value,this.context.currentTime,.003);}}}
+ private applyLevels(){if(!this.context)return;for(const [node,value]of [[this.musicBus,this.levels.musicVolume],[this.sfxBus,this.levels.sfxVolume],[this.uiBus,this.levels.uiVolume]] as const){if(node){node.gain.cancelScheduledValues(this.context.currentTime);
+  // Zero is an explicit user mute, including while the audio clock is stopped.
+  // The value setter also resets the current slot; a scheduled ramp needs render time.
+  if(value===0)node.gain.value=0;else node.gain.setTargetAtTime(value,this.context.currentTime,.003);
+ }}}
  private async preload(){await Promise.all(Object.entries(assets.sfx).map(async([id,item])=>{try{const response=await fetch(new URL('./assets/audio/'+item.file,location.href));if(!response.ok)throw Error('audio_asset');const bytes=await response.arrayBuffer();this.raw.set(id,bytes);if(this.context)void this.decode(id,bytes);}catch{this.error=true;this.failed.add(id);}}));}
  async unlock(){
   try{
