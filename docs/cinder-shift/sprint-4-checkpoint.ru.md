@@ -1,3 +1,11 @@
+# Продолжение 18.11.2026 - alpha.7
+
+[Отчёт](alpha7-electric-train.ru.md), [ведомость](alpha7-verification.json). Source `1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db`, build `cinder-v1.b36.a1`: 142 selected checks, C02/C03 full routes и Chromium/Firefox/WebKit PASS. Реализованы ситуации YU03-A/B/C/D; стабильные power collider IDs, запрет смены опоры под героем, видимые за Мирой power controls и защита от переключения соседнего рубильника при закрытом контакте. Сверены архив и 71 файл, просмотрены exact-source кадры.
+
+Шесть исходных RW3 IDs PARTIAL. Продолжать остальные подробные комнаты C03 и production art/audio/VFX, затем RW4. Общий QA сохраняет 44/48 px и повторяемый CI audio warning-restore failure; native frame comparison прошёл 12/12 на отдельном повторе без изменения порога. Эти результаты не скрыты selected gate. Alpha.7 не опубликована, зарегистрированный live - alpha.5 / `cinder-v1.b28.a1`. Все детали и снимок текущих workflow в ведомости.
+
+## История alpha.6
+
 # Продолжение 18.11.2026 - alpha.6
 
 Актуальные [отчёт](alpha6-kitchen-encounters.ru.md) и [доказательства](alpha6-verification.json). Source `20b908046e1266fc12a1ebb03ce206608dc96980`, build `cinder-v1.b31.a1`: 128 selected checks, оба полных C02/C03 маршрута и Chromium/Firefox/WebKit регрессия PASS. Реализованы физическая заслонка SW01-A, паровой карман SW01-B и три фазы SW01-D/SW05-D. Исправлены выбор repair/switch и границы парового укрытия. Архив и все 71 файла сверены; шесть статических кадров просмотрены. Route driver не изменялся.
