@@ -172,7 +172,7 @@ test('train doors, light and actual supports follow both earned circuit states w
 test('tunnel signals permit a warned crossing between dry pockets in either power circuit',async({page},info)=>{
  await encounter(page,{mission:'YU03',room:'YU03-C',cleared:true});await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  await to(page,216);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');const waiting=await state(page);expect(waiting.hp).toBe(6);await page.screenshot({path:info.outputPath('tunnel-red-signal.png')});
- await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5000<2800;});await standingJump(page,312);await ground(page,288);
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5000<2800;});await to(page,256);await ground(page,320);await standingJump(page,312);await ground(page,288);
  await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');const pocket=await state(page);expect(pocket.hp).toBe(6);await page.screenshot({path:info.outputPath('tunnel-dry-pocket.png')});
  await to(page,556);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  expect((await state(page)).world.repaired).toBe(false);expect((await state(page)).hp).toBe(6);
