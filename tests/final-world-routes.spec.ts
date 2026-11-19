@@ -57,12 +57,15 @@ async function standAtHeight(page:Page,point:{x:number;y:number}){
   // Walk around a real edge, descend through clear space, then return below it.
   const drops=Array.from({length:139},(_,i)=>40+i*4).filter(at=>at<=600
    &&landed.solids.some((r:any)=>Math.abs(r.y-point.y)<1&&at-20>=r.x&&at+20<=r.x+r.width)
+   // Descend on the target side of ground walls; walking back across one
+   // would jump onto the shelf again instead of returning underneath it.
+   &&!landed.solids.some((r:any)=>intersects({x:Math.min(at,x)-11,y:point.y-44,width:Math.abs(at-x)+22,height:44},r))
    &&!landed.solids.some((r:any)=>r.y>=feet-1&&r.y<point.y&&r.x<at+20&&r.x+r.width>at-20))
    .sort((a,b)=>Math.abs(a-landed.player.x)+Math.abs(a-x)/4-Math.abs(b-landed.player.x)-Math.abs(b-x)/4);
   if(!drops.length)throw Error('no physical descent to target '+JSON.stringify({room:landed.room,point,player:landed.player}));
   await walk(page,drops[0]);await walk(page,x);
  }
- const actual=await state(page);expect(Math.abs(actual.player.y+22-point.y),'actual standing height').toBeLessThan(2);
+ const actual=await state(page);expect(Math.abs(actual.player.y+22-point.y),'actual standing height '+JSON.stringify({room:actual.room,target:point,player:actual.player})).toBeLessThan(2);
 }
 async function approachContext(page:Page,action:'switch'|'activate',point:{x:number;y:number}){
  // This contact now sits on a working bridge above a crouchable underpass.
