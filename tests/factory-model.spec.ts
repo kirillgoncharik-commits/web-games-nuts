@@ -13,6 +13,9 @@ test('factory first show is safe and both circuits keep a permanent upper walkwa
  expect(worldSolids(spec,s).find(r=>r.id==='world-power:belt-A')).toMatchObject({x:264,y:272,height:48});
  expect(actWorld(spec,s,{x:112,y:320},body(112,320),1,100)?.action).toBe('switch');
  expect(worldSolids(spec,s).some(r=>r.id==='world-power:belt-A')).toBe(false);expect(room.solids).toEqual(fixed);
+ // The stopped-belt ground lane must not end in a low step under the walkway lip.
+ const upper=room.solids.find(r=>r.y===256&&r.width>100)!;const lane={x:upper.x+upper.width,y:276,width:552-upper.x-upper.width,height:44};
+ expect([...room.solids,...worldSolids(spec,s)].some(r=>intersects(lane,r))).toBe(false);
  expect(room.cache).toMatchObject({x:328,y:256});
  expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,200)?.ids).toEqual(['belt:phase-0']);expect(worldReady(spec,s)).toBe(true);
 });
