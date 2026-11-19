@@ -3,7 +3,7 @@ import {rooms} from '../games/cinder-shift/src/room-data';
 import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
-import {clearLine} from '../games/cinder-shift/src/geometry';
+import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
 import {standingJump,ground} from './route-helpers';
@@ -49,6 +49,21 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
 }
+async function standAtHeight(page:Page,point:{x:number;y:number}){
+ const x=point.x;await walk(page,x);
+ const landed=await state(page),feet=landed.player.y+22;
+ if(feet<point.y-2){
+  // Reaching the right x on an optional upper shelf is not reaching its ground target.
+  // Walk around a real edge, descend through clear space, then return below it.
+  const drops=Array.from({length:139},(_,i)=>40+i*4).filter(at=>at<=600
+   &&landed.solids.some((r:any)=>Math.abs(r.y-point.y)<1&&at-20>=r.x&&at+20<=r.x+r.width)
+   &&!landed.solids.some((r:any)=>r.y>=feet-1&&r.y<point.y&&r.x<at+20&&r.x+r.width>at-20))
+   .sort((a,b)=>Math.abs(a-landed.player.x)+Math.abs(a-x)/4-Math.abs(b-landed.player.x)-Math.abs(b-x)/4);
+  if(!drops.length)throw Error('no physical descent to target '+JSON.stringify({room:landed.room,point,player:landed.player}));
+  await walk(page,drops[0]);await walk(page,x);
+ }
+ const actual=await state(page);expect(Math.abs(actual.player.y+22-point.y),'actual standing height').toBeLessThan(2);
+}
 async function approachContext(page:Page,action:'switch'|'activate',point:{x:number;y:number}){
  // This contact now sits on a working bridge above a crouchable underpass.
  // Follow its visible entry ledge; horizontal walking alone stays below it.
@@ -71,30 +86,18 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){
   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);
  }
- const x=contextPoint(await state(page),action,point);await walk(page,x);
- const landed=await state(page),feet=landed.player.y+22;
- if(feet<point.y-2){
-  // Reaching the right x on an optional upper shelf is not reaching the contact.
-  // Walk around a real edge, descend through clear space, then return below it.
-  const drops=Array.from({length:139},(_,i)=>40+i*4).filter(at=>at<=600
-   &&landed.solids.some((r:any)=>Math.abs(r.y-point.y)<1&&at-20>=r.x&&at+20<=r.x+r.width)
-   &&!landed.solids.some((r:any)=>r.y>=feet-1&&r.y<point.y&&r.x<at+20&&r.x+r.width>at-20))
-   .sort((a,b)=>Math.abs(a-landed.player.x)+Math.abs(a-x)/4-Math.abs(b-landed.player.x)-Math.abs(b-x)/4);
-  if(!drops.length)throw Error('no physical descent to contact '+JSON.stringify({room:landed.room,point,player:landed.player}));
-  await walk(page,drops[0]);await walk(page,x);
- }
- const actual=await state(page);expect(Math.abs(actual.player.y+22-point.y),'actual contact standing height').toBeLessThan(2);
+ const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
-  const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>200).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
+  const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>r.y<320&&r.y+r.height>200&&r.x<x+20&&r.x+r.width>x-20)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
-  await walk(page,at);await expect.poll(async()=>(await state(page)).player.y+22).toBe(320);await face(page,en.x>at?1:-1);await page.keyboard.down('j');
+  await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
  }
 }
