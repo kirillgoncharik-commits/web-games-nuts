@@ -1,0 +1,1703 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/web-games-nuts/web-games-nuts/game/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.media.config.ts",
+      "--grep=RW2 atlas",
+      "--output=test-results/media",
+      "--reporter=line,json"
+    ],
+    "configFile": "/home/runner/work/web-games-nuts/web-games-nuts/game/playwright.media.config.ts",
+    "rootDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/8ad0151a62e140d40350a72bef00601e13d32061",
+        "commitHash": "8ad0151a62e140d40350a72bef00601e13d32061",
+        "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/12",
+        "prTitle": "Prepare Cinder Shift alpha.12 for itch.io and CrazyGames Basic",
+        "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+        "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44553827584"
+      },
+      "gitCommit": {
+        "shortHash": "8ad0151",
+        "hash": "8ad0151a62e140d40350a72bef00601e13d32061",
+        "subject": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58",
+        "body": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58\n",
+        "author": {
+          "name": "kirillgoncharik-commits",
+          "email": "kirill.goncharik@gmail.com",
+          "time": 1795101673000
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "time": 1795101673000
+        },
+        "branch": "HEAD"
+      },
+      "gitDiff": "diff --git a/games/cinder-shift/platforms/targets.json b/games/cinder-shift/platforms/targets.json\nindex 680370f..13bfcf9 100644\n--- a/games/cinder-shift/platforms/targets.json\n+++ b/games/cinder-shift/platforms/targets.json\n@@ -3,13 +3,70 @@\n   \"default_target\": \"web\",\n   \"one_native_sdk_per_bundle\": true,\n   \"targets\": {\n-    \"web\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"host GA4 only after consent\"},\n-    \"itch\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"disabled\"},\n-    \"crazygames-basic\": {\"integration_status\":\"profile_only\",\"ads\":[],\"storage\":\"local fallback; platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"crazygames-full\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_after_tutorial\",\"mission_failed_retry_after_tutorial\"],\"storage\":\"platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"gamepix\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next\"],\"storage\":\"compact SDK save pending\",\"analytics\":\"no external SDK\",\"distribution\":\"OFF\"},\n-    \"y8\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_on_click\",\"mission_failed_retry_on_click\"],\"storage\":\"persistent guest contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"playgama\": {\"integration_status\":\"blocked_bridge_access\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"Bridge only; pending\",\"analytics\":\"Bridge only; pending\",\"locale\":\"Bridge; pending\",\"audio\":\"tool-produced or recorded OGG/MP3 still required\"},\n-    \"yandex\": {\"integration_status\":\"blocked_partner_onboarding\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"persistent guest; cloud only when verified\",\"analytics\":\"platform metrics; external off\"}\n+    \"web\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"host GA4 only after consent\"\n+    },\n+    \"itch\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"disabled\"\n+    },\n+    \"crazygames-basic\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local; no SDK in Basic\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"crazygames-full\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_after_tutorial\",\n+        \"mission_failed_retry_after_tutorial\"\n+      ],\n+      \"storage\": \"platform profile contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"gamepix\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next\"\n+      ],\n+      \"storage\": \"compact SDK save pending\",\n+      \"analytics\": \"no external SDK\",\n+      \"distribution\": \"OFF\"\n+    },\n+    \"y8\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_on_click\",\n+        \"mission_failed_retry_on_click\"\n+      ],\n+      \"storage\": \"persistent guest contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"playgama\": {\n+      \"integration_status\": \"blocked_bridge_access\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"Bridge only; pending\",\n+      \"analytics\": \"Bridge only; pending\",\n+      \"locale\": \"Bridge; pending\",\n+      \"audio\": \"tool-produced or recorded OGG/MP3 still required\"\n+    },\n+    \"yandex\": {\n+      \"integration_status\": \"blocked_partner_onboarding\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"persistent guest; cloud only when verified\",\n+      \"analytics\": \"platform metrics; external off\"\n+    }\n   }\n }\ndiff --git a/scripts/build.mjs b/scripts/build.mjs\nindex c567137..66dfca8 100644\n--- a/scripts/build.mjs\n+++ b/scripts/build.mjs\n@@ -21,5 +21,5 @@ const dir='dist/cinder-shift', files=[];\n if(target!=='web')await rm(join(dir,'game-analytics.js'),{force:true});\n async function walk(path){for(const name of (await readdir(path)).sort()){const file=join(path,name);if((await stat(file)).isDirectory())await walk(file);else{const bytes=await readFile(file);files.push({path:relative(dir,file),bytes:bytes.length,gzip_bytes:gzipSync(bytes).length,sha256:createHash('sha256').update(bytes).digest('hex')});}}}\n await walk(dir);\n-await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n+await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',gameplay_base_sha:process.env.CINDER_GAMEPLAY_BASE_SHA||sha,target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n console.log(`Artifact: ${dir}; ${files.reduce((n,f)=>n+f.gzip_bytes,0)} gzip bytes; source ${sha}`);\ndiff --git a/vite.config.ts b/vite.config.ts\nindex 53922fe..2389185 100644\n--- a/vite.config.ts\n+++ b/vite.config.ts\n@@ -21,7 +21,7 @@ export default defineConfig({\n       handler(html) {\n         if (target === 'web') return html;\n         return html.replace(/<!-- web-channel:start -->[\\s\\S]*?<!-- web-channel:end -->/, '')\n-          .replace('href=\"/games/\"', 'href=\"https://nuts.bid/games/\"');\n+          .replace(/<a class=\"brand\"[^>]*>([\\s\\S]*?)<\\/a>/, '<span class=\"brand\" aria-label=\"Nuts Games\">$1</span>');\n       }\n     }\n   }],",
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/8ad0151a62e140d40350a72bef00601e13d32061",
+            "commitHash": "8ad0151a62e140d40350a72bef00601e13d32061",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/12",
+            "prTitle": "Prepare Cinder Shift alpha.12 for itch.io and CrazyGames Basic",
+            "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44553827584"
+          },
+          "gitCommit": {
+            "shortHash": "8ad0151",
+            "hash": "8ad0151a62e140d40350a72bef00601e13d32061",
+            "subject": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58",
+            "body": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795101673000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795101673000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/games/cinder-shift/platforms/targets.json b/games/cinder-shift/platforms/targets.json\nindex 680370f..13bfcf9 100644\n--- a/games/cinder-shift/platforms/targets.json\n+++ b/games/cinder-shift/platforms/targets.json\n@@ -3,13 +3,70 @@\n   \"default_target\": \"web\",\n   \"one_native_sdk_per_bundle\": true,\n   \"targets\": {\n-    \"web\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"host GA4 only after consent\"},\n-    \"itch\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"disabled\"},\n-    \"crazygames-basic\": {\"integration_status\":\"profile_only\",\"ads\":[],\"storage\":\"local fallback; platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"crazygames-full\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_after_tutorial\",\"mission_failed_retry_after_tutorial\"],\"storage\":\"platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"gamepix\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next\"],\"storage\":\"compact SDK save pending\",\"analytics\":\"no external SDK\",\"distribution\":\"OFF\"},\n-    \"y8\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_on_click\",\"mission_failed_retry_on_click\"],\"storage\":\"persistent guest contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"playgama\": {\"integration_status\":\"blocked_bridge_access\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"Bridge only; pending\",\"analytics\":\"Bridge only; pending\",\"locale\":\"Bridge; pending\",\"audio\":\"tool-produced or recorded OGG/MP3 still required\"},\n-    \"yandex\": {\"integration_status\":\"blocked_partner_onboarding\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"persistent guest; cloud only when verified\",\"analytics\":\"platform metrics; external off\"}\n+    \"web\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"host GA4 only after consent\"\n+    },\n+    \"itch\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"disabled\"\n+    },\n+    \"crazygames-basic\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local; no SDK in Basic\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"crazygames-full\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_after_tutorial\",\n+        \"mission_failed_retry_after_tutorial\"\n+      ],\n+      \"storage\": \"platform profile contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"gamepix\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next\"\n+      ],\n+      \"storage\": \"compact SDK save pending\",\n+      \"analytics\": \"no external SDK\",\n+      \"distribution\": \"OFF\"\n+    },\n+    \"y8\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_on_click\",\n+        \"mission_failed_retry_on_click\"\n+      ],\n+      \"storage\": \"persistent guest contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"playgama\": {\n+      \"integration_status\": \"blocked_bridge_access\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"Bridge only; pending\",\n+      \"analytics\": \"Bridge only; pending\",\n+      \"locale\": \"Bridge; pending\",\n+      \"audio\": \"tool-produced or recorded OGG/MP3 still required\"\n+    },\n+    \"yandex\": {\n+      \"integration_status\": \"blocked_partner_onboarding\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"persistent guest; cloud only when verified\",\n+      \"analytics\": \"platform metrics; external off\"\n+    }\n   }\n }\ndiff --git a/scripts/build.mjs b/scripts/build.mjs\nindex c567137..66dfca8 100644\n--- a/scripts/build.mjs\n+++ b/scripts/build.mjs\n@@ -21,5 +21,5 @@ const dir='dist/cinder-shift', files=[];\n if(target!=='web')await rm(join(dir,'game-analytics.js'),{force:true});\n async function walk(path){for(const name of (await readdir(path)).sort()){const file=join(path,name);if((await stat(file)).isDirectory())await walk(file);else{const bytes=await readFile(file);files.push({path:relative(dir,file),bytes:bytes.length,gzip_bytes:gzipSync(bytes).length,sha256:createHash('sha256').update(bytes).digest('hex')});}}}\n await walk(dir);\n-await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n+await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',gameplay_base_sha:process.env.CINDER_GAMEPLAY_BASE_SHA||sha,target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n console.log(`Artifact: ${dir}; ${files.reduce((n,f)=>n+f.gzip_bytes,0)} gzip bytes; source ${sha}`);\ndiff --git a/vite.config.ts b/vite.config.ts\nindex 53922fe..2389185 100644\n--- a/vite.config.ts\n+++ b/vite.config.ts\n@@ -21,7 +21,7 @@ export default defineConfig({\n       handler(html) {\n         if (target === 'web') return html;\n         return html.replace(/<!-- web-channel:start -->[\\s\\S]*?<!-- web-channel:end -->/, '')\n-          .replace('href=\"/games/\"', 'href=\"https://nuts.bid/games/\"');\n+          .replace(/<a class=\"brand\"[^>]*>([\\s\\S]*?)<\\/a>/, '<span class=\"brand\" aria-label=\"Nuts Games\">$1</span>');\n       }\n     }\n   }],",
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/sprint2-media\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/8ad0151a62e140d40350a72bef00601e13d32061",
+            "commitHash": "8ad0151a62e140d40350a72bef00601e13d32061",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/12",
+            "prTitle": "Prepare Cinder Shift alpha.12 for itch.io and CrazyGames Basic",
+            "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44553827584"
+          },
+          "gitCommit": {
+            "shortHash": "8ad0151",
+            "hash": "8ad0151a62e140d40350a72bef00601e13d32061",
+            "subject": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58",
+            "body": "Merge 003ffa91cec7f64b5b4c29c464c216bf5fd49865 into 1cc93376ff0013a306a98e554127009571974f58\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795101673000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795101673000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/games/cinder-shift/platforms/targets.json b/games/cinder-shift/platforms/targets.json\nindex 680370f..13bfcf9 100644\n--- a/games/cinder-shift/platforms/targets.json\n+++ b/games/cinder-shift/platforms/targets.json\n@@ -3,13 +3,70 @@\n   \"default_target\": \"web\",\n   \"one_native_sdk_per_bundle\": true,\n   \"targets\": {\n-    \"web\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"host GA4 only after consent\"},\n-    \"itch\": {\"integration_status\":\"local_candidate\",\"ads\":[],\"storage\":\"IndexedDB local\",\"analytics\":\"disabled\"},\n-    \"crazygames-basic\": {\"integration_status\":\"profile_only\",\"ads\":[],\"storage\":\"local fallback; platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"crazygames-full\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_after_tutorial\",\"mission_failed_retry_after_tutorial\"],\"storage\":\"platform profile contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"gamepix\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next\"],\"storage\":\"compact SDK save pending\",\"analytics\":\"no external SDK\",\"distribution\":\"OFF\"},\n-    \"y8\": {\"integration_status\":\"blocked_sdk_access\",\"ads\":[\"mission_complete_next_on_click\",\"mission_failed_retry_on_click\"],\"storage\":\"persistent guest contract pending\",\"analytics\":\"platform metrics; external off\"},\n-    \"playgama\": {\"integration_status\":\"blocked_bridge_access\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"Bridge only; pending\",\"analytics\":\"Bridge only; pending\",\"locale\":\"Bridge; pending\",\"audio\":\"tool-produced or recorded OGG/MP3 still required\"},\n-    \"yandex\": {\"integration_status\":\"blocked_partner_onboarding\",\"ads\":[\"mission_complete_next\",\"mission_failed_retry\"],\"storage\":\"persistent guest; cloud only when verified\",\"analytics\":\"platform metrics; external off\"}\n+    \"web\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"host GA4 only after consent\"\n+    },\n+    \"itch\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local\",\n+      \"analytics\": \"disabled\"\n+    },\n+    \"crazygames-basic\": {\n+      \"integration_status\": \"local_candidate\",\n+      \"ads\": [],\n+      \"storage\": \"IndexedDB local; no SDK in Basic\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"crazygames-full\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_after_tutorial\",\n+        \"mission_failed_retry_after_tutorial\"\n+      ],\n+      \"storage\": \"platform profile contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"gamepix\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next\"\n+      ],\n+      \"storage\": \"compact SDK save pending\",\n+      \"analytics\": \"no external SDK\",\n+      \"distribution\": \"OFF\"\n+    },\n+    \"y8\": {\n+      \"integration_status\": \"blocked_sdk_access\",\n+      \"ads\": [\n+        \"mission_complete_next_on_click\",\n+        \"mission_failed_retry_on_click\"\n+      ],\n+      \"storage\": \"persistent guest contract pending\",\n+      \"analytics\": \"platform metrics; external off\"\n+    },\n+    \"playgama\": {\n+      \"integration_status\": \"blocked_bridge_access\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"Bridge only; pending\",\n+      \"analytics\": \"Bridge only; pending\",\n+      \"locale\": \"Bridge; pending\",\n+      \"audio\": \"tool-produced or recorded OGG/MP3 still required\"\n+    },\n+    \"yandex\": {\n+      \"integration_status\": \"blocked_partner_onboarding\",\n+      \"ads\": [\n+        \"mission_complete_next\",\n+        \"mission_failed_retry\"\n+      ],\n+      \"storage\": \"persistent guest; cloud only when verified\",\n+      \"analytics\": \"platform metrics; external off\"\n+    }\n   }\n }\ndiff --git a/scripts/build.mjs b/scripts/build.mjs\nindex c567137..66dfca8 100644\n--- a/scripts/build.mjs\n+++ b/scripts/build.mjs\n@@ -21,5 +21,5 @@ const dir='dist/cinder-shift', files=[];\n if(target!=='web')await rm(join(dir,'game-analytics.js'),{force:true});\n async function walk(path){for(const name of (await readdir(path)).sort()){const file=join(path,name);if((await stat(file)).isDirectory())await walk(file);else{const bytes=await readFile(file);files.push({path:relative(dir,file),bytes:bytes.length,gzip_bytes:gzipSync(bytes).length,sha256:createHash('sha256').update(bytes).digest('hex')});}}}\n await walk(dir);\n-await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n+await writeFile(join(dir,'build-manifest.json'),JSON.stringify({...metadata,game_id:'r01',gameplay_base_sha:process.env.CINDER_GAMEPLAY_BASE_SHA||sha,target,platform_status:targetProfile.integration_status,source_sha:sha,source_dirty:dirty,stage:gameConfig.stage,files,total_bytes:files.reduce((n,f)=>n+f.bytes,0),total_gzip_bytes:files.reduce((n,f)=>n+f.gzip_bytes,0)},null,2)+'\\n');\n console.log(`Artifact: ${dir}; ${files.reduce((n,f)=>n+f.gzip_bytes,0)} gzip bytes; source ${sha}`);\ndiff --git a/vite.config.ts b/vite.config.ts\nindex 53922fe..2389185 100644\n--- a/vite.config.ts\n+++ b/vite.config.ts\n@@ -21,7 +21,7 @@ export default defineConfig({\n       handler(html) {\n         if (target === 'web') return html;\n         return html.replace(/<!-- web-channel:start -->[\\s\\S]*?<!-- web-channel:end -->/, '')\n-          .replace('href=\"/games/\"', 'href=\"https://nuts.bid/games/\"');\n+          .replace(/<a class=\"brand\"[^>]*>([\\s\\S]*?)<\\/a>/, '<span class=\"brand\" aria-label=\"Nuts Games\">$1</span>');\n       }\n     }\n   }],",
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "snapshotDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "headless": true,
+          "locale": "ru-RU",
+          "viewport": {
+            "width": 1280,
+            "height": 844
+          },
+          "launchOptions": {
+            "args": [
+              "--mute-audio"
+            ]
+          },
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/build-rework-harness.mjs && npm run preview",
+      "env": {
+        "CINDER_QA_MUTE": "0",
+        "CINDER_QA_HARNESS": "1"
+      },
+      "url": "http://127.0.0.1:4175/games/cinder-shift/",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "sprint2-media.spec.ts",
+      "file": "sprint2-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "RW2 atlas airlock A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3306,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:27.708Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1b4b285050659d11381f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:31.268Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4443431d155715d129eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3165,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:34.630Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f9976ca74fb928b95479",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3029,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:37.807Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4e875bdf7d732e256ed9",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2955,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:40.844Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9c479fd2f778b0d972f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:43.808Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f753abb7a569ff5444c0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:46.779Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-24cc5198737cee26f514",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2968,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:49.756Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-68767e4f4cfe33da9d28",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2943,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:52.737Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-21a702fff591c5476c68",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:55.690Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7e9883cb762114bce11b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3023,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:27:58.657Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-85502fa49890477ff235",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2972,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:01.688Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-8561a94337798d81af26",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2962,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:04.673Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b86477d468b148bacba7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:07.642Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e246567293bd40bf9f06",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2944,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:10.608Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d577898d4de003d6ebea",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:13.559Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e874b94f83a19b427073",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2992,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:16.524Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-db01690e207019570f19",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3045,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:19.526Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-19e5ffa54f8416cec8d3",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2991,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:22.586Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-aec5644e0e6bd6b7ddcf",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:25.587Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-2672a4da4663da1e821c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2973,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:28.555Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-46558dfc15781cd2b8ce",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2994,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:31.535Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-705f85795ab64640dad7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3025,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:34.538Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c86ad89e05408701d9e0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3J",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3021,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:37.574Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7f2ca94829e3de612a7a",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3K",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3020,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:40.604Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-a725ed176942b050b380",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2960,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:43.636Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-32eb1907149e876c4e77",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2936,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:46.606Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-120f5283347864d30674",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2981,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:49.551Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1111fa5738f61ef6076e",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2988,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:52.543Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-dacf339092dc2e17f13c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2922,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:55.542Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-80b789570afee5ecea84",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:28:58.472Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9d809b96f90841132251",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2973,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:01.439Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-53c8ca85fb0c2f86bacd",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:04.419Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-50977b8791aca16e47eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2921,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:07.403Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-76ada261c688352ffea0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2979,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:10.333Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b77124b9213d8d1d290f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2981,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:13.326Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-38145a3b0ad2d4aea7f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3003,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:16.320Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6e8591ee921194c68a0b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3026,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:19.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-13fa3c377137f8ad0a55",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3025,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:22.369Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-afb00db3087bdbb681a6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:25.405Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-3a61e6555d4d63bd95c6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2960,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:28.384Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4bf76a70bf11cf488c5f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2990,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:31.355Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d3f4fe4b63abacab718f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3079,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:34.354Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c728c6b9d929f3fda8a4",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3024,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-19T15:29:37.453Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6dac771e7967e41fa030",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-19T15:27:22.949Z",
+    "duration": 137593.62099999998,
+    "expected": 44,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
