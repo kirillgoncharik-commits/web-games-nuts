@@ -32,12 +32,13 @@ export class WorldMotionArt{
       for(const c of world.carry?.contacts??[])if(c.active&&!this.previous.contacts.includes(c.id))this.cues.push({x:c.rect.x+c.rect.width/2,y:c.rect.y+c.rect.height/2,born:now});
     }
     this.previous=current;
-    const signature=[reduced?0:Math.floor(now/80),reduced].join(':');
+    const motionNow=this.room.world?.landmark==='drive'&&world.phase>=2?0:now;
+    const signature=[reduced?0:Math.floor(motionNow/80),reduced].join(':');
     if(signature!==this.signature){
       this.signature=signature;const g=this.background;g.clear();
       // Separate background prop plane above the routes. It never resembles a platform.
       const x=roomPlacement(this.room.id),y=65;
-      for(const p of this.rig.parts){const pose=sampleMotion(p,now,this.rig.duration,reduced);
+      for(const p of this.rig.parts){const pose=sampleMotion(p,motionNow,this.rig.duration,reduced);
         g.save().translateCanvas(x+pose.x,y+pose.y);
         if(p.pivot)g.translateCanvas(p.pivot.x,p.pivot.y).rotateCanvas(pose.rotation*Math.PI/180).translateCanvas(-p.pivot.x,-p.pivot.y);
         for(const s of p.shapes)g.fillStyle(parseInt(motionPalette[s.color].slice(1),16),(s.alpha??1)*pose.alpha*.85).fillRect(s.x,s.y,s.width,s.height);

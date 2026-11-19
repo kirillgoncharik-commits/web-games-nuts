@@ -11,7 +11,7 @@ permissions:
 jobs:
   runtime-checks:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,7 +40,7 @@ jobs:
       - name: Verify rendered motion, pause and reduced motion in all ten worlds
         run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/world-motion.spec.ts --output=test-results/world-motion
       - name: Verify reported Cargo turret encounters
-        run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/cargo-turrets.spec.ts tests/world-environment.spec.ts --output=test-results/cargo-turrets
+        run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/factory-environment.spec.ts tests/cargo-turrets.spec.ts tests/world-environment.spec.ts --output=test-results/cargo-turrets
       - name: Verify explicit silence, warning restore and the real music slider
         run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/audio-settings.spec.ts tests/sprint2-details.spec.ts --grep 'music volume|real music slider' --output=test-results/audio-settings
       - name: Verify menu targets and layouts at all supported sizes

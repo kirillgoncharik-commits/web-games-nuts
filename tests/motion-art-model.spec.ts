@@ -30,7 +30,7 @@ test('render cadence does not change poses at a shared simulation instant',()=>{
     expect(sampleMotion(part,rig.duration,rig.duration)).toEqual(sampleMotion(part,0,rig.duration));
   }
 });
-function setup(id:'YU02-B'|'YU02-D'){
+function setup(id:'YU02-B'|'YU02-D'|'YU04-D'){
   const room=rooms[id],state={world:createWorldState(id,room.world!)} as RoomState;
   const layers:{calls:any[];object:any}[]=[];
   const scene={add:{graphics:()=>{const calls:any[]=[];let object:any;object=new Proxy({},{get:(_,method)=>(...args:any[])=>{calls.push([method,...args]);return object;}});layers.push({calls,object});return object;}}};
@@ -57,4 +57,10 @@ test('reduced feedback retains a local confirmation without moving particles',()
   state.world!.phase=1;art.render(state,80,true);
   expect(layers[1].calls.filter(c=>c[0]==='strokeRect')).toHaveLength(1);
   expect(layers[1].calls.filter(c=>c[0]==='fillRect')).toHaveLength(0);
+});
+test('resetting the factory drive stops its authored flywheel while simulation continues',()=>{
+  const {art,state,layers}=setup('YU04-D');state.world!.phase=1;art.render(state,800,false);
+  const running=layers[0].calls.length;art.render(state,1040,false);expect(layers[0].calls.length).toBeGreaterThan(running);
+  state.world!.phase=2;art.render(state,1120,false);const stopped=layers[0].calls.length,before=structuredClone(state);
+  art.render(state,2400,false);art.render(state,4800,false);expect(layers[0].calls.length).toBe(stopped);expect(state).toEqual(before);
 });

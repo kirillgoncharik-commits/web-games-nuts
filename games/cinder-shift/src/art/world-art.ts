@@ -3,7 +3,7 @@ import type Phaser from 'phaser';
 import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
-import {powerTarget,worldReady,worldPulse,worldPulseArea,worldPowerFieldPhase} from '../session/world-runtime';
+import {powerTarget,worldReady,worldPulse,worldPulseArea,worldPowerFieldPhase,worldPhaseDoors} from '../session/world-runtime';
 import {keyboardSolids,keyboardPhase,paperPhase,lampPhase,clothSolid,airPhase} from '../session/world-environment';
 import {WorldMotionArt} from './world-motion';
 
@@ -71,7 +71,7 @@ export class WorldArt{
   }
   // Visible lip/material at every real collision surface, including the safe lower route.
   const materials=scene.add.graphics().setDepth(2.2);
-  for(const s of room.solids){if(s.id?.startsWith('world-power:')||s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:')||s.id?.startsWith('world-encounter:')||s.id?.startsWith('world-latch:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
+  for(const s of room.solids){if(s.id?.startsWith('world-power:')||s.id?.startsWith('world-key:')||s.id?.startsWith('world-paper:')||s.id?.startsWith('world-cloth:')||s.id?.startsWith('world-bridge:')||s.id?.startsWith('world-encounter:')||s.id?.startsWith('world-latch:')||s.id?.startsWith('world-phase:'))continue;materials.fillStyle(p[1]).fillRect(s.x,s.y,s.width,s.height);materials.fillStyle(p[2],.65).fillRect(s.x,s.y,s.width,3);materials.fillStyle(p[0],.4).fillRect(s.x,s.y+s.height-3,s.width,3);for(let x=s.x+8;x<s.x+s.width;x+=24)materials.fillStyle(p[0],.35).fillRect(x,s.y+6,8,2);}
   this.ink=scene.add.graphics().setDepth(6.5);this.environment=scene.add.graphics().setDepth(3.2);
   if(room.world?.switches)for(const point of room.world.switches)this.labels.push(scene.add.text(point.x,point.y-62,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae',backgroundColor:'#172533'}).setOrigin(.5).setDepth(6.6));
   if(room.world?.keyboard)for(const text of ['I','II'])this.keyLabels.push(scene.add.text(0,0,text,{fontFamily:'monospace',fontSize:'10px',color:'#f1d8ae'}).setOrigin(.5,0).setDepth(3.3));
@@ -79,6 +79,17 @@ export class WorldArt{
  render(player:Player,a:MissionAttempt,state:RoomState,reduced:boolean){
   const spec=this.room.world!,world=state.world!,g=this.ink,h=this.environment,now=a.clock.now;g.clear();h.clear();
   this.motion.render(state,now,reduced,player.x);
+  if(spec.belt){const r=spec.belt.area,running=world.power?.circuit===spec.belt.runningOn,offset=running&&!reduced?Math.floor(now/80)%8:0;
+   h.fillStyle(0x263b48).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,running?0xefc778:0x8bd8c1).lineBetween(r.x,r.y,r.x+r.width,r.y);
+   for(let x=r.x+8+offset;x<r.x+r.width-4;x+=16){h.fillStyle(0x7c8e92).fillRect(x,r.y+4,7,3);}
+   // Transport is a visible circuit configuration, never a change to Mira's base speed/jump.
+   h.lineStyle(2,running?0xefc778:0x8bd8c1);if(running)h.lineBetween(r.x+12,r.y+9,r.x+28,r.y+9).lineBetween(r.x+28,r.y+9,r.x+23,r.y+5);else h.lineBetween(r.x+14,r.y+4,r.x+14,r.y+9).lineBetween(r.x+20,r.y+4,r.x+20,r.y+9);
+  }
+  for(const r of worldPhaseDoors(spec,world)){
+   h.fillStyle(0x4c6471).fillRect(r.x,r.y,r.width,r.height);h.lineStyle(2,0xefc778).strokeRect(r.x,r.y,r.width,r.height);
+   for(let y=r.y+6;y<r.y+r.height;y+=10)h.lineBetween(r.x+3,y,r.x+r.width-3,y);
+   h.fillStyle(0xefc778).fillRect(r.x+r.width/2-3,r.y-10,6,5);
+  }
   for(const wire of spec.powerWires||[]){
    const on=world.power?.circuit===wire.on,c=wire.on==='A'?0xefc778:0x8bd8c1;
    h.lineStyle(on?2:1,c,on?.8:.2);
