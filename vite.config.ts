@@ -21,7 +21,7 @@ export default defineConfig({
       handler(html) {
         if (target === 'web') return html;
         return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
-          .replace('href="/games/"', 'href="https://nuts.bid/games/"');
+          .replace(/<a class="brand"[^>]*>([\s\S]*?)<\/a>/, '<span class="brand" aria-label="Nuts Games">$1</span>');
       }
     }
   }],
