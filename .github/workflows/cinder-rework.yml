@@ -22,7 +22,7 @@ jobs:
         run: |
           node scripts/export-rework-registry.mjs
           git diff --exit-code -- docs/cinder-shift/rework-room-registry.json
-      - run: npx playwright test tests/world-environment-model.spec.ts tests/turret-model.spec.ts tests/combat-feedback.spec.ts tests/regulator-ballistics-model.spec.ts tests/aimed-guard-model.spec.ts tests/player-jump-model.spec.ts tests/projectile-clearing.spec.ts tests/rw1-b-model.spec.ts tests/rework-model.spec.ts tests/m05b1-model.spec.ts tests/new-modes-core.spec.ts tests/session-model.spec.ts
+      - run: npx playwright test tests/motion-art-model.spec.ts tests/world-environment-model.spec.ts tests/turret-model.spec.ts tests/combat-feedback.spec.ts tests/regulator-ballistics-model.spec.ts tests/aimed-guard-model.spec.ts tests/player-jump-model.spec.ts tests/projectile-clearing.spec.ts tests/rw1-b-model.spec.ts tests/rework-model.spec.ts tests/m05b1-model.spec.ts tests/new-modes-core.spec.ts tests/session-model.spec.ts
         env:
           CINDER_BASE_URL: http://127.0.0.1:4175
   encounters:
@@ -48,6 +48,8 @@ jobs:
           pactl load-module module-null-sink sink_name=cinder_qa
           pactl set-default-sink cinder_qa
       - run: npm run build
+      - name: Verify rendered motion, pause and reduced motion in all ten worlds
+        run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/world-motion.spec.ts --output=test-results/world-motion
       - name: Verify final boss ballistics and defensive limits first
         run: npx playwright test --config=playwright.rework.config.ts --project=${{ matrix.browser }} tests/world-environment.spec.ts tests/cargo-turrets.spec.ts tests/cargo-jump-precision.spec.ts tests/rw1-final-combat.spec.ts --output=test-results/final-combat
       - name: Verify existing UI, equipment and combat feedback

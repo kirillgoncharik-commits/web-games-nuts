@@ -42,7 +42,13 @@ for(const reduced of [false,true])test(`quay water signals survive lights off an
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.simMs%5600<3100;});await to(page,304);await ground(page,320);
  await jump(page,304,344);await ground(page,288);await to(page,352);await ground(page,288);await standingJump(page,392);await ground(page,272);await standingJump(page,480);await ground(page,248);
  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU02-C'].cacheUsed).toBe(true);await capture('quay-upper-salvage');
- await to(page,540);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
+ await to(page,540);await ground(page,320);
+ // The optional upper route takes long enough to reach a new water cycle.
+ // The contact accepts E only in the safe phase, just like the full C03 driver.
+ // Wait here on dry ground and leave time for the input's simulation tick.
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.simMs%5600<4000;});
+ const ready=await state(page);expect(Math.abs(ready.player.x-552)).toBeLessThan(32);expect(ready.world.power.circuit).toBe('B');await capture('quay-contact-ready');
+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
  await writeFile(info.outputPath('quay-evidence.json'),JSON.stringify({fixture:'one YU02-C entry with drone explicitly cleared for geometry and lighting; full C03 route keeps real combat. All subsequent movement is ordinary keyboard input',reduced,samples},null,2));
 });
 

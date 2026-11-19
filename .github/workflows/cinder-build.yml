@@ -37,6 +37,8 @@ jobs:
           tar -xzf qa-work/menu-before-artifact/cinder-shift-artifact.tar.gz -C qa-work/menu-before-site/games/cinder-shift
           CINDER_MENU_BASELINE_SITE=qa-work/menu-before-site node scripts/capture-menu-baseline.mjs
       - run: npm run build
+      - name: Verify rendered motion, pause and reduced motion in all ten worlds
+        run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/world-motion.spec.ts --output=test-results/world-motion
       - name: Verify reported Cargo turret encounters
         run: npx playwright test --config=playwright.rework.config.ts --project=chromium tests/cargo-turrets.spec.ts tests/world-environment.spec.ts --output=test-results/cargo-turrets
       - name: Verify explicit silence, warning restore and the real music slider

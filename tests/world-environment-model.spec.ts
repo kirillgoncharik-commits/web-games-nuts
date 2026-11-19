@@ -388,6 +388,16 @@ test('quay lighting never controls water visibility, timing, collision or its wa
  for(const circuit of ['A','B'] as const){s.power!.circuit=circuit;for(const x of [232,304,584])expect(worldPulseHits(spec,body(x,320),1900,s)).toBe(false);}
  expect(room.enemies.map(e=>e.id)).toEqual(['yu02c-drone']);expect(room.cache).toMatchObject({x:480,y:248});
 });
+test('quay exit contact waits safely without consuming the circuit or nearby repair',()=>{
+ const spec=rooms['YU02-C'].world!,s=createWorldState('YU02-C',spec),point={x:540,y:320};
+ actWorld(spec,s,{x:112,y:320},body(112,320),1,100);
+ for(const now of [1000,1900]){
+  expect(actWorld(spec,s,point,body(point.x,point.y),1,now,false,false)).toBeNull();
+  expect(s.phase).toBe(0);expect(s.power!.circuit).toBe('B');expect(s.repaired).toBe(false);
+ }
+ expect(actWorld(spec,s,point,body(point.x,point.y),1,2600,false,false)?.action).toBe('activate');
+ expect(s.phase).toBe(1);expect(worldReady(spec,s)).toBe(true);expect(s.power!.circuit).toBe('B');expect(s.repaired).toBe(false);
+});
 test('port relay starts a fresh warning only after the elevated cargo feed and retains three distinct IDs',()=>{
  const spec=rooms['YU02-D'].world!,s=createWorldState('YU02-D',spec);stepWorldEnvironment(spec,s,body(64,320),320,20000);
  expect(worldPulse(spec,20000,s)).toBe('safe');expect(s.pulseStartedAt).toBeNull();
