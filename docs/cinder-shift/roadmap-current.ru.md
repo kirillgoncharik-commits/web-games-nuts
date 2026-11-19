@@ -1,3 +1,14 @@
+# Текущая разработка — alpha.11, Art + Motion
+
+19.11.2026. [Арт и анимации](alpha11-art-motion.ru.md), [проверки](alpha11-verification.json).
+10 rigs / 44 слоя подключены к 40 комнатам новых миров. Build, contracts и 51 модель PASS;
+игровой browser CI ожидается. Figma-файл создан, перенос заблокирован MCP-лимитом Starter.
+Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5.
+
+---
+
+История предыдущих итераций:
+
 # Текущая разработка — alpha.9, Дом связи
 
 18.11.2026. [Отчёт](alpha9-house-of-communications.ru.md), [ведомость](alpha9-verification.json). Runtime `1f865d1`, tree `35fd408`: четыре комнаты YU01, настоящая высота контакта моста, крыша и подготовка первой передачи. Чистая локальная сборка, 906 EN/RU ключей, art contracts, 149 моделей и 86 world/environment models PASS. Browser input, screenshots, полные маршруты и immutable artifact **PENDING CI**. Локальный сервер запрещён sandbox (`listen EPERM`). Production остаётся alpha.5.

@@ -5,6 +5,7 @@ import type {MissionAttempt,RoomState} from '../mission';
 import type {Player} from '../player';
 import {powerTarget,worldReady,worldPulse,worldPulseArea,worldPowerFieldPhase} from '../session/world-runtime';
 import {keyboardSolids,keyboardPhase,paperPhase,lampPhase,clothSolid,airPhase} from '../session/world-environment';
+import {WorldMotionArt} from './world-motion';
 
 const palettes={
  SW01:[0x382932,0xc98551,0xf2d39b,0x6a5264],SW02:[0x242f42,0x526887,0xf0c577,0x85929c],SW03:[0x344753,0x8f9cac,0xd5c9bd,0x7470a0],SW04:[0x294747,0xa56347,0xc7c98b,0x628d6e],SW05:[0x282d4a,0x715166,0xf2c97b,0x827b9c],
@@ -14,7 +15,9 @@ const palettes={
 export class WorldArt{
  private ink:Phaser.GameObjects.Graphics;private environment:Phaser.GameObjects.Graphics;private labels:Phaser.GameObjects.Text[]=[];
  private keyLabels:Phaser.GameObjects.Text[]=[];
+ private motion:WorldMotionArt;
  constructor(private scene:Phaser.Scene,private room:RoomDefinition){
+  this.motion=new WorldMotionArt(scene,room);
   const mission=room.id.slice(0,4) as keyof typeof palettes,p=palettes[mission],home=mission.startsWith('SW');
   const g=scene.add.graphics().setDepth(1.25),landmark=room.world!.landmark;
   g.fillStyle(p[0]).fillRect(0,40,640,280);
@@ -75,6 +78,7 @@ export class WorldArt{
  }
  render(player:Player,a:MissionAttempt,state:RoomState,reduced:boolean){
   const spec=this.room.world!,world=state.world!,g=this.ink,h=this.environment,now=a.clock.now;g.clear();h.clear();
+  this.motion.render(state,now,reduced,player.x);
   for(const wire of spec.powerWires||[]){
    const on=world.power?.circuit===wire.on,c=wire.on==='A'?0xefc778:0x8bd8c1;
    h.lineStyle(on?2:1,c,on?.8:.2);

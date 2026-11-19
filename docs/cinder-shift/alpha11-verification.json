@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-19",
+  "version": "0.8.0-alpha.11",
+  "status": "ART_MOTION_IMPLEMENTED_LOCAL_CHECKS_PASS_BROWSER_CI_PENDING_NOT_RC",
+  "base_remote_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+  "scope": {
+    "rigs": 10,
+    "editable_parts": 44,
+    "rooms": 40,
+    "source": "games/cinder-shift/src/art/motion-atlas.ts",
+    "renderer": "games/cinder-shift/src/art/world-motion.ts",
+    "gallery": "art/motion-v1/preview.html",
+    "contact_sheet": "art/motion-v1/contact-sheet.png",
+    "animation_preview": "art/motion-v1/motion-preview.gif"
+  },
+  "local_checks": {
+    "build": "PASS",
+    "typecheck": "PASS",
+    "i18n_keys": 913,
+    "art_contracts": "PASS",
+    "motion_and_environment_models": {
+      "passed": 51,
+      "failed": 0
+    },
+    "prepared_figma_script_syntax": "PASS_AS_ASYNC_FUNCTION_NOT_EXECUTED",
+    "runtime_browser": "BLOCKED_LISTEN_EPERM_127.0.0.1_4175"
+  },
+  "visual_review": {
+    "source_contact_sheet": "VIEWED",
+    "runtime_screenshots": "PENDING_CI",
+    "figma_native_layers": "NOT_CREATED"
+  },
+  "figma": {
+    "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+    "status": "FILE_CREATED_ASSET_IMPORT_BLOCKED_STARTER_MCP_LIMIT",
+    "import_script": "art/motion-v1/figma-import.js",
+    "native_timelines_verified": false
+  },
+  "harbor_test_repairs": [
+    "Context planning uses actual 22-pixel body width instead of an arbitrary 40-pixel clearance.",
+    "Port relay routes jump via the real upper step rather than walking into it.",
+    "Quay contact approach ends before momentum carries the player into the repair pocket.",
+    "Registry regenerated with the actual package version."
+  ],
+  "ci": {
+    "status": "PENDING_SOURCE_SAVE"
+  },
+  "deployed": false,
+  "accepted": false,
+  "production": {
+    "version": "0.8.0-alpha.5",
+    "changed": false
+  },
+  "remaining": [
+    "Resolve browser findings on exact source and review runtime frames.",
+    "Complete remaining detailed world encounters and full RW3 production manifest; this pack is a subset.",
+    "Import and verify native Figma layers/timelines after the connector quota permits.",
+    "RW4 localization, devices, storage/performance/channel checks and RC remain open."
+  ],
+  "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate"
+}

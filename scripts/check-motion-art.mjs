@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {stripTypeScriptTypes} from 'node:module';
+import {createHash} from 'node:crypto';
+const manifest=JSON.parse(await readFile('art/motion-v1/manifest.json','utf8'));
+const source=await readFile(manifest.source,'utf8');
+assert.equal(createHash('sha256').update(source).digest('hex'),manifest.source_sha256,'Run npm run art:motion after changing the source');
+const {motionRigs,motionSvg}=await import('data:text/javascript;base64,'+Buffer.from(stripTypeScriptTypes(source,{mode:'strip'})).toString('base64'));
+assert.deepEqual(manifest.rigs,motionRigs,'The handoff must describe the actual game art');
+for(const rig of motionRigs)assert.equal(await readFile(`art/motion-v1/svg/${rig.id}.svg`,'utf8'),motionSvg(rig),rig.id+' editable export differs from runtime source');
+console.log(`Motion art contract PASS: ${motionRigs.length} rigs / ${motionRigs.reduce((n,r)=>n+r.parts.length,0)} source layers / exact SVG exports.`);

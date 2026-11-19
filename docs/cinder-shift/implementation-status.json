@@ -1,13 +1,13 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-18T15:39:54.095029+00:00",
-  "reference": "Alpha.8 audio and compact touch-target fixes verified. Selected, both world routes and three-browser engineering gates PASS; first C03 route failure retained. RW3 production and RW4 remain incomplete.",
+  "updated_at": "2026-11-19T06:31:27.136160+00:00",
+  "reference": "Alpha.11 authored environment art/motion pack integrated; local build/art contracts/51 models PASS. Browser CI and native Figma import remain unverified. RW3 partial, not RC.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
     "code_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Alpha.8 exact-source runtime and equivalent local tree verified. Report-only successor follows the immutable tested source.",
+    "working_tree": "Alpha.11 source changes are locally verified; awaiting source save and browser CI. See alpha11-verification.json.",
     "published_game_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "test_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
@@ -1047,106 +1047,126 @@
     "production_release_report": "docs/cinder-shift/sprint-3-production-release-2026-11-16.json"
   },
   "active_development_successor": {
-    "version": "0.8.0-alpha.9",
-    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
-    "scope": [
-      "YU01-A entrance, powered stair lights and reachable upper salvage",
-      "YU01-B actual bridge contact and reversible stair/bridge geometry",
-      "YU01-C connected upper route and lower physical cover",
-      "YU01-D two safe preparations before fresh pulse warning, signals and physical transmission map"
-    ],
-    "report": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
-    "verification_report": "docs/cinder-shift/alpha9-verification.json",
+    "date": "2026-11-19",
+    "version": "0.8.0-alpha.11",
+    "status": "ART_MOTION_IMPLEMENTED_LOCAL_CHECKS_PASS_BROWSER_CI_PENDING_NOT_RC",
+    "base_remote_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+    "scope": {
+      "rigs": 10,
+      "editable_parts": 44,
+      "rooms": 40,
+      "source": "games/cinder-shift/src/art/motion-atlas.ts",
+      "renderer": "games/cinder-shift/src/art/world-motion.ts",
+      "gallery": "art/motion-v1/preview.html",
+      "contact_sheet": "art/motion-v1/contact-sheet.png",
+      "animation_preview": "art/motion-v1/motion-preview.gif"
+    },
     "local_checks": {
-      "build": "PASS_CLEAN_EQUIVALENT_TREE",
+      "build": "PASS",
       "typecheck": "PASS",
-      "i18n_keys": 906,
-      "art_source_animation_contracts": "PASS",
-      "models": {
-        "passed": 149,
-        "failed": 0,
-        "log_sha256": "2f57b78256f8f3a6daa929be3204e7fa7316cf06b68bf1be6b7211e9957424bc"
-      },
-      "world_models": {
-        "passed": 86,
+      "i18n_keys": 913,
+      "art_contracts": "PASS",
+      "motion_and_environment_models": {
+        "passed": 51,
         "failed": 0
       },
-      "build_id": "local.20261118T153636991Z",
-      "source_sha": "970f518671576e1f93333c2b4f394e3c3005bbf8",
-      "source_dirty": false,
-      "manifest_files": 71,
-      "browser": "NOT_RUN_LOCAL_LISTEN_EPERM",
-      "browser_blocker": "sandbox denies listen 127.0.0.1:4175; model tests use CINDER_BASE_URL only to disable webServer, with no browser or network involved",
-      "candidate_artifact": false
+      "prepared_figma_script_syntax": "PASS_AS_ASYNC_FUNCTION_NOT_EXECUTED",
+      "runtime_browser": "BLOCKED_LISTEN_EPERM_127.0.0.1_4175"
     },
-    "browser_checks": "PENDING_CI",
-    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
-    "runtime_tree_sha": "35fd408a2ef78a53312f97eb60b67d806391b148",
+    "visual_review": {
+      "source_contact_sheet": "VIEWED",
+      "runtime_screenshots": "PENDING_CI",
+      "figma_native_layers": "NOT_CREATED"
+    },
+    "figma": {
+      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+      "status": "FILE_CREATED_ASSET_IMPORT_BLOCKED_STARTER_MCP_LIMIT",
+      "import_script": "art/motion-v1/figma-import.js",
+      "native_timelines_verified": false
+    },
+    "harbor_test_repairs": [
+      "Context planning uses actual 22-pixel body width instead of an arbitrary 40-pixel clearance.",
+      "Port relay routes jump via the real upper step rather than walking into it.",
+      "Quay contact approach ends before momentum carries the player into the repair pocket.",
+      "Registry regenerated with the actual package version."
+    ],
+    "ci": {
+      "status": "PENDING_SOURCE_SAVE"
+    },
     "deployed": false,
     "accepted": false,
-    "ci": {
-      "status": "IN_PROGRESS",
-      "artifact_run_id": 44337561152,
-      "cross_browser_run_id": 44337560933,
-      "full_regression_run_id": 44337561019,
-      "full_routes_run_id": 44337561002,
-      "workflow_results": "PENDING",
-      "ordinary_input": "PENDING",
-      "screenshots": "PENDING",
-      "immutable_artifact": "PENDING"
+    "production": {
+      "version": "0.8.0-alpha.5",
+      "changed": false
     },
-    "verified_parent_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
+    "remaining": [
+      "Resolve browser findings on exact source and review runtime frames.",
+      "Complete remaining detailed world encounters and full RW3 production manifest; this pack is a subset.",
+      "Import and verify native Figma layers/timelines after the connector quota permits.",
+      "RW4 localization, devices, storage/performance/channel checks and RC remain open."
+    ],
+    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate"
   },
   "active_iteration": {
-    "version": "0.8.0-alpha.9",
-    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
-    "scope": [
-      "YU01-A entrance, powered stair lights and reachable upper salvage",
-      "YU01-B actual bridge contact and reversible stair/bridge geometry",
-      "YU01-C connected upper route and lower physical cover",
-      "YU01-D two safe preparations before fresh pulse warning, signals and physical transmission map"
-    ],
-    "report": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
-    "verification_report": "docs/cinder-shift/alpha9-verification.json",
+    "date": "2026-11-19",
+    "version": "0.8.0-alpha.11",
+    "status": "ART_MOTION_IMPLEMENTED_LOCAL_CHECKS_PASS_BROWSER_CI_PENDING_NOT_RC",
+    "base_remote_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+    "scope": {
+      "rigs": 10,
+      "editable_parts": 44,
+      "rooms": 40,
+      "source": "games/cinder-shift/src/art/motion-atlas.ts",
+      "renderer": "games/cinder-shift/src/art/world-motion.ts",
+      "gallery": "art/motion-v1/preview.html",
+      "contact_sheet": "art/motion-v1/contact-sheet.png",
+      "animation_preview": "art/motion-v1/motion-preview.gif"
+    },
     "local_checks": {
-      "build": "PASS_CLEAN_EQUIVALENT_TREE",
+      "build": "PASS",
       "typecheck": "PASS",
-      "i18n_keys": 906,
-      "art_source_animation_contracts": "PASS",
-      "models": {
-        "passed": 149,
-        "failed": 0,
-        "log_sha256": "2f57b78256f8f3a6daa929be3204e7fa7316cf06b68bf1be6b7211e9957424bc"
-      },
-      "world_models": {
-        "passed": 86,
+      "i18n_keys": 913,
+      "art_contracts": "PASS",
+      "motion_and_environment_models": {
+        "passed": 51,
         "failed": 0
       },
-      "build_id": "local.20261118T153636991Z",
-      "source_sha": "970f518671576e1f93333c2b4f394e3c3005bbf8",
-      "source_dirty": false,
-      "manifest_files": 71,
-      "browser": "NOT_RUN_LOCAL_LISTEN_EPERM",
-      "browser_blocker": "sandbox denies listen 127.0.0.1:4175; model tests use CINDER_BASE_URL only to disable webServer, with no browser or network involved",
-      "candidate_artifact": false
+      "prepared_figma_script_syntax": "PASS_AS_ASYNC_FUNCTION_NOT_EXECUTED",
+      "runtime_browser": "BLOCKED_LISTEN_EPERM_127.0.0.1_4175"
     },
-    "browser_checks": "PENDING_CI",
-    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
-    "runtime_tree_sha": "35fd408a2ef78a53312f97eb60b67d806391b148",
+    "visual_review": {
+      "source_contact_sheet": "VIEWED",
+      "runtime_screenshots": "PENDING_CI",
+      "figma_native_layers": "NOT_CREATED"
+    },
+    "figma": {
+      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+      "status": "FILE_CREATED_ASSET_IMPORT_BLOCKED_STARTER_MCP_LIMIT",
+      "import_script": "art/motion-v1/figma-import.js",
+      "native_timelines_verified": false
+    },
+    "harbor_test_repairs": [
+      "Context planning uses actual 22-pixel body width instead of an arbitrary 40-pixel clearance.",
+      "Port relay routes jump via the real upper step rather than walking into it.",
+      "Quay contact approach ends before momentum carries the player into the repair pocket.",
+      "Registry regenerated with the actual package version."
+    ],
+    "ci": {
+      "status": "PENDING_SOURCE_SAVE"
+    },
     "deployed": false,
     "accepted": false,
-    "ci": {
-      "status": "IN_PROGRESS",
-      "artifact_run_id": 44337561152,
-      "cross_browser_run_id": 44337560933,
-      "full_regression_run_id": 44337561019,
-      "full_routes_run_id": 44337561002,
-      "workflow_results": "PENDING",
-      "ordinary_input": "PENDING",
-      "screenshots": "PENDING",
-      "immutable_artifact": "PENDING"
+    "production": {
+      "version": "0.8.0-alpha.5",
+      "changed": false
     },
-    "verified_parent_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
+    "remaining": [
+      "Resolve browser findings on exact source and review runtime frames.",
+      "Complete remaining detailed world encounters and full RW3 production manifest; this pack is a subset.",
+      "Import and verify native Figma layers/timelines after the connector quota permits.",
+      "RW4 localization, devices, storage/performance/channel checks and RC remain open."
+    ],
+    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate"
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",
@@ -1922,5 +1942,63 @@
       "local_download_checksum": "PASS_ZIP_TAR_AND_ALL_MANIFEST_FILES",
       "deployed": false
     }
+  },
+  "historical_alpha9_checkpoint": {
+    "version": "0.8.0-alpha.9",
+    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
+    "scope": [
+      "YU01-A entrance, powered stair lights and reachable upper salvage",
+      "YU01-B actual bridge contact and reversible stair/bridge geometry",
+      "YU01-C connected upper route and lower physical cover",
+      "YU01-D two safe preparations before fresh pulse warning, signals and physical transmission map"
+    ],
+    "report": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
+    "verification_report": "docs/cinder-shift/alpha9-verification.json",
+    "local_checks": {
+      "build": "PASS_CLEAN_EQUIVALENT_TREE",
+      "typecheck": "PASS",
+      "i18n_keys": 906,
+      "art_source_animation_contracts": "PASS",
+      "models": {
+        "passed": 149,
+        "failed": 0,
+        "log_sha256": "2f57b78256f8f3a6daa929be3204e7fa7316cf06b68bf1be6b7211e9957424bc"
+      },
+      "world_models": {
+        "passed": 86,
+        "failed": 0
+      },
+      "build_id": "local.20261118T153636991Z",
+      "source_sha": "970f518671576e1f93333c2b4f394e3c3005bbf8",
+      "source_dirty": false,
+      "manifest_files": 71,
+      "browser": "NOT_RUN_LOCAL_LISTEN_EPERM",
+      "browser_blocker": "sandbox denies listen 127.0.0.1:4175; model tests use CINDER_BASE_URL only to disable webServer, with no browser or network involved",
+      "candidate_artifact": false
+    },
+    "browser_checks": "PENDING_CI",
+    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
+    "runtime_tree_sha": "35fd408a2ef78a53312f97eb60b67d806391b148",
+    "deployed": false,
+    "accepted": false,
+    "ci": {
+      "status": "IN_PROGRESS",
+      "artifact_run_id": 44337561152,
+      "cross_browser_run_id": 44337560933,
+      "full_regression_run_id": 44337561019,
+      "full_routes_run_id": 44337561002,
+      "workflow_results": "PENDING",
+      "ordinary_input": "PENDING",
+      "screenshots": "PENDING",
+      "immutable_artifact": "PENDING"
+    },
+    "verified_parent_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e"
+  },
+  "historical_alpha10_failed_ci": {
+    "runtime_source_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+    "status": "5_WORKFLOWS_SUCCESS_3_FAILURE",
+    "artifact_run": 44344756827,
+    "candidate_run": 44344756949,
+    "check_run": 44344756848
   }
 }

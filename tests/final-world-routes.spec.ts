@@ -44,7 +44,7 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
  const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610
   &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)
-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+20&&r.x+r.width>x-20)
+  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)
   // Plan the standing point separately from waiting for the actual safe phase.
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;

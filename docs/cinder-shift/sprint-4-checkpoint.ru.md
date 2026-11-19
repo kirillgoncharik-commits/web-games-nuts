@@ -1,3 +1,14 @@
+# Текущая разработка — alpha.11, Art + Motion
+
+19.11.2026. [Арт и анимации](alpha11-art-motion.ru.md), [проверки](alpha11-verification.json).
+10 rigs / 44 слоя подключены к 40 комнатам новых миров. Build, contracts и 51 модель PASS;
+игровой browser CI ожидается. Figma-файл создан, перенос заблокирован MCP-лимитом Starter.
+Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5.
+
+---
+
+История предыдущих итераций:
+
 # Продолжение 18.11.2026 — alpha.9, Дом связи
 
 [Отчёт](alpha9-house-of-communications.ru.md), [ведомость](alpha9-verification.json). Remote runtime `1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320`, local `970f518671576e1f93333c2b4f394e3c3005bbf8`, точный общий tree `35fd408a2ef78a53312f97eb60b67d806391b148`. Чистая локальная сборка, contracts и 149 моделей PASS; 86 world/environment models PASS. Четыре комнаты YU01 подключены; проверка ввода, screenshots, оба полных маршрута и designated artifact **PENDING CI**. Обычный C03 route использует настоящий подъём на мост, не ослабляя проверку высоты контакта.

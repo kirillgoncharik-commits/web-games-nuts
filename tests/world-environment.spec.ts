@@ -42,7 +42,7 @@ for(const reduced of [false,true])test(`quay water signals survive lights off an
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.simMs%5600<3100;});await to(page,304);await ground(page,320);
  await jump(page,304,344);await ground(page,288);await to(page,352);await ground(page,288);await standingJump(page,392);await ground(page,272);await standingJump(page,480);await ground(page,248);
  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU02-C'].cacheUsed).toBe(true);await capture('quay-upper-salvage');
- await to(page,552);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
+ await to(page,540);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);expect((await state(page)).hp).toBe(6);expect((await state(page)).exitOpen).toBe(true);
  await writeFile(info.outputPath('quay-evidence.json'),JSON.stringify({fixture:'one YU02-C entry with drone explicitly cleared for geometry and lighting; full C03 route keeps real combat. All subsequent movement is ordinary keyboard input',reduced,samples},null,2));
 });
 
@@ -53,7 +53,7 @@ test('port relay earns the elevated platform feed before its fresh warning, shie
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  await jump(page,124,176);await ground(page,288);await standingJump(page,264);await ground(page,288);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  expect((await state(page)).worldPulse).toBe('warning');await capture('port-relay-cargo-feed');
- await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await to(page,408);await ground(page,320);
+ await standingJump(page,344);await ground(page,244);await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await to(page,408);await ground(page,320);
  await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='safe');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
  await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');await to(page,448);await ground(page,320);
  await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='active');expect((await state(page)).hp).toBe(6);await capture('port-relay-dry-pocket');
@@ -312,11 +312,10 @@ test('substation earns traction isolation before its fresh pulse warning and con
 test('a closed transmitter contact beside a lever keeps the selected circuit when interact is pressed',async({page},info)=>{
  test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-D'});
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
- await jump(page,128,216);await ground(page,320);await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%4800<3000;});
- await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
- await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
+ await jump(page,124,176);await ground(page,288);await standingJump(page,264);await ground(page,288);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
+ await standingJump(page,344);await ground(page,244);await to(page,416);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
  await to(page,408);await ground(page,320);await page.waitForFunction(()=>(window as any).__CINDER__().worldPulse==='warning');
  const before=await state(page);await page.keyboard.press('e');const blocked=await state(page);expect(blocked.world.phase).toBe(1);expect(blocked.world.power.circuit).toBe('A');expect(blocked.world.power.switches).toBe(2);await page.screenshot({path:info.outputPath('closed-contact-preserves-circuit.png')});
- await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%4800<3400;});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).world.power.circuit).toBe('A');
+ await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5200<3400;});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).world.power.circuit).toBe('A');
  await writeFile(info.outputPath('closed-contact-evidence.json'),JSON.stringify({fixture:'one YU02-D entry; real switching and confirmation, including a deliberate press during a closed window',before,blocked,confirmed:await state(page)},null,2));
 });
