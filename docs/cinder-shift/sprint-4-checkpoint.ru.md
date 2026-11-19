@@ -1,0 +1,131 @@
+# Текущая разработка — alpha.11, Art + Motion
+
+19.11.2026. [Арт и анимации](alpha11-art-motion.ru.md), [проверки](alpha11-verification.json).
+10 rigs / 44 слоя подключены к 40 комнатам новых миров. Build, contracts и 51 модель PASS;
+игровой browser CI ожидается. Figma-файл создан, перенос заблокирован MCP-лимитом Starter.
+Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5.
+
+---
+
+История предыдущих итераций:
+
+# Продолжение 18.11.2026 — alpha.9, Дом связи
+
+[Отчёт](alpha9-house-of-communications.ru.md), [ведомость](alpha9-verification.json). Remote runtime `1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320`, local `970f518671576e1f93333c2b4f394e3c3005bbf8`, точный общий tree `35fd408a2ef78a53312f97eb60b67d806391b148`. Чистая локальная сборка, contracts и 149 моделей PASS; 86 world/environment models PASS. Четыре комнаты YU01 подключены; проверка ввода, screenshots, оба полных маршрута и designated artifact **PENDING CI**. Обычный C03 route использует настоящий подъём на мост, не ослабляя проверку высоты контакта.
+
+Далее: получить результаты artifact/cross-browser CI `44337561152` / `44337560933`, исправить найденное и осмотреть кадры. Затем YU02/YU04/YU05 и production pack. Локальный браузерный сервер запрещён sandbox; исходники сохранены в PR10. Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5. Отдельный C01 эксперимент не переносился.
+
+## История alpha.8
+
+# Продолжение 18.11.2026 - alpha.8
+
+18.11.2026. [Отчёт](alpha8-audio-and-touch.ru.md), [доказательства](alpha8-verification.json). Source `753f344`, build `cinder-v1.b37.a2`: 178 selected checks, оба полных маршрута и три браузера PASS. Общая регрессия 478/478; все восемь workflow / 50 latest jobs SUCCESS после targeted C03 повтора. Исправлены нулевая громкость при остановленном AudioContext и кнопки компактных меню 44/48 px. Первый C03 route failure сохранён; локальный и targeted CI повтор на тех же исходниках PASS. Архив и 71 файлов сверены. Alpha.8 не опубликована; production alpha.5 сохраняется.
+
+Все шесть RW3 IDs PARTIAL. Продолжить подробные ситуации C03 (YU01/YU02/YU04/YU05), production art/animation/VFX/audio и RW4. Стабильность C03 автопрохождения, Cargo E inactivity, dedicated fresh earned unlock, physical devices и human timing остаются открытыми. Отдельный C01 эксперимент не входит в эту итерацию. Снимок общего CI - в ведомости.
+
+## История alpha.7
+
+# Продолжение 18.11.2026 - alpha.7
+
+[Отчёт](alpha7-electric-train.ru.md), [ведомость](alpha7-verification.json). Source `1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db`, build `cinder-v1.b36.a1`: 142 selected checks, C02/C03 full routes и Chromium/Firefox/WebKit PASS. Реализованы ситуации YU03-A/B/C/D; стабильные power collider IDs, запрет смены опоры под героем, видимые за Мирой power controls и защита от переключения соседнего рубильника при закрытом контакте. Сверены архив и 71 файл, просмотрены exact-source кадры.
+
+Шесть исходных RW3 IDs PARTIAL. Продолжать остальные подробные комнаты C03 и production art/audio/VFX, затем RW4. Общий QA сохраняет 44/48 px и повторяемый CI audio warning-restore failure; native frame comparison прошёл 12/12 на отдельном повторе без изменения порога. Эти результаты не скрыты selected gate. Alpha.7 не опубликована, зарегистрированный live - alpha.5 / `cinder-v1.b28.a1`. Все детали и снимок текущих workflow в ведомости.
+
+## История alpha.6
+
+# Продолжение 18.11.2026 - alpha.6
+
+Актуальные [отчёт](alpha6-kitchen-encounters.ru.md) и [доказательства](alpha6-verification.json). Source `20b908046e1266fc12a1ebb03ce206608dc96980`, build `cinder-v1.b31.a1`: 128 selected checks, оба полных C02/C03 маршрута и Chromium/Firefox/WebKit регрессия PASS. Реализованы физическая заслонка SW01-A, паровой карман SW01-B и три фазы SW01-D/SW05-D. Исправлены выбор repair/switch и границы парового укрытия. Архив и все 71 файла сверены; шесть статических кадров просмотрены. Route driver не изменялся.
+
+Все шесть RW3 IDs остаются PARTIAL; продолжать остальные подробные комнаты, особенно C03, затем production art/audio/VFX и RW4. Общий regression сохраняет дефект mobile button 44/48 px, Cargo E inactivity unreproduced/open, dedicated fresh earned unlock и физические устройства открыты. Alpha.6 сохранена в PR10 и не опубликована; live остаётся alpha.5 / `cinder-v1.b28.a1`. Report-only successor не меняет проверенный runtime source.
+
+## История alpha.5
+
+# Продолжение 17.11.2026 - alpha.5
+
+Актуальные [отчёт](alpha5-laundry-balcony.ru.md) и [доказательства](alpha5-verification.json). Source `c7f3b87`, build `cinder-v1.b28.a1`: selected gate 114 checks + C02/C03 full routes PASS; Chromium/Firefox/WebKit PASS. Механизмы SW03/SW04 подключены и проверены. Все шесть RW3 ID PARTIAL; production pack и RW4 остаются открытыми. По отдельной команде Кирилла alpha.5 опубликована; [manifest и 71 файл проверены live](alpha5-production-release-2026-11-17.json).
+
+## Исторический checkpoint
+
+# Текущая контрольная точка: alpha.4, 16.11.2026
+
+**INCOMPLETE / NOT RC.** Доработаны SW02-C (бумажная платформа), SW02-D (два скана лампы) и ART-01 (видимый робот со статичным свечением).
+
+Source `ce0e946a261f01f9928ad57a9c6fcd9702f57390`, build `cinder-v1.b23.a1`, [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10). Выбранный gate: 102 PASS, оба полных маршрута C02/C03 PASS, immutable archive. Cross-browser: Chromium 64 PASS, Firefox/WebKit по 63 PASS + 1 явно обозначенный touch SKIP; models 117 PASS.
+
+Актуальные [подробный отчёт](alpha4-desktop-and-menu.ru.md), [verification](alpha4-verification.json) и [room registry](new-world-runtime-registry.json) заменяют старые CURRENT/FULL_INPUT_FAIL ниже. Все шесть RW3 требований остаются PARTIAL; полного production art/audio и RW4/RC ещё нет. На production зарегистрирована alpha.3; alpha.4 не опубликована.
+
+Продолжить SW03/SW04 и оставшееся производство по brief. Среда unavailable; все изменения сохранены в remote. Сначала синхронизировать свежий HEAD, сохранив старые локальные checkout и возможный незакоммиченный draft отчёта.
+
+<details><summary>Исторический checkpoint до alpha.4</summary>
+
+# Финальный этап Cinder Shift — checkpoint 16.11.2026
+
+**INCOMPLETE / NOT RC / NOT ACCEPTED.** Вход M-RW4 выявил незавершённый M-RW3. Выполнена следующая производственная итерация M-RW3; сравнительный M-COMPARE не запускался.
+
+## Активная alpha.3 после проверенного среза
+
+Source `0117a79a53e114e9246ad6114d2c603a436f8ae7`, tree `4666be1cbf90021864624cda913c174b0f674adc`, локальный эквивалент `eb77d1c`. SW02-A теперь содержит настоящие нажимаемые клавиши с физическим снижением соседней опоры и безопасным возвратом. Build/typecheck/i18n и 64 локальные модели PASS. На [CI 43901074700](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43901074700) прошли 86 runtime/input checks (включая клавиатуру и два touch-контакта Chromium) и оба полных маршрута C02/C03 по 20 комнат/5 миссий с финалами и reload результата. Все четыре job выбранного gate PASS; alpha.3 artifact `14244131349`, build `cinder-v1.b19.a1` сохранён. GitHub ZIP digest `3a9ced4caa808b955f8f5694d247adc131efb641ef16ee6814a8efa17859224b`; повторная локальная проверка checksum не выполнена из-за отключения среды. После синхронизации source среда стала unavailable; новые screenshot/JSON evidence не просмотрены. [Подробный checkpoint](rw3-environment-production.ru.md).
+
+Проверенный alpha.2 artifact ниже сохраняется как отдельный baseline. Alpha.3 не считается RC/принятой/опубликованной; полный производственный объём остаётся открытым.
+
+## Точное состояние предыдущего проверенного среза
+
+Ветка `codex/cinder-shift-final`, draft [PR10](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10), база — `codex/cinder-shift-m-rework` / PR9. Исходный remote `487b6757e60f1b7152e566503139d9cd425f57eb` перед началом сверён через compare: identical.
+
+Последний полностью проверенный runtime source: `90170441b9742ce6a2f0dee5cf6a71e689b46935`. Точный отчёт — [sprint-4-verification.json](sprint-4-verification.json); каталог новых комнат — [new-world-runtime-registry.json](new-world-runtime-registry.json).
+
+Первая поставка remote `1fba2c9f1452c457f0a4d5833b526215049b586f` совпадала с локальным `0d3f38a6772320c867482706bb3edf5c1f307722` по tree `6f7d31b5895c3eb1bc7314805e27359cfda23775`. Затем локальная среда отключилась. Последующие исправления сохранены через GitHub и проверялись своим CI. Среда исходников восстановлена: свежая локальная копия `cinder-shift-final-continue`, commit `37a2df9`, совпадает с remote runtime по tree `3f5572e3eb0f7b1d09274539237bcb25768e6b81`. Старая копия `cinder-shift-final` и её незакоммиченные документы сохранены; продолжать её без сверки нельзя.
+
+## Продолжение и сообщение о турелях
+
+Пользователь подтвердил сектор 2, E/F. Исправлены показ отключённой турели (знак отсутствия питания, без HP) и зависевшая от старого tutorial-флага подсказка E. На source `52e56d5` прошли пять проверок турелей и полный набор 54 encounter/UI/combat checks в каждом из Chromium/Firefox/WebKit — 162 PASS. В F выключенное состояние предусмотрено E01/Relay; E всегда получает питание. Неподвижная E пока не воспроизведена и остаётся открытой. [Точный отчёт](cargo-turrets-2026-11-16.md).
+
+Новая проверка геометрии нашла SW02-D: турель пересекала укрытие и не стояла на полу. Размещение исправлено; модель сначала упала, после исправления все 44 action/placement/spawn models PASS. Ещё 58 legacy/turret models PASS; typecheck/i18n — 885 ключей.
+
+Исторически полные маршруты на `52e56d5` были красными: C02 — смерть при небезопасном обходе к SW02-B; C03 дошёл до YU05-C (19-я комната), где driver прыгал под низким потолком вместо подъёма на полку. Последующие input-прогоны выявили неточности подхода к консолям и предметам; сохранены все failure-state. На source `b782ee2`, run `43891987840`, C02 впервые прошёл все 20 комнат/5 миссий, финал, факты и reload результата. C03 остался красным: player стоял на краю укрытия возле консоли x568. Current source `9017044` использует ближайшие консоли, проверенные позиции взаимодействия, запас времени для броска и боковой подход к предмету. На exact source `9017044`, [run 43893609588](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43893609588), оба полных маршрута теперь PASS: 20+20 комнат, по пять миссий, три SW-фрагмента/пять YU-передач, финалы и reload сохранённого результата. Пакеты 5 turret + 29 previous + 50 targeted PASS. Все четыре job выбранного gate завершились успешно; это не общий PASS всех workflow и не production acceptance.
+
+Сохранён [immutable alpha.2 artifact](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43893609588/artifacts/14237839242), build `cinder-v1.b18.a1`, source `9017044`, clean. ZIP SHA256 `4cde336401862e73033695864f7ac23edc3bbb0de4100be9fc49c1b727ed9f76`; game tar SHA256 `695bffb81faad7268de94f0fb6a18eb68c5103c9d3cd141ee6145c67ab570f66`. Скачивание и checksum проверены. Это alpha-кандидат, не RC и не live deploy. Успешные body-only route attachments не сохранялись list reporter; proof — CI PASS и assertions. Добавлена явная запись JSON для будущих прогонов; этот export-only delta прошёл typecheck, игровые файлы не изменены.
+
+## Реальная поставка alpha.2
+
+- 40 утверждённых SW/YU room IDs, десять миссий A–D, общая сцена/физика/бой/Мира/мастерская и переходы. C01 сохраняет 44 комнаты и обе Foundry-ветки.
+- Carry/pickup/throw/drop на interact, запрет огня/заряда с занятыми руками, одноразовая защита крышкой, возврат обязательного предмета, последовательные контакты и ledger.
+- A/B меняет реальные коллайдеры. Замыкание внутри тела отклоняется; цели показывают один/два индикатора. Исправлены размещение контактов крыши/состава и высота визуального маркера; модели учитывают fixed и активные circuit solids.
+- Устойчивое открытие после полного C01, selector и отдельные progress/purchases/entry/result миров. Future/corrupt records защищены. Исправлено восстановление world save после write failure, с проверкой сохранности C01.
+- Canonical fragments SW01/SW03/SW04 проверяются перед SW05; YU записывает передачи. Повтор callback не даёт награду.
+- Карты, процедурный секторный art draft, 14 оригинальных scheduler themes, 131 новая EN/RU строка, notes alpha.2. Итоговые сводки миров отделены от C01 history; подтверждение записи связано с фактическим save result.
+- Готовый terminal exit имеет приоритет над повторным подбором уже использованного carry item.
+
+Это подключённый **runtime draft**, а не выполненный production pack.
+
+## Проверки
+
+Локально на первой поставке: build/typecheck/i18n (882 EN/RU ключа), прежние art/anchor/rig contracts, reproducible C01 registry и 164 модельных теста PASS. Локальный HTTP server был запрещён (listen EPERM), затем среда стала unavailable.
+
+Исторический exact-source [CI 43873344613](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613):
+- build/typecheck PASS;
+- прежний RW3 pack: 29 PASS;
+- новый targeted pack: 49 PASS, включая action models, placement checks, selector/notes/механику, обычные входы и recovery world save;
+- полные C02/C03 input routes: **0 PASS / 2 FAIL**.
+
+C02 останавливается в SW01-C: контакт выполнен, но driver пробует ремонт вне радиуса. C03 — в YU01-C: driver стреляет с верхней платформы в нижний уровень дрона. Эти факты не доказывают игровой softlock; полный пользовательский маршрут остаётся непроверенным. Нельзя закрывать его по моделям, удалить проверку ради зелёного CI или объявить обе кампании сданными.
+
+Начальный unlock в новых тестах — явно обозначенная legacy C01 completion fixture. Все действия внутри новых миров идут обычным клавиатурным вводом, без инъекции прогресса/HP/целей. Это не доказательство fresh C01 → earned unlock. История всех завершённых неудачных прогонов сохранена в verification.
+
+Загружен только [test-evidence ZIP](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43873344613/artifacts/14228767961), SHA256 `2930101cdd20efcf74b9a7b47fc2033a0669cee0b3b2c59d57ded2cd7fce2665`. Финальный game artifact не выпущен, потому что input gate красный. Остальная регрессия на момент записи ещё имела queued/in-progress jobs; общего PASS нет.
+
+## Следующий конкретный шаг
+
+Сквозной keyboard gate на `9017044` закрыт. Продолжить production brief M-RW3: подробные комнатные механизмы, затем touch/Retry/build-варианты и earned fresh C01 unlock. Локальный HTTP/browser по-прежнему запрещён; человеческие и физические device-проверки остаются NOT RUN. Случай E не закрывать как исправленный без воспроизведения.
+
+После этого продолжить production по brief: нажимаемые клавиши, бумажная/воздушная среда, пространственные фазы и encounters; весь 128-position art/animation/VFX manifest; stems/intensities, восемь stinger, SFX среды, editable masters/экспорты и listening evidence. Текущий процедурный draft/14 themes этот объём не закрывают.
+
+M-RW4 после выхода RW3: пять испытаний с принятым контентом; полный утверждённый набор 50 локалей/RTL (сейчас готовы EN/RU); storage/update/rollback matrix; performance/совокупные вспышки/аудио; реальные устройства/каналы; один immutable RC preview.
+
+Все шесть исходных M-RW3 ID — PARTIAL. 80 canonical IDs, 54 aliases и три RW3-ADD сохранены. Субъективная приёмка, human timing и физические телефоны — NOT RUN. Недостающие переводы не заменены копиями EN.
+
+Production в этой задаче не менялся: справочная alpha.1 / `ffa3df5...`, build `cinder-v1.b1.a1`, site `f9f31a615ed05fc206a93eef24cb78d2fc67bb4c`. Публикация и одобрение RC не заявлены.
+
+
+</details>

@@ -1,3 +1,4 @@
+import type {WorldMissionId} from './new-campaign-content';
 import type {PlayableMissionId} from './missions';
 
 export type TimeAttackMedal='bronze'|'silver'|'gold';
@@ -5,6 +6,7 @@ export type MedalCalibration={mission_id:PlayableMissionId;reference_ms:number|n
 
 /** References stay unset until a real standard run is accepted in playtest. */
 export const timeAttackMedalCalibration:Readonly<Record<PlayableMissionId,MedalCalibration>>=Object.freeze({
+ ...Object.fromEntries((['SW01','SW02','SW03','SW04','SW05','YU01','YU02','YU03','YU04','YU05'] as WorldMissionId[]).map(id=>[id,{mission_id:id,reference_ms:null,source:'awaiting_playtest' as const}])) as Record<WorldMissionId,MedalCalibration>,
   airlock:{mission_id:'airlock',reference_ms:null,source:'awaiting_playtest'},
   cargo:{mission_id:'cargo',reference_ms:null,source:'awaiting_playtest'},
   foundry:{mission_id:'foundry',reference_ms:null,source:'awaiting_playtest'},

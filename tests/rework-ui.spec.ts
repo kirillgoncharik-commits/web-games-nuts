@@ -20,6 +20,31 @@ test('menu has one action group; language and analytics remain reachable in Sett
  await expect(page.getByTestId('new-shift')).toBeVisible();
 });
 
+for(const size of [{width:1440,height:900},{width:390,height:844},{width:667,height:300}])for(const locale of ['ru','en'])test(`ART-01 robot and glow stay clear of controls, ${size.width}x${size.height} ${locale}`,async({page},info)=>{
+ await page.setViewportSize(size);await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();
+ await page.getByTestId('menu-settings').click();await page.getByTestId('locale').selectOption(locale);await page.getByTestId('settings-back').click();
+ const inspect=async()=>{
+  await expect(page.getByTestId('menu-art')).toBeVisible();await expect(page.getByTestId('menu-robot-glow')).toBeVisible();
+  const result=await page.locator('.main-menu').evaluate(panel=>{
+   const svg=panel.querySelector('svg')!,matrix=svg.getScreenCTM()!;
+   const p=(x:number,y:number)=>{const point=svg.createSVGPoint();point.x=x;point.y=y;return point.matrixTransform(matrix);};
+   const top=p(980,85),bottom=p(1385,875),robot={left:top.x,top:top.y,right:bottom.x,bottom:bottom.y};
+   const overlaps=[...panel.querySelectorAll(':scope>header,:scope>.panel-content,:scope>.panel-actions')].some(el=>{const r=el.getBoundingClientRect();return r.left<robot.right&&r.right>robot.left&&r.top<robot.bottom&&r.bottom>robot.top;});
+   const buttons=[...panel.querySelectorAll('button')].map(el=>{const r=el.getBoundingClientRect();return {id:el.id,inside:r.left>=0&&r.top>=0&&r.right<=innerWidth&&r.bottom<=innerHeight,clickable:el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))};});
+   const image=svg.querySelector('image')!;return {robot,overlaps,buttons,artWidth:svg.clientWidth,href:image.getAttribute('href'),horizontalOverflow:panel.scrollWidth>panel.clientWidth+1};
+  });
+  console.log('Menu geometry',JSON.stringify({size,locale,...result}));
+  expect(result.robot.left).toBeGreaterThan(0);expect(result.robot.top).toBeGreaterThan(0);expect(result.robot.right).toBeLessThan(size.width);expect(result.robot.bottom).toBeLessThan(size.height);
+  expect(result.overlaps).toBe(false);expect(result.horizontalOverflow).toBe(false);expect(result.buttons.every(b=>b.inside&&b.clickable)).toBe(true);
+  const response=await page.request.get('/games/cinder-shift/'+result.href);expect(response.ok()).toBe(true);return result;
+ };
+ const normal=await inspect();await page.screenshot({path:info.outputPath('menu-normal.png')});
+ await page.getByTestId('menu-settings').click();await page.locator('#reduced-motion').check();await page.locator('#reduced-flashes').check();await page.locator('#effects-intensity').focus();await page.locator('#effects-intensity').press('Home');await page.getByTestId('settings-back').click();
+ const reduced=await inspect();await page.screenshot({path:info.outputPath('menu-reduced.png')});
+ // Reduced settings must preserve the readable silhouette, not identical SVG grid sizing.
+ for(const view of [normal,reduced]){expect(view.robot.right-view.robot.left).toBeGreaterThanOrEqual(72);expect(view.robot.bottom-view.robot.top).toBeGreaterThanOrEqual(150);}await writeFile(info.outputPath('menu-art-evidence.json'),JSON.stringify({size,locale,normal,reduced},null,2));
+});
+
 for(const width of [1280,667,390])test(`facility inspection and inline module purchase preserve progress at ${width}px`,async({page},info)=>{
  await page.setViewportSize({width,height:width===667?300:800});
  await page.goto('/games/cinder-shift/?seed=4');await page.getByTestId('new-shift').click();

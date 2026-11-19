@@ -1,6 +1,6 @@
 {
   "milestone": "M-REWORK",
-  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_C3_ENGINEERING_VERIFIED_WITH_M_RW4_SUBSCOPES; M_RW3_A0_STARTED",
+  "status": "IN_PROGRESS; M_RW1_ENGINEERING_COMPLETE; M_RW2_WITH_RW4_SUBSCOPES; M_RW3_ALPHA8_QA_VERIFIED_RUNTIME_DRAFT; M_RW4_ENTRY_INCOMPLETE",
   "started_at": "2026-11-12",
   "source": "https://trello.com/c/AqZ78Mjo",
   "requirements_source": {
@@ -1247,20 +1247,15 @@
     }
   },
   "candidate": {
-    "version": "0.8.0-alpha.1",
-    "milestone": "M-RW3",
-    "checkpoint": "A0_FOUNDATION",
-    "status": "IN_PROGRESS",
-    "published": true,
+    "version": "0.8.0-alpha.9",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha9-house-of-communications.ru.md",
+    "status": "LOCAL_MODELS_PASS_BROWSER_CI_IN_PROGRESS_RW3_PARTIAL_NOT_RC",
+    "published": false,
     "accepted": false,
-    "verification_report": "docs/cinder-shift/sprint-3-verification.json",
-    "limitations": "Not checkpoint A: SW01/YU01 full vertical slices and all 40 production rooms/art/audio remain open. Two internal fixtures are not campaign delivery.",
-    "build_id": "cinder-v1.b1.a1",
-    "runtime_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
-    "publication_scope": "A0 foundation production; original full RW3 scope remains open",
-    "preview_url": "https://94d80ae3.nuts-games.pages.dev/games/cinder-shift/",
-    "production_url": "https://nuts.bid/games/cinder-shift/",
-    "general_ci": "ALL_8_WORKFLOWS_SUCCESS"
+    "runtime_source_sha": "1f865d1d15f8a7b3cecf4653ca1be9f1ed0be320",
+    "last_fully_verified_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
+    "verification_report": "docs/cinder-shift/alpha9-verification.json"
   },
   "requirements": [
     {
@@ -2575,7 +2570,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE; ART01_ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
         "baseline": "38468184 / B6; reuse existing mechanics and assets",
@@ -2596,15 +2591,20 @@
           "games/cinder-shift/src/ui/application.ts",
           "games/cinder-shift/src/ui/sprint2.css",
           "tests/rework-ui.spec.ts",
-          "tests/release-readiness.spec.ts"
+          "tests/release-readiness.spec.ts",
+          "games/cinder-shift/src/ui/menu-art.ts",
+          "games/cinder-shift/src/ui-art.css"
         ],
         "reports": [
           "docs/cinder-shift/sprint-2-verification.json",
-          "docs/cinder-shift/sprint-2-requirement-review.json"
+          "docs/cinder-shift/sprint-2-requirement-review.json",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
         ],
         "acceptance_scope": "Main menu art retained and actions grouped; language and analytics remain in Settings.",
         "verification": "VERIFIED_ENGINEERING_C3"
-      }
+      },
+      "art01_clarification": "Visible robot with static silhouette glow verified on alpha.4; formal acceptance NOT RUN and this clarification is not deployed."
     },
     {
       "id": "RW-05.04",
@@ -2841,19 +2841,42 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-progress.ts",
-        "games/cinder-shift/src/ui/application.ts"
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-06.05",
@@ -2861,19 +2884,42 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-progress.ts",
-        "games/cinder-shift/src/session/save.ts"
+        "games/cinder-shift/src/session/save.ts",
+        "games/cinder-shift/src/ui/application.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-07.01",
@@ -3175,7 +3221,7 @@
         "docs/cinder-shift/sprint-2-verification.json",
         "docs/cinder-shift/sprint-2-requirement-review.json"
       ],
-      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE",
+      "publication": "C3_PRODUCTION; ACCEPTANCE_INCOMPLETE; ART01_ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "implementation_status": "complete",
       "sprint_owner": "M-RW2",
       "sprint_2_audit": {
@@ -3197,15 +3243,20 @@
           "games/cinder-shift/src/art/sector-design.ts",
           "games/cinder-shift/src/ui/research-icons.ts",
           "tests/sprint2-media.spec.ts",
-          "tests/rw1-equipment.spec.ts"
+          "tests/rw1-equipment.spec.ts",
+          "games/cinder-shift/src/ui/menu-art.ts",
+          "games/cinder-shift/src/ui-art.css"
         ],
         "reports": [
           "docs/cinder-shift/sprint-2-verification.json",
-          "docs/cinder-shift/sprint-2-requirement-review.json"
+          "docs/cinder-shift/sprint-2-requirement-review.json",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
         ],
         "acceptance_scope": "Five sectors, all 44 rooms, equipment, hazards, actors/Regulator and all W/M/D + E01–E06 icons.",
         "verification": "VERIFIED_ENGINEERING_C3"
-      }
+      },
+      "art01_clarification": "Visible robot with static silhouette glow verified on alpha.4; formal acceptance NOT RUN and this clarification is not deployed."
     },
     {
       "id": "RW-08.03",
@@ -4124,19 +4175,43 @@
       "status": "PARTIAL",
       "implementation": [
         "docs/cinder-shift/new-campaigns/",
-        "games/cinder-shift/content/new-campaigns/"
+        "games/cinder-shift/content/new-campaigns/",
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-12.02",
@@ -4144,39 +4219,119 @@
       "status": "PARTIAL",
       "implementation": [
         "games/cinder-shift/src/session/world-mechanics.ts",
-        "tests/world-mechanics-harness.ts"
+        "tests/world-mechanics-harness.ts",
+        "games/cinder-shift/src/world-rooms.ts",
+        "games/cinder-shift/src/session/world-runtime.ts"
       ],
       "verification": [
         "tests/sprint3-model.spec.ts",
         "tests/sprint3-ui.spec.ts",
-        "tests/sprint3-world.spec.ts"
+        "tests/sprint3-world.spec.ts",
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
       ],
       "evidence": [
-        "docs/cinder-shift/sprint-3-verification.json"
+        "docs/cinder-shift/sprint-3-verification.json",
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
       ],
-      "publication": "not_published",
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
       "sprint_owner": "M-RW3",
-      "sprint_3_scope_remaining": "See sprint-3-checkpoint.ru.md; original requirement is not closed by foundation/models/fixtures."
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/world-rooms.ts",
+          "games/cinder-shift/src/session/world-runtime.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-12.03",
       "requirement": "Подключить ранее согласованные art/music пакеты обоих миров, все состояния и необходимые анимации/VFX по общему стандарту переработки; отдельные каталоги файлов без runtime-интеграции не считаются сдачей.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "sprint_owner": "M-RW3"
+      "status": "PARTIAL",
+      "implementation": [
+        "games/cinder-shift/src/art/world-art.ts",
+        "audio/m06/synth.mjs"
+      ],
+      "verification": [
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+      ],
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
+      "sprint_owner": "M-RW3",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/art/world-art.ts",
+          "audio/m06/synth.mjs"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-12.04",
       "requirement": "Принять путь fresh→финал первой→открытие обоих миров→reload→Start/Continue/Replay каждого. Переключение не стирает соседний прогресс.",
-      "status": "OPEN",
-      "implementation": [],
-      "verification": [],
-      "evidence": [],
-      "publication": "not_published",
-      "sprint_owner": "M-RW3"
+      "status": "PARTIAL",
+      "implementation": [
+        "games/cinder-shift/src/ui/application.ts",
+        "games/cinder-shift/src/session/save.ts"
+      ],
+      "verification": [
+        "tests/final-worlds.spec.ts",
+        "tests/final-world-routes.spec.ts"
+      ],
+      "evidence": [
+        "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+        "docs/cinder-shift/sprint-4-verification.json",
+        "docs/cinder-shift/alpha4-verification.json",
+        "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+      ],
+      "publication": "ALPHA3_RUNTIME_DRAFT_LIVE; ALPHA4_CANDIDATE_NOT_PUBLISHED",
+      "sprint_owner": "M-RW3",
+      "implementation_status": "partial",
+      "verification_status": "PARTIAL; FULL_WORLD_INPUT_PASS_ALPHA4; PRODUCTION_INCOMPLETE; FRESH_C01_UNLOCK_NOT_RUN",
+      "sprint_3_scope_remaining": "Full input routes pass on alpha.4 after one labelled legacy unlock fixture. Remaining detailed mechanisms, production art/audio and fresh C01 earned unlock remain open; see alpha4-desktop-and-menu.ru.md.",
+      "current_engineering_evidence": {
+        "files": [
+          "games/cinder-shift/src/ui/application.ts",
+          "games/cinder-shift/src/session/save.ts"
+        ],
+        "reports": [
+          "docs/cinder-shift/sprint-4-verification.json",
+          "docs/cinder-shift/sprint-4-checkpoint.ru.md",
+          "docs/cinder-shift/alpha4-verification.json",
+          "docs/cinder-shift/alpha4-desktop-and-menu.ru.md"
+        ],
+        "limits": "Both 20-room/five-mission routes PASS with final facts and persisted reload. Legacy C01 unlock fixture; detailed production art/audio and human first-run timing remain incomplete.",
+        "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+      }
     },
     {
       "id": "RW-12.05",
@@ -4358,11 +4513,104 @@
     }
   ],
   "current_production_release": {
+    "version": "0.8.0-alpha.5",
+    "build_id": "cinder-v1.b28.a1",
+    "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "site_main_sha": "1d9dc3418a2a0084bb4d693718a491389b8d6ff7",
+    "report": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED"
+  },
+  "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",
     "build_id": "cinder-v1.b1.a1",
     "runtime_source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
     "site_merge_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
     "url": "https://nuts.bid/games/cinder-shift/",
     "evidence": "sprint-3-production-release-2026-11-16.json"
+  },
+  "art_clarifications": [
+    {
+      "id": "ART-01",
+      "canonical_ids": [
+        "RW-05.03",
+        "RW-08.02"
+      ],
+      "status": "VERIFIED_ENGINEERING_ALPHA4",
+      "accepted": false,
+      "published": false,
+      "evidence": "docs/cinder-shift/alpha4-verification.json"
+    }
+  ],
+  "verified_alpha4_candidate": {
+    "version": "0.8.0-alpha.4",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha4-desktop-and-menu.ru.md",
+    "status": "ALPHA4_VERIFIED_ENGINEERING_CANDIDATE_RW3_PARTIAL_NOT_RC",
+    "published": false,
+    "accepted": false,
+    "runtime_source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "last_fully_verified_runtime_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390"
+  },
+  "previous_production_alpha3": {
+    "version": "0.8.0-alpha.3",
+    "build_id": "cinder-v1.b19.a1",
+    "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "site_merge_sha": "022ed15f05e18441d66368bd2c7e4273419a932d",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "evidence": "alpha3-production-release-2026-11-16.json"
+  },
+  "verified_alpha5_candidate": {
+    "version": "0.8.0-alpha.5",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha5-laundry-balcony.ru.md",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
+    "published": true,
+    "accepted": false,
+    "runtime_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "last_fully_verified_runtime_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "verification_report": "docs/cinder-shift/alpha5-verification.json"
+  },
+  "verified_alpha6_candidate": {
+    "version": "0.8.0-alpha.6",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha6-kitchen-encounters.ru.md",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
+    "published": false,
+    "accepted": false,
+    "runtime_source_sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "last_fully_verified_runtime_sha": "20b908046e1266fc12a1ebb03ce206608dc96980",
+    "verification_report": "docs/cinder-shift/alpha6-verification.json"
+  },
+  "verified_alpha7_candidate": {
+    "version": "0.8.0-alpha.7",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha7-electric-train.ru.md",
+    "status": "SELECTED_AND_CROSS_BROWSER_ENGINEERING_GATES_PASS_RW3_PARTIAL_NOT_RC",
+    "published": false,
+    "accepted": false,
+    "runtime_source_sha": "1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db",
+    "last_fully_verified_runtime_sha": "1eee69e8dfd4efaa9b3c203ae0c707d098ccb3db",
+    "verification_report": "docs/cinder-shift/alpha7-verification.json"
+  },
+  "verified_alpha8_candidate": {
+    "version": "0.8.0-alpha.8",
+    "first_runtime_source_sha": "1fba2c9f1452c457f0a4d5833b526215049b586f",
+    "tests_successor_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
+    "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+    "checkpoint": "docs/cinder-shift/alpha8-audio-and-touch.ru.md",
+    "status": "ENGINEERING_QA_PASS_RW3_PARTIAL_NOT_RC",
+    "published": false,
+    "accepted": false,
+    "runtime_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
+    "last_fully_verified_runtime_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
+    "verification_report": "docs/cinder-shift/alpha8-verification.json"
   }
 }

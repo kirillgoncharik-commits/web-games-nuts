@@ -1,12 +1,14 @@
 // Test-only entry, compiled outside dist/. The production entry has no fixture globals.
 import {app} from '../games/cinder-shift/src/main';
-import {Campaign,newCampaign} from '../games/cinder-shift/src/session/campaign';
-import {missionIds,type PlayableMissionId} from '../games/cinder-shift/src/session/missions';
+import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';
+import {missionChain,type PlayableMissionId} from '../games/cinder-shift/src/session/missions';
+import {isWorldMission,worldForMission} from '../games/cinder-shift/src/session/new-campaign-content';
 import type {RoomId} from '../games/cinder-shift/src/room-data';
 import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/research';
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
+ async audioClock(action:'suspend'|'resume'){const service=app.effects as any,ctx=service.context as AudioContext;await ctx[action]();return{state:ctx.state,time:ctx.currentTime};},
  audioMixer(input?:{warning?:boolean;musicVolume?:number}){const service=app.effects as any;if(input?.warning)app.effects.play('warn_turret');if(input?.musicVolume!==undefined)app.effects.configure({...app.settings,musicVolume:input.musicVolume});return{gain:service.musicBus?.gain.value,context:service.context?.state,snapshot:app.effects.snapshot()};},
  capture(){return new Promise(resolve=>app.game.renderer.snapshot(image=>{
   const s=(window as any).__CINDER__();
@@ -14,8 +16,9 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
  }));},
  start(input:{mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];active?:ActiveSkill;reactorCircuit?:'cooling'|'isolation';cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;clearedEnemyIds?:string[];hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
   app.game.scene.stop('Room');app.game.scene.stop('Backdrop');
-  const campaign=new Campaign(newCampaign(input.seed??4));
-  for(const id of missionIds){
+  const world=isWorldMission(input.mission)?worldForMission(input.mission):'r01';
+  const campaign=new Campaign(world==='r01'?newCampaign(input.seed??4):newWorldCampaign(world,input.seed??4));
+  for(const id of missionChain(input.mission)){
    if(id===input.mission)break;
    campaign.selectMission(id);campaign.prepare();campaign.begin();
    campaign.applyResult({attempt_id:'fixture-'+id,mission_id:id,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:1,screen_ms:0,nodes:[]});campaign.advance();
@@ -31,7 +34,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
   if(input.cleared)attempt.room().enemies.forEach(enemy=>enemy.hp=0);
   for(const id of input.clearedEnemyIds||[]){const enemy=attempt.room().enemies.find(e=>e.id===id);if(!enemy)throw Error('Unknown fixture enemy '+id);enemy.hp=0;}
   if(input.hp!==undefined)attempt.hp=input.hp;
-  app.campaign=campaign;app.attempt=attempt;app.runSession=null;app.challengeEntry=null;app.challengeSpec=null;app.challengeResult=null;
+  app.activeWorld=world;app.campaign=campaign;app.attempt=attempt;app.runSession=null;app.challengeEntry=null;app.challengeSpec=null;app.challengeResult=null;
   app.settings.debugBodies=input.debug||false;app.settings.reducedMotion=input.reduced||false;
   app.state='playing';app.ui.hide();app.controls.clear();app.controls.setScope('play');
   app.game.scene.start('Room',{attempt});document.getElementById('game')?.focus();

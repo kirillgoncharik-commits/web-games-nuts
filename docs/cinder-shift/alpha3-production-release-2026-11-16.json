@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-16",
+  "timezone": "Europe/Podgorica",
+  "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
+  "authorization": "Kirill: выложи на бой последнюю версию",
+  "url": "https://nuts.bid/games/cinder-shift/",
+  "version": "0.8.0-alpha.3",
+  "build_id": "cinder-v1.b19.a1",
+  "runtime_source_sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+  "source_docs_head": "469f9483925fd3126fedd4d905c1754e3e3bcf17",
+  "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
+  "artifact_run_id": 43901074700,
+  "artifact_id": 14244131349,
+  "artifact_zip_sha256": "3a9ced4caa808b955f8f5694d247adc131efb641ef16ee6814a8efa17859224b",
+  "artifact_tar_sha256": "3feb3f0dc0b4d4abf116e1c657548b1819cbe3590c064d06b233976075301afc",
+  "immutable_artifact_promoted_without_rebuild": true,
+  "all_71_artifact_file_hashes_match": true,
+  "site_check": "PASS; 7 locale routes/assets/metadata",
+  "validation": {
+    "artifact_gate": "all four jobs success, both complete 20-room campaign routes",
+    "combat_browsers": "Chromium/Firefox/WebKit success",
+    "local_model_tests": 113,
+    "models_ci_failure": "Registry build_id alpha.2 versus alpha.3 only; art check passed; model step skipped by that job. Local 113-model suite subsequently passed.",
+    "general_regression": "not all workflows claimed successful"
+  },
+  "previous_production": {
+    "version": "0.8.0-alpha.1",
+    "build_id": "cinder-v1.b1.a1",
+    "source_sha": "ffa3df5f24d155df95daaafd2c127c5fc97d0a29",
+    "site_commit": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c"
+  },
+  "rollback": "Restore game from site commit f9f31a615ed05fc206a93eef24cb78d2fc67bb4c; prior content-addressed assets retained.",
+  "acceptance_complete": false,
+  "known_open": "Cargo E inactivity not reproduced; full production art/audio, physical devices and human acceptance remain open.",
+  "site_source_commit": "9e8f0506c0b27bdaac761cc51e049820f885b1c4",
+  "site_merge_sha": "022ed15f05e18441d66368bd2c7e4273419a932d",
+  "site_pr": "https://github.com/kirillgoncharik-commits/nutsbid/pull/17",
+  "deployment_id": "c7fd7975-6843-46ba-905e-03fc07a0bef6",
+  "cloudflare_check": {
+    "id": 133442536594,
+    "conclusion": "success"
+  },
+  "site_ci_check": {
+    "id": 133442175430,
+    "conclusion": "success"
+  },
+  "live_verification": {
+    "verified_at": "2026-11-16T16:30:36.098Z",
+    "manifest_exact": true,
+    "current_files_verified": 71,
+    "prior_bundle_files_verified": 2,
+    "failures": 0
+  },
+  "local_model_source_sha": "eb77d1c5dd2a28b9a3e0eb6836ad8123c63e9447",
+  "browser_gameplay_smoke_this_deployment": "NOT_RUN; runtime gate and full-route CI evidence recorded above."
+}

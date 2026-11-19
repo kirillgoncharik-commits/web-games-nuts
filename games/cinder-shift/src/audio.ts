@@ -1,3 +1,4 @@
+import {isWorldMission} from './session/new-campaign-content';
 import assets from './audio/assets.generated.json' with {type:'json'};
 import {buildTrack,midiHz,type ThemeId,type MusicTrack,type MusicEvent} from '../../../audio/m06/synth.mjs';
 import type {PlayableMissionId} from './session/missions';
@@ -6,7 +7,7 @@ export type AudioLevels={musicVolume:number;sfxVolume:number;uiVolume:number};
 type Bus='ui'|'sfx'|'result';
 type Music={id:ThemeId;track:MusicTrack;started:number;next:number;cycle:number;gain:GainNode;nodes:Set<AudioScheduledSourceNode>;timer:ReturnType<typeof setInterval>|0};
 type Voice={source:AudioBufferSourceNode;gain:GainNode;bus:Bus;priority:number;id:SoundId;started:number;ends:number};
-export function musicTheme(mission:PlayableMissionId,room?:string):ThemeId{return room==='M5E'?'evacuation':room==='M5D'?'boss':mission==='cargo'?'freight':mission==='foundry'?'foundry':mission==='archive'?'archive':mission==='reactor'?'reactor':'airlock';}
+export function musicTheme(mission:PlayableMissionId,room?:string):ThemeId{return isWorldMission(mission)?room?.endsWith('05-D')?(mission.startsWith('SW')?'SW_FINALE':'YU_FINALE'):mission:room==='M5E'?'evacuation':room==='M5D'?'boss':mission==='cargo'?'freight':mission==='foundry'?'foundry':mission==='archive'?'archive':mission==='reactor'?'reactor':'airlock';}
 export class AudioService{
  private context?:AudioContext;private master?:GainNode;private musicBus?:GainNode;private sfxBus?:GainNode;private uiBus?:GainNode;
  private buffers=new Map<string,AudioBuffer>();private raw=new Map<string,ArrayBuffer>();private prepared:Promise<void>;private decoding=new Map<string,Promise<void>>();
@@ -17,7 +18,11 @@ export class AudioService{
  get muted(){return this.mute;}
  set muted(value:boolean){this.mute=value;if(this.master)this.master.gain.setValueAtTime(value?0:.32,this.context!.currentTime);if(value){this.stopVoices(()=>true);this.stopMusic();}else this.syncMusic();}
  configure(settings:AudioLevels&{muted:boolean}){this.levels={musicVolume:settings.musicVolume,sfxVolume:settings.sfxVolume,uiVolume:settings.uiVolume};this.muted=settings.muted;this.applyLevels();}
- private applyLevels(){if(!this.context)return;for(const [node,value]of [[this.musicBus,this.levels.musicVolume],[this.sfxBus,this.levels.sfxVolume],[this.uiBus,this.levels.uiVolume]] as const){if(node){node.gain.cancelScheduledValues(this.context.currentTime);node.gain.setTargetAtTime(value,this.context.currentTime,.003);}}}
+ private applyLevels(){if(!this.context)return;for(const [node,value]of [[this.musicBus,this.levels.musicVolume],[this.sfxBus,this.levels.sfxVolume],[this.uiBus,this.levels.uiVolume]] as const){if(node){node.gain.cancelScheduledValues(this.context.currentTime);
+  // Zero is an explicit user mute, including while the audio clock is stopped.
+  // The value setter also resets the current slot; a scheduled ramp needs render time.
+  if(value===0)node.gain.value=0;else node.gain.setTargetAtTime(value,this.context.currentTime,.003);
+ }}}
  private async preload(){await Promise.all(Object.entries(assets.sfx).map(async([id,item])=>{try{const response=await fetch(new URL('./assets/audio/'+item.file,location.href));if(!response.ok)throw Error('audio_asset');const bytes=await response.arrayBuffer();this.raw.set(id,bytes);if(this.context)void this.decode(id,bytes);}catch{this.error=true;this.failed.add(id);}}));}
  async unlock(){
   try{

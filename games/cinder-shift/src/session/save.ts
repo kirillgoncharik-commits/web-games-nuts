@@ -1,8 +1,9 @@
-import {isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';
+import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';
+import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';
 import {contentVersion,type CampaignData} from './campaign';
 import {nodeIds,loadout,prerequisitesMet,type NodeId} from './research';
 import {migrateEventPlan,validPlan} from './events';
-import {isPlayableMission,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';
+import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';
 import {validateLegacySave} from './legacy-save';
 import {actions,bindingAllowed,type Action} from '../input';
 export const databaseName='cinder-shift-r01';
@@ -27,8 +28,8 @@ export function validateSave(v:unknown):SaveIssue{
  if(d.character_id!==undefined&&d.character_id!=='mira')return'corrupt';
  if(!ids(d.nodes)||typeof d.campaign_id!=='string'||d.campaign_id.length<8||d.campaign_id.length>100||!uint(d.campaign_seed)||!isPlayableMission(d.mission_id)||!isPlayableMission(d.location_id)||!['map','research','briefing','mission','result','campaign_checkpoint','campaign_complete'].includes(d.stage)&&!(previousPreviewDraft&&d.stage==='preview_complete'))return'corrupt';
  if(d.active!==null&&(!['M1','W4'].includes(d.active)||!d.nodes.includes(d.active)))return'corrupt';
- if(!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!isPlayableMission(m))||new Set(d.completed_missions).size!==d.completed_missions.length||d.completed_missions.some((m:PlayableMissionId,index:number)=>missionIds[index]!==m)||legacyVersion&&d.completed_missions.some((m:PlayableMissionId)=>missionIds.indexOf(m)>(v.content_version==='campaign-m05b2.0'?3:1)))return'corrupt';
- const missionIndex=missionIds.indexOf(d.mission_id),locationIndex=missionIds.indexOf(d.location_id);
+ if(!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!isPlayableMission(m))||new Set(d.completed_missions).size!==d.completed_missions.length||d.completed_missions.some((m:PlayableMissionId,index:number)=>missionIds[index]!==m)||legacyVersion&&d.completed_missions.some((m:PlayableMissionId)=>missionIds.indexOf(m as BaseMissionId)>(v.content_version==='campaign-m05b2.0'?3:1)))return'corrupt';
+ const missionIndex=missionIds.indexOf(d.mission_id as BaseMissionId),locationIndex=missionIds.indexOf(d.location_id as BaseMissionId);
  if(missionIndex>d.completed_missions.length||locationIndex>d.completed_missions.length)return'corrupt';
  const expectedRewards=d.completed_missions.filter((m:PlayableMissionId)=>missions[m].researchReward>0).map((m:PlayableMissionId)=>d.campaign_id+':'+m);
  if(!Array.isArray(d.reward_ledger)||d.reward_ledger.length!==expectedRewards.length||new Set(d.reward_ledger).size!==d.reward_ledger.length||expectedRewards.some((key:string)=>!d.reward_ledger.includes(key)))return'corrupt';
@@ -38,7 +39,7 @@ export function validateSave(v:unknown):SaveIssue{
  if(typeof v.saved_at!=='string'||!Number.isFinite(Date.parse(v.saved_at))||typeof v.build_id!=='string')return'corrupt';
  if(d.run_stats!==undefined&&(!object(d.run_stats)||!Number.isFinite(d.run_stats.active_ms)||d.run_stats.active_ms<0||!Number.isInteger(d.run_stats.deaths)||d.run_stats.deaths<0||!Number.isInteger(d.run_stats.score)||d.run_stats.score<0||![null,'service','press'].includes(d.run_stats.foundry_route)||typeof d.run_stats.history_complete!=='boolean'||d.run_stats.assisted!==undefined&&typeof d.run_stats.assisted!=='boolean'))return'corrupt';
  if(!legacyVersion&&!d.run_stats)return'corrupt';
- if(d.entry!==null){const e=d.entry,format=v.content_version==='campaign-m05b2.0'?'b2':legacyVersion?'b1':'current';if(!object(e)||!isPlayableMission(e.mission_id)||missionIds.indexOf(e.mission_id)>d.completed_missions.length||legacyVersion&&missionIds.indexOf(e.mission_id)>(v.content_version==='campaign-m05b2.0'?3:1)||e.seed!==missionSeed(d.campaign_seed,e.mission_id)||!object(e.build)||!ids(e.build.nodes)||e.build.nodes.some((n:NodeId)=>!d.nodes.includes(n))||!['M1','W4',null].includes(e.build.active))return'corrupt';const expected=loadout(e.build.nodes,e.build.active);if(!sameLoadout(e.build,expected,format)||e.max_hp!==expected.maxHp||e.initial_hp!==e.max_hp||e.initial_score!==0||!validPlan(e.event_plan,e.mission_id))return'corrupt';}
+ if(d.entry!==null){const e=d.entry,format=v.content_version==='campaign-m05b2.0'?'b2':legacyVersion?'b1':'current';if(!object(e)||!isPlayableMission(e.mission_id)||missionIds.indexOf(e.mission_id as BaseMissionId)>d.completed_missions.length||legacyVersion&&missionIds.indexOf(e.mission_id as BaseMissionId)>(v.content_version==='campaign-m05b2.0'?3:1)||e.seed!==missionSeed(d.campaign_seed,e.mission_id)||!object(e.build)||!ids(e.build.nodes)||e.build.nodes.some((n:NodeId)=>!d.nodes.includes(n))||!['M1','W4',null].includes(e.build.active))return'corrupt';const expected=loadout(e.build.nodes,e.build.active);if(!sameLoadout(e.build,expected,format)||e.max_hp!==expected.maxHp||e.initial_hp!==e.max_hp||e.initial_score!==0||!validPlan(e.event_plan,e.mission_id))return'corrupt';}
  if(['briefing','mission','result','campaign_checkpoint','campaign_complete'].includes(d.stage)||previousPreviewDraft&&d.stage==='preview_complete'){if(!d.entry||d.entry.mission_id!==d.mission_id)return'corrupt';}
  if(d.result!==null){const r=d.result;if(!object(r)||!['victory','death'].includes(r.result)||!isPlayableMission(r.mission_id)||typeof r.attempt_id!=='string'||!d.processed_attempts.includes(r.attempt_id)||r.applied!==true||typeof r.reward_granted!=='boolean'||!ids(r.nodes)||r.nodes.some((n:NodeId)=>!d.nodes.includes(n))||typeof r.reason!=='string'||!Number.isFinite(r.active_ms)||r.active_ms<0||!Number.isFinite(r.screen_ms)||r.screen_ms<0||r.max_hp!==loadout(r.nodes).maxHp||!Number.isInteger(r.hp)||r.hp<0||r.hp>r.max_hp||!Number.isInteger(r.score)||r.score<0||r.score>1000000||r.reward_granted&&!d.reward_ledger.includes(d.campaign_id+':'+r.mission_id))return'corrupt';}
  if(['result','campaign_checkpoint','campaign_complete'].includes(d.stage)&&(!d.result||d.result.mission_id!==d.mission_id))return'corrupt';
@@ -111,7 +112,32 @@ export class SaveService{
     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}
     const envelope:Envelope={schema_version:1,content_version:contentVersion,game_id:'r01',build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};const issue=validateSave(envelope);if(issue){this.status(issue);return Promise.resolve(false);}return this.put('campaign',envelope);
   }
+  private worldWritable=new Map<NewCampaignId,boolean>();
+  async loadWorldCampaign(id:NewCampaignId){
+    const loaded=await this.loadModeData(`world.${id}.v1`);const issue=loaded.ok&&loaded.value!==undefined?validateWorldSave(loaded.value,id):loaded.ok?null:'unavailable';
+    this.worldWritable.set(id,loaded.ok&&!issue);return{ok:loaded.ok&&!issue,issue,campaign:loaded.ok&&loaded.value!==undefined&&!issue?structuredClone((loaded.value as WorldEnvelope).campaign):null};
+  }
+  saveWorldCampaign(id:NewCampaignId,campaign:CampaignData){
+    if(!this.worldWritable.get(id))return Promise.resolve(false);
+    const record:WorldEnvelope={schema_version:1,content_version:'worlds-rw3.1',game_id:id,build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};
+    const issue=validateWorldSave(record,id);if(issue){this.status(issue);return Promise.resolve(false);}return this.put(`world.${id}.v1`,record);
+  }
   saveSettings(settings:Settings){try{localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}
   async recordCampaign(campaign:CampaignData){if(!this.available||this.blocked||!this.careerValid||!isCompleteBaseCampaign(campaign))return false;if(this.careerRuns.some(run=>run.campaign_id===campaign.campaign_id))return true;const run:CompletedRun={ruleset_id:campaign.run_stats.ruleset_id||'legacy-rc1',campaign_id:campaign.campaign_id,content_version:contentVersion,completed_at:new Date().toISOString(),active_ms:campaign.run_stats.active_ms,deaths:campaign.run_stats.deaths,score:campaign.run_stats.score,foundry_route:campaign.run_stats.foundry_route,nodes:[...campaign.nodes],difficulty:'standard',assistance:campaign.run_stats.assisted?'assisted':'standard',history_complete:campaign.run_stats.history_complete},runs=[...this.careerRuns,run];const saved=Boolean(await this.put('career',{version:1,runs}));if(saved)this.careerRuns=runs;return saved;}
   async retry(campaign:CampaignData|null,settings:Settings){if(!await this.connect())return false;await this.saveSettings(settings);return campaign?this.saveCampaign(campaign):true;}
+}
+
+export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_id:NewCampaignId;build_id:string;saved_at:string;campaign:CampaignData};
+export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{
+ if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';
+ const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';
+ const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';
+ if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';
+ if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';
+ // This projection only validates. It never aliases worlds in storage or changes the saved seed.
+ const copy=structuredClone(raw),c=copy.campaign,base=(m:string)=>missionIds[chain.indexOf(m)],ledger=(key:string)=>{for(const m of chain)if(key===d.campaign_id+':'+m)return d.campaign_id+':'+base(m);return key;};
+ copy.game_id='r01';copy.content_version=contentVersion;c.mission_id=base(c.mission_id);c.location_id=base(c.location_id);c.completed_missions=c.completed_missions.map(base);if(!Array.isArray(c.reward_ledger))return'corrupt';c.reward_ledger=c.reward_ledger.map(ledger);
+ if(c.entry){c.entry.mission_id=base(c.entry.mission_id);c.entry.seed=missionSeed(c.campaign_seed,c.entry.mission_id);}
+ if(c.result)c.result.mission_id=base(c.result.mission_id);
+ return validateSave(copy);
 }

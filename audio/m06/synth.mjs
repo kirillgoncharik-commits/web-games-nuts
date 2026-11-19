@@ -12,6 +12,9 @@ export const themes={
  boss:{bpm:160,bars:32,roots:[36,37,43,39],motif:[0,1,7,8,7,1,5,0],answer:[12,8,7,1],swing:.02,lead:.1,bass:.16,answerLevel:.035,noise:.04}
 };
 
+// RW3 original chapter scores. 32-bar A/B/variation/reprise form; no sampled melodies.
+Object.assign(themes,{"SW01":{"bpm":104,"bars":32,"roots":[48,53,55,50],"motif":[0,4,7,12,9,7,4,2],"answer":[19,16,7,3],"swing":0.025,"lead":0.045,"bass":0.085,"answerLevel":0.026,"noise":0.008},"SW02":{"bpm":112,"bars":32,"roots":[50,57,55,53],"motif":[0,7,9,4,12,7,2,4],"answer":[21,19,7,3],"swing":0.025,"lead":0.045,"bass":0.085,"answerLevel":0.026,"noise":0.008},"SW03":{"bpm":108,"bars":32,"roots":[45,52,48,50],"motif":[0,3,7,10,5,7,3,0],"answer":[19,12,7,3],"swing":0.025,"lead":0.045,"bass":0.085,"answerLevel":0.026,"noise":0.008},"SW04":{"bpm":116,"bars":32,"roots":[48,55,53,57],"motif":[0,7,12,9,7,4,5,2],"answer":[24,14,7,3],"swing":0.025,"lead":0.045,"bass":0.085,"answerLevel":0.026,"noise":0.008},"SW05":{"bpm":124,"bars":32,"roots":[45,53,55,52],"motif":[0,4,7,11,12,9,7,4],"answer":[19,19,7,3],"swing":0.025,"lead":0.045,"bass":0.085,"answerLevel":0.026,"noise":0.008},"YU01":{"bpm":98,"bars":32,"roots":[40,45,43,47],"motif":[0,3,7,10,7,5,2,3],"answer":[19,14,7,3],"swing":0.06,"lead":0.035,"bass":0.085,"answerLevel":0.026,"noise":0.014},"YU02":{"bpm":106,"bars":32,"roots":[38,45,41,43],"motif":[0,7,10,5,3,7,2,0],"answer":[22,10,7,3],"swing":0.06,"lead":0.035,"bass":0.085,"answerLevel":0.026,"noise":0.014},"YU03":{"bpm":114,"bars":32,"roots":[40,47,45,43],"motif":[0,7,3,10,12,7,5,2],"answer":[15,19,7,3],"swing":0.06,"lead":0.035,"bass":0.085,"answerLevel":0.026,"noise":0.014},"YU04":{"bpm":118,"bars":32,"roots":[36,43,41,39],"motif":[0,2,7,8,7,5,3,2],"answer":[19,14,7,3],"swing":0.06,"lead":0.035,"bass":0.085,"answerLevel":0.026,"noise":0.014},"YU05":{"bpm":110,"bars":32,"roots":[41,48,45,43],"motif":[0,5,7,12,10,7,3,5],"answer":[19,17,7,3],"swing":0.06,"lead":0.035,"bass":0.085,"answerLevel":0.026,"noise":0.014},"SW_MENU":{"bpm":90,"bars":16,"roots":[48,53,55,50],"motif":[0,4,7,12,9,7,4,2],"answer":[19,16,7,3],"swing":0.025,"lead":0.025,"bass":0.055,"answerLevel":0.026,"noise":0.003},"SW_FINALE":{"bpm":124,"bars":24,"roots":[45,53,55,52],"motif":[0,4,7,11,12,9,7,4],"answer":[19,19,7,3],"swing":0.025,"lead":0.055,"bass":0.1,"answerLevel":0.026,"noise":0.016},"YU_MENU":{"bpm":90,"bars":16,"roots":[40,45,43,47],"motif":[0,3,7,10,7,5,2,3],"answer":[19,14,7,3],"swing":0.06,"lead":0.025,"bass":0.055,"answerLevel":0.026,"noise":0.003},"YU_FINALE":{"bpm":110,"bars":24,"roots":[41,48,45,43],"motif":[0,5,7,12,10,7,3,5],"answer":[19,17,7,3],"swing":0.06,"lead":0.055,"bass":0.1,"answerLevel":0.026,"noise":0.016}});
+
 export function buildTrack(id){
  const score=themes[id];if(!score)throw Error('unknown_music_theme:'+id);
  const events=[],beatLength=score.bars*4;
@@ -22,7 +25,7 @@ export function buildTrack(id){
   for(let step=0;step<8;step++){
    const beat=bar*4+step*.5+(step%2?score.swing:0),motifIndex=(step+localBar*2+(phrase===2?2:0))%motif.length,offset=motif[motifIndex];
    const rest=(id==='map'&&step%2===1)||(id==='menu'&&step===5&&localBar%2===1)||(id==='archive'&&step===3&&localBar%2===0);
-   if(!rest)add(beat,.34,chord+12+offset+(phrase===1?12:0),'pulse',score.lead*energy);
+   if(!rest)add(beat,id.startsWith('SW')?.28:.34,chord+12+offset+(phrase===1?12:0),id.startsWith('SW')?'triangle':'pulse',score.lead*energy);
    if(step%2===0&&!returning)add(beat+.22,.25,chord+24+score.answer[(step/2+localBar)%score.answer.length],'triangle',score.answerLevel);
   }
   const bassPattern=id==='freight'||id==='reactor'||id==='boss'?[0,.75,1.5,2,2.75,3.5]:[0,1,2,3];

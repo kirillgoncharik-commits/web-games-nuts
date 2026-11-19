@@ -1,0 +1,295 @@
+{
+  "version": "0.8.0-alpha.4",
+  "date": "2026-11-16",
+  "timezone": "Europe/Podgorica",
+  "status": "INCOMPLETE_RW3_PRODUCTION_RW4_NOT_RC",
+  "source": {
+    "branch": "codex/cinder-shift-final",
+    "sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "tree": "62f3fa023706061f01021f82e052e49653a07595",
+    "pr": 10
+  },
+  "production": {
+    "changed": false,
+    "version": "0.8.0-alpha.3",
+    "build_id": "cinder-v1.b19.a1",
+    "sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+    "evidence": "docs/cinder-shift/alpha3-production-release-2026-11-16.json"
+  },
+  "local": {
+    "runtime_build": "PASS",
+    "art_contracts": "PASS",
+    "i18n_keys": 885,
+    "regression_models": 117,
+    "world_id_placement_action_models": 42,
+    "availability": "UNAVAILABLE_AFTER_FIRST_SOURCE_SYNC",
+    "browser": "NOT_RUN_LOCAL_LISTEN_EPERM_AND_CHROME_ABORT"
+  },
+  "current_ci": {
+    "run_id": 43919699944,
+    "status": "SUCCESS_ALL_FOUR_JOBS_SELECTED_ENGINEERING_GATE",
+    "runtime_job_id": 133483362093,
+    "checks": {
+      "passed": 102,
+      "failed": 0,
+      "packs": [
+        9,
+        8,
+        6,
+        29,
+        50
+      ]
+    },
+    "world_routes": {
+      "c02-small-world": {
+        "job_id": 133483361803,
+        "status": "PASS",
+        "artifact_id": 14253791713,
+        "rooms": 20,
+        "missions": 5
+      },
+      "c03-adriatic-1986": {
+        "job_id": 133483362165,
+        "status": "PASS",
+        "artifact_id": 14253292366,
+        "rooms": 20,
+        "missions": 5
+      }
+    },
+    "game_artifact": {
+      "id": 14253897643,
+      "name": "cinder-shift-23-1",
+      "build_id": "cinder-v1.b23.a1",
+      "source_sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+      "zip_bytes": 4548188,
+      "zip_sha256_from_github": "c3e51f509068765311d15735540b39744b7f060899bb65ea2ef414577d5b8754",
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43919699944/artifacts/14253897643",
+      "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
+      "deployed": false
+    }
+  },
+  "visual_review": {
+    "status": "REVIEWED_EXACT_RU_CONTACT_SHEET",
+    "viewports": [
+      "1440x900",
+      "390x844",
+      "667x300"
+    ],
+    "languages_automated": [
+      "ru",
+      "en"
+    ],
+    "normal_reduced_automated": "READABLE_SILHOUETTE_AND_CONTROLS_PASS_ALL_THREE_ENGINES",
+    "overlap": "NONE",
+    "all_menu_controls_visible_and_clickable": true,
+    "static_glow": "VISIBLE",
+    "before": {
+      "version": "0.8.0-alpha.3",
+      "sha": "0117a79a53e114e9246ad6114d2c603a436f8ae7",
+      "build_id": "cinder-v1.b19.a1",
+      "method": "immutable artifact with verified tar checksum"
+    },
+    "after": {
+      "sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+      "build_id": "cinder-v1.b23.a1"
+    },
+    "evidence_artifact_id": 14254172299,
+    "evidence_zip_sha256": "c4f3167f09a0a5175bb85414338f6abae8c037a99c51146694ad249a8087feb3",
+    "geometry_policy": "Independent bounds, >=72px silhouette width and >=150px silhouette height, no overlap/cropping, accessible controls in each mode. Exact coordinate equality removed as an unrequested constraint."
+  },
+  "history": [
+    {
+      "source": "ec9cacdd869f32d0ff827ae8f52d0c150c893650",
+      "run_id": 43911020170,
+      "world_routes": "BOTH_PASS",
+      "runtime_checks": "CANCELLED_DURING_BASELINE_GIT_FETCH",
+      "artifact": "SKIPPED"
+    },
+    {
+      "run_id": 43911020430,
+      "models": "PASS",
+      "browser_source_merge": "e9ace96e08a8f263c00fcc90c86a09219c3c1bbd",
+      "chromium": {
+        "passed": 16,
+        "failed": 1
+      },
+      "firefox": {
+        "passed": 15,
+        "failed": 1,
+        "skipped": 1
+      },
+      "webkit": {
+        "passed": 15,
+        "failed": 1,
+        "skipped": 1
+      },
+      "failure": "Paper test jumped from center instead of approaching ledge. Corrected approach uses ordinary input; game collision/safety code unchanged.",
+      "lamp": "PASS_ALL_THREE_BROWSERS"
+    },
+    {
+      "source": "5b6c60b2b5209d7cddf3714708b80108607cf283",
+      "status": "SUPERSEDED_BY_REPORT_EXPORT_ONLY_SUCCESSOR"
+    }
+  ],
+  "limits": [
+    "All six RW3 requirements remain PARTIAL.",
+    "Full routes begin with a labelled legacy C01 unlock fixture. Earned fresh C01 unlock NOT RUN.",
+    "Physical phones and human timing/acceptance NOT RUN.",
+    "Cargo E inactivity remains unreproduced/open.",
+    "Cloth/air/wind/water and remaining detailed rooms, production art/audio/VFX and RW4 gates remain open."
+  ],
+  "test_only_successor": {
+    "sha": "ce0e946a261f01f9928ad57a9c6fcd9702f57390",
+    "tree": "62f3fa023706061f01021f82e052e49653a07595",
+    "changed_files": [
+      {
+        "filename": "tests/rework-ui.spec.ts",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 1,
+        "changes": 3,
+        "previous_filename": null
+      }
+    ],
+    "reason": "Replaced unrequested pixel-identical normal/reduced SVG geometry with readable silhouette size while retaining bounds, overlap, visibility, clickability and image-loading checks.",
+    "prior_webkit_observation": {
+      "initial_pack": {
+        "passed": 16,
+        "skipped": 1
+      },
+      "ui_pack": {
+        "passed": 45,
+        "failed": 2
+      },
+      "failures": "Desktop RU/EN exact-coordinate equality only; all functional visibility/clickability assertions passed.",
+      "job_id": 133469859351,
+      "merge_source": "994140d1c6babf655e34f48c3ca68849b9587d34",
+      "merge_comparison_with_ddfa": "identical files; compare files=[]"
+    }
+  },
+  "verified_alpha4_initial_ci": {
+    "run_id": 43915855984,
+    "status": "SUCCESS_SELECTED_ENGINEERING_GATE",
+    "runtime_job_id": 133469873440,
+    "checks": {
+      "passed": 102,
+      "failed": 0,
+      "packs": [
+        9,
+        8,
+        6,
+        29,
+        50
+      ]
+    },
+    "world_routes": {
+      "c02-small-world": {
+        "job_id": 133469873974,
+        "status": "PASS",
+        "artifact_id": 14250451737,
+        "rooms": 20,
+        "missions": 5
+      },
+      "c03-adriatic-1986": {
+        "job_id": 133469874132,
+        "status": "PASS",
+        "artifact_id": 14251081423,
+        "rooms": 20,
+        "missions": 5
+      }
+    },
+    "game_artifact": {
+      "id": 14250137263,
+      "name": "cinder-shift-22-1",
+      "build_id": "cinder-v1.b22.a1",
+      "source_sha": "ddfa1ea9ce32fbc242cef767acb4c3b14a38f089",
+      "zip_bytes": 4547015,
+      "zip_sha256_from_github": "93243e42c71f29ee06ee487f49736991c04fc7980fd66d4c499ecb2705f18522",
+      "url": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/43915855984/artifacts/14250137263",
+      "download_checksum_verification": "NOT_RUN_LOCAL_ENVIRONMENT_UNAVAILABLE",
+      "deployed": false
+    }
+  },
+  "cross_browser": {
+    "run_id": 43919699918,
+    "status": "SUCCESS_ALL_FOUR_JOBS",
+    "merge_source_sha": "579ac1253818ad90a7c7f8fded14372ccad9024d",
+    "comparison_with_runtime_sha": "GitHub compare ahead by one merge commit, files=[]; same source files as ce0e946.",
+    "models": {
+      "job_id": 133483555121,
+      "passed": 117
+    },
+    "browsers": {
+      "chromium": {
+        "job_id": 133483554417,
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0
+      },
+      "firefox": {
+        "job_id": 133483554935,
+        "passed": 63,
+        "failed": 0,
+        "skipped": 1
+      },
+      "webkit": {
+        "job_id": 133483555039,
+        "passed": 63,
+        "failed": 0,
+        "skipped": 1
+      }
+    },
+    "skip_reason": "The Chromium CDP two-contact touch case is intentionally skipped outside Chromium. Physical phones remain NOT RUN."
+  },
+  "workflow_snapshot": [
+    {
+      "id": 43919699897,
+      "name": "Cinder Shift Sprint 2 presentation",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919699883,
+      "name": "Cinder Shift full routes and saves",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919699999,
+      "name": "Cinder Shift rework combat flow",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919699914,
+      "name": "Cinder Shift Sprint 2 runtime media",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919700070,
+      "name": "Cinder Shift check",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 43919699944,
+      "name": "Cinder Shift artifact",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919699918,
+      "name": "Cinder Shift rework candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 43919699998,
+      "name": "Cinder Shift reachable build curve",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "workflow_snapshot_note": "Seven workflows completed successfully at final report preparation; Cinder Shift check was still running. Selected artifact and cross-browser gates are complete."
+}

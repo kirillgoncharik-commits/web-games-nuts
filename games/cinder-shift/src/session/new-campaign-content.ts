@@ -1,6 +1,10 @@
 import config from '../../game.config.json' with {type:'json'};
 import sourceRegistry from '../../content/new-campaigns/rooms_40.json' with {type:'json'};
 
+export type WorldMissionId='SW01'|'SW02'|'SW03'|'SW04'|'SW05'|'YU01'|'YU02'|'YU03'|'YU04'|'YU05';
+export type WorldRoomId=`${WorldMissionId}-${'A'|'B'|'C'|'D'}`;
+export const isWorldMission=(id:string):id is WorldMissionId=>/^(SW|YU)0[1-5]$/.test(id);
+export const worldForMission=(id:WorldMissionId):NewCampaignId=>id.startsWith('SW')?'c02-small-world':'c03-adriatic-1986';
 export type NewCampaignId='c02-small-world'|'c03-adriatic-1986';
 export type NewCampaignRoom={
  campaign_id:string;

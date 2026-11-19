@@ -155,6 +155,13 @@ export class SceneArt{
     const g=this.threats,{state}=turretPresentation(e,powered),cx=e.x,muzzle=enemyMuzzle(e),facing=Math.sign(e.aim.x-e.x)||1;
     const body=this.art(`turret_${state}`,cx,e.y+15,54,50,5,facing);
     if(state==='destroyed')return body;
+    if(state==='off'){
+      body.setTint(0x687784).setAlpha(.45);
+      // A disconnected power symbol replaces the live enemy's health pips.
+      const y=e.y-39;g.lineStyle(2,0x9aa8ae,.9).strokeCircle(cx,y,8);
+      g.lineBetween(cx-6,y+6,cx+6,y-6);g.lineBetween(cx,y-12,cx,y-5);
+      return body;
+    }
     if(state==='warning'){
       this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral',2).setAlpha(.85);
       this.sprite('warning-reticle',e.aim.x,e.aim.y,8);g.lineStyle(2,0xf36d76).lineBetween(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y);
@@ -171,15 +178,16 @@ export class SceneArt{
   }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
-    this.environment.draw(attempt,reducedFlashes);
+    if(!room.world)this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
     this.bossHpLast=attempt.bossHp;
-    this.landmarks(room);
+    if(!room.world)this.landmarks(room);
     const pose=miraRigPose(now,player.body.velocity.x,y,player.crouching);
     const hit=now<attempt.damageFlashUntil;
     const hero=(id:AssetId,px:number,py:number)=>{
       const s=this.sprite(id,px,py,6,f);
       // Recoil is a visual offset; the rig anchors and projectile muzzle stay fixed.
+      if(id==='mira-cutter'&&state.world?.carry?.item.state==='held')s.setVisible(false);
       if(id==='mira-cutter'&&!reducedFlashes&&now<this.recoilUntil)s.setX(s.x-f*2);
       if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };
@@ -352,7 +360,7 @@ export class SceneArt{
       if(e.kind!=='turret'&&phase==='recovery'){this.threats.lineStyle(1,signals.energy,.85).lineBetween(e.x-12,e.y-33,e.x-12,e.y-29).lineBetween(e.x-12,e.y-29,e.x+12,e.y-29).lineBetween(e.x+12,e.y-33,e.x+12,e.y-29);}
       if(e.aimed){const open=guardVulnerable(e),g=this.threats;g.lineStyle(2,open?signals.energy:signals.warning,.9);if(open){g.lineBetween(e.x-20,e.y-22,e.x-20,e.y-4);g.lineBetween(e.x+20,e.y-22,e.x+20,e.y-4);}else g.strokeRoundedRect(e.x-19,e.y-24,38,28,3);g.strokeCircle(e.x,e.y-39,5);}
       if(e.behavior==='aggressive'){this.threats.lineStyle(2,0xffb65b).strokeTriangle(e.x-20,e.y-12,e.x-13,e.y-7,e.x-20,e.y-2);if(e.noticeMs>0)this.threats.lineStyle(2,0xf1d8ae).strokeCircle(e.x,e.y-38,12);}
-      for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
+      if(attempt.enemyPowered(e))for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
       if(phase==='telegraph'&&e.kind==='walker'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aimed?e.aim.y:muzzle.y,'signal-coral').setAlpha(.85);this.sprite('warning-triangle',e.x,e.y-43,8);if(e.aimed){const g=this.threats;g.lineStyle(e.aimLocked?2:1,e.aimLocked?signals.damage:signals.warning,.9).strokeCircle(e.aim.x,e.aim.y,e.aimLocked?8:12);g.lineBetween(e.aim.x-15,e.aim.y,e.aim.x+15,e.aim.y);g.lineBetween(e.aim.x,e.aim.y-15,e.aim.x,e.aim.y+15);}}
       else if(phase==='telegraph'&&e.kind==='drone'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.85);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);this.line(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y,'signal-coral');}
     }

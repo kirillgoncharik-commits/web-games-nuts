@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-19",
+  "version": "0.8.0-alpha.12",
+  "status": "PUBLISHED_DEVELOPMENT_ALPHA_RUNTIME_PASS_FULL_ROUTES_INCOMPLETE_NOT_RC",
+  "source": {
+    "branch": "codex/cinder-shift-final",
+    "sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+    "tree": "e064b395f629fd19b6689253b0a0dcefa62e3b85",
+    "local_equivalent": "10287e9b788962de479cc54171346149be6dc852",
+    "same_tree_verified": true
+  },
+  "work_order": "docs/cinder-shift/current-work-order.ru.md",
+  "scope": {
+    "rooms": [
+      "YU04-A",
+      "YU04-B",
+      "YU04-C",
+      "YU04-D"
+    ],
+    "design": "docs/cinder-shift/new-campaigns/10_All_Rooms_Deep_Design_RU.txt:196-217",
+    "changes": [
+      "Safe belt configuration and optional resource walkway; base movement unchanged.",
+      "Hoist feed at its actual platform height; far lever before the exit door.",
+      "Elevated distributor feed and a separate ground exit feed.",
+      "Three drive phases remove physical screens, start a fresh warning, reset and stop the drive, then secure the radio feed.",
+      "Phase doors disappear from colliders and rendering together. Stopped flywheel retains static pixels while simulation time continues.",
+      "Eight live EN/RU hints and a completed-objective hint. Stable room/contact/reward IDs retained."
+    ]
+  },
+  "local": {
+    "build": "PASS_4CDF5F0_CLEAN_CI_BUILD; CURRENT_DRIVER_ONLY_SUCCESSOR_BUILD_PENDING_CI",
+    "types": "PASS",
+    "i18n_keys": 921,
+    "art_contracts": "PASS",
+    "models": {
+      "passed": 122,
+      "failed": 0,
+      "skipped": 0,
+      "source_game_code": "4cdf5f0; runtime and model code unchanged by the two later route-driver commits"
+    },
+    "model_report": "qa-work/alpha12-models-after-clearance-fix.json",
+    "browser": "LOCAL_REPL_CHROMIUM_C02_FULL_PASS_C03_FAIL_YU04_C_SOURCE_836A04F",
+    "initial_mixed_selection": "Four legacy browser cases failed to launch in the restricted local environment; corrected model-only selection passed 122/122. No browser PASS is claimed locally."
+  },
+  "ci": {
+    "status": "COMPLETED_RUNTIME_PASS_C02_AND_C03_FAIL_ARTIFACT_SKIPPED",
+    "source_sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+    "artifact_run_id": 44503490858,
+    "cross_browser_run_id": 44503490842,
+    "pr_regression_run_id": 44503490841,
+    "full_routes_run_id": 44503491070,
+    "factory_cases_per_browser": 6,
+    "native_drive_stop_hash": "PASS_SOURCE_7CAE23E_RUNTIME_JOB_135489142833",
+    "factory_input": "PASS_SIX_CHROMIUM_CASES_SOURCE_7CAE23E",
+    "c03_route": "FAIL_YU04_C_APPROACH",
+    "runtime_frames": "PREVIOUS_FIXED_SOURCE_SIX_FRAMES_VIEWED; CURRENT_PENDING",
+    "immutable_artifact": "NOT_CREATED_ARTIFACT_GATE_FAILED"
+  },
+  "ci_budget_change": {
+    "encounters_minutes": 30,
+    "runtime_minutes": 20,
+    "reason": "Both alpha.11 Firefox attempts exhausted the 15-minute job budget after slow browser installation. Expanded suites now include six factory cases. Only job time budgets changed; gameplay/test assertion timeouts and thresholds were not relaxed.",
+    "subsequent_regression_deduplication": "Current code makes the active final branch use the PR general-regression gate once and check out its exact head, avoiding duplicate twelve-shard push/PR runs. No test cases or assertion thresholds were removed."
+  },
+  "figma": {
+    "status": "STARTER_MCP_QUOTA_BLOCKED_PREVIOUSLY_VERIFIED",
+    "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+    "imported": false
+  },
+  "production": {
+    "version": "0.8.0-alpha.12",
+    "changed": true,
+    "source_sha": "836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5",
+    "build_id": "local.20261119T132107351Z",
+    "site_merge_sha": "9392476bd66a65f35ef7bf6e23a05f82a6d65393",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "record": "alpha12-production-release-2026-11-19.json",
+    "local_rebuild_not_designated_ci_artifact": true
+  },
+  "deployed": true,
+  "accepted": false,
+  "remaining": [
+    "Resolve ordinary-input and visual findings on the exact source.",
+    "Complete the radio station YU05-A-D and the rest of the agreed production art/audio/VFX manifest.",
+    "Fresh earned world unlock, full save/challenge/localization/device/performance matrices and RW4 remain open.",
+    "Figma native layers/timelines remain pending quota availability.",
+    "SDK and platform delivery are a separate subsequent sprint after finishing the game."
+  ],
+  "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_ENGINEERING_COMPLETION_GATE",
+  "whole_rw3_status": "ALL_SIX_ORIGINAL_IDS_PARTIAL",
+  "initial_source": {
+    "sha": "10a77221068c07566e730eb66d9ae00c171d024e",
+    "tree": "6cb029f2f574a34f66e988ccec7f6b68101aeb91",
+    "local_equivalent": "cb7bfd4656cb19981e5fe174bca552b7e1a39795"
+  },
+  "initial_ci": {
+    "artifact_run_id": 44498785647,
+    "cross_browser_run_id": 44498785661,
+    "source_regression_run_id": 44498776175,
+    "pr_regression_run_id": 44498785622,
+    "full_routes_run_id": 44498785723,
+    "c03_route": "FAIL_YU04_A_LOWER_PATH_HEADROOM",
+    "factory_input": "SIX_CHROMIUM_CASES_PASS"
+  },
+  "red_green": {
+    "initial_source": "10a77221068c07566e730eb66d9ae00c171d024e",
+    "initial_c03_failure": {
+      "run_id": 44498776175,
+      "job_id": 135472707518,
+      "room": "YU04-A",
+      "player_x": 381,
+      "hp": 6,
+      "problem": "The B platform at y288 blocks the lower route immediately below the fixed walkway lip; insufficient headroom for the base jump."
+    },
+    "initial_room_scenarios": "All six factory ordinary-input scenarios passed in Chromium on the initial source; the complete C03 journey exposed the separate lower-route defect.",
+    "fix": "Move the B branch support to the upper line at y244 and keep the stopped-belt ground lane clear. Add an actual body-clearance assertion; no movement, hazard timing or test threshold changes.",
+    "after_source": "7cae23ef192492e16af577108ed53e3d4c86f191",
+    "after_models": "122 PASS for unchanged factory game/model code; current ordinary-input and full C03 CI pending",
+    "driver_findings": [
+      {
+        "source": "4cdf5f0",
+        "room": "YU04-C",
+        "problem": "The route planner treated the entire column beneath a high platform as blocked and could not find a firing lane. The standing 22x44 body actually fits.",
+        "fix": "Use actual standing body intersections and physically descend to the ground firing lane."
+      },
+      {
+        "source": "4604210",
+        "room": "YU01-C",
+        "problem": "The first descent planner walked around the nearer left edge and jumped back onto the shelf to cross a closed floor-level wall.",
+        "fix": "Require a clear actual-body ground corridor from descent point to target; descend on the target side of the wall."
+      }
+    ]
+  },
+  "previous_fixed_source_evidence": {
+    "source_sha": "4cdf5f0b4face37eab995f8c3c54047160a6676f",
+    "artifact_run_id": 44500756385,
+    "runtime_checks": {
+      "job_id": 135479668217,
+      "status": "PASS",
+      "passed": 216,
+      "packs": {
+        "native_motion_pause_reduced": 10,
+        "factory_cargo_environment": 39,
+        "audio_settings": 3,
+        "menu_layouts": 33,
+        "environment_models": 46,
+        "menu_art": 6,
+        "sprint3": 29,
+        "final_worlds": 50
+      }
+    },
+    "factory_input": "SIX_CHROMIUM_CASES_PASS; includes normal/reduced hoist and drive, pause, physical phase doors and native stopped-flywheel pixel hash",
+    "runtime_frames": {
+      "artifact_id": 14516984415,
+      "status": "VIEWED_SIX_FACTORY_FRAMES",
+      "cases": [
+        "resource walkway",
+        "hoist contact",
+        "upper distributor feed",
+        "fresh drive warning",
+        "drive stopped",
+        "radio feed secured"
+      ],
+      "caveat": "Cleared distributor entry tests geometry; full real combat must pass the complete C03 route."
+    },
+    "c02_route": {
+      "job_id": 135479667406,
+      "status": "PASS_ALL_20_ROOMS_LEGACY_UNLOCK_FIXTURE"
+    },
+    "c03_route": {
+      "job_id": 135479667784,
+      "status": "FAIL_ROUTE_DRIVER_NO_BASELINE_FIRING_LANE_YU04_C"
+    },
+    "cross_browser": {
+      "run_id": 44500756374,
+      "checkout_sha": "e97bf650453d72afd6bc12660b8eedd45a8d3a31",
+      "source_note": "PR merge checkout, distinct from the exact-head artifact job. Not claimed as same-source certification.",
+      "chromium_passed": 107,
+      "model_passed": 169,
+      "firefox": "10 motion + 46 encounters PASS, 1 skip; later UI interrupted by superseding commit",
+      "webkit": "10 motion PASS; encounters interrupted by superseding commit"
+    }
+  }
+}

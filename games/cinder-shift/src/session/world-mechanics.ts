@@ -38,12 +38,14 @@ export function stepCarry(room:CarryRoom,ms:number,solids:readonly Rect[]):strin
 }
 
 export type Circuit='A'|'B';
-export type PowerObject={id:string;rect:Rect;solidOn:Circuit};
+export type PowerObject={id:string;rect:Rect;solidOn:Circuit;role?:'door'};
 export type PowerRoom={circuit:Circuit;switches:number;objects:PowerObject[];ledger:string[]};
 export function createPowerRoom(objects:PowerObject[],circuit:Circuit='A',ledger:string[]=[]):PowerRoom{return{objects:structuredClone(objects),circuit,switches:0,ledger:[...ledger]};}
-export function circuitSolids(room:PowerRoom){return room.objects.filter(o=>o.solidOn===room.circuit).map(o=>o.rect);}
+export function circuitSolids(room:PowerRoom){return room.objects.filter(o=>o.solidOn===room.circuit).map(o=>({...o.rect,id:'world-power:'+o.id}));}
 export function switchCircuit(room:PowerRoom,player:Rect):boolean{
  const next=room.circuit==='A'?'B':'A';if(room.objects.some(o=>o.solidOn===next&&intersects(player,o.rect)))return false;
+ // A manual switch waits until its rider has left the changing surface.
+ if(room.objects.some(o=>o.solidOn===room.circuit&&Math.abs(player.y+player.height-o.rect.y)<3&&player.x<o.rect.x+o.rect.width&&player.x+player.width>o.rect.x))return false;
  room.circuit=next;room.switches++;return true;
 }
 export function powerReadout(room:PowerRoom){return{lever:room.circuit==='A'?'left':'right',label:room.circuit,lamps:room.circuit==='A'?1:2,wiring:room.circuit==='A'?'solid':'double'} as const;}
