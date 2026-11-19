@@ -545,19 +545,19 @@
   ],
   "active_workstream": {
     "milestone": "M-RW3_BEFORE_M_RW4",
-    "status": "RUNTIME_REGRESSION_PASS_FIREFOX_UI_RETRY_PENDING_RW3_PARTIAL_NOT_RC",
-    "version": "0.8.0-alpha.11",
+    "status": "FACTORY_IMPLEMENTED_LOCAL_MODELS_PASS_INPUT_CI_PENDING_NOT_RC",
+    "version": "0.8.0-alpha.12",
     "coverage": "docs/cinder-shift/rework-coverage.json",
-    "checkpoint": "docs/cinder-shift/alpha11-art-motion.ru.md",
-    "verification_report": "docs/cinder-shift/alpha11-verification.json",
+    "checkpoint": "docs/cinder-shift/alpha12-factory.ru.md",
+    "verification_report": "docs/cinder-shift/alpha12-verification.json",
     "source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "published": false,
     "accepted": false,
     "complete_campaigns_delivered": 0,
     "authored_runtime_rooms": 40,
     "production_art_audio_complete": false,
-    "publication_scope": "Alpha.11 art and motion development; production remains alpha.5.",
-    "runtime_source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174"
+    "publication_scope": "Alpha.12 factory detailed encounters in development. Production remains alpha.5.",
+    "runtime_source_sha": "7cae23ef192492e16af577108ed53e3d4c86f191"
   },
   "historical_source_checkout": {
     "branch": "codex/cinder-shift-m05b1-campaign",
@@ -1048,867 +1048,359 @@
   },
   "active_development_successor": {
     "date": "2026-11-19",
-    "version": "0.8.0-alpha.11",
-    "status": "RUNTIME_REGRESSION_PASS_FIREFOX_UI_RETRY_PENDING_RW3_PARTIAL_NOT_RC",
-    "base_remote_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+    "version": "0.8.0-alpha.12",
+    "status": "FACTORY_IMPLEMENTED_LOCAL_MODELS_PASS_INPUT_CI_PENDING_NOT_RC",
+    "source": {
+      "branch": "codex/cinder-shift-final",
+      "sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "tree": "e064b395f629fd19b6689253b0a0dcefa62e3b85",
+      "local_equivalent": "10287e9b788962de479cc54171346149be6dc852",
+      "same_tree_verified": true
+    },
+    "work_order": "docs/cinder-shift/current-work-order.ru.md",
     "scope": {
-      "rigs": 10,
-      "editable_parts": 44,
-      "rooms": 40,
-      "source": "games/cinder-shift/src/art/motion-atlas.ts",
-      "renderer": "games/cinder-shift/src/art/world-motion.ts",
-      "gallery": "art/motion-v1/preview.html",
-      "contact_sheet": "art/motion-v1/contact-sheet.png",
-      "animation_preview": "art/motion-v1/motion-preview.gif"
+      "rooms": [
+        "YU04-A",
+        "YU04-B",
+        "YU04-C",
+        "YU04-D"
+      ],
+      "design": "docs/cinder-shift/new-campaigns/10_All_Rooms_Deep_Design_RU.txt:196-217",
+      "changes": [
+        "Safe belt configuration and optional resource walkway; base movement unchanged.",
+        "Hoist feed at its actual platform height; far lever before the exit door.",
+        "Elevated distributor feed and a separate ground exit feed.",
+        "Three drive phases remove physical screens, start a fresh warning, reset and stop the drive, then secure the radio feed.",
+        "Phase doors disappear from colliders and rendering together. Stopped flywheel retains static pixels while simulation time continues.",
+        "Eight live EN/RU hints and a completed-objective hint. Stable room/contact/reward IDs retained."
+      ]
     },
-    "local_checks": {
-      "build": "PASS",
-      "typecheck": "PASS",
-      "i18n_keys": 913,
+    "local": {
+      "build": "PASS_4CDF5F0_CLEAN_CI_BUILD; CURRENT_DRIVER_ONLY_SUCCESSOR_BUILD_PENDING_CI",
+      "types": "PASS",
+      "i18n_keys": 921,
       "art_contracts": "PASS",
-      "motion_and_environment_models": {
-        "passed": 52,
-        "failed": 0
-      },
-      "prepared_figma_script_syntax": "PASS_AS_ASYNC_FUNCTION_NOT_EXECUTED",
-      "runtime_browser": "BLOCKED_LISTEN_EPERM_127.0.0.1_4175",
-      "clean_equivalent_build": "PASS; source_dirty false; 71 manifest files"
-    },
-    "visual_review": {
-      "source_contact_sheet": "VIEWED",
-      "runtime_screenshots": "VIEWED; native Phaser normal frames of all ten rigs; reduced resting poses checked by pixel comparisons",
-      "figma_native_layers": "NOT_CREATED",
-      "runtime_contact_sheet": "art/motion-v1/runtime-contact-sheet.png"
-    },
-    "figma": {
-      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
-      "status": "FILE_CREATED_ASSET_IMPORT_BLOCKED_STARTER_MCP_LIMIT",
-      "import_script": "art/motion-v1/figma-import.js",
-      "native_timelines_verified": false,
-      "quota_rechecked": "2026-11-19; get_libraries still returns Starter MCP tool call limit"
-    },
-    "harbor_test_repairs": [
-      "Context planning uses actual 22-pixel body width instead of an arbitrary 40-pixel clearance.",
-      "Port relay routes jump via the real upper step rather than walking into it.",
-      "Quay contact approach ends before momentum carries the player into the repair pocket.",
-      "Registry regenerated with the actual package version."
-    ],
-    "ci": {
-      "status": "RUNTIME_AND_REGRESSION_PASS_FIREFOX_EXTENDED_UI_RETRY_PENDING",
-      "source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "artifact_run_id": 44479591334,
-      "cross_browser_run_id": 44479591435,
-      "full_regression_run_id": 44479585083,
-      "pr_regression_run_id": 44479591537,
-      "runtime_checks": {
-        "job_id": 135408295013,
-        "status": "PASS",
-        "passed": 210,
-        "failed": 0,
-        "packs": [
-          {
-            "name": "native_motion_pause_reduced",
-            "passed": 10
-          },
-          {
-            "name": "cargo_and_environment_input",
-            "passed": 33
-          },
-          {
-            "name": "audio_settings",
-            "passed": 3
-          },
-          {
-            "name": "menu_layouts",
-            "passed": 33
-          },
-          {
-            "name": "environment_models",
-            "passed": 46
-          },
-          {
-            "name": "menu_art_ru_en",
-            "passed": 6
-          },
-          {
-            "name": "previous_rw3",
-            "passed": 29
-          },
-          {
-            "name": "world_models_and_ui",
-            "passed": 50
-          }
-        ],
-        "artifact_id": 14508387240
-      },
-      "world_routes": {
-        "status": "PASS_BOTH",
-        "c02": {
-          "rooms": 20,
-          "missions": 5,
-          "artifact_id": 14507613973
-        },
-        "c03": {
-          "rooms": 20,
-          "missions": 5,
-          "artifact_id": 14507844284
-        }
-      },
-      "motion_pixels": {
-        "status": "PASS_ALL_THREE_BROWSERS",
-        "executions": 30,
-        "per_browser": 10,
-        "browsers": [
-          "chromium",
-          "firefox",
-          "webkit"
-        ],
-        "fixture": "One cleared room entry; subsequent trusted pause/settings UI; native Phaser pixel capture."
-      },
-      "cross_browser_jobs": [
-        {
-          "job_id": 135408294637,
-          "name": "models",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408294786,
-          "name": "encounters (webkit)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408294880,
-          "name": "encounters (chromium)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408295033,
-          "name": "encounters (firefox)",
-          "status": "completed",
-          "conclusion": "cancelled",
-          "attempt": 1
-        },
-        {
-          "job_id": 135418563890,
-          "name": "encounters (firefox)",
-          "status": "in_progress",
-          "conclusion": null,
-          "attempt": 2
-        },
-        {
-          "job_id": 135418565314,
-          "name": "models",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        },
-        {
-          "job_id": 135418566134,
-          "name": "encounters (chromium)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        },
-        {
-          "job_id": 135418614761,
-          "name": "encounters (webkit)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        }
-      ],
-      "regression_jobs": [
-        {
-          "job_id": 135408274538,
-          "name": "check (1)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274855,
-          "name": "check (3)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274913,
-          "name": "check (7)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274929,
-          "name": "check (11)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274931,
-          "name": "check (10)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274950,
-          "name": "check (2)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275013,
-          "name": "check (5)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275022,
-          "name": "check (12)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275040,
-          "name": "check (6)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275078,
-          "name": "check (9)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275114,
-          "name": "check (8)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275121,
-          "name": "check (4)",
-          "status": "completed",
-          "conclusion": "success"
-        }
-      ],
-      "pr_regression_jobs": [
-        {
-          "job_id": 135408296060,
-          "name": "check (6)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296112,
-          "name": "check (7)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296134,
-          "name": "check (2)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296170,
-          "name": "check (4)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296198,
-          "name": "check (3)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296214,
-          "name": "check (11)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296229,
-          "name": "check (9)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296301,
-          "name": "check (12)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296304,
-          "name": "check (10)",
-          "status": "queued",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296348,
-          "name": "check (5)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296380,
-          "name": "check (1)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296418,
-          "name": "check (8)",
-          "status": "queued",
-          "conclusion": null
-        }
-      ],
-      "artifact_jobs": [
-        {
-          "job_id": 135408294549,
-          "name": "world-routes (c02-small-world)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408295013,
-          "name": "runtime-checks",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408295047,
-          "name": "world-routes (c03-adriatic-1986)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135412935096,
-          "name": "artifact",
-          "status": "queued",
-          "conclusion": null
-        }
-      ],
-      "ordinary_input": "PASS_SELECTED_CHROMIUM_AND_BOTH_FULL_WORLD_ROUTES",
-      "screenshots": "EXACT_SOURCE_NATIVE_FRAMES_DOWNLOADED_AND_TEN_NORMAL_SCENES_VIEWED",
-      "immutable_artifact": {
-        "version": "0.8.0-alpha.11",
-        "build_id": "cinder-v1.b44.a1",
-        "source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-        "source_dirty": false,
-        "artifact_sha256": "b00a4c5092ecedc5c17db342b78ed9d273fda97ed88f10947febfe4d8a930e65",
-        "manifest_sha256": "cadb4a54ed4c9f33707d0f9e96693b0f8e4cccdd6f0ff2fa42ffff382f59abfb",
-        "files_checked": 71,
-        "status": "PASS",
-        "artifact_id": 14509070974,
-        "run_id": 44479591334
-      },
-      "quay_status": "PASS_NORMAL_AND_REDUCED_CHROMIUM_FIREFOX_WEBKIT; 516/516 general cases; exact-source shard 10 had 43/43 pass, no skips/flaky/unexpected",
-      "runtime_frames_reviewed": true,
-      "all_required_passed": false,
-      "overall_report_status": "RUNTIME_REGRESSION_PASS_FIREFOX_UI_RETRY_PENDING_RW3_PARTIAL_NOT_RC",
-      "snapshot_at_utc": "2026-11-19T07:51:34.502Z",
-      "regression": {
-        "run_id": 44479585083,
-        "status": "PASS",
-        "passed": 516,
+      "models": {
+        "passed": 122,
         "failed": 0,
         "skipped": 0,
-        "shards": 12
+        "source_game_code": "4cdf5f0; runtime and model code unchanged by the two later route-driver commits"
       },
-      "firefox_retry": {
-        "reason": "First attempt cancelled after the 15-minute job budget; no failed assertions were reported. Browser installation used about six minutes. Ten motion checks and forty final-combat/environment checks passed before cancellation during legacy UI.",
-        "first_job_id": 135408295033,
-        "first_motion_passed": 10,
-        "first_environment_and_combat_passed": 40,
-        "status": "TARGETED_JOB_RERUN_REQUESTED_SAME_SOURCE"
-      }
+      "model_report": "qa-work/alpha12-models-after-clearance-fix.json",
+      "browser": "BLOCKED_LOCAL_SANDBOX; ordinary input and screenshots require CI",
+      "initial_mixed_selection": "Four legacy browser cases failed to launch in the restricted local environment; corrected model-only selection passed 122/122. No browser PASS is claimed locally."
     },
-    "deployed": false,
-    "accepted": false,
+    "ci": {
+      "status": "RUNNING",
+      "source_sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "artifact_run_id": 44503490858,
+      "cross_browser_run_id": 44503490842,
+      "pr_regression_run_id": 44503490841,
+      "full_routes_run_id": 44503491070,
+      "factory_cases_per_browser": 6,
+      "native_drive_stop_hash": "PENDING_CURRENT_SOURCE; PASS_4CDF5F0",
+      "factory_input": "PENDING_CURRENT_SOURCE; SIX_CASES_PASS_4CDF5F0",
+      "c03_route": "PENDING_AFTER_DRIVER_CLEARANCE_AND_DESCENT_FIX",
+      "runtime_frames": "PREVIOUS_FIXED_SOURCE_SIX_FRAMES_VIEWED; CURRENT_PENDING",
+      "immutable_artifact": "PENDING"
+    },
+    "ci_budget_change": {
+      "encounters_minutes": 30,
+      "runtime_minutes": 20,
+      "reason": "Both alpha.11 Firefox attempts exhausted the 15-minute job budget after slow browser installation. Expanded suites now include six factory cases. Only job time budgets changed; gameplay/test assertion timeouts and thresholds were not relaxed.",
+      "subsequent_regression_deduplication": "Current code makes the active final branch use the PR general-regression gate once and check out its exact head, avoiding duplicate twelve-shard push/PR runs. No test cases or assertion thresholds were removed."
+    },
+    "figma": {
+      "status": "STARTER_MCP_QUOTA_BLOCKED_PREVIOUSLY_VERIFIED",
+      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+      "imported": false
+    },
     "production": {
       "version": "0.8.0-alpha.5",
       "changed": false
     },
+    "deployed": false,
+    "accepted": false,
     "remaining": [
-      "Finish the remaining browser/route/regression gates on the exact source.",
-      "Complete remaining detailed world encounters and full RW3 production manifest; this pack is a subset.",
-      "Import and verify native Figma layers/timelines after the connector quota permits.",
-      "RW4 localization, devices, storage/performance/channel checks and RC remain open."
+      "Resolve ordinary-input and visual findings on the exact source.",
+      "Complete the radio station YU05-A-D and the rest of the agreed production art/audio/VFX manifest.",
+      "Fresh earned world unlock, full save/challenge/localization/device/performance matrices and RW4 remain open.",
+      "Figma native layers/timelines remain pending quota availability.",
+      "SDK and platform delivery are a separate subsequent sprint after finishing the game."
     ],
-    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate",
-    "runtime_source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
-    "runtime_tree_sha": "00ab3eedc4e089dead8df8614fdfc8a8cf2b37a8",
-    "equivalent_local_runtime_sha": "b3ca53e",
-    "initial_alpha11_ci": {
-      "status": "FAILED; QUAY_CLOSED_WINDOW; ARTIFACT_SKIPPED",
-      "source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
-      "artifact_run_id": 44472991221,
-      "cross_browser_run_id": 44472991178,
-      "full_regression_run_id": 44472991145,
-      "full_routes_run_id": 44472991530,
-      "workflow_results": "PENDING",
-      "ordinary_input": "PENDING",
-      "screenshots": "PENDING",
-      "immutable_artifact": "PENDING"
+    "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_ENGINEERING_COMPLETION_GATE",
+    "whole_rw3_status": "ALL_SIX_ORIGINAL_IDS_PARTIAL",
+    "initial_source": {
+      "sha": "10a77221068c07566e730eb66d9ae00c171d024e",
+      "tree": "6cb029f2f574a34f66e988ccec7f6b68101aeb91",
+      "local_equivalent": "cb7bfd4656cb19981e5fe174bca552b7e1a39795"
     },
-    "source": {
-      "branch": "codex/cinder-shift-final",
-      "sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "tree": "ba729288ece87f2cac9624a338dbf4b25fc4f329",
-      "local_equivalent": "c97f71b5b3d7b16eeddb90db7a09a302aa548bf4",
-      "same_tree_verified": true,
-      "runtime_unchanged_from": "b43629d3262271afc5f72330b80bafe874ba82ee"
+    "initial_ci": {
+      "artifact_run_id": 44498785647,
+      "cross_browser_run_id": 44498785661,
+      "source_regression_run_id": 44498776175,
+      "pr_regression_run_id": 44498785622,
+      "full_routes_run_id": 44498785723,
+      "c03_route": "FAIL_YU04_A_LOWER_PATH_HEADROOM",
+      "factory_input": "SIX_CHROMIUM_CASES_PASS"
     },
     "red_green": {
-      "before_source": "b43629d3262271afc5f72330b80bafe874ba82ee",
-      "before": "Quay normal/reduced input scenarios failed in Chromium and Firefox; the artifact was not produced.",
-      "cause": "The optional salvage route changes the arrival phase. The one-shot E press reached the contact during a closed water window. The full C03 driver already waits for safe.",
-      "fix": "Wait on dry ground for the existing safe window before one trusted E press. Check actual standing x and circuit. No gameplay, coordinates, input mutation, timing thresholds or hazard changes.",
-      "after_source": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "after": "PASS_NORMAL_AND_REDUCED_CHROMIUM_FIREFOX_WEBKIT; 516/516 general cases; exact-source shard 10 had 43/43 pass, no skips/flaky/unexpected"
+      "initial_source": "10a77221068c07566e730eb66d9ae00c171d024e",
+      "initial_c03_failure": {
+        "run_id": 44498776175,
+        "job_id": 135472707518,
+        "room": "YU04-A",
+        "player_x": 381,
+        "hp": 6,
+        "problem": "The B platform at y288 blocks the lower route immediately below the fixed walkway lip; insufficient headroom for the base jump."
+      },
+      "initial_room_scenarios": "All six factory ordinary-input scenarios passed in Chromium on the initial source; the complete C03 journey exposed the separate lower-route defect.",
+      "fix": "Move the B branch support to the upper line at y244 and keep the stopped-belt ground lane clear. Add an actual body-clearance assertion; no movement, hazard timing or test threshold changes.",
+      "after_source": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "after_models": "122 PASS for unchanged factory game/model code; current ordinary-input and full C03 CI pending",
+      "driver_findings": [
+        {
+          "source": "4cdf5f0",
+          "room": "YU04-C",
+          "problem": "The route planner treated the entire column beneath a high platform as blocked and could not find a firing lane. The standing 22x44 body actually fits.",
+          "fix": "Use actual standing body intersections and physically descend to the ground firing lane."
+        },
+        {
+          "source": "4604210",
+          "room": "YU01-C",
+          "problem": "The first descent planner walked around the nearer left edge and jumped back onto the shelf to cross a closed floor-level wall.",
+          "fix": "Require a clear actual-body ground corridor from descent point to target; descend on the target side of the wall."
+        }
+      ]
     },
-    "updated_at_utc": "2026-11-19T07:52:02.237049+00:00"
+    "previous_fixed_source_evidence": {
+      "source_sha": "4cdf5f0b4face37eab995f8c3c54047160a6676f",
+      "artifact_run_id": 44500756385,
+      "runtime_checks": {
+        "job_id": 135479668217,
+        "status": "PASS",
+        "passed": 216,
+        "packs": {
+          "native_motion_pause_reduced": 10,
+          "factory_cargo_environment": 39,
+          "audio_settings": 3,
+          "menu_layouts": 33,
+          "environment_models": 46,
+          "menu_art": 6,
+          "sprint3": 29,
+          "final_worlds": 50
+        }
+      },
+      "factory_input": "SIX_CHROMIUM_CASES_PASS; includes normal/reduced hoist and drive, pause, physical phase doors and native stopped-flywheel pixel hash",
+      "runtime_frames": {
+        "artifact_id": 14516984415,
+        "status": "VIEWED_SIX_FACTORY_FRAMES",
+        "cases": [
+          "resource walkway",
+          "hoist contact",
+          "upper distributor feed",
+          "fresh drive warning",
+          "drive stopped",
+          "radio feed secured"
+        ],
+        "caveat": "Cleared distributor entry tests geometry; full real combat must pass the complete C03 route."
+      },
+      "c02_route": {
+        "job_id": 135479667406,
+        "status": "PASS_ALL_20_ROOMS_LEGACY_UNLOCK_FIXTURE"
+      },
+      "c03_route": {
+        "job_id": 135479667784,
+        "status": "FAIL_ROUTE_DRIVER_NO_BASELINE_FIRING_LANE_YU04_C"
+      },
+      "cross_browser": {
+        "run_id": 44500756374,
+        "checkout_sha": "e97bf650453d72afd6bc12660b8eedd45a8d3a31",
+        "source_note": "PR merge checkout, distinct from the exact-head artifact job. Not claimed as same-source certification.",
+        "chromium_passed": 107,
+        "model_passed": 169,
+        "firefox": "10 motion + 46 encounters PASS, 1 skip; later UI interrupted by superseding commit",
+        "webkit": "10 motion PASS; encounters interrupted by superseding commit"
+      }
+    }
   },
   "active_iteration": {
     "date": "2026-11-19",
-    "version": "0.8.0-alpha.11",
-    "status": "RUNTIME_REGRESSION_PASS_FIREFOX_UI_RETRY_PENDING_RW3_PARTIAL_NOT_RC",
-    "base_remote_sha": "e5677f871fa973c4b1289fd248d0d823c00ab3a2",
+    "version": "0.8.0-alpha.12",
+    "status": "FACTORY_IMPLEMENTED_LOCAL_MODELS_PASS_INPUT_CI_PENDING_NOT_RC",
+    "source": {
+      "branch": "codex/cinder-shift-final",
+      "sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "tree": "e064b395f629fd19b6689253b0a0dcefa62e3b85",
+      "local_equivalent": "10287e9b788962de479cc54171346149be6dc852",
+      "same_tree_verified": true
+    },
+    "work_order": "docs/cinder-shift/current-work-order.ru.md",
     "scope": {
-      "rigs": 10,
-      "editable_parts": 44,
-      "rooms": 40,
-      "source": "games/cinder-shift/src/art/motion-atlas.ts",
-      "renderer": "games/cinder-shift/src/art/world-motion.ts",
-      "gallery": "art/motion-v1/preview.html",
-      "contact_sheet": "art/motion-v1/contact-sheet.png",
-      "animation_preview": "art/motion-v1/motion-preview.gif"
+      "rooms": [
+        "YU04-A",
+        "YU04-B",
+        "YU04-C",
+        "YU04-D"
+      ],
+      "design": "docs/cinder-shift/new-campaigns/10_All_Rooms_Deep_Design_RU.txt:196-217",
+      "changes": [
+        "Safe belt configuration and optional resource walkway; base movement unchanged.",
+        "Hoist feed at its actual platform height; far lever before the exit door.",
+        "Elevated distributor feed and a separate ground exit feed.",
+        "Three drive phases remove physical screens, start a fresh warning, reset and stop the drive, then secure the radio feed.",
+        "Phase doors disappear from colliders and rendering together. Stopped flywheel retains static pixels while simulation time continues.",
+        "Eight live EN/RU hints and a completed-objective hint. Stable room/contact/reward IDs retained."
+      ]
     },
-    "local_checks": {
-      "build": "PASS",
-      "typecheck": "PASS",
-      "i18n_keys": 913,
+    "local": {
+      "build": "PASS_4CDF5F0_CLEAN_CI_BUILD; CURRENT_DRIVER_ONLY_SUCCESSOR_BUILD_PENDING_CI",
+      "types": "PASS",
+      "i18n_keys": 921,
       "art_contracts": "PASS",
-      "motion_and_environment_models": {
-        "passed": 52,
-        "failed": 0
-      },
-      "prepared_figma_script_syntax": "PASS_AS_ASYNC_FUNCTION_NOT_EXECUTED",
-      "runtime_browser": "BLOCKED_LISTEN_EPERM_127.0.0.1_4175",
-      "clean_equivalent_build": "PASS; source_dirty false; 71 manifest files"
-    },
-    "visual_review": {
-      "source_contact_sheet": "VIEWED",
-      "runtime_screenshots": "VIEWED; native Phaser normal frames of all ten rigs; reduced resting poses checked by pixel comparisons",
-      "figma_native_layers": "NOT_CREATED",
-      "runtime_contact_sheet": "art/motion-v1/runtime-contact-sheet.png"
-    },
-    "figma": {
-      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
-      "status": "FILE_CREATED_ASSET_IMPORT_BLOCKED_STARTER_MCP_LIMIT",
-      "import_script": "art/motion-v1/figma-import.js",
-      "native_timelines_verified": false,
-      "quota_rechecked": "2026-11-19; get_libraries still returns Starter MCP tool call limit"
-    },
-    "harbor_test_repairs": [
-      "Context planning uses actual 22-pixel body width instead of an arbitrary 40-pixel clearance.",
-      "Port relay routes jump via the real upper step rather than walking into it.",
-      "Quay contact approach ends before momentum carries the player into the repair pocket.",
-      "Registry regenerated with the actual package version."
-    ],
-    "ci": {
-      "status": "RUNTIME_AND_REGRESSION_PASS_FIREFOX_EXTENDED_UI_RETRY_PENDING",
-      "source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "artifact_run_id": 44479591334,
-      "cross_browser_run_id": 44479591435,
-      "full_regression_run_id": 44479585083,
-      "pr_regression_run_id": 44479591537,
-      "runtime_checks": {
-        "job_id": 135408295013,
-        "status": "PASS",
-        "passed": 210,
-        "failed": 0,
-        "packs": [
-          {
-            "name": "native_motion_pause_reduced",
-            "passed": 10
-          },
-          {
-            "name": "cargo_and_environment_input",
-            "passed": 33
-          },
-          {
-            "name": "audio_settings",
-            "passed": 3
-          },
-          {
-            "name": "menu_layouts",
-            "passed": 33
-          },
-          {
-            "name": "environment_models",
-            "passed": 46
-          },
-          {
-            "name": "menu_art_ru_en",
-            "passed": 6
-          },
-          {
-            "name": "previous_rw3",
-            "passed": 29
-          },
-          {
-            "name": "world_models_and_ui",
-            "passed": 50
-          }
-        ],
-        "artifact_id": 14508387240
-      },
-      "world_routes": {
-        "status": "PASS_BOTH",
-        "c02": {
-          "rooms": 20,
-          "missions": 5,
-          "artifact_id": 14507613973
-        },
-        "c03": {
-          "rooms": 20,
-          "missions": 5,
-          "artifact_id": 14507844284
-        }
-      },
-      "motion_pixels": {
-        "status": "PASS_ALL_THREE_BROWSERS",
-        "executions": 30,
-        "per_browser": 10,
-        "browsers": [
-          "chromium",
-          "firefox",
-          "webkit"
-        ],
-        "fixture": "One cleared room entry; subsequent trusted pause/settings UI; native Phaser pixel capture."
-      },
-      "cross_browser_jobs": [
-        {
-          "job_id": 135408294637,
-          "name": "models",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408294786,
-          "name": "encounters (webkit)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408294880,
-          "name": "encounters (chromium)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 1
-        },
-        {
-          "job_id": 135408295033,
-          "name": "encounters (firefox)",
-          "status": "completed",
-          "conclusion": "cancelled",
-          "attempt": 1
-        },
-        {
-          "job_id": 135418563890,
-          "name": "encounters (firefox)",
-          "status": "in_progress",
-          "conclusion": null,
-          "attempt": 2
-        },
-        {
-          "job_id": 135418565314,
-          "name": "models",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        },
-        {
-          "job_id": 135418566134,
-          "name": "encounters (chromium)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        },
-        {
-          "job_id": 135418614761,
-          "name": "encounters (webkit)",
-          "status": "completed",
-          "conclusion": "success",
-          "attempt": 2
-        }
-      ],
-      "regression_jobs": [
-        {
-          "job_id": 135408274538,
-          "name": "check (1)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274855,
-          "name": "check (3)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274913,
-          "name": "check (7)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274929,
-          "name": "check (11)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274931,
-          "name": "check (10)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408274950,
-          "name": "check (2)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275013,
-          "name": "check (5)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275022,
-          "name": "check (12)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275040,
-          "name": "check (6)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275078,
-          "name": "check (9)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275114,
-          "name": "check (8)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408275121,
-          "name": "check (4)",
-          "status": "completed",
-          "conclusion": "success"
-        }
-      ],
-      "pr_regression_jobs": [
-        {
-          "job_id": 135408296060,
-          "name": "check (6)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296112,
-          "name": "check (7)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296134,
-          "name": "check (2)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296170,
-          "name": "check (4)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296198,
-          "name": "check (3)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296214,
-          "name": "check (11)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296229,
-          "name": "check (9)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408296301,
-          "name": "check (12)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296304,
-          "name": "check (10)",
-          "status": "queued",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296348,
-          "name": "check (5)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296380,
-          "name": "check (1)",
-          "status": "in_progress",
-          "conclusion": null
-        },
-        {
-          "job_id": 135408296418,
-          "name": "check (8)",
-          "status": "queued",
-          "conclusion": null
-        }
-      ],
-      "artifact_jobs": [
-        {
-          "job_id": 135408294549,
-          "name": "world-routes (c02-small-world)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408295013,
-          "name": "runtime-checks",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135408295047,
-          "name": "world-routes (c03-adriatic-1986)",
-          "status": "completed",
-          "conclusion": "success"
-        },
-        {
-          "job_id": 135412935096,
-          "name": "artifact",
-          "status": "queued",
-          "conclusion": null
-        }
-      ],
-      "ordinary_input": "PASS_SELECTED_CHROMIUM_AND_BOTH_FULL_WORLD_ROUTES",
-      "screenshots": "EXACT_SOURCE_NATIVE_FRAMES_DOWNLOADED_AND_TEN_NORMAL_SCENES_VIEWED",
-      "immutable_artifact": {
-        "version": "0.8.0-alpha.11",
-        "build_id": "cinder-v1.b44.a1",
-        "source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-        "source_dirty": false,
-        "artifact_sha256": "b00a4c5092ecedc5c17db342b78ed9d273fda97ed88f10947febfe4d8a930e65",
-        "manifest_sha256": "cadb4a54ed4c9f33707d0f9e96693b0f8e4cccdd6f0ff2fa42ffff382f59abfb",
-        "files_checked": 71,
-        "status": "PASS",
-        "artifact_id": 14509070974,
-        "run_id": 44479591334
-      },
-      "quay_status": "PASS_NORMAL_AND_REDUCED_CHROMIUM_FIREFOX_WEBKIT; 516/516 general cases; exact-source shard 10 had 43/43 pass, no skips/flaky/unexpected",
-      "runtime_frames_reviewed": true,
-      "all_required_passed": false,
-      "overall_report_status": "RUNTIME_REGRESSION_PASS_FIREFOX_UI_RETRY_PENDING_RW3_PARTIAL_NOT_RC",
-      "snapshot_at_utc": "2026-11-19T07:51:34.502Z",
-      "regression": {
-        "run_id": 44479585083,
-        "status": "PASS",
-        "passed": 516,
+      "models": {
+        "passed": 122,
         "failed": 0,
         "skipped": 0,
-        "shards": 12
+        "source_game_code": "4cdf5f0; runtime and model code unchanged by the two later route-driver commits"
       },
-      "firefox_retry": {
-        "reason": "First attempt cancelled after the 15-minute job budget; no failed assertions were reported. Browser installation used about six minutes. Ten motion checks and forty final-combat/environment checks passed before cancellation during legacy UI.",
-        "first_job_id": 135408295033,
-        "first_motion_passed": 10,
-        "first_environment_and_combat_passed": 40,
-        "status": "TARGETED_JOB_RERUN_REQUESTED_SAME_SOURCE"
-      }
+      "model_report": "qa-work/alpha12-models-after-clearance-fix.json",
+      "browser": "BLOCKED_LOCAL_SANDBOX; ordinary input and screenshots require CI",
+      "initial_mixed_selection": "Four legacy browser cases failed to launch in the restricted local environment; corrected model-only selection passed 122/122. No browser PASS is claimed locally."
     },
-    "deployed": false,
-    "accepted": false,
+    "ci": {
+      "status": "RUNNING",
+      "source_sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "artifact_run_id": 44503490858,
+      "cross_browser_run_id": 44503490842,
+      "pr_regression_run_id": 44503490841,
+      "full_routes_run_id": 44503491070,
+      "factory_cases_per_browser": 6,
+      "native_drive_stop_hash": "PENDING_CURRENT_SOURCE; PASS_4CDF5F0",
+      "factory_input": "PENDING_CURRENT_SOURCE; SIX_CASES_PASS_4CDF5F0",
+      "c03_route": "PENDING_AFTER_DRIVER_CLEARANCE_AND_DESCENT_FIX",
+      "runtime_frames": "PREVIOUS_FIXED_SOURCE_SIX_FRAMES_VIEWED; CURRENT_PENDING",
+      "immutable_artifact": "PENDING"
+    },
+    "ci_budget_change": {
+      "encounters_minutes": 30,
+      "runtime_minutes": 20,
+      "reason": "Both alpha.11 Firefox attempts exhausted the 15-minute job budget after slow browser installation. Expanded suites now include six factory cases. Only job time budgets changed; gameplay/test assertion timeouts and thresholds were not relaxed.",
+      "subsequent_regression_deduplication": "Current code makes the active final branch use the PR general-regression gate once and check out its exact head, avoiding duplicate twelve-shard push/PR runs. No test cases or assertion thresholds were removed."
+    },
+    "figma": {
+      "status": "STARTER_MCP_QUOTA_BLOCKED_PREVIOUSLY_VERIFIED",
+      "url": "https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW",
+      "imported": false
+    },
     "production": {
       "version": "0.8.0-alpha.5",
       "changed": false
     },
+    "deployed": false,
+    "accepted": false,
     "remaining": [
-      "Finish the remaining browser/route/regression gates on the exact source.",
-      "Complete remaining detailed world encounters and full RW3 production manifest; this pack is a subset.",
-      "Import and verify native Figma layers/timelines after the connector quota permits.",
-      "RW4 localization, devices, storage/performance/channel checks and RC remain open."
+      "Resolve ordinary-input and visual findings on the exact source.",
+      "Complete the radio station YU05-A-D and the rest of the agreed production art/audio/VFX manifest.",
+      "Fresh earned world unlock, full save/challenge/localization/device/performance matrices and RW4 remain open.",
+      "Figma native layers/timelines remain pending quota availability.",
+      "SDK and platform delivery are a separate subsequent sprint after finishing the game."
     ],
-    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate",
-    "runtime_source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
-    "runtime_tree_sha": "00ab3eedc4e089dead8df8614fdfc8a8cf2b37a8",
-    "equivalent_local_runtime_sha": "b3ca53e",
-    "initial_alpha11_ci": {
-      "status": "FAILED; QUAY_CLOSED_WINDOW; ARTIFACT_SKIPPED",
-      "source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
-      "artifact_run_id": 44472991221,
-      "cross_browser_run_id": 44472991178,
-      "full_regression_run_id": 44472991145,
-      "full_routes_run_id": 44472991530,
-      "workflow_results": "PENDING",
-      "ordinary_input": "PENDING",
-      "screenshots": "PENDING",
-      "immutable_artifact": "PENDING"
+    "human_acceptance": "DEFERRED_BY_USER; OUTSIDE_CURRENT_ENGINEERING_COMPLETION_GATE",
+    "whole_rw3_status": "ALL_SIX_ORIGINAL_IDS_PARTIAL",
+    "initial_source": {
+      "sha": "10a77221068c07566e730eb66d9ae00c171d024e",
+      "tree": "6cb029f2f574a34f66e988ccec7f6b68101aeb91",
+      "local_equivalent": "cb7bfd4656cb19981e5fe174bca552b7e1a39795"
     },
-    "source": {
-      "branch": "codex/cinder-shift-final",
-      "sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "tree": "ba729288ece87f2cac9624a338dbf4b25fc4f329",
-      "local_equivalent": "c97f71b5b3d7b16eeddb90db7a09a302aa548bf4",
-      "same_tree_verified": true,
-      "runtime_unchanged_from": "b43629d3262271afc5f72330b80bafe874ba82ee"
+    "initial_ci": {
+      "artifact_run_id": 44498785647,
+      "cross_browser_run_id": 44498785661,
+      "source_regression_run_id": 44498776175,
+      "pr_regression_run_id": 44498785622,
+      "full_routes_run_id": 44498785723,
+      "c03_route": "FAIL_YU04_A_LOWER_PATH_HEADROOM",
+      "factory_input": "SIX_CHROMIUM_CASES_PASS"
     },
     "red_green": {
-      "before_source": "b43629d3262271afc5f72330b80bafe874ba82ee",
-      "before": "Quay normal/reduced input scenarios failed in Chromium and Firefox; the artifact was not produced.",
-      "cause": "The optional salvage route changes the arrival phase. The one-shot E press reached the contact during a closed water window. The full C03 driver already waits for safe.",
-      "fix": "Wait on dry ground for the existing safe window before one trusted E press. Check actual standing x and circuit. No gameplay, coordinates, input mutation, timing thresholds or hazard changes.",
-      "after_source": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
-      "after": "PASS_NORMAL_AND_REDUCED_CHROMIUM_FIREFOX_WEBKIT; 516/516 general cases; exact-source shard 10 had 43/43 pass, no skips/flaky/unexpected"
+      "initial_source": "10a77221068c07566e730eb66d9ae00c171d024e",
+      "initial_c03_failure": {
+        "run_id": 44498776175,
+        "job_id": 135472707518,
+        "room": "YU04-A",
+        "player_x": 381,
+        "hp": 6,
+        "problem": "The B platform at y288 blocks the lower route immediately below the fixed walkway lip; insufficient headroom for the base jump."
+      },
+      "initial_room_scenarios": "All six factory ordinary-input scenarios passed in Chromium on the initial source; the complete C03 journey exposed the separate lower-route defect.",
+      "fix": "Move the B branch support to the upper line at y244 and keep the stopped-belt ground lane clear. Add an actual body-clearance assertion; no movement, hazard timing or test threshold changes.",
+      "after_source": "7cae23ef192492e16af577108ed53e3d4c86f191",
+      "after_models": "122 PASS for unchanged factory game/model code; current ordinary-input and full C03 CI pending",
+      "driver_findings": [
+        {
+          "source": "4cdf5f0",
+          "room": "YU04-C",
+          "problem": "The route planner treated the entire column beneath a high platform as blocked and could not find a firing lane. The standing 22x44 body actually fits.",
+          "fix": "Use actual standing body intersections and physically descend to the ground firing lane."
+        },
+        {
+          "source": "4604210",
+          "room": "YU01-C",
+          "problem": "The first descent planner walked around the nearer left edge and jumped back onto the shelf to cross a closed floor-level wall.",
+          "fix": "Require a clear actual-body ground corridor from descent point to target; descend on the target side of the wall."
+        }
+      ]
     },
-    "updated_at_utc": "2026-11-19T07:52:02.237049+00:00"
+    "previous_fixed_source_evidence": {
+      "source_sha": "4cdf5f0b4face37eab995f8c3c54047160a6676f",
+      "artifact_run_id": 44500756385,
+      "runtime_checks": {
+        "job_id": 135479668217,
+        "status": "PASS",
+        "passed": 216,
+        "packs": {
+          "native_motion_pause_reduced": 10,
+          "factory_cargo_environment": 39,
+          "audio_settings": 3,
+          "menu_layouts": 33,
+          "environment_models": 46,
+          "menu_art": 6,
+          "sprint3": 29,
+          "final_worlds": 50
+        }
+      },
+      "factory_input": "SIX_CHROMIUM_CASES_PASS; includes normal/reduced hoist and drive, pause, physical phase doors and native stopped-flywheel pixel hash",
+      "runtime_frames": {
+        "artifact_id": 14516984415,
+        "status": "VIEWED_SIX_FACTORY_FRAMES",
+        "cases": [
+          "resource walkway",
+          "hoist contact",
+          "upper distributor feed",
+          "fresh drive warning",
+          "drive stopped",
+          "radio feed secured"
+        ],
+        "caveat": "Cleared distributor entry tests geometry; full real combat must pass the complete C03 route."
+      },
+      "c02_route": {
+        "job_id": 135479667406,
+        "status": "PASS_ALL_20_ROOMS_LEGACY_UNLOCK_FIXTURE"
+      },
+      "c03_route": {
+        "job_id": 135479667784,
+        "status": "FAIL_ROUTE_DRIVER_NO_BASELINE_FIRING_LANE_YU04_C"
+      },
+      "cross_browser": {
+        "run_id": 44500756374,
+        "checkout_sha": "e97bf650453d72afd6bc12660b8eedd45a8d3a31",
+        "source_note": "PR merge checkout, distinct from the exact-head artifact job. Not claimed as same-source certification.",
+        "chromium_passed": 107,
+        "model_passed": 169,
+        "firefox": "10 motion + 46 encounters PASS, 1 skip; later UI interrupted by superseding commit",
+        "webkit": "10 motion PASS; encounters interrupted by superseding commit"
+      }
+    }
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",
@@ -2742,5 +2234,13 @@
     "artifact_run": 44344756827,
     "candidate_run": 44344756949,
     "check_run": 44344756848
+  },
+  "current_work_order": "docs/cinder-shift/current-work-order.ru.md",
+  "historical_alpha11_checkpoint": {
+    "version": "0.8.0-alpha.11",
+    "source_sha": "d4c72ec6ae53071f6dffc41f4ae8424a56dc3174",
+    "verification": "docs/cinder-shift/alpha11-verification.json",
+    "checkpoint": "docs/cinder-shift/alpha11-art-motion.ru.md",
+    "immutable_build": "cinder-v1.b44.a1"
   }
 }
