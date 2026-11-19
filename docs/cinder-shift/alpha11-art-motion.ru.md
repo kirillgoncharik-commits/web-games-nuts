@@ -28,3 +28,6 @@ Figma: https://www.figma.com/design/M2XBW1Q0YPhOPQqNaRVQVW
 Все шесть RW3 IDs остаются PARTIAL. Этот pack не закрывает весь production manifest,
 оставшиеся подробные ситуации и RW4. Production остаётся alpha.5.
 Отдельный эксперимент C01 сюда не переносился.
+
+Исходники сохранены в PR10: `b43629d3262271afc5f72330b80bafe874ba82ee`, tree `00ab3ee`.
+CI artifact `44472991221`, cross-browser `44472991178`, regression `44472991145`: в очереди/работе, результат пока не получен.

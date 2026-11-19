@@ -1,13 +1,13 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-19T06:31:27.136160+00:00",
+  "updated_at": "2026-11-19T06:35:40.644461+00:00",
   "reference": "Alpha.11 authored environment art/motion pack integrated; local build/art contracts/51 models PASS. Browser CI and native Figma import remain unverified. RW3 partial, not RC.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
-    "code_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
+    "code_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
-    "working_tree": "Alpha.11 source changes are locally verified; awaiting source save and browser CI. See alpha11-verification.json.",
+    "working_tree": "Alpha.11 source saved in PR10. Local and remote runtime trees match 00ab3ee. Local build/art contracts/51 models PASS; browser CI queued or running.",
     "published_game_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
     "test_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
@@ -1091,7 +1091,16 @@
       "Registry regenerated with the actual package version."
     ],
     "ci": {
-      "status": "PENDING_SOURCE_SAVE"
+      "status": "QUEUED_OR_RUNNING",
+      "source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
+      "artifact_run_id": 44472991221,
+      "cross_browser_run_id": 44472991178,
+      "full_regression_run_id": 44472991145,
+      "full_routes_run_id": 44472991530,
+      "workflow_results": "PENDING",
+      "ordinary_input": "PENDING",
+      "screenshots": "PENDING",
+      "immutable_artifact": "PENDING"
     },
     "deployed": false,
     "accepted": false,
@@ -1105,7 +1114,10 @@
       "Import and verify native Figma layers/timelines after the connector quota permits.",
       "RW4 localization, devices, storage/performance/channel checks and RC remain open."
     ],
-    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate"
+    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate",
+    "runtime_source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
+    "runtime_tree_sha": "00ab3eedc4e089dead8df8614fdfc8a8cf2b37a8",
+    "equivalent_local_runtime_sha": "b3ca53e"
   },
   "active_iteration": {
     "date": "2026-11-19",
@@ -1152,7 +1164,16 @@
       "Registry regenerated with the actual package version."
     ],
     "ci": {
-      "status": "PENDING_SOURCE_SAVE"
+      "status": "QUEUED_OR_RUNNING",
+      "source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
+      "artifact_run_id": 44472991221,
+      "cross_browser_run_id": 44472991178,
+      "full_regression_run_id": 44472991145,
+      "full_routes_run_id": 44472991530,
+      "workflow_results": "PENDING",
+      "ordinary_input": "PENDING",
+      "screenshots": "PENDING",
+      "immutable_artifact": "PENDING"
     },
     "deployed": false,
     "accepted": false,
@@ -1166,7 +1187,10 @@
       "Import and verify native Figma layers/timelines after the connector quota permits.",
       "RW4 localization, devices, storage/performance/channel checks and RC remain open."
     ],
-    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate"
+    "human_acceptance": "DEFERRED_BY_USER; not a current engineering completion gate",
+    "runtime_source_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
+    "runtime_tree_sha": "00ab3eedc4e089dead8df8614fdfc8a8cf2b37a8",
+    "equivalent_local_runtime_sha": "b3ca53e"
   },
   "previous_production_alpha1": {
     "version": "0.8.0-alpha.1",
