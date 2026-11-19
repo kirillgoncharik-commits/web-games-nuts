@@ -1,8 +1,12 @@
 # Текущая разработка — alpha.11, Art + Motion
 
-19.11.2026. [Арт и анимации](alpha11-art-motion.ru.md), [проверки](alpha11-verification.json).
-10 rigs / 44 слоя подключены к 40 комнатам новых миров. Build, contracts и 51 модель PASS;
-игровой browser CI ожидается. Figma-файл создан, перенос заблокирован MCP-лимитом Starter.
+19.11.2026. [Арт и анимации](alpha11-art-motion.ru.md), [проверки](alpha11-verification.json), [реальные игровые кадры](../../art/motion-v1/runtime-contact-sheet.png).
+10 rigs / 44 слоя подключены к 40 комнатам новых миров. Чистая сборка, contracts и 52 модели PASS.
+Follow-up `d4c72ec`: 210/210 выбранных runtime-проверок и оба полных маршрута C02/C03 PASS;
+30 проверок реальных пикселей/паузы/reduced motion в Chromium, Firefox и WebKit PASS.
+Общая регрессия 516/516 PASS. Архив cinder-v1.b44.a1 и все 71 файла сверены.
+Расширенный Firefox UI прогон повторяется на тех же исходниках после отмены первого задания по 15-минутному лимиту; до отмены прошли 10 motion и 40 environment/combat проверок.
+Figma-файл создан, импорт всё ещё заблокирован MCP-лимитом Starter.
 Все шесть RW3 IDs PARTIAL, RC не готов, production alpha.5.
 
 ---

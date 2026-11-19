@@ -37,3 +37,10 @@ Starter plan's MCP call limit. **The destination contains no imported art; nativ
 It imports native SVG vectors, places editable parts and builds 80 ms HOLD keyframes from the same source.
 Rotor frames are centered on the actual source pivots. Run only after the required Figma guidance and
 library discovery are available. Inspect the resulting vectors and timelines before changing the status.
+
+## Runtime verification follow-up
+
+Source `d4c72ec` adds native Phaser pixel checks for all ten rigs, pause, and the actual reduced-motion checkbox.
+`runtime-contact-sheet.png` contains ten real game frames from Chromium artifact `14508387240`;
+it is separate from the SVG source preview. Both complete world routes and 210 selected runtime checks pass.
+See `docs/cinder-shift/alpha11-verification.json` for the current broader CI status and the preserved initial quay failures.
