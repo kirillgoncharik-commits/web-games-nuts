@@ -1,7 +1,7 @@
 {
   "date": "2026-11-19",
   "version": "0.8.0-alpha.12",
-  "status": "FACTORY_IMPLEMENTED_LOCAL_MODELS_PASS_INPUT_CI_PENDING_NOT_RC",
+  "status": "PUBLISHED_DEVELOPMENT_ALPHA_RUNTIME_PASS_FULL_ROUTES_INCOMPLETE_NOT_RC",
   "source": {
     "branch": "codex/cinder-shift-final",
     "sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
@@ -39,22 +39,22 @@
       "source_game_code": "4cdf5f0; runtime and model code unchanged by the two later route-driver commits"
     },
     "model_report": "qa-work/alpha12-models-after-clearance-fix.json",
-    "browser": "BLOCKED_LOCAL_SANDBOX; ordinary input and screenshots require CI",
+    "browser": "LOCAL_REPL_CHROMIUM_C02_FULL_PASS_C03_FAIL_YU04_C_SOURCE_836A04F",
     "initial_mixed_selection": "Four legacy browser cases failed to launch in the restricted local environment; corrected model-only selection passed 122/122. No browser PASS is claimed locally."
   },
   "ci": {
-    "status": "RUNNING",
+    "status": "COMPLETED_RUNTIME_PASS_C02_AND_C03_FAIL_ARTIFACT_SKIPPED",
     "source_sha": "7cae23ef192492e16af577108ed53e3d4c86f191",
     "artifact_run_id": 44503490858,
     "cross_browser_run_id": 44503490842,
     "pr_regression_run_id": 44503490841,
     "full_routes_run_id": 44503491070,
     "factory_cases_per_browser": 6,
-    "native_drive_stop_hash": "PENDING_CURRENT_SOURCE; PASS_4CDF5F0",
-    "factory_input": "PENDING_CURRENT_SOURCE; SIX_CASES_PASS_4CDF5F0",
-    "c03_route": "PENDING_AFTER_DRIVER_CLEARANCE_AND_DESCENT_FIX",
+    "native_drive_stop_hash": "PASS_SOURCE_7CAE23E_RUNTIME_JOB_135489142833",
+    "factory_input": "PASS_SIX_CHROMIUM_CASES_SOURCE_7CAE23E",
+    "c03_route": "FAIL_YU04_C_APPROACH",
     "runtime_frames": "PREVIOUS_FIXED_SOURCE_SIX_FRAMES_VIEWED; CURRENT_PENDING",
-    "immutable_artifact": "PENDING"
+    "immutable_artifact": "NOT_CREATED_ARTIFACT_GATE_FAILED"
   },
   "ci_budget_change": {
     "encounters_minutes": 30,
@@ -68,10 +68,16 @@
     "imported": false
   },
   "production": {
-    "version": "0.8.0-alpha.5",
-    "changed": false
+    "version": "0.8.0-alpha.12",
+    "changed": true,
+    "source_sha": "836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5",
+    "build_id": "local.20261119T132107351Z",
+    "site_merge_sha": "9392476bd66a65f35ef7bf6e23a05f82a6d65393",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "record": "alpha12-production-release-2026-11-19.json",
+    "local_rebuild_not_designated_ci_artifact": true
   },
-  "deployed": false,
+  "deployed": true,
   "accepted": false,
   "remaining": [
     "Resolve ordinary-input and visual findings on the exact source.",
