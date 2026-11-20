@@ -20,6 +20,7 @@ export default defineConfig({
       order: 'pre',
       handler(html) {
         if (target === 'web') return html;
+        if(target==='yandex')html=html.replace('<head>','<head>\n<script src="/sdk.js"></script>');
         return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
           .replace(/<a class="brand"[^>]*>([\s\S]*?)<\/a>/, '<span class="brand" aria-label="Nuts Games">$1</span>');
       }

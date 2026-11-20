@@ -12,7 +12,7 @@ export class AudioService{
  private context?:AudioContext;private master?:GainNode;private musicBus?:GainNode;private sfxBus?:GainNode;private uiBus?:GainNode;
  private buffers=new Map<string,AudioBuffer>();private raw=new Map<string,ArrayBuffer>();private prepared:Promise<void>;private decoding=new Map<string,Promise<void>>();
  private voices=new Set<Voice>();private retiring=new Set<Voice>();private music?:Music;private desiredMusic:ThemeId|null=null;private worldTheme:ThemeId='airlock';private failed=new Set<string>();
- private world=false;private hidden=false;private mute=false;private noiseBuffer?:AudioBuffer;
+ private world=false;private hidden=false;private hostBlocked=false;private mute=false;private noiseBuffer?:AudioBuffer;
  private levels:AudioLevels={musicVolume:.18,sfxVolume:.75,uiVolume:.6};private once=new Set<string>();private played:Record<string,number>={};private dropped=0;private maximum=0;private error=false;
  constructor(){this.prepared=this.preload();}
  get muted(){return this.mute;}
@@ -65,7 +65,8 @@ export class AudioService{
  clearCombat(){this.stopVoices(v=>v.bus==='sfx');}
  pauseWorld(){this.world=false;this.stopVoices(v=>v.bus==='sfx');this.desiredMusic=null;this.stopMusic();}
  background(){this.hidden=true;this.world=false;for(const voice of [...this.voices])this.stop(voice,true);for(const voice of this.retiring){try{voice.source.stop();}catch{}voice.source.disconnect();voice.gain.disconnect();}this.retiring.clear();this.stopMusic(true);void this.context?.suspend().catch(()=>{});}
- foreground(){this.hidden=false;this.syncMusic();}
+ hostPause(active:boolean){this.hostBlocked=active;if(active)this.background();else if(!document.hidden)this.foreground();}
+ foreground(){if(this.hostBlocked)return;this.hidden=false;this.syncMusic();}
  state(){return this.context?.state||'uninitialized';}
  snapshot(){const expected=Object.keys(assets.sfx).length,decoded=this.buffers.size,unavailableResources=[...this.failed].sort();return{state:this.state(),expected,decoded,unavailable:this.error,unavailableResources,partialFailure:decoded>0&&unavailableResources.length>0,ready:expected>0&&decoded===expected&&unavailableResources.length===0,world:this.world,hidden:this.hidden,muted:this.mute,voices:[...this.voices].filter(v=>v.bus!=='result').length,resultVoices:[...this.voices].filter(v=>v.bus==='result').length,retiring:this.retiring.size,music:this.music?.id||null,maxVoices:this.maximum,dropped:this.dropped,played:{...this.played},levels:{...this.levels}};}
 }

@@ -60,13 +60,16 @@
       "audio": "tool-produced or recorded OGG/MP3 still required"
     },
     "yandex": {
-      "integration_status": "blocked_partner_onboarding",
+      "integration_status": "sdk_candidate_host_qa_pending",
       "ads": [
         "mission_complete_next",
         "mission_failed_retry"
       ],
-      "storage": "persistent guest; cloud only when verified",
-      "analytics": "platform metrics; external off"
+      "storage": "Yandex getStorage guest envelope; no cloud claim",
+      "analytics": "platform metrics; external off",
+      "locale": "SDK environment.i18n.lang with saved player preference",
+      "sdk_source": "/sdk.js",
+      "sdk_docs_verified": "2026-11-20"
     }
   }
 }

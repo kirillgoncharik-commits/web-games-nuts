@@ -6,6 +6,7 @@ import {migrateEventPlan,validPlan} from './events';
 import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';
 import {validateLegacySave} from './legacy-save';
 import {actions,bindingAllowed,type Action} from '../input';
+import type {RecordStorage} from './host-storage';
 export const databaseName='cinder-shift-r01';
 export const schemaVersion=1;
 export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};
@@ -84,13 +85,15 @@ export class SaveService{
   hasExistingProfile=false;baseCompleted=false;completionProfile:CompletionProfile={schema_version:1,base_game_id:'r01',completion_ids:[]};completionProfileValid=true;
   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;
   onStatus:()=>void=()=>{};
-  constructor(readonly build:string){}
+  constructor(readonly build:string,private hostStorage?:RecordStorage){}
+  useHostStorage(storage:RecordStorage){if(this.available||this.db)throw Error('storage_already_connected');this.hostStorage=storage;}
   private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}
   async connect(){
+    if(this.hostStorage){try{await this.hostStorage.read('settings');this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.message:'host_storage_error';this.available=false;this.status('unavailable');return false;}}
     if(this.available&&this.db)return true;this.db?.close();
     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}
   }
-  private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
+  private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
   async loadModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
     if(!await this.connect())return{ok:false};
     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}
@@ -105,8 +108,8 @@ export class SaveService{
   }
   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{
     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;
-    if(!this.available||!this.db)return false;
-    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}
+    if(!this.available||!this.db&&!this.hostStorage)return false;
+    try{if(this.hostStorage)await this.hostStorage.writeMany({[key]:snapshot,...(profile?{'world-profile.v1':profile}:{})});else await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}
   };const result=this.queue.then(operation,operation);this.queue=result;return result;}
   saveCampaign(campaign:CampaignData,replace=false){
     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}
