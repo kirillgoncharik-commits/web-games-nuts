@@ -27,21 +27,24 @@ async function unlocked(page:Page){
  if(await notes.isVisible())await notes.click();
  await expect(resume).toBeVisible();
 }
-async function walk(page:Page,target:number,allowExit=false,enemyId?:string){
- const origin=(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
+async function walk(page:Page,target:number,{exitFrom,enemyId}:{exitFrom?:string;enemyId?:string}={}){
+ const origin=exitFrom??(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
   const s=await state(page);
   if(enemyId&&s.state==='playing'&&s.room===origin&&s.enemies.find((e:any)=>e.id===enemyId)?.hp<=0){
    await Promise.all(['a','d','s','Space'].map(key=>page.keyboard.up(key)));
    await ground(page);
    return;
   }
-  if(allowExit&&(s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
+  if(exitFrom&&s.state==='transition'){
+   await page.waitForFunction(origin=>{const s=(window as any).__CINDER__();return s.state==='complete'||s.state==='playing'&&s.room!==origin;},origin);
+  }
+  if(exitFrom&&(s.state==='transition'||s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
    // Releasing direction mid-jump still carries horizontal momentum until the
    // next ticks. Validate the landing, rather than accepting the airborne x.
    if(Math.abs((await state(page)).player.x-target)<7)return;
    previous=NaN;continue;
   }
-  if(allowExit&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
+  if(exitFrom&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
   if(pulse&&feetNow>274&&(pulse.fromPhase===undefined||s.world.phase>=pulse.fromPhase)){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
@@ -70,7 +73,7 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
 }
 async function standAtHeight(page:Page,point:{x:number;y:number},enemyId?:string){
- const x=point.x;await walk(page,x,false,enemyId);
+ const x=point.x;await walk(page,x,{enemyId});
  if(enemyId&&(await state(page)).enemies.find((e:any)=>e.id===enemyId)?.hp<=0)return;
  const landed=await state(page),feet=landed.player.y+22;
  if(feet<point.y-2){
@@ -180,7 +183,7 @@ async function solveRoom(page:Page){
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}
  s=await state(page);const repair=rooms[s.room as keyof typeof rooms].world?.repair;if(repair&&s.hp<s.maxHp&&!s.world.repaired){await walk(page,contextPoint(s,'repair',repair));await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);}
- const before=s.room;await walk(page,600,true);s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
+ const before=s.room;await walk(page,600,{exitFrom:before});s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
 }
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
  // Allow five full sectors and their real retries on a hosted browser.
@@ -208,7 +211,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['YU01','YU01-A'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
