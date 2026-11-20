@@ -94,11 +94,11 @@ export class SaveService{
     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}
   }
   private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
-  async loadModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
+  async loadModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|'active-world.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
     if(!await this.connect())return{ok:false};
     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}
   }
-  async saveModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`,value:unknown){
+  async saveModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|'active-world.v1'|`world.${string}.v1`,value:unknown){
     if(!this.available&&!await this.connect())return false;
     return Boolean(await this.put(key,value));
   }

@@ -90,7 +90,7 @@ async function bridgeAdapter(overrides={}){
   initialize:async()=>{calls.push('init');},
   platform:{language:'ru',isPaused:false,isAudioEnabled:true,sendMessage:async message=>{calls.push(message);},on:(name,fn)=>events.set(name,fn)},
   storage:{get:async key=>data.get(key)??null,set:async(key,value)=>{data.set(key,value);}},
-  advertisement:{interstitial:{isSupported:true,show(){calls.push('ad');}},on:(name,fn)=>events.set(name,fn)},
+  advertisement:{isInterstitialSupported:true,interstitialState:'closed',rewardedState:'closed',showInterstitial(){calls.push('ad');},on:(name,fn)=>events.set(name,fn)},
   ...overrides
  };
  globalThis.window={bridge,YaGames:{init:()=>assert.fail('wrong native SDK')}};
@@ -120,7 +120,7 @@ test('Bridge interstitial events compose with host pause and deduplicate a trans
 test('Bridge no-fill/failed/throw outcomes release pause without inventing ad completion',async()=>{
  for(const scenario of ['closed','failed','throw']){
   const a=await bridgeAdapter();await a.host.initialize();a.host.ready();
-  a.bridge.advertisement.interstitial.show=()=>{if(scenario==='throw')throw Error('network');a.events.get('interstitial_state_changed')(scenario);};
+  a.bridge.advertisement.showInterstitial=()=>{if(scenario==='throw')throw Error('network');a.events.get('interstitial_state_changed')(scenario);};
   const result=await a.host.requestInterstitial('mission_complete_next',scenario);
   assert.equal(result.status,scenario==='closed'?'no_fill':'failed');assert.equal(a.host.paused,false);
  }

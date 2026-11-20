@@ -12,7 +12,7 @@ window.bridge={
  initialize:async()=>{},
  platform:{language:'en',isPaused:false,isAudioEnabled:true,sendMessage:async message=>{window.__BRIDGE_TEST.calls.push(message)},on(name,fn){window.__BRIDGE_TEST.events[name]=fn}},
  storage:{get:async(key,parse)=>{if(parse!==false)throw Error('raw envelope required');return rawGet('pg:'+key)},set:async(key,value)=>rawSet('pg:'+key,value)},
- advertisement:{interstitial:{isSupported:true,show(){window.__BRIDGE_TEST.events.interstitial_state_changed('failed')}},on(name,fn){window.__BRIDGE_TEST.events[name]=fn}}
+ advertisement:{isInterstitialSupported:true,interstitialState:'closed',rewardedState:'closed',showInterstitial(){window.__BRIDGE_TEST.events.interstitial_state_changed('failed')},on(name,fn){window.__BRIDGE_TEST.events[name]=fn}}
 };
 `;
 async function mock(page:Page,body=sdkScript){await page.route('https://bridge.playgama.com/**/playgama-bridge.js',route=>route.fulfill({status:200,contentType:'text/javascript',body}));}

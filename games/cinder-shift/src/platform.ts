@@ -8,7 +8,7 @@ type BridgeSdk={
  initialize():Promise<void>;
  platform:{language:string;isPaused:boolean;isAudioEnabled:boolean;sendMessage(message:string):Promise<unknown>;on(event:string,listener:(value:boolean)=>void):unknown};
  storage:BridgeStorage;
- advertisement:{interstitial:{isSupported:boolean;show(placement:string):void};on(event:string,listener:(state:string)=>void):unknown};
+ advertisement:{isInterstitialSupported:boolean;interstitialState:string;rewardedState:string;showInterstitial(placement:string):void;on(event:string,listener:(state:string)=>void):unknown};
 };
 type YandexSdk={
  environment:{i18n:{lang:string}};
@@ -87,7 +87,8 @@ export class PlatformAdapter{
  requestInterstitial(placement:string,transitionId:string):Promise<AdResult>{
   const existing=this.adRequests.get(transitionId);if(existing)return existing;
   if((!this.sdk&&!this.bridge)||!this.profile.ads.includes(placement))return Promise.resolve({status:'unsupported',nativeRequestSent:false,transitionId});
-  if(this.bridge&&!this.bridge.advertisement.interstitial.isSupported)return Promise.resolve({status:'unsupported',nativeRequestSent:false,transitionId});
+  if(this.bridge&&!this.bridge.advertisement.isInterstitialSupported)return Promise.resolve({status:'unsupported',nativeRequestSent:false,transitionId});
+  if(this.bridge&&(this.paused||['loading','opened'].includes(this.bridge.advertisement.interstitialState)||['loading','opened'].includes(this.bridge.advertisement.rewardedState)))return Promise.resolve({status:'no_fill',nativeRequestSent:false,transitionId});
   if(this.adInFlight)return Promise.resolve({status:'no_fill',nativeRequestSent:false,transitionId});
   this.adInFlight=true;
   const request=new Promise<AdResult>(resolve=>{
@@ -99,7 +100,7 @@ export class PlatformAdapter{
    this.setPause('ad',true);
    if(this.bridge){
     this.bridgeAdState=state=>{if(state==='opened')opened=true;else if(state==='closed')finish(opened?'completed':'no_fill');else if(state==='failed')finish('failed');};
-    try{this.bridge.advertisement.interstitial.show(placement);}catch{this.setPause('bridge_ad',false);finish('failed');}
+    try{this.bridge.advertisement.showInterstitial(placement);}catch{this.setPause('bridge_ad',false);finish('failed');}
     return;
    }
    timer=setTimeout(()=>finish('no_fill'),5000);
