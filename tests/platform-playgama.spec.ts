@@ -15,6 +15,12 @@ window.bridge={
  advertisement:{isInterstitialSupported:true,interstitialState:'closed',rewardedState:'closed',showInterstitial(){window.__BRIDGE_TEST.events.interstitial_state_changed('failed')},on(name,fn){window.__BRIDGE_TEST.events[name]=fn}}
 };
 `;
+test.beforeEach(async({page})=>{page.on('pageerror',error=>console.log('PAGEERROR',error.message));});
+test.afterEach(async({page},info)=>{
+ if(info.status!==info.expectedStatus)console.log('BRIDGE_FAILURE',JSON.stringify(await page.evaluate(()=>{
+  const s=(window as any).__CINDER__?.();return{state:s?.state,screen:s?.screen,platform:s?.platform,audio:s?.audioStatus,host:(window as any).__BRIDGE_TEST,body:document.body.innerText.slice(0,1800)};
+ }).catch(error=>({diagnostic:String(error)})))));
+});
 async function mock(page:Page,body=sdkScript){await page.route('https://bridge.playgama.com/**/playgama-bridge.js',route=>route.fulfill({status:200,contentType:'text/javascript',body}));}
 test('Bridge alone supplies locale and storage; game readiness and host pause follow actual play',async({page})=>{
  await mock(page);await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();
@@ -38,7 +44,7 @@ test('Bridge envelope restores purchased progress, with startup language always 
 test('platform audio mute applies at startup, during play, and again after reload',async({page})=>{
  await mock(page,sdkScript.replace('isAudioEnabled:true','isAudioEnabled:false'));
  await page.goto('/games/cinder-shift/');await expect(page.getByTestId('new-shift')).toBeVisible();expect((await state(page)).audioStatus.hostMuted).toBe(true);
- await page.evaluate(()=>(window as any).__BRIDGE_TEST.audio(true));await startMission(page,{locale:'en'});
+ await startMission(page,{locale:'en'});await page.evaluate(()=>(window as any).__BRIDGE_TEST.audio(true));await page.keyboard.press('d');
  await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);
  await page.evaluate(()=>(window as any).__BRIDGE_TEST.audio(false));const muted=await state(page);
  expect(muted.audioStatus.hostMuted).toBe(true);expect(muted.audioStatus.music).toBe(null);expect(muted.audioStatus.voices).toBe(0);
