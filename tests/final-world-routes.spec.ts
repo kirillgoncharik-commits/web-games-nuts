@@ -183,7 +183,9 @@ async function solveRoom(page:Page){
  const before=s.room;await walk(page,600,true);s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
 }
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
- test.setTimeout(600000);await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],losses:RouteLoss[]=[],pressure:ReturnType<typeof campaignPressure>=[];
+ // Allow five full sectors and their real retries on a hosted browser.
+ // Individual movement, combat and interaction timeouts still identify stalls.
+ test.setTimeout(25*60_000);await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],losses:RouteLoss[]=[],pressure:ReturnType<typeof campaignPressure>=[];
  for(let mission=1;mission<=5;mission++){
   await page.getByTestId('map-prepare').click();await page.getByTestId('briefing').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
   await playSector(page,info,losses,async()=>{
