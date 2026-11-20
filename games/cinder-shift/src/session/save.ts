@@ -6,6 +6,7 @@ import {migrateEventPlan,validPlan} from './events';
 import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';
 import {validateLegacySave} from './legacy-save';
 import {actions,bindingAllowed,type Action} from '../input';
+import {validRadioLinks} from './radio-links';
 export const databaseName='cinder-shift-r01';
 export const schemaVersion=1;
 export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};
@@ -131,6 +132,7 @@ export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_
 export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{
  if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';
  const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';
+ if(d.radio_links!==undefined&&(id!=='c03-adriatic-1986'||!validRadioLinks(d.radio_links)||!d.completed_missions.includes('YU04')))return'corrupt';
  const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';
  if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';
  if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';
