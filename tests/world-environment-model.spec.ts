@@ -45,7 +45,7 @@ test('rooftop circuit swaps a screen for real lower cover while the upper salvag
  const cover=worldSolids(spec,state).find(r=>r.id==='world-power:roof-shelter-B')!;
  expect(cover).toMatchObject({x:340,y:288,height:32});
  expect(clearLine({x:440,y:292},{x:320,y:292},worldSolids(spec,state))).toBe(false);
- expect(rooms['YU01-C'].enemies).toHaveLength(1);expect(rooms['YU01-C'].cache).toMatchObject({x:416,y:244});
+ expect(rooms['YU01-C'].enemies.map(e=>e.kind)).toEqual(['walker','drone']);expect(rooms['YU01-C'].cache).toMatchObject({x:416,y:244});
  expect(rooms['YU01-C'].solids.some(r=>r.x===224&&r.y===256&&r.width===80)).toBe(true);
  expect(worldSolids(spec,state).some(r=>r.id==='world-power:screen-A')).toBe(false);
 });
@@ -341,7 +341,7 @@ test('tunnel signal pockets stay outside the real pulse in either circuit and re
  for(const x of [216,344,584])for(const now of [1600,1800,2299])expect(worldPulseHits(spec,body(x,320),now,s)).toBe(false);
  expect(worldPulseHits(spec,body(256,320),1800,s)).toBe(true);
  actWorld(spec,s,{x:112,y:320},body(112,320),1,0);expect(spec.pulse!.signals).toHaveLength(2);expect(worldPulseHits(spec,body(256,320),1800,s)).toBe(true);
- expect(spec.repair!.x).toBeGreaterThan(spec.pulse!.x+spec.pulse!.width);expect(room.enemies.map(e=>e.id)).toEqual(['yu03c-drone']);
+ expect(spec.repair!.x).toBeGreaterThan(spec.pulse!.x+spec.pulse!.width);expect(room.enemies.map(e=>e.id)).toEqual(['yu03c-drone','yu03c-track']);
 });
 
 test('a closed contact window never falls through to an adjacent switch in the correct circuit',()=>{
@@ -355,14 +355,14 @@ test('a closed contact window never falls through to an adjacent switch in the c
 
 test('warehouse power opens the real gate and joins two fixed steps to the optional lift salvage',()=>{
  const room=rooms['YU02-A'],spec=room.world!,s=createWorldState(room.id,spec);
- expect(room.enemies).toHaveLength(0);expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
+ expect(room.enemies.map(e=>e.kind)).toEqual(['walker','drone']);expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
  expect(worldSolids(spec,s).some(r=>r.id==='world-power:warehouse-A')).toBe(true);
  actWorld(spec,s,{x:112,y:320},body(112,320),1,0);
  expect(worldSolids(spec,s).some(r=>r.id==='world-power:warehouse-A')).toBe(false);
  const lift=worldSolids(spec,s).find(r=>r.id==='world-power:lift-B')!;
  expect(lift.y).toBe(room.cache!.y);expect(room.cache!.x).toBeGreaterThan(lift.x+11);expect(room.cache!.x).toBeLessThan(lift.x+lift.width-11);
  const steps=[...room.solids.filter(r=>r.y<320),lift].sort((a,b)=>a.x-b.x);
- expect(steps.map(r=>r.y)).toEqual([288,256,224]);
+ expect(steps.map(r=>r.y)).toEqual([288,256,224,192]);
  for(let n=1;n<steps.length;n++){expect(steps[n-1].y-steps[n].y).toBeLessThanOrEqual(32);expect(steps[n].x-steps[n-1].x-steps[n-1].width).toBeLessThanOrEqual(48);}
  expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,200)?.ids).toEqual(['warehouse:phase-0']);expect(worldReady(spec,s)).toBe(true);
 });
@@ -386,7 +386,7 @@ test('quay lighting never controls water visibility, timing, collision or its wa
  actWorld(spec,s,{x:112,y:320},body(112,320),1,100);
  expect(s.power!.circuit).toBe('B');expect(spec.pulse).toEqual(pulse);expect(worldPulseHits(spec,body(272,320),1900,s)).toBe(danger);
  for(const circuit of ['A','B'] as const){s.power!.circuit=circuit;for(const x of [232,304,584])expect(worldPulseHits(spec,body(x,320),1900,s)).toBe(false);}
- expect(room.enemies.map(e=>e.id)).toEqual(['yu02c-drone']);expect(room.cache).toMatchObject({x:480,y:248});
+ expect(room.enemies.map(e=>e.id)).toEqual(['yu02c-drone','yu02c-quay']);expect(room.cache).toMatchObject({x:480,y:248});
 });
 test('quay exit contact waits safely without consuming the circuit or nearby repair',()=>{
  const spec=rooms['YU02-C'].world!,s=createWorldState('YU02-C',spec),point={x:540,y:320};

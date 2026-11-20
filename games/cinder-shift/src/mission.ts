@@ -8,6 +8,7 @@ import {characterProfile,type CharacterProfile}from'./session/profile';
 import {hasEvent,shutter,cargoShutter,eventConfig,type EventPlan} from './session/events';
 import {missions,type PlayableMissionId} from './session/missions';
 import {createEnemy,suspendEnemy,type EnemyState} from './enemies';
+import {CampaignScore} from './session/campaign-score';
 import type {ScoreLedger} from './session/score-ledger';
 export {rooms} from './room-data';
 export type {RoomId,Rect,Point,EnemyDefinition,RoomDefinition} from './room-data';
@@ -19,25 +20,39 @@ export type Result='victory'|'death';
 export class MissionAttempt{
  readonly balance:ReturnType<typeof combatBalance>;
  readonly id=crypto.randomUUID();readonly missionId:PlayableMissionId;private harmEvent=0;
- current:RoomId;hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;score:number;relayIntelCollected=false;relayRepairUsed=false;
+ current:RoomId;hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;
+ readonly campaignScore?:CampaignScore;
+ private legacyScore:number;
+ get score(){return this.legacyScore+(this.campaignScore?.total??0);}
+ recordKill(enemy:EnemyState){this.campaignScore?.kill(enemy.id,enemy.kind);this.scoreLedger?.kill(enemy.id,enemy.kind);}
+ recordPatrol(points:number){if(this.campaignScore)this.campaignScore.patrol('E06',points);else this.legacyScore+=points;}
+ private recoverCache(id:string){
+  if(this.campaignScore)this.campaignScore.cache(id,eventConfig.salvageScore);
+  else this.legacyScore+=eventConfig.salvageScore;
+  this.scoreLedger?.goal(id);
+ }
+ relayIntelCollected=false;relayRepairUsed=false;
  reactorCircuit:'cooling'|'isolation'='isolation';reactorRerouted=false;
  cargoCircuit:'conveyor'|'security'='security';cargoRerouted=false;objective=false;cellCollected=false;cellInstalled=false;archiveCarrierCollected=false;archiveUploadPowered=false;dataUploaded=false;scoutedArchive=false;s05Accepted=false;e06Rewarded=false;d4Used=false;lastDeathSaved=false;readonly regulator=new RegulatorEncounter();abilityReadyAt=0;foundryRoute:'service'|'press'|null=null;activeMs=0;hurtUntil=-1;damageFlashUntil=-1;lastDamageAbsorbed=false;
  result:Result|'abandoned'|null=null;reason='';tutorial=new Set<string>();clock=new SimulationClock();states:Partial<Record<RoomId,RoomState>>={};
- constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger){this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.balance=combatBalance(this.missionId,this.entry.difficulty);this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active,this.entry.difficulty);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power'&&this.missionId==='cargo'&&hasEvent(this.eventPlan,'E01'))this.room('F').terminal=true;}
+ constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger,campaignScoring=mode==='mission'&&!scoreLedger){if(campaignScoring)this.campaignScore=new CampaignScore();this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.balance=combatBalance(this.missionId,this.entry.difficulty);this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active,this.entry.difficulty);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.legacyScore=this.entry.initial_score;
+ if(campaignScoring&&this.entry.attachment==='accelerator')this.profile.projectileSpeed*=1.25;
+ if(campaignScoring&&this.entry.attachment==='cycler')this.profile.shotsPerSecond*=1.15;
+ if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power'&&this.missionId==='cargo'&&hasEvent(this.eventPlan,'E01'))this.room('F').terminal=true;}
  get bossHp(){return this.regulator.hp;}
  set bossHp(value:number){this.regulator.hp=value;}
  get bossElapsedMs(){return this.regulator.elapsedMs;}
  get build(){return this.entry.build;}
  get eventPlan():EventPlan{return this.entry.event_plan;}
  definition(id=this.current):RoomDefinition{const base=rooms[id],saved=this.states[id];if(base.world){const state=this.room(id);return{...base,solids:[...base.solids,...worldSolids(base.world,state.world!)]};}let solids=base.solids.filter(s=>(!s.id||!saved?.brokenPanels.includes(s.id))&&!(s.id==='archive-scout-screen'&&this.scoutedArchive));if(id==='B'&&hasEvent(this.eventPlan,'E02'))solids=[...solids,shutter];const cargoEvent=id==='F'&&hasEvent(this.eventPlan,'E01');if(cargoEvent&&!saved?.terminal)solids=[...solids,cargoShutter];let terminal=base.terminal,terminalKind=base.terminalKind;if(id==='F'&&!cargoEvent){terminal=undefined;terminalKind=undefined;}let next=base.next,previous=base.previous;if(id==='M3F')next=saved?.route==='press'?'M3C':saved?.route==='service'?'M3B':undefined;if(id==='M3K')previous=this.room('M3F').route==='press'?'M3J':'M3H';if(id==='M4C'&&!this.dataUploaded)next=undefined;const hazards=base.hazards?.filter(h=>h.kind!=='heat'||this.missionId==='reactor'||id==='M3E'||hasEvent(this.eventPlan,'E04')).map(h=>id==='M3E'?{...h,enabled:(saved?.powerCircuit||'press')===(h.kind==='press'?'press':'furnace')}:id==='M5I'?{...h,enabled:this.reactorRerouted&&this.reactorCircuit==='isolation'}:h);const cache=id==='M5B'&&!hasEvent(this.eventPlan,'E06')?undefined:base.cache;if(previous&&!missions[this.missionId].rooms.includes(previous))previous=undefined;if(next&&!missions[this.missionId].rooms.includes(next))next=undefined;const conveyor=base.conveyor?{...base.conveyor,enabled:this.cargoRerouted&&this.cargoCircuit==='conveyor'}:undefined;return{...base,solids,hazards,conveyor,cache,terminal,terminalKind,next,previous};}
- chooseContainer(choice:'repair'|'salvage'){const hasChoice=hasEvent(this.eventPlan,'E03');if(this.mode!=='mission'||this.missionId!=='airlock'||this.current!=='B'||this.room('B').containerUsed||(choice==='salvage'&&!hasChoice))return false;if(choice==='repair'&&!this.claimRepair('R01'))return false;this.room('B').containerUsed=true;if(choice==='salvage'){this.score+=eventConfig.salvageScore;this.scoreLedger?.goal('optional:E03');}return true;}
+ chooseContainer(choice:'repair'|'salvage'){const hasChoice=hasEvent(this.eventPlan,'E03');if(this.mode!=='mission'||this.missionId!=='airlock'||this.current!=='B'||this.room('B').containerUsed||(choice==='salvage'&&!hasChoice))return false;if(choice==='repair'&&!this.claimRepair('R01'))return false;this.room('B').containerUsed=true;if(choice==='salvage'){this.recoverCache('optional:E03');}return true;}
  collectRelayIntel(){if(this.mode!=='mission'||this.missionId!=='airlock'||this.current!=='B'||this.entry.relay_template!=='relay_airlock_cargo_v1'||this.entry.relay_leg!=='A'||this.relayIntelCollected)return false;this.relayIntelCollected=true;this.scoreLedger?.goal('relay:intel');return true;}
  claimRelayRepair(){if(this.mode!=='mission'||this.missionId!=='cargo'||this.current!=='F'||this.entry.relay_template!=='relay_airlock_cargo_v1'||this.entry.relay_leg!=='B'||this.entry.relay_support!=='repair'||!this.cellCollected||this.relayRepairUsed||this.hp>=this.maxHp)return false;this.relayRepairUsed=true;this.hp=Math.min(this.maxHp,this.hp+2);return true;}
  cacheReady(){const def=this.definition();return this.mode==='mission'&&Boolean(def.cache)&&!this.room().cacheUsed&&(this.current!=='M4B'||this.combatRemaining()===0);}
  collectArchiveCarrier(){if(this.mode!=='mission'||this.missionId!=='archive'||!this.definition().dataCarrier||this.archiveCarrierCollected)return false;this.archiveCarrierCollected=true;return true;}
  connectArchivePower(){if(this.mode!=='mission'||this.missionId!=='archive'||this.current!=='M4G'||!this.archiveCarrierCollected||this.combatRemaining()>0||this.room().terminal)return false;this.archiveUploadPowered=true;this.room().terminal=true;return true;}
  enemyTelegraphScale(){return this.missionId==='archive'&&this.scoutedArchive?1.5:1;}
- chooseCache(choice:'salvage'|'scout'|'health'|'challenge'){const def=this.definition(),state=this.room();if(!this.cacheReady())return false;const hasBeacon=def.id==='M4B'&&hasEvent(this.eventPlan,'E05'),hasPatrol=def.id==='M5B'&&hasEvent(this.eventPlan,'E06');if(choice==='salvage'){if(hasBeacon||hasPatrol)return false;this.score+=eventConfig.salvageScore;this.scoreLedger?.goal('cache:'+def.id);}else if(choice==='scout'){if(!hasBeacon)return false;this.scoutedArchive=true;}else if(choice==='health'){if(!hasBeacon||this.hp>=this.maxHp)return false;this.hp=Math.min(this.maxHp,this.hp+1);}else{if(!hasPatrol)return false;this.s05Accepted=true;state.enemies.push(createEnemy({id:'m5b-e06-ram',kind:'walker',preset:'ram_charge',x:552,y:305,end:{x:576,y:305},activateX:500,first:true,charge:{min:500,max:592}}));}state.cacheUsed=true;return true;}
+ chooseCache(choice:'salvage'|'scout'|'health'|'challenge'){const def=this.definition(),state=this.room();if(!this.cacheReady())return false;const hasBeacon=def.id==='M4B'&&hasEvent(this.eventPlan,'E05'),hasPatrol=def.id==='M5B'&&hasEvent(this.eventPlan,'E06');if(choice==='salvage'){if(hasBeacon||hasPatrol)return false;this.recoverCache('cache:'+def.id);}else if(choice==='scout'){if(!hasBeacon)return false;this.scoutedArchive=true;}else if(choice==='health'){if(!hasBeacon||this.hp>=this.maxHp)return false;this.hp=Math.min(this.maxHp,this.hp+1);}else{if(!hasPatrol)return false;this.s05Accepted=true;state.enemies.push(createEnemy({id:'m5b-e06-ram',kind:'walker',preset:'ram_charge',x:552,y:305,end:{x:576,y:305},activateX:500,first:true,charge:{min:500,max:592}}));}state.cacheUsed=true;return true;}
  toggleReactorPower(){if(this.mode!=='mission'||this.missionId!=='reactor'||this.current!=='M5H')return false;this.reactorCircuit=this.reactorCircuit==='isolation'?'cooling':'isolation';this.reactorRerouted=true;return true;}
  toggleCargoPower(){if(this.mode!=='mission'||this.missionId!=='cargo'||this.current!=='M2C')return false;this.cargoCircuit=this.cargoCircuit==='security'?'conveyor':'security';this.cargoRerouted=true;return true;}
  toggleFoundryPower(){if(this.current!=='M3E'||!this.definition().powerSwitch)return false;const saved=this.room();saved.powerCircuit=saved.powerCircuit==='press'?'furnace':'press';return true;}
@@ -76,7 +91,7 @@ export class MissionAttempt{
   if(worldAbsorb(this.room().world)){this.lastDamageAbsorbed=true;return true;}
   const hpBefore=this.hp;this.hp=Math.max(0,this.hp-incomingDamage(this.balance,reason));if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.room().hpLost+=hpBefore-this.hp;this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
  }
- finish(result:Result|'abandoned'){if(this.result)return false;this.result=result;return true;}
+ finish(result:Result|'abandoned'){if(this.result)return false;if(result==='victory')this.campaignScore?.room(this.current);this.campaignScore?.finish(result);this.result=result;return true;}
 }
 // Render rate never changes simulation steps; long frames are admitted as bounded work.
 export class SimulationClock{

@@ -1,0 +1,89 @@
+import {test,expect} from '@playwright/test';
+import {Campaign,newWorldCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
+import {CampaignScore} from '../games/cinder-shift/src/session/campaign-score';
+import {ScoreLedger} from '../games/cinder-shift/src/session/score-ledger';
+import {MissionAttempt,rooms} from '../games/cinder-shift/src/mission';
+import {validateWorldSave} from '../games/cinder-shift/src/session/save';
+import {roomThreatCanActivate} from '../games/cinder-shift/src/session/threat-activation';
+import {createEnemy} from '../games/cinder-shift/src/enemies';
+import {startMission,roomA,completeFromB,state} from './helpers';
+
+test('each scoring event is paid once and only extraction delivers the optional cargo',()=>{
+ for(const outcome of ['victory','death','abandoned'] as const){
+  const score=new CampaignScore();
+  for(let repeat=0;repeat<2;repeat++){
+   score.kill('p','walker');score.kill('d','drone');score.kill('t','turret');
+   score.room('SW01-A');score.cache('c',150);score.patrol('elite',250);
+  }
+  expect(score.total).toBe(775);
+  score.finish(outcome);score.finish('victory');score.room('late');
+  expect(score.breakdown()).toEqual({combat:525,rooms:100,salvage:150,extraction:outcome==='victory'?1200:0});
+  expect(score.total).toBe(outcome==='victory'?1975:775);
+ }
+});
+
+test('prior attempt funds one attachment and retries cannot spend the same score twice',()=>{
+ const c=new Campaign(newWorldCampaign('c02-small-world',4));
+ c.prepare();c.begin();
+ const entry=c.data.entry!,a=new MissionAttempt('mission',entry);
+ a.recordKill(createEnemy(rooms['SW01-A'].enemies[0]));
+ a.campaignScore!.room('SW01-A');a.campaignScore!.cache('test',150);a.finish('death');
+ const result={attempt_id:a.id,mission_id:a.missionId,result:'death' as const,reason:'test',hp:0,max_hp:a.maxHp,active_ms:2000,screen_ms:50,nodes:[],score:a.score,score_breakdown:a.campaignScore!.breakdown()};
+ expect(c.applyResult(result)).toBe(true);expect(c.applyResult(result)).toBe(false);
+ expect(c.data.run_stats.score).toBe(0);expect(c.data.loadout_budget).toBe(300);
+ c.data.stage='research';expect(c.chooseAttachment('cycler')).toBe(false);
+ expect(c.chooseAttachment('accelerator')).toBe(true);
+ const resumed=new Campaign(c.snapshot());resumed.prepare();resumed.begin();
+ const actual=new MissionAttempt('mission',resumed.data.entry!);
+ expect(actual.profile.projectileSpeed).toBe(a.profile.projectileSpeed*1.25);
+ expect(actual.score).toBe(0);expect(resumed.data.loadout_budget).toBe(0);
+ const envelope={schema_version:1,content_version:'worlds-rw3.1',game_id:'c02-small-world',build_id:contentVersion,saved_at:new Date().toISOString(),campaign:resumed.snapshot()};
+ expect(validateWorldSave(envelope,'c02-small-world')).toBeNull();
+ resumed.begin();expect(resumed.data.entry?.attachment).toBeUndefined();
+ const trial=new MissionAttempt('mission',entry,new ScoreLedger(),false);
+ expect(trial.campaignScore).toBeUndefined();expect(new MissionAttempt('training').campaignScore).toBeUndefined();
+});
+
+test('every relief unit follows an existing reachable lead in its own room',()=>{
+ for(const room of Object.values(rooms).filter(r=>r.world)){
+  const enemies=room.enemies.map(createEnemy);
+  expect(new Set(enemies.map(e=>e.id)).size).toBe(enemies.length);
+  for(const unit of enemies.filter(e=>e.afterEnemy)){
+   let current=unit;
+   const seen=new Set([unit.id]);
+   while(current.afterEnemy){
+    const lead=enemies.find(e=>e.id===current.afterEnemy);
+    expect(lead,unit.id).toBeDefined();expect(seen.has(lead!.id)).toBe(false);
+    current=lead!;seen.add(current.id);
+   }
+   const leader=enemies.find(e=>e.id===unit.afterEnemy)!;
+   expect(roomThreatCanActivate(room.id,unit,enemies,{x:600,y:300},room.solids)).toBe(false);
+   leader.hp=0;
+   expect(roomThreatCanActivate(room.id,unit,enemies,{x:600,y:300},room.solids)).toBe(true);
+   leader.hp=1;
+  }
+ }
+});
+
+test('Airlock pays on the HUD, saves the result and equips the next attempt from its score',async({page})=>{
+ test.setTimeout(180000);
+ await startMission(page,{seed:4,node:'W1',locale:'en'});
+ await expect(page.locator('#hud-score')).toHaveText('Score · 0');
+ await roomA(page,true);
+ await expect(page.locator('#hud-score')).toHaveText('Score · 150');
+ await completeFromB(page,{coveringFire:true});
+ await expect(page.getByTestId('arcade-total')).toBeVisible();
+ const result=(await state(page)).campaign.result;
+ expect(result.score_breakdown.rooms).toBe(600);
+ expect(result.score_breakdown.extraction).toBe(1000);
+ expect(result.score).toBeGreaterThan(1600);
+ await page.reload();await page.getByTestId('continue').click();
+ await expect(page.getByTestId('arcade-total')).toBeVisible();
+ await page.getByTestId('retry-loadout').click();
+ await page.getByTestId('run-attachment').selectOption('cycler');
+ await page.getByTestId('briefing').click();
+ if(await page.getByTestId('skip-arrival').isVisible())await page.getByTestId('skip-arrival').click();
+ await expect.poll(async()=>(await state(page)).campaign.entry?.attachment).toBe('cycler');
+ await expect(page.locator('#hud-score')).toHaveText('Score · 0');
+ expect((await state(page)).campaign.loadout_budget).toBe(0);
+});

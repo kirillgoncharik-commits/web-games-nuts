@@ -1,3 +1,4 @@
+import {attachmentPrices,isAttachment} from './campaign-score';
 import type {RecordStorage} from './host-storage';
 import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';
 import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';
@@ -42,6 +43,11 @@ export function validateSave(v:unknown):SaveIssue{
  if(d.points!==1+earned-d.nodes.length||!Number.isInteger(d.points)||d.points<0)return'corrupt';
  if(!Array.isArray(d.processed_attempts)||d.processed_attempts.some((x:unknown)=>typeof x!=='string'||!x.length)||new Set(d.processed_attempts).size!==d.processed_attempts.length)return'corrupt';
  if(typeof v.saved_at!=='string'||!Number.isFinite(Date.parse(v.saved_at))||typeof v.build_id!=='string')return'corrupt';
+ if(d.loadout_budget!==undefined&&(!Number.isSafeInteger(d.loadout_budget)||d.loadout_budget<0))return'corrupt';
+ if(d.next_attachment!==undefined&&(!isAttachment(d.next_attachment)||attachmentPrices[d.next_attachment]>(d.loadout_budget??0)))return'corrupt';
+ if(d.entry?.attachment!==undefined&&!isAttachment(d.entry.attachment))return'corrupt';
+ const tally=d.result?.score_breakdown;
+ if(tally!==undefined){const keys=['combat','rooms','salvage','extraction'];if(!object(tally)||keys.some(k=>!Number.isSafeInteger(tally[k])||tally[k]<0)||keys.reduce((sum,k)=>sum+tally[k],0)!==d.result.score)return'corrupt';}
  if(d.run_stats!==undefined&&(!object(d.run_stats)||!Number.isFinite(d.run_stats.active_ms)||d.run_stats.active_ms<0||!Number.isInteger(d.run_stats.deaths)||d.run_stats.deaths<0||!Number.isInteger(d.run_stats.score)||d.run_stats.score<0||![null,'service','press'].includes(d.run_stats.foundry_route)||typeof d.run_stats.history_complete!=='boolean'||d.run_stats.assisted!==undefined&&typeof d.run_stats.assisted!=='boolean'))return'corrupt';
  if(!legacyVersion&&!d.run_stats)return'corrupt';
  if(d.entry!==null){const e=d.entry,format=v.content_version==='campaign-m05b2.0'?'b2':legacyVersion?'b1':'current';if(!object(e)||!isPlayableMission(e.mission_id)||missionIds.indexOf(e.mission_id as BaseMissionId)>d.completed_missions.length||legacyVersion&&missionIds.indexOf(e.mission_id as BaseMissionId)>(v.content_version==='campaign-m05b2.0'?3:1)||e.seed!==missionSeed(d.campaign_seed,e.mission_id)||!object(e.build)||!ids(e.build.nodes)||e.build.nodes.some((n:NodeId)=>!d.nodes.includes(n))||!['M1','W4',null].includes(e.build.active))return'corrupt';const expected=loadout(e.build.nodes,e.build.active);if(!sameLoadout(e.build,expected,format)||(e.difficulty??'easy')!==(d.difficulty??'easy')||e.max_hp!==campaignHp(expected.maxHp,d.difficulty)||e.initial_hp!==e.max_hp||e.initial_score!==0||!validPlan(e.event_plan,e.mission_id))return'corrupt';}

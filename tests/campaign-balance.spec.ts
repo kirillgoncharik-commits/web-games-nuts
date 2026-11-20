@@ -57,7 +57,7 @@ test('world patrols have clear spawn positions and every mission has combat',()=
         const solids=[...room.solids,...worldSolids(room.world!,createWorldState(room.id,room.world!))];
         for(const def of room.enemies) {
           const body=enemyRect(createEnemy(def));
-          expect(solids.filter(rect=>intersects(rect,body)),room.id+' / '+def.id).toEqual([]);
+          expect.soft(solids.filter(rect=>intersects(rect,body)),room.id+' / '+def.id).toEqual([]);
         }
       }
     }

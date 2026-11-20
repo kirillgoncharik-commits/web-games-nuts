@@ -106,7 +106,9 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  for(let n=0;n<12;n++){
-  const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
+  const s=await state(page),alive=s.enemies.filter((e:any)=>e.hp>0);if(!alive.length)return;
+  const en=alive.filter((e:any)=>!e.afterEnemy||!alive.some((lead:any)=>lead.id===e.afterEnemy)).sort((a:any,b:any)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
+  if(!en)throw Error('Cyclic reinforcement dependency in '+s.room);
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
@@ -120,7 +122,14 @@ async function combat(page:Page){
  }
 }
 async function solveRoom(page:Page){
- await combat(page);let s=await state(page);
+ let s=await state(page);
+ const entrance=rooms[s.room as keyof typeof rooms].world!;
+ if(s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
+  const first=entrance.switches[0];
+  await approachContext(page,'switch',first);await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(entrance.sequence?.[0]);
+ }
+ await combat(page);s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
   const spec=rooms[s.room as keyof typeof rooms].world!,pickup=contextPoint(s,'pickup',{x:s.world.carry.item.position.x,y:320});
