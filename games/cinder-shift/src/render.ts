@@ -12,6 +12,7 @@ import {cacheInReach} from './interactions';
 import {fitSprite,coverSprite,type ArtFrame,type SpriteAnchor} from './art/placement';
 import {roomLighting,signals} from './art/lighting';
 import {EnvironmentMotion} from './art/environment-motion';
+import {ProductionSprites} from './art/production-art';
 import {drawSectorArchitecture,roomSector} from './art/sector-design';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
@@ -35,7 +36,7 @@ export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
   private recoilUntil=-1;private enemyHitUntil=new Map<string,number>();
   private bossSprite?:Phaser.GameObjects.Image;
-  private environment:EnvironmentMotion;
+  private environment:EnvironmentMotion;private production:ProductionSprites;
   private readonly cues=new CombatEffects();private readonly cueGraphics:Phaser.GameObjects.Graphics;private threats:Phaser.GameObjects.Graphics;private debug:Phaser.GameObjects.Graphics;private exitMarker:Phaser.GameObjects.Text;private shieldLabels:Phaser.GameObjects.Text[]=[];
   constructor(private scene:Phaser.Scene,private room:RoomDefinition,private plan:EventPlan=[],private debugEnabled:()=>boolean=()=>false){
     const staticStart=scene.children.list.length;
@@ -50,7 +51,7 @@ export class SceneArt{
       lamps.fillStyle(light.light,light.strength*.55).fillEllipse(x,232,154,104);
       lamps.fillStyle(light.light,light.strength).fillEllipse(x,220,84,60);
     }
-    this.environment=new EnvironmentMotion(scene);
+    this.environment=new EnvironmentMotion(scene);this.production=new ProductionSprites(scene);
     this.cueGraphics=scene.add.graphics().setDepth(8);
     for(const x of [96,288,512])scene.add.tileSprite(x,224,16,96,'m03-environment','support').setOrigin(0).setTint(0x91a7b0).setAlpha(.32).setDepth(1);
     if(room.id==='A'||room.id==='T'){scene.add.rectangle(298,110,208,106,0x213747,.72).setOrigin(0).setDepth(1);scene.add.tileSprite(300,112,204,104,'m03-environment','wall').setOrigin(0).setTint(0x72909c).setAlpha(.24).setDepth(1);}
@@ -114,14 +115,8 @@ export class SceneArt{
       .setCrop(layout.x,layout.y,layout.width,layout.height);
   }
 
-  private materialPlate(rect:Rect,color:number,segments:number){
-    const {x,y,width,height}=rect;
-    this.threats.fillStyle(0x172937).fillRect(x,y,width,height);
-    this.threats.lineStyle(1,color,.85).strokeRect(x,y,width,height);
-    for(let i=1;i<segments;i++){
-      const offset=Math.round(i*height/segments);
-      this.threats.lineStyle(1,color,.5).lineBetween(x,y+offset,x+width,y+offset);
-    }
+  private materialPlate(rect:Rect,_color:number,_segments:number){
+    this.production.rect('door-closed',rect,4);
   }
   private landmarks(room:RoomDefinition){
     const groups:Record<string,Array<[ArtFrame,number,number,number,number]>>={
@@ -171,13 +166,10 @@ export class SceneArt{
     return body;
   }
   private dataChip(x:number,feet:number,scale:number,empty:boolean){
-    const g=this.threats,c=empty?0x456171:0x76dcc8;g.lineStyle(2*scale,c,empty?.45:1);
-    g.fillStyle(0x101823,.95).fillRect(x-8*scale,feet-26*scale,16*scale,22*scale);g.strokeRect(x-8*scale,feet-26*scale,16*scale,22*scale);
-    for(let n=0;n<3;n++){const y=feet-(22-n*6)*scale;g.lineBetween(x-12*scale,y,x-8*scale,y);g.lineBetween(x+8*scale,y,x+12*scale,y);}
-    if(!empty){g.fillStyle(c,.9).fillRect(x-3*scale,feet-21*scale,6*scale,6*scale);g.lineBetween(x-3*scale,feet-10*scale,x+3*scale,feet-10*scale);}
+    this.production.draw('block-'+(empty?'installed':'ground'),x,feet-4,16*scale,22*scale,5);
   }
   render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
-    this.used=0;this.artUsed=0;this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
+    this.used=0;this.artUsed=0;this.production.begin();this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
     if(!room.world)this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
     this.bossHpLast=attempt.bossHp;
@@ -201,7 +193,7 @@ export class SceneArt{
     hero('mira-head',x,y-pose.height).setOrigin(.5,0);
     hero('mira-cutter',x+f*(19-21),y-(player.crouching?15:28)-4);
     if(room.target&&state.targetHp>0){
-      this.sprite(state.targetHp===3?'target':'target-damaged',room.target.x,room.target.y);
+      this.production.draw(state.targetHp===3?'scanner-idle':'scanner-exposed',room.target.x,room.target.y+18,30,36,4);
       for(let i=0;i<state.targetHp;i++)this.sprite('signal-mint',room.target.x-8+i*6,room.target.y-27,7).setDisplaySize(4,3);
     }
     if(room.terminal){
@@ -277,7 +269,8 @@ export class SceneArt{
       const activated=now<this.bufferEffectUntil,frame=!state.bufferUsed?'ready':activated?(attempt.build.shieldClear?'discharge':'absorbed'):'spent';
       this.art(`buffer-discharge_${frame}`,x,y-22,54,54,7,1,'center',frame==='ready'?.62:frame==='spent'?.45:1);
     }
-    for(const zone of room.safeZones||[]){const protectedPocket=zone.shielded===true;this.threats.fillStyle(0x153c3f,protectedPocket?.3:.22).fillRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?3:2,0x76dcc8,.8).strokeRect(zone.x,zone.y,zone.width,zone.height);this.threats.lineStyle(protectedPocket?4:3,0x76dcc8).lineBetween(zone.x,zone.y+4,zone.x,zone.y+zone.height-4);if(protectedPocket)for(let px=zone.x+10;px<zone.x+zone.width-3;px+=14)this.threats.lineStyle(1,0x76dcc8,.65).lineBetween(px,zone.y+4,px,zone.y+zone.height-4);}
+    for(const zone of room.safeZones||[]){if(zone.shielded)this.production.draw('repair-protected',zone.x+zone.width/2,zone.y+zone.height,Math.min(zone.width,76),Math.min(zone.height,56),3.5,1,.7);}
+
     if(room.id==='B'){
       const station=this.art(`repair-station_${state.containerUsed?'used':'ready'}`,repairPosition.x,320,46,48,5);
       if(state.containerUsed||attempt.hp>=attempt.maxHp)station.setAlpha(.62);
@@ -303,8 +296,9 @@ export class SceneArt{
         ?active?'press_strike':warning?'press_warning':recovering?'press_recovery':'press_safe'
         :active?'heat-emitter_active':warning?'heat-emitter_warning':recovering?'heat-emitter_recovery':'heat-emitter_cool';
       this.art(frame,hazard.x+hazard.width/2,hazard.y+hazard.height,hazard.width+18,hazard.height+14,3);
-      this.threats.fillStyle(color,active ? (reducedFlashes?.13:.23) : warning ? .10 : .025).fillRect(hazard.x,hazard.y,hazard.width,hazard.height);
-      this.threats.lineStyle(2,color,active ? .95 : warning ? .8 : .4).strokeRect(hazard.x,hazard.y,hazard.width,hazard.height);
+      // The machine sprite remains visible. A floor edge marks its actual
+      // danger width instead of painting an opaque box over the equipment.
+      this.threats.lineStyle(active?3:1,color,active?.8:warning?.65:.25).lineBetween(hazard.x,hazard.y+hazard.height-1,hazard.x+hazard.width,hazard.y+hazard.height-1);
       if(warning)this.sprite('warning-triangle',hazard.x+hazard.width/2,hazard.y+hazard.height/2,8);
       if(active){
         this.threats.lineStyle(1,0xfff0c9,.65);
@@ -322,45 +316,36 @@ export class SceneArt{
         else if(pattern.stage==='transition')this.bossSprite.setTint(0xa6a0b8);
         else if(now<this.bossHitUntil&&!reducedFlashes)this.bossSprite.setTint(0xb0e1de);
       }else this.art(`regulator_${bossState}`,room.boss.x,body.y+body.height,body.width,body.height,3);
-      const core=hitboxes.core,cx=core.x+core.width/2,cy=core.y+core.height/2;
-      this.threats.fillStyle(0x101823,.98).fillRect(core.x,core.y,core.width,core.height);
-      if(open){
-        this.threats.lineStyle(2,signals.energy,.9).strokeRect(core.x,core.y,core.width,core.height);
-        this.threats.fillStyle(signals.energy,.5).fillRect(core.x+5,core.y+3,core.width-10,core.height-6);
-        this.threats.fillStyle(signals.shot,.9).fillRect(cx-4,cy-4,8,8);
-        for(const y of [core.y,core.y+core.height])for(let x=body.x+8;x<body.x+body.width-8;x+=12)this.threats.lineStyle(1,signals.energy,.5).lineBetween(x,y,x+5,y);
-      }else{
-        const seam=pattern.stage==='transition'?signals.violet:pattern.overloaded?signals.warning:0x7895a7;
-        this.threats.fillStyle(0x30495c).fillRect(core.x,core.y,core.width/2-1,core.height).fillRect(cx+1,core.y,core.width/2-1,core.height);
-        this.threats.lineStyle(1,seam,.9).strokeRect(core.x,core.y,core.width,core.height).lineBetween(cx,core.y,cx,core.y+core.height);
+      const core=hitboxes.core;
+      this.production.rect('regulator-core-'+(!alive?'destroyed':open?'recovery':pattern.phase==='warning'?'warning':pattern.phase==='active'?'attack':'idle'),core,4);
+      // The aperture is artwork aligned to the exact damageable core. Attack
+      // lanes are electrical beams with edge markers, not opaque UI boxes.
+      for(const r of pattern.rects){
+       const g=this.threats,active=pattern.phase==='active',c=active?signals.damage:signals.warning;
+       if(active){g.lineStyle(Math.max(3,r.width*.65),c,reducedFlashes?.16:.3).lineBetween(r.x+r.width/2,r.y,r.x+r.width/2,r.y+r.height);g.lineStyle(2,0xffe7b2,.8).lineBetween(r.x+r.width/2,r.y,r.x+r.width/2,r.y+r.height);}
+       else{g.lineStyle(1,c,.65);for(let yy=r.y;yy<r.y+r.height;yy+=14){g.lineBetween(r.x,yy,r.x,Math.min(yy+7,r.y+r.height));g.lineBetween(r.x+r.width,yy,r.x+r.width,Math.min(yy+7,r.y+r.height));}}
+       for(let xx=r.x+6;xx<r.x+r.width-2;xx+=12)this.sprite('warning-triangle',xx,r.y+r.height-5,8).setDisplaySize(7,7).setAlpha(active?.9:.6);
       }
-      if(alive){
-        const piston=reducedFlashes?0:Math.floor(now/180)%3;
-        for(const side of [-1,1]){const px=room.boss.x+side*70;this.threats.lineStyle(2,0x9bb3bf,.7).lineBetween(px,body.y+53+piston,px,body.y+73+piston);if(phaseTwo)this.threats.fillStyle(signals.violet,.75).fillRect(px-3,body.y+27,6,4);}
-      }
-      for(const rect of pattern.rects){const color=pattern.phase==='active'?signals.damage:signals.warning;this.threats.fillStyle(color,pattern.phase==='active'?.30:.10).fillRect(rect.x,rect.y,rect.width,rect.height);this.threats.lineStyle(2,color,.85).strokeRect(rect.x,rect.y,rect.width,rect.height);if(pattern.moving&&pattern.phase==='warning')for(let x=rect.x+20;x<rect.x+rect.width-10;x+=40){this.threats.lineBetween(x,270,x+10,276);this.threats.lineBetween(x+10,276,x,282);}}
       this.threats.fillStyle(0x101823).fillRect(body.x,body.y-14,body.width,8);this.threats.fillStyle(0xf36d76).fillRect(body.x+2,body.y-12,(body.width-4)*Math.max(0,attempt.bossHp/room.boss.hp),4);this.threats.lineStyle(1,0xedf1ec,.9).strokeRect(body.x,body.y-14,body.width,8);
     }
     if(room.previous)this.sprite('gate-open',31,320,3);
     for(const e of state.enemies){
-      if(e.hp<=0){if(e.kind==='turret')this.turret(e,false);else if(e.preset==='walker_security')this.art('security-walker_destroyed',e.x,e.y+15,44,40,5);else if(e.preset==='ram_charge')this.art('ram-charger_destroyed',e.x,e.y+15,48,38,5);else this.sprite(e.kind==='drone'?'drone-wreck':'walker-wreck',e.x,320);continue;}
+      if(e.hp<=0&&e.mob){this.production.draw(e.mob+'-destroyed',e.x,e.kind==='drone'?e.y+10:e.y+15,44,34,5);continue;}
+      if(e.hp<=0){if(e.kind==='turret')this.turret(e,false);else this.production.draw((e.preset==='ram_charge'?'base-ram':e.kind==='drone'?'base-drone':'base-walker')+'-destroyed',e.x,320,44,32,5);continue;}
       const phase=enemyPhase(e),facing=e.state==='attack'?Math.sign(e.aim.x-e.x)||-1:e.direction;let actorImage:Phaser.GameObjects.Image;
-      if(e.kind==='turret')actorImage=this.turret(e,attempt.enemyPowered(e));
-      else if(e.preset==='walker_security'){
-        const frame=phase==='telegraph'?'warning':phase==='attack'?'fire':phase==='recovery'?'recovery':e.state==='chase'||e.noticeMs>0?'notice':'patrol';
-        actorImage=this.art(`security-walker_${frame}`,e.x,e.y+15,42,40,5,facing);
-      }else if(e.preset==='ram_charge'){
-        const frame=phase==='telegraph'?'windup':phase==='attack'?'charge':phase==='recovery'?'recovery':'idle';
-        actorImage=this.art(`ram-charger_${frame}`,e.x,e.y+15,48,38,5,facing);
-        const exposed=ramVulnerable(e);this.threats.lineStyle(2,exposed?signals.energy:0x9bb3bf,.9).strokeRect(e.x-15,e.y-20,30,7);if(exposed)this.threats.fillStyle(signals.energy,.6).fillRect(e.x-12,e.y-18,24,3);else this.threats.lineBetween(e.x-8,e.y-20,e.x+8,e.y-13);
-      }else actorImage=this.sprite(e.kind,e.x,e.kind==='walker'?e.y+15:e.y,5,facing);
+      if(e.mob){
+        const powered=attempt.enemyPowered(e),pose=!powered?'idle':phase==='telegraph'?'warning':phase==='attack'?'attack':phase==='recovery'?'recovery':'idle';
+        actorImage=this.production.draw(e.mob+'-'+pose,e.x,e.kind==='drone'?e.y+14:e.y+15,46,e.kind==='drone'?32:42,5,-facing,powered?1:.4);
+        if(e.kind==='turret'&&phase==='telegraph'&&powered){const m=enemyMuzzle(e);this.line(m.x,m.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.7);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);}
+      }else if(e.kind==='turret')actorImage=this.turret(e,attempt.enemyPowered(e));
+      else{
+        const family=e.preset==='ram_charge'?'base-ram':e.kind==='drone'?'base-drone':'base-walker',pose=phase==='telegraph'?'warning':phase==='attack'?'attack':phase==='recovery'?'recovery':'idle';
+        actorImage=this.production.draw(family+'-'+pose,e.x,e.kind==='drone'?e.y+12:e.y+15,e.preset==='ram_charge'?48:42,e.kind==='drone'?30:40,5,-facing);
+      }
+      if(!reducedFlashes&&(e.state==='patrol'||e.state==='chase'))actorImage.y+=Math.floor(now/160)%2;
       if(now<(this.enemyHitUntil.get(e.id)??-1))actorImage.setTint(signals.damage);
       if(e.kind!=='turret'&&e.shotFlashMs>0){const muzzle=enemyMuzzle(e);this.threats.fillStyle(signals.shot,.85).fillRect(Math.round(muzzle.x)-2,Math.round(muzzle.y)-2,5,3);}
-      if(e.kind==='walker'&&e.preset!=='ram_charge'&&(e.state==='patrol'||e.state==='chase')){const step=reducedFlashes?0:Math.floor(now/140)%2,px=Math.round(e.x);this.threats.fillStyle(0x91a7b0,.75).fillRect(px-10+step*3,Math.round(e.y)+13,6,2).fillRect(px+4-step*3,Math.round(e.y)+13,6,2);}
-      if(e.kind!=='turret'&&phase==='recovery'){this.threats.lineStyle(1,signals.energy,.85).lineBetween(e.x-12,e.y-33,e.x-12,e.y-29).lineBetween(e.x-12,e.y-29,e.x+12,e.y-29).lineBetween(e.x+12,e.y-33,e.x+12,e.y-29);}
-      if(e.aimed){const open=guardVulnerable(e),g=this.threats;g.lineStyle(2,open?signals.energy:signals.warning,.9);if(open){g.lineBetween(e.x-20,e.y-22,e.x-20,e.y-4);g.lineBetween(e.x+20,e.y-22,e.x+20,e.y-4);}else g.strokeRoundedRect(e.x-19,e.y-24,38,28,3);g.strokeCircle(e.x,e.y-39,5);}
-      if(e.behavior==='aggressive'){this.threats.lineStyle(2,0xffb65b).strokeTriangle(e.x-20,e.y-12,e.x-13,e.y-7,e.x-20,e.y-2);if(e.noticeMs>0)this.threats.lineStyle(2,0xf1d8ae).strokeCircle(e.x,e.y-38,12);}
-      if(attempt.enemyPowered(e))for(let i=0;i<e.hp;i++)this.sprite('signal-coral',e.x-9+i*7,e.y-27,7).setDisplaySize(5,2);
+      if(attempt.enemyPowered(e)&&now<(this.enemyHitUntil.get(e.id)??-1))for(let i=0;i<e.hp;i++)this.threats.fillStyle(signals.damage,.9).fillCircle(e.x-7+i*7,e.y-29,2);
       if(phase==='telegraph'&&e.kind==='walker'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aimed?e.aim.y:muzzle.y,'signal-coral').setAlpha(.85);this.sprite('warning-triangle',e.x,e.y-43,8);if(e.aimed){const g=this.threats;g.lineStyle(e.aimLocked?2:1,e.aimLocked?signals.damage:signals.warning,.9).strokeCircle(e.aim.x,e.aim.y,e.aimLocked?8:12);g.lineBetween(e.aim.x-15,e.aim.y,e.aim.x+15,e.aim.y);g.lineBetween(e.aim.x,e.aim.y-15,e.aim.x,e.aim.y+15);}}
       else if(phase==='telegraph'&&e.kind==='drone'){const muzzle=enemyMuzzle(e);this.line(muzzle.x,muzzle.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.85);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);this.line(e.aim.x-14,e.aim.y,e.aim.x+14,e.aim.y,'signal-coral');}
     }
@@ -368,7 +353,7 @@ export class SceneArt{
       const bolt=this.sprite(shot.team==='player'?'shot-player':'shot-enemy',shot.x,shot.y,8,shot.vx>=0?1:-1);
       if(shot.team==='player')bolt.setTintFill(signals.shot);
     }
-    this.cues.draw(this.cueGraphics,now,reducedFlashes);
+    this.production.end();this.cues.draw(this.cueGraphics,now,reducedFlashes);
     for(let i=this.used;i<this.pool.length;i++)this.pool[i].setVisible(false);
     for(let i=this.artUsed;i<this.artPool.length;i++)this.artPool[i].setVisible(false);
     this.debug.clear();

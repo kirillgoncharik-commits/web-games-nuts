@@ -1,54 +1,25 @@
 import type Phaser from 'phaser';
 import type {MissionAttempt} from '../mission';
-import {roomDesign} from './sector-design';
+import {ProductionSprites} from './production-art';
 
-/** Decorative mechanisms use simulation time: pause, blur and scene changes freeze them. */
+/** Decorative sprites follow the simulation clock and actual circuit selection. */
 export class EnvironmentMotion{
- private readonly graphics:Phaser.GameObjects.Graphics;
- private lastFrame='';
- constructor(scene:Phaser.Scene){this.graphics=scene.add.graphics().setDepth(1.4);}
+ private graphics:Phaser.GameObjects.Graphics;private sprites:ProductionSprites;private lastFrame='';
+ constructor(scene:Phaser.Scene){this.graphics=scene.add.graphics().setDepth(1.4);this.sprites=new ProductionSprites(scene);}
  draw(attempt:MissionAttempt,reduced:boolean){
   const def=attempt.definition(),shutdown=attempt.missionId==='reactor'&&attempt.bossHp<=0;
   const powered=!shutdown&&(attempt.missionId==='archive'&&['M4G','M4H','M4C'].includes(def.id)?attempt.archiveUploadPowered:def.id==='A'||def.terminalKind==='restore'?attempt.room().terminal:true);
-  const tick=reduced||!powered?0:Math.floor(attempt.clock.now/140),color=powered?roomDesign(def).accent:0x596572;
-  const signature=[def.id,tick,powered,reduced,attempt.cargoCircuit,attempt.cargoRerouted,attempt.reactorCircuit,attempt.reactorRerouted,attempt.room().powerCircuit].join(':');
+  const tick=reduced||!powered?0:Math.floor(attempt.clock.now/140),signature=[def.id,tick,powered,attempt.cargoCircuit,attempt.reactorCircuit,attempt.room().powerCircuit].join(':');
   if(signature===this.lastFrame)return;this.lastFrame=signature;
-  const g=this.graphics;g.clear();
-  g.lineStyle(2,0x456171,.8);
-  const fan=(x:number,y:number)=>{g.strokeCircle(x,y,24);g.lineStyle(3,color,.5);for(let blade=0;blade<4;blade++){const angle=(blade+tick%8/8)*Math.PI/2;g.lineBetween(x+Math.cos(angle)*6,y+Math.sin(angle)*6,x+Math.cos(angle)*20,y+Math.sin(angle)*20);}g.fillStyle(0x30495c).fillCircle(x,y,5);};
-  const bars=(x:number,y:number)=>{for(let n=0;n<6;n++){g.fillStyle((tick+n)%6===0?color:0x30495c,.65).fillRect(x+n*14,y,8,4);}};
-  switch(attempt.missionId){
-   case'airlock':fan(116,128);g.lineStyle(1,color,.4).strokeRect(380,116,180,48);bars(420,132);g.fillStyle(color,.35).fillRect(390+(tick*5)%150,151,18,3);break;
-   case'cargo':{
-    g.fillStyle(0x213747,.85).fillRect(180,178,200,18);for(let n=0;n<11;n++)g.lineStyle(1,color,.3).lineBetween(182+n*18+(tick%3)*2,180,178+n*18+(tick%3)*2,194);
-    g.lineStyle(3,0x456171,.7).lineBetween(424,86,578,86);g.fillStyle(color,.5).fillRect(432+(tick%40)*3,82,16,10);g.lineStyle(1,color,.4).lineBetween(440+(tick%40)*3,92,440+(tick%40)*3,130);
-    if(def.id==='M2C')for(const [circuit,y]of [['conveyor',154],['security',232]] as const){
-     const live=attempt.cargoRerouted&&attempt.cargoCircuit===circuit,c=live?0x76dcc8:0x456171;
-     g.lineStyle(live?3:1,c,live?.85:.45);g.beginPath();g.moveTo(112,282);g.lineTo(112,112);g.lineTo(396,112);g.lineTo(396,y);g.lineTo(488,y);g.strokePath();
-     g.fillStyle(0x101823,.9).fillRoundedRect(420,y-17,68,34,4);g.lineStyle(2,c,.8).strokeRoundedRect(420,y-17,68,34,4);
-     if(circuit==='conveyor')for(let n=0;n<4;n++)g.lineBetween(430+n*13,y+7,440+n*13,y-7);
-     else{g.strokeCircle(448,y,9);g.lineBetween(448,y,472,y-5);}
-    }
-    if(def.conveyor){
-     const b=def.conveyor,live=b.enabled===true,c=live?0x76dcc8:0x456171,phase=reduced||!live?0:((attempt.clock.now*b.speed/1000)%18+18)%18;
-     g.fillStyle(0x101823,.95).fillRect(b.x,b.y+5,b.width,b.height-5);g.lineStyle(2,c,.8).lineBetween(b.x,b.y+5,b.x+b.width,b.y+5);
-     for(let n=-1;n<=Math.ceil(b.width/18);n++){const x=b.x+n*18+phase;if(x>=b.x+7&&x<b.x+b.width-5){g.lineStyle(2,c,live?.9:.45).lineBetween(x+4,b.y+8,x-4,b.y+12);g.lineBetween(x-4,b.y+12,x+4,b.y+15);}}
-     g.lineStyle(1,c,.7).lineBetween(24,338,b.x,338);g.lineBetween(b.x,338,b.x,320);
-    }
-    break;
-   }
-   case'foundry':{
-    const hydraulic=def.id!=='M3E'||attempt.room().powerCircuit!=='furnace',cycle=hydraulic?tick:0;
-    for(let n=0;n<3;n++){const offset=(cycle+n*3)%12;g.fillStyle(0x30495c,.85).fillRect(106+n*32,76,18,88);g.fillStyle(hydraulic?color:0x596572,.55).fillRect(110+n*32,108+Math.abs(6-offset)*5,10,26);}
-    // A separate return pipe: coolant slugs travel toward the pump, not into play space.
-    g.lineStyle(6,0x30495c,.9).lineBetween(424,105,558,105).lineBetween(558,105,558,178);
-    for(let n=0;n<4;n++){const x=430+(n*29+tick*4)%120;g.fillStyle(color,powered?.42:.15).fillRect(x,103,9,3);}
-    g.lineStyle(2,0x456171,.7).strokeRect(438,122,108,52);bars(452,136);break;
-   }
-   case'archive':for(let n=0;n<5;n++){g.fillStyle(0x213747,.9).fillRect(94+n*20,88,16,72);g.fillStyle((tick+n)%7<2?color:0x456171,.55).fillRect(98+n*20,96,8,4);}g.lineStyle(1,0x456171,.8).strokeRect(394,96,170,80);g.fillStyle(color,.12).fillRect(398,100+(tick*3)%70,162,4);bars(430,158);break;
-   case'reactor':
-    if(def.id==='M5H'){for(const [circuit,y]of [['cooling',192],['isolation',242]] as const){const live=attempt.reactorRerouted&&attempt.reactorCircuit===circuit,c=live?0x76dcc8:0x456171;g.lineStyle(live?3:1,c,live?.9:.45).lineBetween(112,282,112,y).lineBetween(112,y,470,y);g.lineStyle(2,c,.9).strokeRect(430,y-16,76,32);if(circuit==='cooling'){g.strokeCircle(452,y,10);g.lineBetween(442,y,462,y);g.lineBetween(452,y-10,452,y+10);}else{g.lineBetween(441,y+9,460,y-9);g.lineBetween(460,y-9,480,y+9);}}}
-    g.lineStyle(3,0x456171,.8).strokeCircle(478,124,40);g.lineStyle(2,color,.3).strokeCircle(478,124,18+(tick%8)*2);g.fillStyle(color,.25).fillCircle(478,124,9);fan(132,132);g.lineStyle(2,color,.25).lineBetween(156,132,210,132);break;
-  }
+  const g=this.graphics,p=this.sprites;g.clear();p.begin();
+  const bob=reduced||!powered?0:Math.round(Math.sin(tick/3)*2);
+  const props:Record<string,[string,string]>={airlock:['SW03-damper','YU04-distributor'],cargo:['YU02-crane','YU04-conveyor'],foundry:['YU04-lathe','YU04-flywheel'],archive:['YU05-relay','YU05-crt'],reactor:['YU03-substation','YU04-flywheel']};
+  const frames=props[attempt.missionId]??props.airlock;
+  p.draw(frames[0],128,172+bob,90,96,1.4,1,.7);p.draw(frames[1],486,184,118,98,1.4,1,.7);
+  const connection=(y:number,live:boolean,frame:string)=>{g.lineStyle(live?2:1,live?0x91d2b8:0x405c70,.75).lineBetween(112,282,112,y).lineBetween(112,y,464,y);p.draw(frame,464,y+14,66,34,1.5);};
+  if(def.id==='M2C'){connection(154,attempt.cargoRerouted&&attempt.cargoCircuit==='conveyor','bridge-extended');connection(232,attempt.cargoRerouted&&attempt.cargoCircuit==='security','scanner-idle');}
+  if(def.id==='M5H'){connection(192,attempt.reactorRerouted&&attempt.reactorCircuit==='cooling','SW03-damper');connection(242,attempt.reactorRerouted&&attempt.reactorCircuit==='isolation','switch-B');}
+  if(def.conveyor){const b=def.conveyor,live=b.enabled===true;p.rect('bridge-extended',b,2.3);const phase=reduced||!live?0:(attempt.clock.now/80)%12;g.lineStyle(2,live?0x91d2b8:0x78949f,.7);for(let x=b.x+8+phase;x<b.x+b.width-6;x+=16)g.lineBetween(x,b.y+5,x+5,b.y+5);}
+  p.end();
  }
 }

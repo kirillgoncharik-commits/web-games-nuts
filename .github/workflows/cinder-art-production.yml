@@ -1,0 +1,38 @@
+name: Cinder Shift complete art scenes
+on:
+  pull_request:
+    paths: ['games/cinder-shift/**', 'art/world-production/**', 'scripts/world-production-art.mjs', 'scripts/check-world-production-art.mjs', 'tests/art-production.spec.ts', 'tests/world-enemy-model.spec.ts', 'playwright.art-production.config.ts', '.github/workflows/cinder-art-production.yml']
+  workflow_dispatch:
+concurrency:
+  group: cinder-art-production-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  scenes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [base, small, adriatic, six]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run art:check
+      - run: npm run build
+      - run: node scripts/build-rework-harness.mjs
+      - name: Render the actual installed art and gather room evidence
+        run: npx playwright test --config=playwright.art-production.config.ts --grep '${{ matrix.group }}' --reporter=line --output=test-results/production-art
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-art-${{ matrix.group }}
+          path: |
+            test-results/production-art/
+            dist/cinder-shift/build-manifest.json

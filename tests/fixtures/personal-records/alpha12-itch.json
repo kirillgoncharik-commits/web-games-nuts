@@ -1,0 +1,4152 @@
+{
+  "target": "itch",
+  "source_sha": "003ffa91cec7f64b5b4c29c464c216bf5fd49865",
+  "build_id": "local.20261119T144350017Z",
+  "version": "0.8.0-alpha.12",
+  "source": "ordinary input in hash-verified published alpha.12 binary",
+  "records": {
+    "campaign": {
+      "schema_version": 1,
+      "content_version": "campaign-m05b3.0",
+      "game_id": "r01",
+      "build_id": "0.8.0-alpha.12",
+      "saved_at": "2026-11-20T06:41:06.645Z",
+      "campaign": {
+        "character_id": "mira",
+        "campaign_id": "d8c0c96d-69f1-422c-bac7-8519138ed9b9",
+        "campaign_seed": 4,
+        "mission_id": "airlock",
+        "location_id": "airlock",
+        "stage": "mission",
+        "nodes": [
+          "D1"
+        ],
+        "active": null,
+        "points": 0,
+        "completed_missions": [],
+        "reward_ledger": [],
+        "processed_attempts": [],
+        "run_stats": {
+          "ruleset_id": "campaign-rework9",
+          "active_ms": 0,
+          "deaths": 0,
+          "score": 0,
+          "foundry_route": null,
+          "history_complete": true,
+          "assisted": false
+        },
+        "entry": {
+          "mission_id": "airlock",
+          "seed": 4,
+          "build": {
+            "nodes": [
+              "D1"
+            ],
+            "maxHp": 8,
+            "spread": false,
+            "piercing": false,
+            "ricochet": false,
+            "chargedShot": false,
+            "dash": false,
+            "airDash": false,
+            "wallMove": false,
+            "phaseDash": false,
+            "buffer": false,
+            "shieldClear": false,
+            "deathSave": false,
+            "active": null
+          },
+          "max_hp": 8,
+          "initial_hp": 8,
+          "initial_score": 0,
+          "event_plan": [
+            {
+              "event_id": "E03",
+              "definition_version": 2,
+              "room_id": "B",
+              "variant": "repair-cache"
+            }
+          ]
+        },
+        "result": null
+      }
+    },
+    "records.v1": {
+      "version": 1,
+      "best": [
+        {
+          "challenge_key": "CS64-42efa38559b8520603904d38fe72d3319cc76fadfd28e3504ebbe25f2e5ec495",
+          "mode": "time_attack",
+          "metric": "elapsed_ms",
+          "value": 50715,
+          "run_id": "32068bc8-5945-40b7-98cf-e4f2d896dd29",
+          "updated_at": 1795156920492
+        }
+      ],
+      "recent": {
+        "CS64-42efa38559b8520603904d38fe72d3319cc76fadfd28e3504ebbe25f2e5ec495": [
+          {
+            "run_id": "32068bc8-5945-40b7-98cf-e4f2d896dd29",
+            "challenge_key": "CS64-42efa38559b8520603904d38fe72d3319cc76fadfd28e3504ebbe25f2e5ec495",
+            "mode": "time_attack",
+            "state": "finished",
+            "eligibility": "standard",
+            "elapsed_ms": 50715,
+            "sim_ms": 49600,
+            "score": 0,
+            "outcome": "victory",
+            "pause_count": 1,
+            "finished_at": 55088,
+            "splits": [
+              {
+                "checkpoint_id": "airlock:A",
+                "elapsed_ms": 0
+              },
+              {
+                "checkpoint_id": "airlock:B",
+                "elapsed_ms": 8323
+              },
+              {
+                "checkpoint_id": "airlock:M1A",
+                "elapsed_ms": 15389
+              },
+              {
+                "checkpoint_id": "airlock:M1B",
+                "elapsed_ms": 21305
+              },
+              {
+                "checkpoint_id": "airlock:M1C",
+                "elapsed_ms": 29222
+              },
+              {
+                "checkpoint_id": "airlock:C",
+                "elapsed_ms": 39323
+              }
+            ],
+            "medal": null
+          }
+        ]
+      },
+      "traces": [
+        {
+          "challenge_key": "CS64-42efa38559b8520603904d38fe72d3319cc76fadfd28e3504ebbe25f2e5ec495",
+          "run_id": "32068bc8-5945-40b7-98cf-e4f2d896dd29",
+          "sampled_at": 1795156920494,
+          "points": [
+            {
+              "t": 18,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 133,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 233,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 334,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 434,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 550,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 650,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 751,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 867,
+              "x": 64,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 967,
+              "x": 65,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1067,
+              "x": 74.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1167,
+              "x": 86.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1267,
+              "x": 97.8,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1367,
+              "x": 109.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1467,
+              "x": 120.8,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1568,
+              "x": 132.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 1684,
+              "x": 145.7,
+              "y": 292.8,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 1784,
+              "x": 157.2,
+              "y": 266.5,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 1900,
+              "x": 170.6,
+              "y": 247.3,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 2000,
+              "x": 182.1,
+              "y": 240.5,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 2100,
+              "x": 193.6,
+              "y": 242.8,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2200,
+              "x": 205.1,
+              "y": 254,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2300,
+              "x": 216.6,
+              "y": 266,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2400,
+              "x": 228.1,
+              "y": 266,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2500,
+              "x": 239.6,
+              "y": 266,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2600,
+              "x": 251.1,
+              "y": 266,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2700,
+              "x": 262.6,
+              "y": 266,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2801,
+              "x": 274.1,
+              "y": 268.5,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 2901,
+              "x": 285.6,
+              "y": 279.8,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 3016,
+              "x": 298,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3117,
+              "x": 303.8,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3217,
+              "x": 309.6,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3317,
+              "x": 315.4,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3434,
+              "x": 322.2,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3534,
+              "x": 328,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3650,
+              "x": 334.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3750,
+              "x": 340.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3850,
+              "x": 346.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 3950,
+              "x": 352.1,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4051,
+              "x": 357.9,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4167,
+              "x": 364.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4267,
+              "x": 370.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4367,
+              "x": 376.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4467,
+              "x": 382.1,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4567,
+              "x": 387.9,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4668,
+              "x": 393.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4783,
+              "x": 400.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4883,
+              "x": 406.3,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 4983,
+              "x": 412.1,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 5083,
+              "x": 417.9,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 5184,
+              "x": 423.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 5301,
+              "x": 430.4,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 5402,
+              "x": 436.2,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 5517,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 5635,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 5750,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 5850,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 5950,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 6050,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 6168,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 6283,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 6383,
+              "x": 442.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 6483,
+              "x": 447.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 6583,
+              "x": 459,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 6683,
+              "x": 470.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 6783,
+              "x": 482,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 6883,
+              "x": 493.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 6983,
+              "x": 505,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7083,
+              "x": 516.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7183,
+              "x": 528,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7283,
+              "x": 539.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7384,
+              "x": 549.5,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7500,
+              "x": 550.9,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7600,
+              "x": 560.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7700,
+              "x": 572.2,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7800,
+              "x": 583.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 7900,
+              "x": 595.2,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8000,
+              "x": 606.7,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8101,
+              "x": 618.2,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8216,
+              "x": 620.1,
+              "y": 298,
+              "room": "A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 8322,
+              "x": 64,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle",
+              "event": "room_enter"
+            },
+            {
+              "t": 8323,
+              "x": 64,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 8433,
+              "x": 70.9,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8533,
+              "x": 84.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8634,
+              "x": 95.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8750,
+              "x": 109.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8850,
+              "x": 120.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 8967,
+              "x": 134.2,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9067,
+              "x": 145.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9183,
+              "x": 159.1,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9283,
+              "x": 170.6,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9383,
+              "x": 182.1,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9483,
+              "x": 191.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 9583,
+              "x": 203.2,
+              "y": 278.5,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 9683,
+              "x": 213,
+              "y": 256.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 9783,
+              "x": 218,
+              "y": 242.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 9900,
+              "x": 231.4,
+              "y": 241,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10000,
+              "x": 241,
+              "y": 247.3,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10100,
+              "x": 254.4,
+              "y": 250,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10200,
+              "x": 265.9,
+              "y": 250,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10317,
+              "x": 279.3,
+              "y": 250,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10434,
+              "x": 290.8,
+              "y": 253.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10550,
+              "x": 304.3,
+              "y": 269.5,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10650,
+              "x": 309,
+              "y": 292.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 10750,
+              "x": 317.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10850,
+              "x": 329.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 10950,
+              "x": 338.9,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 11051,
+              "x": 337.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 11167,
+              "x": 333.2,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11267,
+              "x": 340.1,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 11367,
+              "x": 351.6,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 11467,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11567,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11667,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11767,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11867,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 11967,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 12067,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 12167,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 12267,
+              "x": 354.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 12367,
+              "x": 361.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12467,
+              "x": 372.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12567,
+              "x": 384.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12667,
+              "x": 395.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12767,
+              "x": 407.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12867,
+              "x": 418.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 12967,
+              "x": 430.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13067,
+              "x": 441.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13183,
+              "x": 455.2,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13283,
+              "x": 466.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13383,
+              "x": 478.2,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13484,
+              "x": 489.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 13584,
+              "x": 501.2,
+              "y": 287.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 13684,
+              "x": 509,
+              "y": 263,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 13784,
+              "x": 510,
+              "y": 247.3,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 13900,
+              "x": 521.7,
+              "y": 240.3,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14000,
+              "x": 533.2,
+              "y": 244,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14100,
+              "x": 544.7,
+              "y": 250,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14200,
+              "x": 556.2,
+              "y": 253.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14301,
+              "x": 558.9,
+              "y": 266.5,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 14418,
+              "x": 558.9,
+              "y": 292.8,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 14600,
+              "x": 558.9,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 14700,
+              "x": 565.8,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14801,
+              "x": 577.3,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 14917,
+              "x": 590.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15017,
+              "x": 602.2,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15117,
+              "x": 613.7,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15233,
+              "x": 621.4,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 15333,
+              "x": 621.4,
+              "y": 298,
+              "room": "B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 15388,
+              "x": 64,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "idle",
+              "event": "room_enter"
+            },
+            {
+              "t": 15434,
+              "x": 65,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15550,
+              "x": 76.7,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15650,
+              "x": 88.2,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15750,
+              "x": 99.7,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15850,
+              "x": 111.2,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 15950,
+              "x": 122.7,
+              "y": 278.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16050,
+              "x": 134.2,
+              "y": 256.8,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16150,
+              "x": 145.7,
+              "y": 244,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16250,
+              "x": 157.2,
+              "y": 240.3,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 16350,
+              "x": 168.7,
+              "y": 245.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 16450,
+              "x": 175.2,
+              "y": 259.8,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 16550,
+              "x": 178.6,
+              "y": 266,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 16650,
+              "x": 189.8,
+              "y": 238.3,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16750,
+              "x": 201.3,
+              "y": 219.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16867,
+              "x": 214.7,
+              "y": 209,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 16967,
+              "x": 226.2,
+              "y": 209.8,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17067,
+              "x": 237.7,
+              "y": 219.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17183,
+              "x": 251.2,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17283,
+              "x": 262.7,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17383,
+              "x": 274.2,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17483,
+              "x": 285.7,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17583,
+              "x": 295.7,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 17683,
+              "x": 296.1,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 17783,
+              "x": 292.5,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 17883,
+              "x": 287.9,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 17985,
+              "x": 287.9,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 18100,
+              "x": 296.7,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18200,
+              "x": 308.2,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18300,
+              "x": 319.7,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18400,
+              "x": 331.3,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18500,
+              "x": 342.8,
+              "y": 234,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18601,
+              "x": 354.3,
+              "y": 236.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18717,
+              "x": 367.7,
+              "y": 250.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18817,
+              "x": 379.2,
+              "y": 272.3,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 18933,
+              "x": 392.6,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19033,
+              "x": 404.1,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19133,
+              "x": 415.6,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19233,
+              "x": 427.1,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19334,
+              "x": 438.6,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19434,
+              "x": 450.1,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19550,
+              "x": 463.5,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19650,
+              "x": 475,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19751,
+              "x": 486.5,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19867,
+              "x": 499.9,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 19983,
+              "x": 512.8,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 20083,
+              "x": 515.2,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 20183,
+              "x": 524.9,
+              "y": 292.8,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 20283,
+              "x": 536.4,
+              "y": 266.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 20383,
+              "x": 547.9,
+              "y": 249.3,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 20483,
+              "x": 559.4,
+              "y": 241,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 20583,
+              "x": 570.9,
+              "y": 241.8,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 20684,
+              "x": 582.4,
+              "y": 251.5,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 20784,
+              "x": 593.9,
+              "y": 270.3,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 20900,
+              "x": 604.3,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21000,
+              "x": 609.3,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21100,
+              "x": 620.8,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 21200,
+              "x": 620.8,
+              "y": 298,
+              "room": "M1A",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 21304,
+              "x": 64,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "idle",
+              "event": "room_enter"
+            },
+            {
+              "t": 21305,
+              "x": 64,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 21417,
+              "x": 70.9,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21534,
+              "x": 86.3,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21650,
+              "x": 97.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21750,
+              "x": 109.3,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 21867,
+              "x": 122.7,
+              "y": 278.5,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 21967,
+              "x": 134.2,
+              "y": 256.8,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 22067,
+              "x": 145.7,
+              "y": 244,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 22167,
+              "x": 157.2,
+              "y": 240.3,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22267,
+              "x": 168.7,
+              "y": 245.5,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22367,
+              "x": 180.2,
+              "y": 259.8,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22467,
+              "x": 191.7,
+              "y": 266,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22567,
+              "x": 203.2,
+              "y": 269.8,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22667,
+              "x": 211.7,
+              "y": 282.5,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 22767,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 22867,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 22967,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23067,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23167,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23267,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23367,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23467,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23567,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23667,
+              "x": 211.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23767,
+              "x": 212,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23867,
+              "x": 217.5,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 23968,
+              "x": 223.3,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24084,
+              "x": 230.1,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24200,
+              "x": 236.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24300,
+              "x": 242.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24400,
+              "x": 248.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24500,
+              "x": 254.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24600,
+              "x": 260,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24700,
+              "x": 265.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24800,
+              "x": 271.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 24900,
+              "x": 277.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25000,
+              "x": 283.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25100,
+              "x": 289,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25200,
+              "x": 294.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25300,
+              "x": 300.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25400,
+              "x": 306.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25500,
+              "x": 312.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25600,
+              "x": 318,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25700,
+              "x": 323.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25800,
+              "x": 329.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 25900,
+              "x": 335.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26000,
+              "x": 341.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26100,
+              "x": 347,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26200,
+              "x": 352.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26300,
+              "x": 358.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26400,
+              "x": 364.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26500,
+              "x": 370.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26600,
+              "x": 376,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 26700,
+              "x": 381.3,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 26800,
+              "x": 390.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 26900,
+              "x": 401.9,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27001,
+              "x": 413.4,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27117,
+              "x": 426.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27217,
+              "x": 438.3,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27333,
+              "x": 451.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27433,
+              "x": 463.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27534,
+              "x": 474.7,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27634,
+              "x": 486.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27750,
+              "x": 499.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27850,
+              "x": 511.1,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 27950,
+              "x": 514.2,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 28067,
+              "x": 524.6,
+              "y": 292.8,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 28167,
+              "x": 536.1,
+              "y": 266.5,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 28267,
+              "x": 547.6,
+              "y": 249.3,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 28367,
+              "x": 559.1,
+              "y": 241,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 28467,
+              "x": 570.6,
+              "y": 241.8,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 28567,
+              "x": 582.1,
+              "y": 251.5,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 28667,
+              "x": 593.6,
+              "y": 270.3,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 28767,
+              "x": 603.6,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 28867,
+              "x": 605,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 28967,
+              "x": 614.8,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29083,
+              "x": 620.5,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 29183,
+              "x": 620.5,
+              "y": 298,
+              "room": "M1B",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 29222,
+              "x": 64,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "idle",
+              "event": "room_enter"
+            },
+            {
+              "t": 29283,
+              "x": 66,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29383,
+              "x": 76.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29483,
+              "x": 88.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29583,
+              "x": 99.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29683,
+              "x": 111.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29783,
+              "x": 122.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 29883,
+              "x": 134.2,
+              "y": 287.8,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 29983,
+              "x": 145.7,
+              "y": 263,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 30083,
+              "x": 157.2,
+              "y": 247.3,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 30183,
+              "x": 168.7,
+              "y": 240.5,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 30283,
+              "x": 180.2,
+              "y": 242.8,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 30383,
+              "x": 191.7,
+              "y": 254,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 30483,
+              "x": 203.2,
+              "y": 266,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 30583,
+              "x": 214.7,
+              "y": 266.8,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 30683,
+              "x": 225.7,
+              "y": 275,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 30783,
+              "x": 227,
+              "y": 292.3,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 30883,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 30983,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31084,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31200,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31301,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31401,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31516,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31616,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31716,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31816,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 31916,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32016,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32116,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32216,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32316,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32416,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32516,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32616,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32716,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32816,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 32916,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33016,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33116,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33217,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33333,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33433,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33533,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33633,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33733,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33833,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 33933,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34034,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34150,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34250,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34350,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34466,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34566,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34666,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34766,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34866,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 34966,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 35066,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 35166,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 35266,
+              "x": 227,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 35366,
+              "x": 233.9,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35466,
+              "x": 245.4,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35566,
+              "x": 256.9,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35666,
+              "x": 247.4,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35766,
+              "x": 246.4,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35866,
+              "x": 256.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 35966,
+              "x": 267.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36066,
+              "x": 279.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36166,
+              "x": 290.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36266,
+              "x": 302.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36366,
+              "x": 313.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36466,
+              "x": 325.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36566,
+              "x": 336.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36666,
+              "x": 348.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36766,
+              "x": 359.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36866,
+              "x": 371.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 36966,
+              "x": 382.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37066,
+              "x": 394.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37166,
+              "x": 405.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37266,
+              "x": 417.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37366,
+              "x": 428.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37466,
+              "x": 440.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37566,
+              "x": 451.7,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37667,
+              "x": 463.2,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37783,
+              "x": 476.6,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37883,
+              "x": 488.1,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 37983,
+              "x": 499.6,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38083,
+              "x": 511.1,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38183,
+              "x": 522.6,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38283,
+              "x": 534.1,
+              "y": 270.3,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 38383,
+              "x": 545.6,
+              "y": 251.5,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 38483,
+              "x": 557.1,
+              "y": 241.8,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 38583,
+              "x": 568.6,
+              "y": 241,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38683,
+              "x": 580.1,
+              "y": 249.3,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38783,
+              "x": 591.6,
+              "y": 266.5,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38883,
+              "x": 602.6,
+              "y": 292.8,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 38983,
+              "x": 605.9,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39083,
+              "x": 616.6,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39183,
+              "x": 620.4,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 39283,
+              "x": 620.4,
+              "y": 298,
+              "room": "M1C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 39323,
+              "x": 64,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle",
+              "event": "room_enter"
+            },
+            {
+              "t": 39383,
+              "x": 66,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39483,
+              "x": 76.7,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39583,
+              "x": 88.2,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39683,
+              "x": 99.7,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39783,
+              "x": 111.2,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39883,
+              "x": 124.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 39983,
+              "x": 134.2,
+              "y": 292.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 40083,
+              "x": 147.6,
+              "y": 263,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 40183,
+              "x": 159.1,
+              "y": 247.3,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 40283,
+              "x": 168.7,
+              "y": 241,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 40383,
+              "x": 180.2,
+              "y": 241.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 40483,
+              "x": 191.7,
+              "y": 251.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 40583,
+              "x": 203.2,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 40683,
+              "x": 214.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 40783,
+              "x": 225.7,
+              "y": 268.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 40883,
+              "x": 227,
+              "y": 279.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 40983,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41083,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41183,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41283,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41383,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41483,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41583,
+              "x": 227,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "crouch"
+            },
+            {
+              "t": 41699,
+              "x": 229,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 41800,
+              "x": 239.7,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 41916,
+              "x": 251.2,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42016,
+              "x": 262.7,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42116,
+              "x": 274.2,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42233,
+              "x": 287.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42333,
+              "x": 299.1,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42433,
+              "x": 310.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42548,
+              "x": 324,
+              "y": 283,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 42649,
+              "x": 335.5,
+              "y": 259.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 42766,
+              "x": 348.9,
+              "y": 244,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 42866,
+              "x": 360.4,
+              "y": 240.3,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 42966,
+              "x": 370.4,
+              "y": 245.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 43066,
+              "x": 370.8,
+              "y": 259.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43166,
+              "x": 370.8,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43266,
+              "x": 370.8,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43366,
+              "x": 370.8,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43466,
+              "x": 363.8,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 43566,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43666,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43781,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43882,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 43983,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44098,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44200,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44315,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44415,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44515,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44615,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44715,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44815,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 44915,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45015,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45115,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45216,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45331,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45432,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45533,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45649,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45749,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45849,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 45950,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 46065,
+              "x": 362.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 46165,
+              "x": 367.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 46265,
+              "x": 379.2,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 46366,
+              "x": 390.7,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 46484,
+              "x": 404.1,
+              "y": 266,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 46600,
+              "x": 412.6,
+              "y": 268.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 46716,
+              "x": 412.6,
+              "y": 282.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 46816,
+              "x": 412.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 46916,
+              "x": 412.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47016,
+              "x": 412.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47116,
+              "x": 412.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47216,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47316,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47416,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47516,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47616,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47716,
+              "x": 411,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 47831,
+              "x": 416,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 47932,
+              "x": 427.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48032,
+              "x": 439,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48132,
+              "x": 450.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48233,
+              "x": 462,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48349,
+              "x": 475.4,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48449,
+              "x": 486.9,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48549,
+              "x": 498.4,
+              "y": 283,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 48649,
+              "x": 502,
+              "y": 259.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 48749,
+              "x": 511.8,
+              "y": 245.5,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "jump"
+            },
+            {
+              "t": 48866,
+              "x": 525.2,
+              "y": 240.3,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 48981,
+              "x": 538.6,
+              "y": 247.3,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 49081,
+              "x": 550.1,
+              "y": 263,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 49182,
+              "x": 560.1,
+              "y": 287.8,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 49282,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49382,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49499,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49599,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49699,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49799,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49899,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 49999,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 50099,
+              "x": 560.5,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "idle"
+            },
+            {
+              "t": 50216,
+              "x": 563.8,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 50316,
+              "x": 575.1,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 50416,
+              "x": 586.6,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 50535,
+              "x": 600,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            },
+            {
+              "t": 50647,
+              "x": 613.4,
+              "y": 298,
+              "room": "C",
+              "facing": 1,
+              "animation_id": "run"
+            }
+          ]
+        }
+      ]
+    },
+    "release-notes.v1": {
+      "schema": 1,
+      "installed_release": "0.8.0-alpha.12",
+      "acknowledged_release": null
+    },
+    "settings": {
+      "locale": "ru",
+      "muted": false,
+      "touchMode": "auto",
+      "layout": "dock",
+      "autofire": true,
+      "debugBodies": false,
+      "reducedFlashes": false,
+      "reducedMotion": false,
+      "effectsIntensity": 0.7,
+      "combatAssist": false,
+      "ghostEnabled": true,
+      "keyBindings": {},
+      "musicVolume": 0.18,
+      "sfxVolume": 0.75,
+      "uiVolume": 0.6
+    }
+  }
+}

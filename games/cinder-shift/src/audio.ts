@@ -12,11 +12,11 @@ export class AudioService{
  private context?:AudioContext;private master?:GainNode;private musicBus?:GainNode;private sfxBus?:GainNode;private uiBus?:GainNode;
  private buffers=new Map<string,AudioBuffer>();private raw=new Map<string,ArrayBuffer>();private prepared:Promise<void>;private decoding=new Map<string,Promise<void>>();
  private voices=new Set<Voice>();private retiring=new Set<Voice>();private music?:Music;private desiredMusic:ThemeId|null=null;private worldTheme:ThemeId='airlock';private failed=new Set<string>();
- private world=false;private hidden=false;private mute=false;private noiseBuffer?:AudioBuffer;
+ private world=false;private hidden=false;private hostBlocked=false;private platformAudioEnabled=true;private mute=false;private noiseBuffer?:AudioBuffer;
  private levels:AudioLevels={musicVolume:.18,sfxVolume:.75,uiVolume:.6};private once=new Set<string>();private played:Record<string,number>={};private dropped=0;private maximum=0;private error=false;
  constructor(){this.prepared=this.preload();}
  get muted(){return this.mute;}
- set muted(value:boolean){this.mute=value;if(this.master)this.master.gain.setValueAtTime(value?0:.32,this.context!.currentTime);if(value){this.stopVoices(()=>true);this.stopMusic();}else this.syncMusic();}
+ set muted(value:boolean){this.mute=value;if(this.master)this.master.gain.setValueAtTime(value||!this.platformAudioEnabled?0:.32,this.context!.currentTime);if(value||!this.platformAudioEnabled){this.stopVoices(()=>true);this.stopMusic();}else this.syncMusic();}
  configure(settings:AudioLevels&{muted:boolean}){this.levels={musicVolume:settings.musicVolume,sfxVolume:settings.sfxVolume,uiVolume:settings.uiVolume};this.muted=settings.muted;this.applyLevels();}
  private applyLevels(){if(!this.context)return;for(const [node,value]of [[this.musicBus,this.levels.musicVolume],[this.sfxBus,this.levels.sfxVolume],[this.uiBus,this.levels.uiVolume]] as const){if(node){node.gain.cancelScheduledValues(this.context.currentTime);
   // Zero is an explicit user mute, including while the audio clock is stopped.
@@ -26,8 +26,8 @@ export class AudioService{
  private async preload(){await Promise.all(Object.entries(assets.sfx).map(async([id,item])=>{try{const response=await fetch(new URL('./assets/audio/'+item.file,location.href));if(!response.ok)throw Error('audio_asset');const bytes=await response.arrayBuffer();this.raw.set(id,bytes);if(this.context)void this.decode(id,bytes);}catch{this.error=true;this.failed.add(id);}}));}
  async unlock(){
   try{
-   if(this.hidden||document.hidden)return;
-   if(!this.context){const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.master.gain.value=this.mute?0:.32;this.master.connect(ctx.destination);this.musicBus=ctx.createGain();this.sfxBus=ctx.createGain();this.uiBus=ctx.createGain();for(const node of [this.musicBus,this.sfxBus,this.uiBus])node.connect(this.master);this.applyLevels();this.noiseBuffer=this.makeNoiseBuffer();}
+   if(this.hidden||document.hidden||!this.platformAudioEnabled)return;
+   if(!this.context){const ctx=this.context=new AudioContext();this.master=ctx.createGain();this.master.gain.value=this.mute||!this.platformAudioEnabled?0:.32;this.master.connect(ctx.destination);this.musicBus=ctx.createGain();this.sfxBus=ctx.createGain();this.uiBus=ctx.createGain();for(const node of [this.musicBus,this.sfxBus,this.uiBus])node.connect(this.master);this.applyLevels();this.noiseBuffer=this.makeNoiseBuffer();}
    if(this.context.state==='suspended')await this.context.resume();
    await this.prepared;for(const[id,bytes]of this.raw)void this.decode(id,bytes);await Promise.all(this.decoding.values());this.syncMusic();
   }catch{this.error=true;}
@@ -38,7 +38,7 @@ export class AudioService{
  private stopVoices(predicate:(v:Voice)=>boolean){for(const voice of [...this.voices])if(predicate(voice))this.stop(voice);}
  play(id:SoundId,onceKey?:string){
   const ctx=this.context,def=assets.sfx[id],buffer=this.buffers.get(id);
-  if(this.mute||this.hidden||document.hidden||ctx?.state!=='running'||!buffer||(def.bus==='sfx'&&!this.world))return false;
+  if(this.mute||!this.platformAudioEnabled||this.hidden||document.hidden||ctx?.state!=='running'||!buffer||(def.bus==='sfx'&&!this.world))return false;
   if(onceKey&&this.once.has(onceKey))return false;
   // A short envelope on the existing music bus keeps real danger cues audible.
   if(def.priority>=4&&this.musicBus){const at=ctx.currentTime,g=this.musicBus.gain,level=this.levels.musicVolume;g.cancelScheduledValues(at);g.setTargetAtTime(level*.42,at,.006);g.setTargetAtTime(level,at+.2,.06);}
@@ -59,13 +59,15 @@ export class AudioService{
  private scheduleMusic(music:Music){const ctx=this.context;if(!ctx||this.music!==music||ctx.state!=='running')return;const beatSeconds=60/music.track.bpm,cycleSeconds=music.track.bars*4*beatSeconds,horizon=ctx.currentTime+.16;
   while(true){const cycleAt=music.started+music.cycle*cycleSeconds,event=music.track.events[music.next];if(!event){music.cycle++;music.next=0;continue;}const at=cycleAt+event.beat*beatSeconds;if(at>horizon)break;music.next++;if(at<ctx.currentTime-.02)continue;this.scheduleNote(music,event,at,beatSeconds);}
  }
- private syncMusic(){const ctx=this.context,id=this.desiredMusic;if(this.mute||this.hidden||document.hidden||ctx?.state!=='running'||!id){this.stopMusic(this.hidden);return;}if(this.music?.id===id)return;this.stopMusic();const track=buildTrack(id),gain=ctx.createGain(),music:Music={id,track,started:ctx.currentTime+.04,next:0,cycle:0,gain,nodes:new Set(),timer:0};gain.gain.value=1;gain.connect(this.musicBus!);this.music=music;this.scheduleMusic(music);music.timer=globalThis.setInterval(()=>this.scheduleMusic(music),25);}
+ private syncMusic(){const ctx=this.context,id=this.desiredMusic;if(this.mute||!this.platformAudioEnabled||this.hidden||document.hidden||ctx?.state!=='running'||!id){this.stopMusic(this.hidden);return;}if(this.music?.id===id)return;this.stopMusic();const track=buildTrack(id),gain=ctx.createGain(),music:Music={id,track,started:ctx.currentTime+.04,next:0,cycle:0,gain,nodes:new Set(),timer:0};gain.gain.value=1;gain.connect(this.musicBus!);this.music=music;this.scheduleMusic(music);music.timer=globalThis.setInterval(()=>this.scheduleMusic(music),25);}
  menu(theme:ThemeId='menu'){this.world=false;this.stopVoices(v=>v.bus!=='ui');this.desiredMusic=theme;this.syncMusic();}
  startWorld(theme?:ThemeId){this.world=true;if(theme)this.worldTheme=theme;this.stopVoices(v=>v.bus==='result'||v.bus==='ui');this.desiredMusic=this.worldTheme;this.syncMusic();}
  clearCombat(){this.stopVoices(v=>v.bus==='sfx');}
  pauseWorld(){this.world=false;this.stopVoices(v=>v.bus==='sfx');this.desiredMusic=null;this.stopMusic();}
  background(){this.hidden=true;this.world=false;for(const voice of [...this.voices])this.stop(voice,true);for(const voice of this.retiring){try{voice.source.stop();}catch{}voice.source.disconnect();voice.gain.disconnect();}this.retiring.clear();this.stopMusic(true);void this.context?.suspend().catch(()=>{});}
- foreground(){this.hidden=false;this.syncMusic();}
+ hostAudio(enabled:boolean){this.platformAudioEnabled=enabled;this.muted=this.mute;}
+ hostPause(active:boolean){this.hostBlocked=active;if(active)this.background();else if(!document.hidden)this.foreground();}
+ foreground(){if(this.hostBlocked)return;this.hidden=false;this.syncMusic();}
  state(){return this.context?.state||'uninitialized';}
- snapshot(){const expected=Object.keys(assets.sfx).length,decoded=this.buffers.size,unavailableResources=[...this.failed].sort();return{state:this.state(),expected,decoded,unavailable:this.error,unavailableResources,partialFailure:decoded>0&&unavailableResources.length>0,ready:expected>0&&decoded===expected&&unavailableResources.length===0,world:this.world,hidden:this.hidden,muted:this.mute,voices:[...this.voices].filter(v=>v.bus!=='result').length,resultVoices:[...this.voices].filter(v=>v.bus==='result').length,retiring:this.retiring.size,music:this.music?.id||null,maxVoices:this.maximum,dropped:this.dropped,played:{...this.played},levels:{...this.levels}};}
+ snapshot(){const expected=Object.keys(assets.sfx).length,decoded=this.buffers.size,unavailableResources=[...this.failed].sort();return{state:this.state(),expected,decoded,unavailable:this.error,unavailableResources,partialFailure:decoded>0&&unavailableResources.length>0,ready:expected>0&&decoded===expected&&unavailableResources.length===0,world:this.world,hidden:this.hidden,muted:this.mute,hostMuted:!this.platformAudioEnabled,voices:[...this.voices].filter(v=>v.bus!=='result').length,resultVoices:[...this.voices].filter(v=>v.bus==='result').length,retiring:this.retiring.size,music:this.music?.id||null,maxVoices:this.maximum,dropped:this.dropped,played:{...this.played},levels:{...this.levels}};}
 }

@@ -2,12 +2,14 @@ import config from '../game.config.json' with {type:'json'};
 import type {EnemyDefinition,EnemyKind,EnemyPreset,Rect,Point} from './room-data';
 import {clearLine,intersects} from './geometry';
 import type {Projectiles} from './projectiles';
+import {worldEnemyProfiles,worldShotOffset} from './world-enemies';
 export type Behavior='passive'|'aggressive';
 export type EnemyAIState='idle'|'patrol'|'chase'|'attack'|'return'|'dead';
 export type AttackPhase='telegraph'|'fire'|'recovery';
 export const enemyPresets:Record<EnemyPreset,{kind:EnemyKind;behavior:Behavior}>={walker_service:{kind:'walker',behavior:'passive'},walker_security:{kind:'walker',behavior:'aggressive'},ram_charge:{kind:'walker',behavior:'passive'},drone_service:{kind:'drone',behavior:'passive'},turret_cycle:{kind:'turret',behavior:'passive'}};
 export type EnemyState=EnemyDefinition&{behavior:Behavior;home:Point;hp:number;state:EnemyAIState;attackPhase:AttackPhase|null;phaseMs:number;cooldown:number;direction:number;shots:number;shotFlashMs:number;aim:Point;active:boolean;provoked:boolean;warnings:number;acquireMs:number;memoryMs:number;lastSeen:Point|null;noticeMs:number;stuckMs:number;aimLocked:boolean};
 export function createEnemy(def:EnemyDefinition):EnemyState{
+ if(def.mob&&worldEnemyProfiles[def.mob].kind!==def.kind)throw Error('invalid_world_enemy_kind');
  const preset=enemyPresets[def.preset];if(def.aimed&&def.preset!=='walker_security')throw Error('invalid_aimed_guard');if(!preset||preset.kind!==def.kind||def.kind==='turret'&&preset.behavior==='aggressive')throw Error('invalid_enemy_preset');
  return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,provoked:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0,aimLocked:false};
 }
@@ -54,9 +56,9 @@ function patrol(e:EnemyState,ms:number,solids:Rect[]){
  if(e.state==='idle'){e.phaseMs-=ms;if(e.phaseMs>0)return;e.state='patrol';}
  const destination=e.direction>0?e.end:e.home;
  if(Math.hypot(destination.x-e.x,e.kind==='drone'?destination.y-e.y:0)<1){e.direction*=-1;e.state='idle';e.phaseMs=250;return;}
- if(!move(e,destination,config.combat[e.kind].speed,ms,solids)){e.direction*=-1;e.state='idle';e.phaseMs=250;}
+ if(!move(e,destination,e.mob?worldEnemyProfiles[e.mob].speed:config.combat[e.kind].speed,ms,solids)){e.direction*=-1;e.state='idle';e.phaseMs=250;}
 }
-function recovery(e:EnemyState){e.attackPhase='recovery';e.aimLocked=false;e.cooldown=Math.max(e.cooldown,e.aimed?aimedGuardRules.recoveryMs:config.combat[e.kind].recovery_ms);e.phaseMs=0;}
+function recovery(e:EnemyState){e.attackPhase='recovery';e.aimLocked=false;e.cooldown=Math.max(e.cooldown,e.mob?worldEnemyProfiles[e.mob].recovery_ms:e.aimed?aimedGuardRules.recoveryMs:config.combat[e.kind].recovery_ms);e.phaseMs=0;}
 function returnHome(e:EnemyState){if(e.state==='attack'&&e.attackPhase!=='recovery')recovery(e);e.state='return';e.attackPhase=null;e.acquireMs=0;e.lastSeen=null;e.memoryMs=0;e.stuckMs=0;}
 export function suspendEnemy(e:EnemyState){
  if(e.hp<=0)return;
@@ -66,7 +68,7 @@ export function suspendEnemy(e:EnemyState){
 export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shots:Projectiles,warn:(kind:string)=>void,telegraphScale=1,canActivate=true){
  if(e.hp<=0){e.state='dead';e.attackPhase=null;return;}
  if(!e.active){if(!canActivate||(player.x<e.activateX&&!e.provoked))return;e.active=true;}
- const cfg=config.combat[e.kind],ai=config.m05b1.ai;
+ const mob=e.mob?worldEnemyProfiles[e.mob]:null,cfg={...config.combat[e.kind],...mob},ai=config.m05b1.ai;
  e.shotFlashMs=Math.max(0,e.shotFlashMs-ms);
  const distance=Math.hypot(e.x-player.x,e.y-player.y),visible=distance<=cfg.range&&clearLine(enemyMuzzle(e),player,solids);
  e.cooldown=Math.max(0,e.cooldown-ms);e.noticeMs=Math.max(0,e.noticeMs-ms);
@@ -82,11 +84,11 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
   }
   if((e.state==='chase'||e.state==='attack')&&(distance>(e.provoked||e.aimed?cfg.range:ai.release_radius)||e.memoryMs<=0)){returnHome(e);return;}
  }
- const beginAttack=()=>{e.state='attack';e.attackPhase='telegraph';e.aimLocked=false;const teaching=e.first&&e.warnings===0;e.phaseMs=(e.aimed?aimedGuardRules.warningMs:e.kind==='walker'&&teaching?config.combat.walker.first_telegraph_ms:cfg.telegraph_ms)*Math.max(1,telegraphScale)*(e.kind==='turret'&&teaching?2:1);if(visible)e.aim={...player};e.warnings++;warn(e.kind);};
+ const beginAttack=()=>{e.state='attack';e.attackPhase='telegraph';e.aimLocked=false;const teaching=e.first&&e.warnings===0;e.phaseMs=(mob?mob.telegraph_ms:e.aimed?aimedGuardRules.warningMs:e.kind==='walker'&&teaching?config.combat.walker.first_telegraph_ms:cfg.telegraph_ms)*Math.max(1,telegraphScale)*(e.kind==='turret'&&teaching?2:1);if(visible)e.aim={...player};e.warnings++;warn(e.kind);};
  if(e.state==='attack'){
     if(e.attackPhase==='telegraph'){
    if(e.behavior==='aggressive'&&(!visible||distance>(e.provoked||e.aimed?cfg.range:ai.attack_release_radius))){recovery(e);return;}
-   if(visible&&!e.aimLocked)e.aim={...player};e.phaseMs-=ms;if(e.aimed&&e.phaseMs<=aimedGuardRules.lockMs*Math.max(1,telegraphScale))e.aimLocked=true;
+   if(visible&&!e.aimLocked)e.aim={...player};e.phaseMs-=ms;if((e.aimed||mob?.lockMs)&&e.phaseMs<=(mob?.lockMs??aimedGuardRules.lockMs)*Math.max(1,telegraphScale))e.aimLocked=true;
      if(e.phaseMs<=0){e.attackPhase='fire';e.phaseMs=e.preset==='ram_charge'?config.m05b2.ram_charge_ms:0;e.shots=0;}
   }else if(e.attackPhase==='fire'){
    if(e.preset==='ram_charge'){
@@ -96,13 +98,13 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
    if(e.preset!=='ram_charge'&&e.phaseMs<=0){
     const direction=Math.sign(e.aim.x-e.x)||-1,from=enemyMuzzle(e,direction);
     if(e.kind==='walker'){
-     if(e.aimed){const angle=Math.atan2(e.aim.y-from.y,e.aim.x-from.x);if(clearLine(from,e.aim,solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy','security-aimed-shot');}
+     if(e.aimed||mob?.pattern==='locked'){const angle=Math.atan2(e.aim.y-from.y,e.aim.x-from.x);if(clearLine(from,e.aim,solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy',e.mob?e.mob+'-shot':'security-aimed-shot');}
      else if(clearLine(from,{x:e.aim.x,y:from.y},solids))shots.fire(from,{x:direction*cfg.projectile_speed,y:0},'enemy','walker-shot');
     }else{
-     const center={x:e.x,y:e.kind==='drone'?e.y:e.y-17},angle=Math.atan2(e.aim.y-center.y,e.aim.x-center.x)+(e.kind==='turret'?(e.shots-1)*.12:0),to={x:from.x+Math.cos(angle)*300,y:from.y+Math.sin(angle)*300};
-     if(clearLine(from,{x:from.x+Math.cos(angle)*18,y:from.y+Math.sin(angle)*18},solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy',e.kind+'-shot');
+     const center={x:e.x,y:e.kind==='drone'?e.y:e.y-17},angle=Math.atan2(e.aim.y-center.y,e.aim.x-center.x)+(e.mob?worldShotOffset(e.mob,e.shots):e.kind==='turret'?(e.shots-1)*.12:0),to={x:from.x+Math.cos(angle)*300,y:from.y+Math.sin(angle)*300};
+     if(clearLine(from,{x:from.x+Math.cos(angle)*18,y:from.y+Math.sin(angle)*18},solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy',(e.mob??e.kind)+'-shot');
     }
-    e.shotFlashMs=75;e.shots++;e.phaseMs='burst_interval_ms' in cfg?cfg.burst_interval_ms:0;if(e.shots>=(e.aimed?1:cfg.burst_count))recovery(e);
+    e.shotFlashMs=75;e.shots++;e.phaseMs=cfg.burst_interval_ms??0;if(e.shots>=(e.aimed?1:cfg.burst_count))recovery(e);
    }
   }else if(e.cooldown<=0){e.attackPhase=null;e.state=e.behavior==='aggressive'?'chase':hasRoute(e)?'patrol':'idle';e.phaseMs=250;if(e.behavior==='passive')e.cooldown=cfg.patrol_ms;}
   return;

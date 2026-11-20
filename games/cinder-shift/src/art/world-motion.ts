@@ -1,12 +1,14 @@
 import type Phaser from 'phaser';
 import type {RoomDefinition} from '../room-data';
 import type {RoomState} from '../mission';
-import {motionRigs,motionPalette,sampleMotion,type MotionRig} from './motion-atlas';
+import {motionRigs,sampleMotion,type MotionRig} from './motion-atlas';
 import {powerTarget} from '../session/world-runtime';
+import {ProductionSprites,productionArt} from './production-art';
 
 /** Decorative only: rendering cannot move a collider, arm a hazard or advance an objective. */
 export class WorldMotionArt{
   private background:Phaser.GameObjects.Graphics;
+  private sprites:ProductionSprites;
   private feedback:Phaser.GameObjects.Graphics;
   private rig?:MotionRig;
   private signature='';
@@ -14,6 +16,7 @@ export class WorldMotionArt{
   private cues:{x:number;y:number;born:number}[]=[];
   constructor(scene:Phaser.Scene,private room:RoomDefinition){
     this.background=scene.add.graphics().setDepth(1.65);
+    this.sprites=new ProductionSprites(scene);
     this.feedback=scene.add.graphics().setDepth(6.4);
     this.rig=motionRigs.find(r=>r.mission===room.id.slice(0,4));
   }
@@ -35,15 +38,13 @@ export class WorldMotionArt{
     const motionNow=this.room.world?.landmark==='drive'&&world.phase>=2?0:now;
     const signature=[reduced?0:Math.floor(motionNow/80),reduced].join(':');
     if(signature!==this.signature){
-      this.signature=signature;const g=this.background;g.clear();
+      this.signature=signature;const g=this.background;g.clear();this.sprites.begin();
       // Separate background prop plane above the routes. It never resembles a platform.
       const x=roomPlacement(this.room.id),y=65;
-      for(const p of this.rig.parts){const pose=sampleMotion(p,motionNow,this.rig.duration,reduced);
-        g.save().translateCanvas(x+pose.x,y+pose.y);
-        if(p.pivot)g.translateCanvas(p.pivot.x,p.pivot.y).rotateCanvas(pose.rotation*Math.PI/180).translateCanvas(-p.pivot.x,-p.pivot.y);
-        for(const s of p.shapes)g.fillStyle(parseInt(motionPalette[s.color].slice(1),16),(s.alpha??1)*pose.alpha*.85).fillRect(s.x,s.y,s.width,s.height);
-        g.restore();
-      }
+      const p=this.rig.parts.find(p=>p.keys?.length)??this.rig.parts[0],pose=sampleMotion(p,motionNow,this.rig.duration,reduced);
+      const sector=this.room.id.slice(0,4) as keyof typeof productionArt.sectors,frame=productionArt.sectors[sector][5];
+      this.sprites.draw(frame,x+80+pose.x+(reduced?0:Math.round(Math.sin(motionNow*Math.PI/1200)*3)),y+104+pose.y+(reduced?0:Math.round(Math.cos(motionNow*Math.PI/1200)*3)),160,104,1.65,1,.68+pose.alpha*.16).setAngle(Math.sin(pose.rotation*Math.PI/180)*2);
+      this.sprites.end();
     }
     const g=this.feedback;g.clear();this.cues=this.cues.filter(c=>now-c.born<480).slice(-4);
     for(const cue of this.cues){

@@ -2,6 +2,7 @@ import {encounterTiming,encounterThreat} from './session/world-encounter';
 import {actWorld,stepWorld,stepWorldEnvironment,worldCanFire,worldPulse,worldPulseElapsed,worldPulseHits,worldPowerFieldPhase,worldPowerFieldHits,worldReady,worldAirVelocity} from './session/world-runtime';
 import {airPhase} from './session/world-environment';
 import {WorldArt} from './art/world-art';
+import {preloadProductionArt} from './art/production-art';
 import Phaser from 'phaser';
 import config from '../game.config.json' with {type:'json'};
 import {MissionAttempt,type RoomId,type Result} from './mission';
@@ -36,6 +37,8 @@ export class RoomScene extends Phaser.Scene{
  constructor(readonly hooks:RoomHooks){super('Room');}
  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
  preload(){
+  this.load.once('loaderror',()=>this.hooks.failure('art_load_error'));
+  preloadProductionArt(this,this.attempt.definition());
   if(!this.attempt.definition().boss||this.textures.exists('regulator-rework'))return;
   this.hooks.transition(true);this.hooks.objective('regulator.loading',{percent:0});
   this.load.on('progress',(value:number)=>this.hooks.objective('regulator.loading',{percent:Math.round(value*100)}));
