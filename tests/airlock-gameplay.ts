@@ -30,7 +30,15 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  const clear=evade?(ids:string[])=>fireFromCover(page,ids):holdFire;
 
  await next('M1A');
- await jump(114,172);await ground(288);await jump(178,292);await ground(256);
+ await jump(114,172);await ground(288);
+ if(evade&&(await read(page)).campaign.difficulty!=='easy'){
+  // The first volley crosses the gap during the climb. Let it approach the
+  // crate, then jump over it and open fire on the way to the higher shelf.
+  await wait(()=>{const s=(window as any).__CINDER__();return s.projectiles.some((shot:{team:string;x:number;vx:number})=>
+   shot.team==='enemy'&&shot.vx<0&&shot.x>s.player.x+55&&shot.x<s.player.x+110);},null,'incoming drone volley');
+  await action('fire',true);
+ }
+ await jump(178,292);await ground(256);
  await action('crouch',true);await clear(['m1a-drone']);await action('crouch',false);
  await move(510);await ground();await next('M1B',true);
 

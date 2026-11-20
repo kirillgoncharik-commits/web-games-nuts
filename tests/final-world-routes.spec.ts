@@ -211,8 +211,11 @@ for(const [mission,room] of [['YU01','YU01-A'],['YU03','YU03-B'],['YU01','YU01-B
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
-  await encounter(page,{mission,room,difficulty,seed:4});
+  // Nightmare route evidence in the exchange records an entry with two HP.
+  const hp=room==='YU01-B'&&difficulty==='nightmare'?2:undefined;
+  await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
+  if(hp!==undefined)expect((await state(page)).hp).toBe(hp);
   await solveRoom(page);
   const end=await state(page);
   expect(end.hp).toBeGreaterThan(0);expect(end.score).toBeGreaterThan(100);
