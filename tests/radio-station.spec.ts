@@ -84,6 +84,9 @@ test('radio finale ordinary input: canopy shelters the pulse, pause freezes it a
  await page.keyboard.press('Escape');const paused=(await state(page)).worldPulseElapsed;await page.waitForTimeout(300);expect((await state(page)).worldPulseElapsed).toBe(paused);await page.getByTestId('resume').click();
  await until(page,()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>2000;},null,'rift safe action window');
  await to(page,432);await ground(page,320);await page.keyboard.press('e');await to(page,408);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
- await to(page,432);await ground(page,320);await page.keyboard.press('e');await jump(page,450,540);await ground(page,320);await to(page,552);await ground(page,320);await page.keyboard.press('e');
+ await to(page,432);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');await jump(page,450,540);await ground(page,320);await to(page,552);await ground(page,320);
+ // Travel can cross into the next warning. The final contact follows the same
+ // safe-window rule as the second contact; wait through it with ordinary input.
+ await until(page,()=>(window as any).__CINDER__().worldPulse==='safe',null,'rift final contact safe window');await page.keyboard.press('e');
  await expect.poll(async()=>(await state(page)).world.phase).toBe(3);expect((await state(page)).worldPulse).toBe('safe');expect((await state(page)).hp).toBe(hp);await page.screenshot({path:info.outputPath('radio-rift-closed.png')});
 });

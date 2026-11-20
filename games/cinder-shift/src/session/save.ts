@@ -82,12 +82,14 @@ export function validateSettings(v:unknown,locale:'en'|'ru'):Settings{
   return {locale:v.locale==='en'||v.locale==='ru'?v.locale:locale,muted:typeof v.muted==='boolean'?v.muted:d.muted,touchMode:['auto','on','off'].includes(v.touchMode)?v.touchMode:d.touchMode,layout:['dock','sides'].includes(v.layout)?v.layout:d.layout,autofire:typeof v.autofire==='boolean'?v.autofire:d.autofire,debugBodies:typeof v.debugBodies==='boolean'?v.debugBodies:d.debugBodies,reducedFlashes:typeof v.reducedFlashes==='boolean'?v.reducedFlashes:d.reducedFlashes,reducedMotion:typeof v.reducedMotion==='boolean'?v.reducedMotion:d.reducedMotion,effectsIntensity:typeof v.effectsIntensity==='number'&&Number.isFinite(v.effectsIntensity)&&v.effectsIntensity>=0&&v.effectsIntensity<=1?v.effectsIntensity:d.effectsIntensity,combatAssist:typeof v.combatAssist==='boolean'?v.combatAssist:d.combatAssist,ghostEnabled:typeof v.ghostEnabled==='boolean'?v.ghostEnabled:d.ghostEnabled,keyBindings,musicVolume:level('musicVolume'),sfxVolume:level('sfxVolume'),uiVolume:level('uiVolume')};
 }
 export class SaveService{
-  private db?:IDBDatabase;private queue:Promise<unknown>=Promise.resolve();private blocked=false;
+  private db?:IDBDatabase;private queue:Promise<unknown>=Promise.resolve();private blocked=false;private failedWrites=new Map<string,string>();
   hasExistingProfile=false;baseCompleted=false;completionProfile:CompletionProfile={schema_version:1,base_game_id:'r01',completion_ids:[]};completionProfileValid=true;
   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;
   onStatus:()=>void=()=>{};
   constructor(readonly build:string){}
-  private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}
+  private status(issue:SaveIssue){if(!issue&&this.failedWrites.size){issue='write_failed';this.lastError=[...this.failedWrites.values()].at(-1)!;}this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}
+  private writeFailed(key:string,error:unknown){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.failedWrites.set(key,this.lastError);this.status('write_failed');}
+  private writeSucceeded(key:string){this.failedWrites.delete(key);if(!this.blocked)this.status(null);}
   async connect(){
     if(this.available&&this.db)return true;this.db?.close();
     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}
@@ -112,8 +114,8 @@ export class SaveService{
           tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);
           const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};
           request.onsuccess=()=>{const raw=request.result;if(raw&&raw.version===1&&!validatePersonalRecords(raw)){const backup=store.get('personal-records.backup.v1');backup.onsuccess=()=>{if(validatePersonalRecords(backup.result))write(backup.result,true);else{tx.abort();reject(Error('statistics_backup_unreadable'));}};}else write(raw);};
-        });if(!this.blocked&&(this.issue==='write_failed'||this.issue==='unavailable'))this.status(null);return result;
-      }catch(error){this.lastError=error instanceof Error?error.message:'statistics_write_error';this.status('write_failed');return null;}
+        });this.writeSucceeded('personal-records.v1');return result;
+      }catch(error){this.writeFailed('personal-records.v1',error);return null;}
     };
     const result=this.queue.then(operation,operation);this.queue=result;return result;
   }
@@ -124,7 +126,7 @@ export class SaveService{
   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{
     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;
     if(!this.available||!this.db)return false;
-    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}
+    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}this.writeSucceeded(key);return true;}catch(error){this.available=false;this.writeFailed(key,error);return false;}
   };const result=this.queue.then(operation,operation);this.queue=result;return result;}
   saveCampaign(campaign:CampaignData,replace=false){
     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}
