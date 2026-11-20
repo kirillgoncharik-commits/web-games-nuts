@@ -80,15 +80,16 @@
       "real input full c03-adriatic-1986"
     ]
   },
-  "resume_blocker": "full-route and independent-playtest verification; other SDK targets pending",
-  "updated_at_utc": "2026-11-20T05:22:39.809479+00:00",
+  "resume_blocker": "independent playtest and remaining host QA; other SDK targets pending",
+  "updated_at_utc": "2026-11-20T05:40:38.009410+00:00",
   "latest_global_artifact": {
-    "run": 44679062489,
+    "run": 44680860274,
+    "source_sha": "9a9d40c23e41f3b60e9783763b0185d53f9f61bd",
     "runtime_checks": "success",
     "c02_full_route": "success",
-    "c03_full_route": "failure",
-    "failure": "walk blocked 264",
-    "production_artifact": "skipped"
+    "c03_full_route": "success",
+    "production_artifact": "success",
+    "target": "web"
   },
   "route_recheck": {
     "run": 44680860274,
@@ -96,7 +97,15 @@
     "runtime_code_unchanged_from_yandex_source": true,
     "c02_full_route": "success",
     "c03_full_route": "success",
-    "runtime_checks": "in_progress",
-    "production_artifact": "pending"
+    "runtime_checks": "success",
+    "production_artifact": "success"
+  },
+  "prior_global_artifact": {
+    "run": 44679062489,
+    "runtime_checks": "success",
+    "c02_full_route": "success",
+    "c03_full_route": "failure",
+    "failure": "walk blocked 264",
+    "production_artifact": "skipped"
   }
 }

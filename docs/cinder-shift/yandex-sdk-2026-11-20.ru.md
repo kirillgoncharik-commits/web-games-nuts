@@ -8,7 +8,7 @@
 
 Interstitial допускается по пользовательскому переходу с результата после Airlock. Первый урок и соревновательные режимы исключены. Повторные callbacks и запросы одного transition ID не выполняют переход повторно. До открытия есть тайм-аут отсутствующего callback, после открытия ожидание реального close/error. Отдельные причины SDK/ad pause складываются.
 
-Английский черновик 655191: иконка, обложка, горизонтальное видео скопированы из RU; добавлены 2 EN-скриншота, Save подтверждён. Тексты EN/RU уже были сохранены. Видео остаётся помечено платформой как ожидающее обработки.
+Английский черновик 655191: иконка, обложка, горизонтальное видео скопированы из RU; добавлены 2 EN-скриншота, Save подтверждён. Тексты EN/RU сохранены. Обработка видео завершилась, но встроенный плеер сообщает Unable to play media; воспроизведение не подтверждено.
 
 ## Проверки
 
@@ -18,7 +18,7 @@ Interstitial допускается по пользовательскому пе
 - Сборка Yandex: PASS; SDK-free Basic/itch не загружают YaGames по тесту адаптера.
 - Три теста реального приложения с контролируемым SDK и регрессия локальных сохранений itch вынесены в workflow `Cinder Shift Yandex integration`: PASS: 3/3 теста Yandex-приложения, 21/21 регрессионный тест itch. [CI](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679055806).
 - Реальный host smoke в авторизованном Chrome: PASS для запуска SDK/готовности/управления/паузы и сохранения при reload. Полная host-проверка, реальный interstitial и независимый гостевой запуск остаются PENDING. SDK-кандидат не является подтверждённой модерационной готовностью.
-- Актуальный общий artifact-прогон: runtime-checks PASS, полный маршрут c02-small-world PASS, маршрут c03-adriatic-1986 FAIL (walk blocked 264). Общий artifact job пропущен. Это отдельный блокер общей готовности.
+- Итоговый общий прогон [44680860274](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274): runtime-checks PASS, оба полных маршрута C02/C03 PASS, artifact PASS. Он собирает web-target; загруженный Yandex ZIP остаётся точным verification-артефактом отдельного целевого workflow.
 
 Официальные контракты проверены 20.11.2026: [подключение](https://yandex.com/dev/games/doc/en/sdk/sdk-about), [Game Ready / Gameplay](https://yandex.com/dev/games/doc/en/sdk/sdk-game-events), [пауза](https://yandex.com/dev/games/doc/en/sdk/sdk-events), [гостевое хранилище](https://yandex.com/dev/games/doc/en/sdk/sdk-player), [реклама](https://yandex.com/dev/games/doc/en/sdk/sdk-adv), [язык](https://yandex.com/dev/games/doc/en/sdk/sdk-environment).
 
@@ -34,8 +34,8 @@ Interstitial допускается по пользовательскому пе
 - Сохранены тексты и медиа EN/RU, Desktop/Landscape, Action/Arcade, черновая отметка 12+. Cloud save выключен; Postpone publication включён. На модерацию не отправлено.
 - Промовидео обработано, но встроенный проигрыватель показывает Unable to play media. Этот медиапункт не отмечен PASS; нужна отдельная проверка воспроизведения/повторный экспорт при необходимости.
 
-Последний общий прогон: https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679062489 . Целевой Yandex ZIP выпущен отдельным verification workflow для тестового черновика; принятым production RC не объявлялся.
+Предшествующий общий прогон 44679062489: runtime-checks и C02 прошли, C03 остановился на `walk blocked 264`, artifact был пропущен. Причина в контроллере теста устранена и повторный общий прогон полностью прошёл. Целевой Yandex ZIP выпущен отдельным verification workflow для тестового черновика; принятым production RC не объявлялся.
 
 ## Контроллер проверки маршрута
 
-В `tests/final-world-routes.spec.ts` распознавание препятствия теперь использует высоту приседа 26 px вместо 20 px. Это устраняет случай, когда невысокая полка YU04-C не считалась препятствием, включалось точное движение в приседе и прыжок оставался заблокированным самим тестом. Runtime и геометрия не менялись. Повторный общий прогон: https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274 . Оба маршрута PASS: c02-small-world и c03-adriatic-1986, каждый по 20 комнат/5 миссий. Расширенный runtime-checks job ещё выполняется; общий production artifact пока не объявлен готовым.
+В `tests/final-world-routes.spec.ts` распознавание препятствия теперь использует высоту приседа 26 px вместо 20 px. Это устраняет случай, когда невысокая полка YU04-C не считалась препятствием, включалось точное движение в приседе и прыжок оставался заблокированным самим тестом. Runtime и геометрия не менялись. Повторный общий прогон: https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274 . Оба маршрута PASS: c02-small-world и c03-adriatic-1986, каждый по 20 комнат/5 миссий. Расширенный runtime-checks и сборка web-артефакта также завершились PASS.
