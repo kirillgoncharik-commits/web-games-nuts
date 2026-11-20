@@ -1,0 +1,159 @@
+{
+  "source_sha": "8c96ee0427a737ab4d4e857909e14d1a4d032505",
+  "seed": 4,
+  "difficulty": "easy",
+  "losses": [],
+  "mission": "airlock",
+  "hp": 3,
+  "max_hp": 6,
+  "active_seconds": 48.083333333332064,
+  "score": 2275,
+  "pressure": [
+    {
+      "room": "A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 633,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 95
+    },
+    {
+      "room": "B",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 3167,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 38
+    },
+    {
+      "room": "M1A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1467,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 41
+    },
+    {
+      "room": "M1B",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1400,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 43
+    },
+    {
+      "room": "M1C",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 4650,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 26
+    },
+    {
+      "room": "C",
+      "enemies": 3,
+      "attacks": 3,
+      "combatMs": 6200,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 29
+    }
+  ],
+  "visited": 6,
+  "repair": [
+    "B"
+  ],
+  "events": [
+    {
+      "event_id": "E03",
+      "definition_version": 2,
+      "room_id": "B",
+      "variant": "repair-cache"
+    }
+  ],
+  "damage": [
+    {
+      "name": "hit_received",
+      "event_id": "ddf60a27-c816-4048-af23-3ba6bbaaa89e",
+      "at": 11071,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "8c96ee0427a737ab4d4e857909e14d1a4d032505",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "35229639-43b4-4203-a9ce-57a90f191310",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "B",
+        "attempt_id": "13de5df5-05bf-4e12-8fb3-8ef1e8174e74",
+        "active_duration": 10.083,
+        "reason": "walker-contact",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "ca317423-cab3-42ae-95dd-05e3609cfb47",
+      "at": 17987,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "8c96ee0427a737ab4d4e857909e14d1a4d032505",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "35229639-43b4-4203-a9ce-57a90f191310",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1A",
+        "attempt_id": "13de5df5-05bf-4e12-8fb3-8ef1e8174e74",
+        "active_duration": 16.683,
+        "reason": "drone-shot",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "ee32c803-a59d-4bba-a3bf-b0a0f55d373d",
+      "at": 35886,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "8c96ee0427a737ab4d4e857909e14d1a4d032505",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "35229639-43b4-4203-a9ce-57a90f191310",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1C",
+        "attempt_id": "13de5df5-05bf-4e12-8fb3-8ef1e8174e74",
+        "active_duration": 34.183,
+        "reason": "turret-shot",
+        "hp": 4
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "e912e5f2-806d-43f4-8c00-c25659a0503e",
+      "at": 46469,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "8c96ee0427a737ab4d4e857909e14d1a4d032505",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "35229639-43b4-4203-a9ce-57a90f191310",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "C",
+        "attempt_id": "13de5df5-05bf-4e12-8fb3-8ef1e8174e74",
+        "active_duration": 44.567,
+        "reason": "walker-shot",
+        "hp": 3
+      }
+    }
+  ]
+}
