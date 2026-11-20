@@ -17,9 +17,11 @@ window.bridge={
 `;
 test.beforeEach(async({page})=>{page.on('pageerror',error=>console.log('PAGEERROR',error.message));});
 test.afterEach(async({page},info)=>{
- if(info.status!==info.expectedStatus)console.log('BRIDGE_FAILURE',JSON.stringify(await page.evaluate(()=>{
+ if(info.status===info.expectedStatus)return;
+ const diagnostic=await page.evaluate(()=>{
   const s=(window as any).__CINDER__?.();return{state:s?.state,screen:s?.screen,platform:s?.platform,audio:s?.audioStatus,host:(window as any).__BRIDGE_TEST,body:document.body.innerText.slice(0,1800)};
- }).catch(error=>({diagnostic:String(error)})))));
+ }).catch(error=>({diagnostic:String(error)}));
+ console.log('BRIDGE_FAILURE',JSON.stringify(diagnostic));
 });
 async function mock(page:Page,body=sdkScript){await page.route('https://bridge.playgama.com/**/playgama-bridge.js',route=>route.fulfill({status:200,contentType:'text/javascript',body}));}
 test('Bridge alone supplies locale and storage; game readiness and host pause follow actual play',async({page})=>{
