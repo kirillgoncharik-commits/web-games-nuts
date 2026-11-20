@@ -7,6 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
 import {standingJump,ground} from './route-helpers';
+import {standingLaneClear,standingHalfWidth} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -46,8 +47,8 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar
 function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
  const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610
-  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)
-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)
+  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)
+  &&standingLaneClear(s.solids,x,y)
   // Plan the standing point separately from waiting for the actual safe phase.
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
@@ -101,7 +102,7 @@ async function combat(page:Page){
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
