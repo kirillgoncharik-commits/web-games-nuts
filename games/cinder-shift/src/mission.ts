@@ -1,5 +1,5 @@
 import {createWorldState,worldSolids,worldReady,worldAbsorb,clearWorldTransient,type WorldRoomState} from './session/world-runtime';
-import {combatBalance} from './session/difficulty';
+import {combatBalance,incomingDamage} from './session/difficulty';
 import {RegulatorEncounter} from './boss';
 import config from '../game.config.json' with {type:'json'};
 import type {MissionEntry} from './session/campaign';
@@ -74,7 +74,7 @@ export class MissionAttempt{
   this.hurtUntil=now+config.initial_balance.hurt_invulnerability_seconds*1000;
   if(this.build.buffer&&!this.room().bufferUsed){this.room().bufferUsed=true;this.lastDamageAbsorbed=true;return true;}
   if(worldAbsorb(this.room().world)){this.lastDamageAbsorbed=true;return true;}
-  const hpBefore=this.hp;this.hp=Math.max(0,this.hp-this.balance.damage);if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.room().hpLost+=hpBefore-this.hp;this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
+  const hpBefore=this.hp;this.hp=Math.max(0,this.hp-incomingDamage(this.balance,reason));if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.room().hpLost+=hpBefore-this.hp;this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
  }
  finish(result:Result|'abandoned'){if(this.result)return false;this.result=result;return true;}
 }

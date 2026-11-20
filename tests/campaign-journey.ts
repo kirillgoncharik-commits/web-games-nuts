@@ -11,7 +11,7 @@ export async function campaignJourney(page:Page,info:TestInfo,hooks:{started?:()
  async function advance(mission:string){await page.getByTestId('result-research').click();await expect(page.getByTestId('map-pin-'+mission)).toHaveAttribute('aria-pressed','true');await page.getByTestId('map-prepare').click();expect((await state(page)).campaign.nodes).toEqual([]);await page.getByTestId('briefing').click();await page.waitForFunction(mission=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.missionId===mission&&s.simMs>0&&s.player?.vy===0;},mission);}
  async function career(){return page.evaluate(()=>new Promise<any>((resolve,reject)=>{const open=indexedDB.open('cinder-shift-r01',1);open.onerror=()=>reject(open.error);open.onsuccess=()=>{const db=open.result,tx=db.transaction('records','readonly'),r=tx.objectStore('records').get('career');r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.oncomplete=()=>db.close();};}));}
  try{
-  await startMission(page,{seed:4,difficulty:info.project.metadata.difficulty});await hooks.started?.();id=(await state(page)).campaign.campaign_id;await roomA(page);await completeFromB(page);await record();
+  await startMission(page,{seed:4,difficulty:info.project.metadata.difficulty});await hooks.started?.();id=(await state(page)).campaign.campaign_id;const coveringFire=Boolean(info.project.metadata.difficulty);await roomA(page,coveringFire);await completeFromB(page,{coveringFire});await record();
   await advance('cargo');await playCargo(page);await record();
   await advance('foundry');await campaignFoundry(page);await record();
   await advance('archive');await campaignArchive(page);await record();
