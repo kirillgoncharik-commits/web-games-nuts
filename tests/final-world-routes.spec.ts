@@ -15,11 +15,17 @@ import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-rou
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
- await page.goto('/games/cinder-shift/?seed=4');await expect(page.getByTestId('new-shift')).toBeVisible();const c=new Campaign(newCampaign(4));
+ // Seed IndexedDB at this origin before the game's first boot, so a fresh
+ // profile checkpoint cannot overwrite the unlock while the page reloads.
+ await page.goto('/games/cinder-shift/build-manifest.json');const c=new Campaign(newCampaign(4));
  for(const id of missionIds){c.prepare();c.begin();c.applyResult({attempt_id:'legacy-'+id,mission_id:id,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:1,screen_ms:0,nodes:[]});c.advance();}
  const record={schema_version:1,content_version:contentVersion,game_id:'r01',build_id:'legacy-completion-fixture',saved_at:new Date().toISOString(),campaign:c.snapshot()};
- await page.evaluate(record=>new Promise<void>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onsuccess=()=>{const db=r.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put(record,'campaign');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};}),record);
- await page.reload();await expect(page.getByTestId('continue')).toBeVisible();
+ await page.evaluate(record=>new Promise<void>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onerror=()=>reject(r.error);r.onupgradeneeded=()=>r.result.createObjectStore('records');r.onsuccess=()=>{const db=r.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put(record,'campaign');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};}),record);
+ await page.goto('/games/cinder-shift/?seed=4');
+ const notes=page.getByTestId('notes-close'),resume=page.getByTestId('continue');
+ await expect(notes.or(resume).first()).toBeVisible();
+ if(await notes.isVisible())await notes.click();
+ await expect(resume).toBeVisible();
 }
 async function walk(page:Page,target:number,allowExit=false,enemyId?:string){
  const origin=(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
