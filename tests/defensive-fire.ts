@@ -13,7 +13,8 @@ export async function fireFromCover(page:Page, targets:readonly string[]) {
       const dangerous=state.projectiles.filter((shot:{team:string;x:number;y:number;vx:number;vy:number})=>{
         const seconds=(state.player.x-shot.x)/shot.vx;
         const y=shot.y+shot.vy*seconds;
-        return shot.team==='enemy' && seconds>0 && seconds<3 && y>=feet-44 && y<=feet+3;
+        const top=feet-(state.player.crouching?26:44)-3;
+        return shot.team==='enemy' && seconds>0 && seconds<3 && y>=top && y<=feet+3;
       });
       if(!dangerous.length && targets.every(id=>state.enemies.find((enemy:{id:string})=>enemy.id===id)?.hp<=0))return;
       const shouldJump=dangerous.some((shot:{x:number;vx:number})=>(state.player.x-shot.x)/shot.vx<0.40);

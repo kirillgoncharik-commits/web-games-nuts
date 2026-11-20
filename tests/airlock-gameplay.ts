@@ -41,6 +41,7 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  }else{await action('crouch',true);await move(380);await action('crouch',false);}
  await move(510);await ground();await next('M1C',true);
 
+ if(evade)await action('fire',true);
  await jump(130,224);await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
  await next('C',true);
 }

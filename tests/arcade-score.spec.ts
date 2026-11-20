@@ -1,4 +1,4 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newWorldCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {CampaignScore} from '../games/cinder-shift/src/session/campaign-score';
 import {ScoreLedger} from '../games/cinder-shift/src/session/score-ledger';
@@ -65,10 +65,35 @@ test('every relief unit follows an existing reachable lead in its own room',()=>
  }
 });
 
-test('Airlock pays on the HUD, saves the result and equips the next attempt from its score',async({page})=>{
+async function measureFire(page:Page){
+ await page.keyboard.down('j');
+ try{
+  return await page.evaluate(()=>new Promise<{speed:number;interval:number}>((resolve,reject)=>{
+   const deadline=performance.now()+5000,times:number[]=[];
+   let lastX=Infinity;
+   function observe(){
+    const s=(window as any).__CINDER__();
+    const central=s.projectiles.filter((p:any)=>p.team==='player'&&p.vx>0&&Math.abs(p.vy)<0.01);
+    const newest=central.sort((a:any,b:any)=>a.x-b.x)[0];
+    if(newest&&newest.x<lastX){
+     // Correct for distance already travelled between input and the observed frame.
+     times.push(s.simMs-(newest.x-s.player.x-19)/newest.vx*1000);
+     if(times.length===9){resolve({speed:newest.vx,interval:(times[8]-times[0])/8});return;}
+    }
+    lastX=newest?.x??Infinity;
+    if(performance.now()>deadline){reject(Error('No nine observable cutter volleys'));return;}
+    requestAnimationFrame(observe);
+   }
+   observe();
+  }));
+ }finally{await page.keyboard.up('j');}
+}
+
+for(const attachment of ['accelerator','cycler'] as const)test('Airlock banks score and measures real volleys with '+attachment,async({page})=>{
  test.setTimeout(180000);
  await startMission(page,{seed:4,node:'W1',locale:'en'});
  await expect(page.locator('#hud-score')).toHaveText('Score · 0');
+ const stock=await measureFire(page);
  await roomA(page,true);
  await expect(page.locator('#hud-score')).toHaveText('Score · 150');
  await completeFromB(page,{coveringFire:true});
@@ -79,10 +104,16 @@ test('Airlock pays on the HUD, saves the result and equips the next attempt from
  await page.reload();await page.getByTestId('continue').click();
  await expect(page.getByTestId('arcade-total')).toBeVisible();
  await page.getByTestId('retry-loadout').click();
- await page.getByTestId('run-attachment').selectOption('cycler');
+ await page.getByTestId('run-attachment').selectOption(attachment);
  await page.getByTestId('briefing').click();
  if(await page.getByTestId('skip-arrival').isVisible())await page.getByTestId('skip-arrival').click();
- await expect.poll(async()=>(await state(page)).campaign.entry?.attachment).toBe('cycler');
+ await expect.poll(async()=>(await state(page)).campaign.entry?.attachment).toBe(attachment);
  await expect(page.locator('#hud-score')).toHaveText('Score · 0');
  expect((await state(page)).campaign.loadout_budget).toBe(0);
+ await expect.poll(async()=>(await state(page)).state).toBe('playing');
+ const equipped=await measureFire(page);
+ expect(equipped.speed/stock.speed).toBeCloseTo(attachment==='accelerator'?1.25:1,3);
+ const expected=attachment==='cycler'?stock.interval/1.15:stock.interval;
+ expect(Math.abs(equipped.interval-expected)).toBeLessThan(5);
+ console.log('Cutter volleys',JSON.stringify({attachment,stock,equipped}));
 });

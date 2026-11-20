@@ -1,3 +1,4 @@
+import {encounter} from './encounter-helpers';
 import {playSector,type RouteLoss} from './campaign-retry';
 import {fireFromCover} from './defensive-fire';
 import {campaignPressure} from './campaign-pressure';
@@ -188,3 +189,18 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
  // Keep the actual result file in the directory uploaded by the workflow.
  const report=info.outputPath('input-route.json');await writeFile(report,JSON.stringify({source:'legacy C01 unlock fixture; all world input real',source_sha:(await state(page)).sha,difficulty,seed:4,visited,losses,pressure,final},null,2));await info.attach('input-route.json',{path:report,contentType:'application/json'});
 });
+
+// Diagnostic entries into individual rooms. These do not count as campaign completions.
+for(const [mission,room] of [['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+ test('focused room entry '+room,async({page},info)=>{
+  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
+  test.setTimeout(100000);
+  const difficulty=info.project.metadata.difficulty??'easy';
+  await encounter(page,{mission,room,difficulty,seed:4});
+  expect((await state(page)).campaign.difficulty).toBe(difficulty);
+  await solveRoom(page);
+  const end=await state(page);
+  expect(end.hp).toBeGreaterThan(0);expect(end.score).toBeGreaterThan(100);
+  if(room.endsWith('-D'))expect(end.state).toBe('complete');else expect(end.room).not.toBe(room);
+ });
+}
