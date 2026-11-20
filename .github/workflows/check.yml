@@ -2,7 +2,7 @@ name: Cinder Shift check
 on:
   push:
     # The active development PR runs the twelve shards once on its exact head.
-    branches-ignore: [codex/cinder-shift-m-rework, codex/cinder-shift-final]
+    branches-ignore: [codex/cinder-shift-m-rework, codex/cinder-shift-final, release/cinder-shift/package-transfer-2026-11-20]
   pull_request:
 concurrency:
   group: cinder-check-${{ github.ref }}

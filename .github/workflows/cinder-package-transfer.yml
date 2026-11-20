@@ -1,0 +1,34 @@
+name: Cinder Shift package transfer
+on:
+  push:
+    branches: [release/cinder-shift/package-transfer-2026-11-20]
+permissions:
+  contents: read
+  actions: read
+jobs:
+  transfer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: cinder-playgama-6-1
+          path: tested-package
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: kirillgoncharik-commits/web-games-nuts
+          run-id: 44774913080
+      - name: Transfer the immutable public game package through the connected repository
+        run: |
+          python3 - <<'PY'
+          import base64,hashlib
+          from pathlib import Path
+          p=next(Path('tested-package').rglob('Cinder-Shift-64-0.8.0-alpha.12-playgama.zip'))
+          data=p.read_bytes()
+          assert len(data)==4837614
+          assert hashlib.sha256(data).hexdigest()=='8d3bdd140fff29c5d23c85b55f31bd2d976baff7fe9dd815832cae9e46597514'
+          encoded=base64.b64encode(data).decode('ascii')
+          print('CINDER_ZIP_BASE64_BEGIN')
+          for at in range(0,len(encoded),2048): print('CINDER_B64:'+encoded[at:at+2048])
+          print('CINDER_ZIP_BASE64_END')
+          print('CINDER_TRANSFER_SHA256:'+hashlib.sha256(data).hexdigest())
+          PY
