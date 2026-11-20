@@ -20,6 +20,7 @@ export function validatePersonalRecords(v:unknown):v is PersonalRecords{
  if(!Object.entries(v.sessions).every(([key,s])=>id(key)&&object(s)&&['shots','hits','total_ms','mission_ms'].every(k=>uint(s[k]))&&s.hits<=s.shots&&s.mission_ms<=s.total_ms&&object(s.campaign_ms)&&Object.entries(s.campaign_ms).every(([key,time])=>id(key)&&uint(time)&&time<=s.mission_ms)))return false;
  if(!Object.entries(v.campaign_baselines).every(([key,b])=>id(key)&&object(b)&&uint(b.active_ms)&&typeof b.history_complete==='boolean'))return false;
  if(!v.completed.every((r:unknown)=>object(r)&&id(r.id)&&world(r.world)&&id(r.content_version)&&date(r.completed_at)&&uint(r.active_ms)&&uint(r.deaths)&&uint(r.score)&&typeof r.ruleset==='string'&&r.ruleset.length<=100&&typeof r.assisted==='boolean'&&typeof r.history_complete==='boolean'&&(r.route===null||['service','press'].includes(r.route))))return false;
+ const sums={shots:0,hits:0,total_ms:0,mission_ms:0};for(const row of Object.values(v.sessions) as CombatCounters[])for(const key of ['shots','hits','total_ms','mission_ms'] as const)sums[key]+=row[key];if(Object.values(sums).some(value=>!Number.isSafeInteger(value)))return false;
  return new Set(v.completed.map((r:CampaignRecord)=>r.id)).size===v.completed.length;
 }
 /** Cumulative fragments make retries idempotent and stale tabs monotonic. */
@@ -47,6 +48,10 @@ export function statisticsTotals(data:PersonalRecords):CombatCounters{
  return total;
 }
 export const accuracy=(shots:number,hits:number)=>shots===0?null:Math.round(hits/shots*1000)/10;
+export type ActivityContext={ready:boolean;visible:boolean;focused:boolean;state:string;panel:boolean;transition:boolean;hostPaused:boolean};
+export function canTrackTime(context:ActivityContext){
+ return context.ready&&context.visible&&context.focused&&!context.hostPaused&&!context.transition&&!['loading','countdown','paused','dying','error'].includes(context.state)&&(context.state==='playing'||context.panel);
+}
 export class PersonalStatistics{
  readonly sessionId=crypto.randomUUID();private own=emptyFragment();private lastAt:number|null=null;private active=false;private inMission=false;private campaignId:string|null=null;
  data=emptyPersonalRecords();ready=false;writable=true;unsaved=false;saveFailed=false;recovered=false;private queue:Promise<unknown>=Promise.resolve();private checkpointMs=0;

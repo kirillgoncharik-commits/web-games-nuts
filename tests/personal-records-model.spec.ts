@@ -1,6 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {Projectiles} from '../games/cinder-shift/src/projectiles';
-import {PersonalStatistics,emptyPersonalRecords,emptyFragment,mergePersonalRecords,statisticsTotals,accuracy,validatePersonalRecords,type PersonalRecords} from '../games/cinder-shift/src/session/personal-records';
+import {PersonalStatistics,canTrackTime,emptyPersonalRecords,emptyFragment,mergePersonalRecords,statisticsTotals,accuracy,validatePersonalRecords,type PersonalRecords} from '../games/cinder-shift/src/session/personal-records';
 import {newCampaign} from '../games/cinder-shift/src/session/campaign';
 
 function memory(){let value:unknown;let fail=false;return{get value(){return value;},set value(v:unknown){value=v;},set fail(v:boolean){fail=v;},async loadModeData(){return{ok:true,value};},async updatePersonalRecords(incoming:PersonalRecords){if(fail)return null;value=mergePersonalRecords(value,incoming);return structuredClone(value as PersonalRecords);}};}
@@ -56,4 +56,15 @@ test('campaign ID distinguishes Continue from Replay, retains unfinished time an
   stats.complete(c,world,'test-content');stats.complete(c,world,'test-content');
  }
  const result=stats.snapshot();expect(result.completed).toHaveLength(4);expect(result.completed.every(r=>r.active_ms===2000)).toBe(true);expect(validatePersonalRecords(result)).toBe(true);
+});
+
+test('foreground time excludes room transfers and noninteractive result loading, but includes ordinary menus',()=>{
+ const active={ready:true,visible:true,focused:true,state:'menu',panel:true,transition:false,hostPaused:false};
+ expect(canTrackTime(active)).toBe(true);expect(canTrackTime({...active,state:'research'})).toBe(true);expect(canTrackTime({...active,state:'playing',panel:false})).toBe(true);
+ for(const value of [{ready:false},{visible:false},{focused:false},{hostPaused:true},{transition:true},{state:'paused'},{state:'loading'},{state:'countdown'},{state:'dying'},{state:'complete',panel:false}])expect(canTrackTime({...active,...value})).toBe(false);
+ expect(canTrackTime({...active,state:'complete',panel:true})).toBe(true);
+});
+
+test('aggregate counters outside the safe integer range are rejected as corrupt',()=>{
+ const value=emptyPersonalRecords();value.sessions.a={...emptyFragment(),shots:Number.MAX_SAFE_INTEGER};value.sessions.b={...emptyFragment(),shots:1};expect(validatePersonalRecords(value)).toBe(false);
 });

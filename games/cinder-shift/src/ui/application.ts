@@ -1,7 +1,7 @@
 import {newCampaignIds,newCampaignMissions,isWorldMission,worldForMission,type NewCampaignId} from '../session/new-campaign-content';
 import {worldContext} from '../session/world-runtime';
 import {restoreRadioLinks} from '../session/radio-links';
-import {PersonalStatistics,statisticsTotals} from '../session/personal-records';
+import {PersonalStatistics,statisticsTotals,canTrackTime} from '../session/personal-records';
 import {personalRecordsView,type RecordsTab} from './personal-records';
 import {worldAvailability,isCompleteBaseCampaign} from '../session/world-progress';
 import {buildMetadata,buildLabel,buildDiagnostics} from '../build';
@@ -519,7 +519,7 @@ export class Application{
   }
   private frame(){
     const now=performance.now(),delta=Math.max(0,Math.min(250,now-this.lastFrame));this.lastFrame=now;
-    const foreground=this.initialMenuShown&&!document.hidden&&document.hasFocus()&&!['loading','countdown','paused','error'].includes(this.state)&&!(platform.snapshot() as {paused?:boolean}).paused;
+    const foreground=canTrackTime({ready:this.initialMenuShown,visible:!document.hidden,focused:document.hasFocus(),state:this.state,panel:this.ui.visible,transition:Boolean(this.room?.transition),hostPaused:Boolean((platform.snapshot() as {paused?:boolean}).paused)});
     this.statistics.tick(now,foreground,this.state==='playing'&&!this.room?.transition,this.state==='playing'&&!this.challengeEntry&&this.attempt?.mode==='mission'?this.campaign?.data.campaign_id||null:null);
     if(this.state==='playing'&&this.challengeEntry&&this.challengeSpec&&this.runSession&&this.runSession.clock.elapsedMs(now)>=this.challengeSpec.duration_limit_ms){void this.expireChallenge();}
     this.captureGhost(now);
