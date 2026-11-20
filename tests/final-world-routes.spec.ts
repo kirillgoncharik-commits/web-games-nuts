@@ -7,6 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
 import {standingJump,ground} from './route-helpers';
+import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -32,7 +33,10 @@ async function walk(page:Page,target:number,allowExit=false){
   }
   const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);
-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
+  // A shelf whose underside is below the crouched head blocks the approach too.
+  // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision
+  // crouching, and then tried to jump while crouch was held forever.
+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;
   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);
   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}
@@ -42,9 +46,9 @@ async function walk(page:Page,target:number,allowExit=false){
 async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
 function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
- const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610
-  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)
-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)
+ const x=contextCandidates(point.x).find(x=>x>32&&x<610
+  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)
+  &&standingLaneClear(s.solids,x,y)
   // Plan the standing point separately from waiting for the actual safe phase.
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
@@ -89,6 +93,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){
   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);
  }
+ if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){
+  // The first feed arms the real warning. Read the pulse from the marked
+  // canopy, then leave shelter only while the second contact's window is open.
+  await walk(page,348);
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});
+ }
  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
@@ -98,7 +108,7 @@ async function combat(page:Page){
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
@@ -117,7 +127,7 @@ async function solveRoom(page:Page){
  s=await state(page);if(s.world.power){
   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
-  for(let phase=0;phase<sequence.length;phase++){
+  for(let phase=s.world.phase;phase<sequence.length;phase++){
    s=await state(page);if(s.world.power.circuit!==sequence[phase]){
     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;
     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
