@@ -7,7 +7,7 @@ import {radioLinkIds,restoreRadioLinks,validRadioLinks} from '../games/cinder-sh
 import {validateWorldSave} from '../games/cinder-shift/src/session/save';
 import {encounter} from './encounter-helpers';
 import {state} from './helpers';
-import {to,ground} from './route-helpers';
+import {to,ground,jump,until} from './route-helpers';
 
 test('model radio link checkpoints are ordered, bounded and restore only confirmed contacts',()=>{
  const spec=rooms['YU05-C'].world!;
@@ -66,6 +66,7 @@ for(const reduced of [false,true])test(`radio links persist after real activatio
  await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  await to(page,400);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+ await page.screenshot({path:info.outputPath('radio-antenna-two-links.png')});
  await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();
  await expect.poll(async()=>{const s=await state(page);return s.campaign.radio_links;}).toEqual(radioLinkIds.slice(0,2));
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();
@@ -73,4 +74,16 @@ for(const reduced of [false,true])test(`radio links persist after real activatio
  const after=await state(page);expect(after.campaign.campaign_id).toBe(before.campaign.campaign_id);expect(after.campaign.points).toBe(before.campaign.points);
  expect(after.roomStates['YU05-C'].world.phase).toBe(2);expect(after.roomStates['YU05-C'].world.ledger).toEqual(radioLinkIds.slice(0,2));
  await page.screenshot({path:info.outputPath('radio-links-reloaded.png')});
+});
+
+test('radio finale ordinary input: canopy shelters the pulse, pause freezes it and closure stops it',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU05',room:'YU05-D'});const hp=(await state(page)).hp;
+ await to(page,112);await ground(page,320);await page.keyboard.press('e');await jump(page,130,240);await ground(page,320);await to(page,264);await ground(page,320);await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await to(page,348);await ground(page,320);
+ await until(page,()=>(window as any).__CINDER__().worldPulse==='active',null,'rift pulse under real canopy');expect((await state(page)).hp).toBe(hp);await page.screenshot({path:info.outputPath('radio-rift-shelter.png')});
+ await page.keyboard.press('Escape');const paused=(await state(page)).worldPulseElapsed;await page.waitForTimeout(300);expect((await state(page)).worldPulseElapsed).toBe(paused);await page.getByTestId('resume').click();
+ await until(page,()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>2000;},null,'rift safe action window');
+ await to(page,432);await ground(page,320);await page.keyboard.press('e');await to(page,408);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+ await to(page,432);await ground(page,320);await page.keyboard.press('e');await jump(page,450,540);await ground(page,320);await to(page,552);await ground(page,320);await page.keyboard.press('e');
+ await expect.poll(async()=>(await state(page)).world.phase).toBe(3);expect((await state(page)).worldPulse).toBe('safe');expect((await state(page)).hp).toBe(hp);await page.screenshot({path:info.outputPath('radio-rift-closed.png')});
 });

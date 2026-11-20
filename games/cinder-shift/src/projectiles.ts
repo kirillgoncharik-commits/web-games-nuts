@@ -3,8 +3,10 @@ import {segmentRect,expand} from './geometry';
 export type Shot={x:number;y:number;vx:number;vy:number;team:'player'|'enemy';source:string;pierces:number;ricochets:number;damage:number;hitIds:string[]};
 export class Projectiles{
  shots:Shot[]=[];
+ onPlayerShot:()=>void=()=>{};onPlayerHit:()=>void=()=>{};private countedHits=new WeakSet<Shot>();
  private clearVersion={player:0,enemy:0};
- fire(origin:Point,velocity:Point,team:Shot['team'],source:string,pierces=0,ricochets=0,damage=1){if(this.shots.length<64)this.shots.push({...origin,vx:velocity.x,vy:velocity.y,team,source,pierces,ricochets,damage,hitIds:[]});}
+ fire(origin:Point,velocity:Point,team:Shot['team'],source:string,pierces=0,ricochets=0,damage=1){if(this.shots.length>=64)return false;this.shots.push({...origin,vx:velocity.x,vy:velocity.y,team,source,pierces,ricochets,damage,hitIds:[]});if(team==='player')this.onPlayerShot();return true;}
+ recordDamage(shot:Shot,acceptedDamage:number){if(shot.team!=='player'||!Number.isFinite(acceptedDamage)||acceptedDamage<=0||this.countedHits.has(shot))return;this.countedHits.add(shot);this.onPlayerHit();}
  clear(){this.clearVersion.player++;this.clearVersion.enemy++;this.shots=[];}
  clearTeam(team:Shot['team']){this.clearVersion[team]++;this.shots=this.shots.filter(shot=>shot.team!==team);}
  step(ms:number,solids:Rect[],hit:(shot:Shot,from:Point,to:Point)=>boolean,piercePanel:(solid:Rect)=>void=()=>{},solidImpact:(shot:Shot,solid:Rect,point:Point)=>void=()=>{}){

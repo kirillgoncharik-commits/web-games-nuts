@@ -1,0 +1,48 @@
+name: Cinder Shift personal records and radio
+on:
+  pull_request:
+    paths:
+      - 'games/cinder-shift/**'
+      - 'tests/personal-records-*.spec.ts'
+      - 'tests/radio-station.spec.ts'
+      - 'tests/encounter-harness.ts'
+      - 'playwright.product.config.ts'
+      - '.github/workflows/cinder-product.yml'
+      - 'package*.json'
+  workflow_dispatch:
+concurrency:
+  group: cinder-product-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  product:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - run: npm run build
+      - run: npm run art:check
+      - name: Verify counters, storage, UI and radio with real browser input
+        env:
+          CINDER_RECORD_VIDEO: '1'
+        run: npx playwright test --config=playwright.product.config.ts --project=${{ matrix.browser }} --reporter=line --output=test-results/product-${{ matrix.browser }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-product-${{ matrix.browser }}-${{ github.run_attempt }}
+          path: |
+            test-results/
+            dist/cinder-shift/build-manifest.json

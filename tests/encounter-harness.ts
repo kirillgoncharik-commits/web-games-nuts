@@ -8,6 +8,9 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
+ flushStatistics(){return app.statistics.flush();},
+ // Storage-contract fixture only; production has no mutable statistics global.
+ writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},
  async audioClock(action:'suspend'|'resume'){const service=app.effects as any,ctx=service.context as AudioContext;await ctx[action]();return{state:ctx.state,time:ctx.currentTime};},
  audioMixer(input?:{warning?:boolean;musicVolume?:number}){const service=app.effects as any;if(input?.warning)app.effects.play('warn_turret');if(input?.musicVolume!==undefined)app.effects.configure({...app.settings,musicVolume:input.musicVolume});return{gain:service.musicBus?.gain.value,context:service.context?.state,snapshot:app.effects.snapshot()};},
  capture(){return new Promise(resolve=>app.game.renderer.snapshot(image=>{
