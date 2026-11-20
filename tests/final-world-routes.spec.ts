@@ -1,3 +1,4 @@
+import {playSector,type RouteLoss} from './campaign-retry';
 import {fireFromCover} from './defensive-fire';
 import {campaignPressure} from './campaign-pressure';
 import {powerTarget,worldContext} from '../games/cinder-shift/src/session/world-runtime';
@@ -149,17 +150,19 @@ async function solveRoom(page:Page){
  const before=s.room;await walk(page,600,true);s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
 }
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
- test.setTimeout(600000);await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],pressure:ReturnType<typeof campaignPressure>=[];
+ test.setTimeout(600000);await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],losses:RouteLoss[]=[],pressure:ReturnType<typeof campaignPressure>=[];
  for(let mission=1;mission<=5;mission++){
   await page.getByTestId('map-prepare').click();await page.getByTestId('briefing').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
+  await playSector(page,info,losses,async()=>{
   for(let room=0;room<4;room++){
    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.player?.vy===0;});const before=await state(page);visited.push(before.room);try{await solveRoom(page);}catch(error){const failed=await state(page);console.error('ROUTE_FAILURE '+JSON.stringify({visited,room:failed.room,state:failed.state,player:failed.player,hp:failed.hp,world:failed.world,solids:failed.solids,enemies:failed.enemies}));await info.attach('route-failure.json',{body:JSON.stringify(await state(page),null,2),contentType:'application/json'});throw error;}
   }
+  });
   pressure.push(...campaignPressure((await state(page)).roomStates));
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
  await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);
  // Body-only attachments are not retained by the CI list reporter on success.
  // Keep the actual result file in the directory uploaded by the workflow.
- const report=info.outputPath('input-route.json');await writeFile(report,JSON.stringify({source:'legacy C01 unlock fixture; all world input real',source_sha:(await state(page)).sha,difficulty,seed:4,visited,pressure,final},null,2));await info.attach('input-route.json',{path:report,contentType:'application/json'});
+ const report=info.outputPath('input-route.json');await writeFile(report,JSON.stringify({source:'legacy C01 unlock fixture; all world input real',source_sha:(await state(page)).sha,difficulty,seed:4,visited,losses,pressure,final},null,2));await info.attach('input-route.json',{path:report,contentType:'application/json'});
 });
