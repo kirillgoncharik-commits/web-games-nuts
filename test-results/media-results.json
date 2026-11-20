@@ -1,0 +1,1703 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.5/x64/bin/node",
+      "/home/runner/work/web-games-nuts/web-games-nuts/game/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.media.config.ts",
+      "--grep=RW2 atlas",
+      "--output=test-results/media",
+      "--reporter=line,json"
+    ],
+    "configFile": "/home/runner/work/web-games-nuts/web-games-nuts/game/playwright.media.config.ts",
+    "rootDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+        "commitHash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+        "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13",
+        "prTitle": "Restore C02/C03 route verification and record Cargo E/F diagnosis",
+        "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+        "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44743524692"
+      },
+      "gitCommit": {
+        "shortHash": "75cf7ee",
+        "hash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+        "subject": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58",
+        "body": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58\n",
+        "author": {
+          "name": "kirillgoncharik-commits",
+          "email": "kirill.goncharik@gmail.com",
+          "time": 1795180855000
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "time": 1795180855000
+        },
+        "branch": "HEAD"
+      },
+      "gitDiff": "diff --git a/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\nnew file mode 100644\nindex 0000000..5818582\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\n@@ -0,0 +1,43 @@\n+# Бэклог 01–02: диагностика до следующего игрового блока\n+\n+ТЗ: `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`, редакция 20.11.2026.\n+\n+## Зафиксированная база\n+\n+- Продуктовая ветка на GitHub: `codex/cinder-shift-final`, `1cc93376ff0013a306a98e554127009571974f58`.\n+- Опубликованный gameplay: `836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5`, alpha.12, web build `local.20261119T132107351Z`.\n+- Действующая integration: `release/cinder-shift/0.8.0-alpha.12/integration`, `94d55e28616e4385ef50737714aa529ab282b7df` при начале продолжения.\n+- Рабочая продуктовая линия: `codex/cinder-shift-product-backlog`; локальный предок `4bb496126643c15eda8145002706cbd75b2f94c7`. Runtime alpha.12 сохранён; SDK-правки остаются в integration.\n+- Форматы кампаний остаются `schema_version=1`, C01 `campaign-m05b3.0`, C02/C03 `worlds-rw3.1`. Эксперимент C01 не переносится.\n+\n+## 01: YU04-C\n+\n+Исходный сбой: Мира жива, 5 HP, x≈291, автодрайвер пытается достичь x264 для подъёма к верхнему контакту. [Исходный общий CI](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679062489) останавливается на `walk blocked 264`; архив пропущен.\n+\n+Причина в тесте: порог препятствия 20 px пропускал уступ y288…300 перед телом в приседе высотой 26 px. Драйвер включал точный ход с удержанием приседа, затем пытался прыгнуть. Реальный прыжок в приседе заблокирован штатными правилами, поэтому цель не достигалась. Это не установленная ошибка физики Миры или контакта распределителя.\n+\n+Из integration возвращается полезная общая правка `9a9d40c23e41f3b60e9783763b0185d53f9f61bd`: распознавание препятствия использует реальную высоту приседа 26 px. Геометрия, ввод героя, HP, сканер, игровые окна и пороги успешности тестов не меняются. После начальной legacy fixture маршрут использует только клавиатуру и обычные кнопки.\n+\n+На исправленном integration source [CI 44680860274](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274) подтверждает оба полных маршрута C02/C03: по 20 комнат и 5 миссий, финал и сохранённый результат после reload; runtime-checks и web artifact также PASS. Это доказательство для integration; продуктовый PR должен повторить проверку на собственной вершине. Более ранние неудачные прогоны остаются в истории.\n+\n+## 02: Cargo E/F\n+\n+Сверены реальные AI, `enemyPowered`, окно уязвимости и условия выхода. E питается независимо от E01; броня открывается после очереди. F без E01, до восстановления питания или с Relay POWER намеренно отключена и не блокирует путь к ячейке. Ошибочные HP-пипсы у отключённой F и устаревавшая под��казка брони E исправлены в прежней версии: [разбор и исходные доказательства](cargo-turrets-2026-11-16.md).\n+\n+20.11 на локальном кандидате повторно пройдены пять browser-сценариев `cargo-turrets.spec.ts`: E с E01 и без; F включается, стреляет и уничтожается; отключённая F не препятствует ячейке; staged-турель Airlock. Это одна начальная fixture, затем обычный ввод. Повтор после suspension/re-entry покрывается четырьмя моделями `turret-model.spec.ts`; миссионные Retry и повторные заходы дополнительно проверяются маршрутом Cargo.\n+\n+Исходный freeze E по конкретному пользовательскому сейву остаётся **NOT REPRODUCED**. Его нельзя объявить исправленным только по зелёной регрессии. Публичную сборку и сохранения эта итерация не меняет.\n+\n+## Дальше\n+\n+03: YU05-A–D, включая сохранение трёх подтверждённых связей. 13: накопительные счётчики и личные рекорды можно вести независимо. 04–12 остаются открытыми в исходном объёме ТЗ. Этот PR не является общим RC и не подтверждает физические мобильные устройства или человеческий плейтест.\n+\n+## Повторный локальный прогон 20.11\n+\n+`cargo-turrets.spec.ts` + `final-world-routes.spec.ts`: **7/7 PASS**, Chromium, 8.3 минуты. Оба мира пройдены обычным вводом, по 20 комнат/5 миссий, с финалом и сохранённым результатом после reload. Четыре модели E/F с повторным входом также PASS. Локальный runtime — неизменённая alpha.12; тестовая правка соответствует 683cba7bb027327bf94fb807a21c095e0c2f4c15. Более поздние изменения YU05 проверяются отдельно.\n+\n+## Дополнительная диагностика C02\n+\n+Exact-head artifact run 44685391664: runtime и C03 PASS; C02 останавливался в SW03-B при возврате на нижнюю линию. Автодрайвер выбирал x248, где тело стоя помещается лишь с зазором 1 px; фактическая допустимая остановка x242.5 оставляла Миру на краю опоры y272. При допуске хода до 7 px это неустойчивая плановая позиция. Выбор позиции теперь резервирует по 19 px от центра (11 px полутела + 7 px допуска + 1 px запаса). Модель воспроизводит исходное пересечение и проверяет безопасную позицию для каждого отклонения от −7 до +7. Штатное тело, скорость, прыжок и координаты игры не меняются. Локальная модель PASS; новый exact-head CI должен повторить весь маршрут.\n+\n+На последующем локальном alpha.14 source f4e5e7001346b3f21e1e49208b72a131b5356c4f оба мира и оба варианта Cargo с Retry прошли: 4/4, 10.2 минуты. Это независимое подтверждение штатных маршрутов; оно не заменяет повтор последней правки планировщика.\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 0b0fbd3..e4de3bd 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -7,6 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';\n import {state} from './helpers';\n import {writeFile} from 'node:fs/promises';\n import {standingJump,ground} from './route-helpers';\n+import {standingLaneClear,standingHalfWidth} from './world-route-clearance';\n \n // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.\n async function unlocked(page:Page){\n@@ -32,7 +33,10 @@ async function walk(page:Page,target:number,allowExit=false){\n   }\n   const feet=p.y+22;\n   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);\n-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n+  // A shelf whose underside is below the crouched head blocks the approach too.\n+  // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision\n+  // crouching, and then tried to jump while crouch was held forever.\n+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;\n   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);\n   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}\n@@ -43,8 +47,8 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar\n function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){\n  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;\n  const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610\n-  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)\n-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)\n+  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)\n+  &&standingLaneClear(s.solids,x,y)\n   // Plan the standing point separately from waiting for the actual safe phase.\n   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);\n  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;\n@@ -98,7 +102,7 @@ async function combat(page:Page){\n   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));\n   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);\n   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);\n-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));\n   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');\n   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');\ndiff --git a/tests/world-route-clearance.spec.ts b/tests/world-route-clearance.spec.ts\nnew file mode 100644\nindex 0000000..03e6fad\n--- /dev/null\n+++ b/tests/world-route-clearance.spec.ts\n@@ -0,0 +1,12 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import {approachError,standingLaneClear} from './world-route-clearance';\n+\n+test('SW03-B floor firing points reserve the actual approach error at the raised ledge',()=>{\n+ const solids=rooms['SW03-B'].solids;\n+ expect(standingLaneClear(solids,248)).toBe(false);\n+ expect(intersects({x:242.5-11,y:276,width:22,height:44},solids.find(r=>r.x===212)!)).toBe(true);\n+ const safe=[256,264,272].find(x=>standingLaneClear(solids,x))!;expect(safe).toBeDefined();\n+ for(let delta=-approachError;delta<=approachError;delta++)expect(solids.some(r=>intersects({x:safe+delta-11,y:276,width:22,height:44},r))).toBe(false);\n+});\ndiff --git a/tests/world-route-clearance.ts b/tests/world-route-clearance.ts\nnew file mode 100644\nindex 0000000..e1ca239\n--- /dev/null\n+++ b/tests/world-route-clearance.ts\n@@ -0,0 +1,11 @@\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import type {Rect} from '../games/cinder-shift/src/room-data';\n+\n+// walk() accepts a settled x within seven pixels. Reserve that error plus one\n+// pixel at each side when choosing a place to stand, rather than planning a\n+// theoretical 22px body one pixel beside a raised ledge.\n+export const approachError=7;\n+export const standingHalfWidth=11+approachError+1;\n+export function standingLaneClear(solids:readonly Rect[],x:number,feet=320){\n+ return !solids.some(r=>intersects({x:x-standingHalfWidth,y:feet-44,width:standingHalfWidth*2,height:44},r));\n+}",
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "commitHash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13",
+            "prTitle": "Restore C02/C03 route verification and record Cargo E/F diagnosis",
+            "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44743524692"
+          },
+          "gitCommit": {
+            "shortHash": "75cf7ee",
+            "hash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "subject": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58",
+            "body": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795180855000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795180855000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\nnew file mode 100644\nindex 0000000..5818582\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\n@@ -0,0 +1,43 @@\n+# Бэклог 01–02: диагностика до следующего игрового блока\n+\n+ТЗ: `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`, редакция 20.11.2026.\n+\n+## Зафиксированная база\n+\n+- Продуктовая ветка на GitHub: `codex/cinder-shift-final`, `1cc93376ff0013a306a98e554127009571974f58`.\n+- Опубликованный gameplay: `836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5`, alpha.12, web build `local.20261119T132107351Z`.\n+- Действующая integration: `release/cinder-shift/0.8.0-alpha.12/integration`, `94d55e28616e4385ef50737714aa529ab282b7df` при начале продолжения.\n+- Рабочая продуктовая линия: `codex/cinder-shift-product-backlog`; локальный предок `4bb496126643c15eda8145002706cbd75b2f94c7`. Runtime alpha.12 сохранён; SDK-правки остаются в integration.\n+- Форматы кампаний остаются `schema_version=1`, C01 `campaign-m05b3.0`, C02/C03 `worlds-rw3.1`. Эксперимент C01 не переносится.\n+\n+## 01: YU04-C\n+\n+Исходный сбой: Мира жива, 5 HP, x≈291, автодрайвер пытается достичь x264 для подъёма к верхнему контакту. [Исходный общий CI](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679062489) останавливается на `walk blocked 264`; архив пропущен.\n+\n+Причина в тесте: порог препятствия 20 px пропускал уступ y288…300 перед телом в приседе высотой 26 px. Драйвер включал точный ход с удержанием приседа, затем пытался прыгнуть. Реальный прыжок в приседе заблокирован штатными правилами, поэтому цель не достигалась. Это не установленная ошибка физики Миры или контакта распределителя.\n+\n+Из integration возвращается полезная общая правка `9a9d40c23e41f3b60e9783763b0185d53f9f61bd`: распознавание препятствия использует реальную высоту приседа 26 px. Геометрия, ввод героя, HP, сканер, игровые окна и пороги успешности тестов не меняются. После начальной legacy fixture маршрут использует только клавиатуру и обычные кнопки.\n+\n+На исправленном integration source [CI 44680860274](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274) подтверждает оба полных маршрута C02/C03: по 20 комнат и 5 миссий, финал и сохранённый результат после reload; runtime-checks и web artifact также PASS. Это доказательство для integration; продуктовый PR должен повторить проверку на собственной вершине. Более ранние неудачные прогоны остаются в истории.\n+\n+## 02: Cargo E/F\n+\n+Сверены реальные AI, `enemyPowered`, окно уязвимости и условия выхода. E питается независимо от E01; броня открывается после очереди. F без E01, до восстановления питания или с Relay POWER намеренно отключена и не блокирует путь к ячейке. Ошибочные HP-пипсы у отключённой F и устаревавшая под��казка брони E исправлены в прежней версии: [разбор и исходные доказательства](cargo-turrets-2026-11-16.md).\n+\n+20.11 на локальном кандидате повторно пройдены пять browser-сценариев `cargo-turrets.spec.ts`: E с E01 и без; F включается, стреляет и уничтожается; отключённая F не препятствует ячейке; staged-турель Airlock. Это одна начальная fixture, затем обычный ввод. Повтор после suspension/re-entry покрывается четырьмя моделями `turret-model.spec.ts`; миссионные Retry и повторные заходы дополнительно проверяются маршрутом Cargo.\n+\n+Исходный freeze E по конкретному пользовательскому сейву остаётся **NOT REPRODUCED**. Его нельзя объявить исправленным только по зелёной регрессии. Публичную сборку и сохранения эта итерация не меняет.\n+\n+## Дальше\n+\n+03: YU05-A–D, включая сохранение трёх подтверждённых связей. 13: накопительные счётчики и личные рекорды можно вести независимо. 04–12 остаются открытыми в исходном объёме ТЗ. Этот PR не является общим RC и не подтверждает физические мобильные устройства или человеческий плейтест.\n+\n+## Повторный локальный прогон 20.11\n+\n+`cargo-turrets.spec.ts` + `final-world-routes.spec.ts`: **7/7 PASS**, Chromium, 8.3 минуты. Оба мира пройдены обычным вводом, по 20 комнат/5 миссий, с финалом и сохранённым результатом после reload. Четыре модели E/F с повторным входом также PASS. Локальный runtime — неизменённая alpha.12; тестовая правка соответствует 683cba7bb027327bf94fb807a21c095e0c2f4c15. Более поздние изменения YU05 проверяются отдельно.\n+\n+## Дополнительная диагностика C02\n+\n+Exact-head artifact run 44685391664: runtime и C03 PASS; C02 останавливался в SW03-B при возврате на нижнюю линию. Автодрайвер выбирал x248, где тело стоя помещается лишь с зазором 1 px; фактическая допустимая остановка x242.5 оставляла Миру на краю опоры y272. При допуске хода до 7 px это неустойчивая плановая позиция. Выбор позиции теперь резервирует по 19 px от центра (11 px полутела + 7 px допуска + 1 px запаса). Модель воспроизводит исходное пересечение и проверяет безопасную позицию для каждого отклонения от −7 до +7. Штатное тело, скорость, прыжок и координаты игры не меняются. Локальная модель PASS; новый exact-head CI должен повторить весь маршрут.\n+\n+На последующем локальном alpha.14 source f4e5e7001346b3f21e1e49208b72a131b5356c4f оба мира и оба варианта Cargo с Retry прошли: 4/4, 10.2 минуты. Это независимое подтверждение штатных маршрутов; оно не заменяет повтор последней правки планировщика.\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 0b0fbd3..e4de3bd 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -7,6 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';\n import {state} from './helpers';\n import {writeFile} from 'node:fs/promises';\n import {standingJump,ground} from './route-helpers';\n+import {standingLaneClear,standingHalfWidth} from './world-route-clearance';\n \n // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.\n async function unlocked(page:Page){\n@@ -32,7 +33,10 @@ async function walk(page:Page,target:number,allowExit=false){\n   }\n   const feet=p.y+22;\n   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);\n-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n+  // A shelf whose underside is below the crouched head blocks the approach too.\n+  // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision\n+  // crouching, and then tried to jump while crouch was held forever.\n+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;\n   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);\n   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}\n@@ -43,8 +47,8 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar\n function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){\n  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;\n  const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610\n-  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)\n-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)\n+  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)\n+  &&standingLaneClear(s.solids,x,y)\n   // Plan the standing point separately from waiting for the actual safe phase.\n   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);\n  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;\n@@ -98,7 +102,7 @@ async function combat(page:Page){\n   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));\n   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);\n   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);\n-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));\n   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');\n   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');\ndiff --git a/tests/world-route-clearance.spec.ts b/tests/world-route-clearance.spec.ts\nnew file mode 100644\nindex 0000000..03e6fad\n--- /dev/null\n+++ b/tests/world-route-clearance.spec.ts\n@@ -0,0 +1,12 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import {approachError,standingLaneClear} from './world-route-clearance';\n+\n+test('SW03-B floor firing points reserve the actual approach error at the raised ledge',()=>{\n+ const solids=rooms['SW03-B'].solids;\n+ expect(standingLaneClear(solids,248)).toBe(false);\n+ expect(intersects({x:242.5-11,y:276,width:22,height:44},solids.find(r=>r.x===212)!)).toBe(true);\n+ const safe=[256,264,272].find(x=>standingLaneClear(solids,x))!;expect(safe).toBeDefined();\n+ for(let delta=-approachError;delta<=approachError;delta++)expect(solids.some(r=>intersects({x:safe+delta-11,y:276,width:22,height:44},r))).toBe(false);\n+});\ndiff --git a/tests/world-route-clearance.ts b/tests/world-route-clearance.ts\nnew file mode 100644\nindex 0000000..e1ca239\n--- /dev/null\n+++ b/tests/world-route-clearance.ts\n@@ -0,0 +1,11 @@\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import type {Rect} from '../games/cinder-shift/src/room-data';\n+\n+// walk() accepts a settled x within seven pixels. Reserve that error plus one\n+// pixel at each side when choosing a place to stand, rather than planning a\n+// theoretical 22px body one pixel beside a raised ledge.\n+export const approachError=7;\n+export const standingHalfWidth=11+approachError+1;\n+export function standingLaneClear(solids:readonly Rect[],x:number,feet=320){\n+ return !solids.some(r=>intersects({x:x-standingHalfWidth,y:feet-44,width:standingHalfWidth*2,height:44},r));\n+}",
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/sprint2-media\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "commitHash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13",
+            "prTitle": "Restore C02/C03 route verification and record Cargo E/F diagnosis",
+            "prBaseHash": "1cc93376ff0013a306a98e554127009571974f58",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44743524692"
+          },
+          "gitCommit": {
+            "shortHash": "75cf7ee",
+            "hash": "75cf7ee16c3b98b51e6b0e09591f8d1decef0afd",
+            "subject": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58",
+            "body": "Merge 8c2fd52f6ae099febffb8189240f6e76ebf96d51 into 1cc93376ff0013a306a98e554127009571974f58\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795180855000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795180855000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\nnew file mode 100644\nindex 0000000..5818582\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-p0-2026-11-20.ru.md\n@@ -0,0 +1,43 @@\n+# Бэклог 01–02: диагностика до следующего игрового блока\n+\n+ТЗ: `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`, редакция 20.11.2026.\n+\n+## Зафиксированная база\n+\n+- Продуктовая ветка на GitHub: `codex/cinder-shift-final`, `1cc93376ff0013a306a98e554127009571974f58`.\n+- Опубликованный gameplay: `836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5`, alpha.12, web build `local.20261119T132107351Z`.\n+- Действующая integration: `release/cinder-shift/0.8.0-alpha.12/integration`, `94d55e28616e4385ef50737714aa529ab282b7df` при начале продолжения.\n+- Рабочая продуктовая линия: `codex/cinder-shift-product-backlog`; локальный предок `4bb496126643c15eda8145002706cbd75b2f94c7`. Runtime alpha.12 сохранён; SDK-правки остаются в integration.\n+- Форматы кампаний остаются `schema_version=1`, C01 `campaign-m05b3.0`, C02/C03 `worlds-rw3.1`. Эксперимент C01 не переносится.\n+\n+## 01: YU04-C\n+\n+Исходный сбой: Мира жива, 5 HP, x≈291, автодрайвер пытается достичь x264 для подъёма к верхнему контакту. [Исходный общий CI](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679062489) останавливается на `walk blocked 264`; архив пропущен.\n+\n+Причина в тесте: порог препятствия 20 px пропускал уступ y288…300 перед телом в приседе высотой 26 px. Драйвер включал точный ход с удержанием приседа, затем пытался прыгнуть. Реальный прыжок в приседе заблокирован штатными правилами, поэтому цель не достигалась. Это не установленная ошибка физики Миры или контакта распределителя.\n+\n+Из integration возвращается полезная общая правка `9a9d40c23e41f3b60e9783763b0185d53f9f61bd`: распознавание препятствия использует реальную высоту приседа 26 px. Геометрия, ввод героя, HP, сканер, игровые окна и пороги успешности тестов не меняются. После начальной legacy fixture маршрут использует только клавиатуру и обычные кнопки.\n+\n+На исправленном integration source [CI 44680860274](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44680860274) подтверждает оба полных маршрута C02/C03: по 20 комнат и 5 миссий, финал и сохранённый результат после reload; runtime-checks и web artifact также PASS. Это доказательство для integration; продуктовый PR должен повторить проверку на собственной вершине. Более ранние неудачные прогоны остаются в истории.\n+\n+## 02: Cargo E/F\n+\n+Сверены реальные AI, `enemyPowered`, окно уязвимости и условия выхода. E питается независимо от E01; броня открывается после очереди. F без E01, до восстановления питания или с Relay POWER намеренно отключена и не блокирует путь к ячейке. Ошибочные HP-пипсы у отключённой F и устаревавшая под��казка брони E исправлены в прежней версии: [разбор и исходные доказательства](cargo-turrets-2026-11-16.md).\n+\n+20.11 на локальном кандидате повторно пройдены пять browser-сценариев `cargo-turrets.spec.ts`: E с E01 и без; F включается, стреляет и уничтожается; отключённая F не препятствует ячейке; staged-турель Airlock. Это одна начальная fixture, затем обычный ввод. Повтор после suspension/re-entry покрывается четырьмя моделями `turret-model.spec.ts`; миссионные Retry и повторные заходы дополнительно проверяются маршрутом Cargo.\n+\n+Исходный freeze E по конкретному пользовательскому сейву остаётся **NOT REPRODUCED**. Его нельзя объявить исправленным только по зелёной регрессии. Публичную сборку и сохранения эта итерация не меняет.\n+\n+## Дальше\n+\n+03: YU05-A–D, включая сохранение трёх подтверждённых связей. 13: накопительные счётчики и личные рекорды можно вести независимо. 04–12 остаются открытыми в исходном объёме ТЗ. Этот PR не является общим RC и не подтверждает физические мобильные устройства или человеческий плейтест.\n+\n+## Повторный локальный прогон 20.11\n+\n+`cargo-turrets.spec.ts` + `final-world-routes.spec.ts`: **7/7 PASS**, Chromium, 8.3 минуты. Оба мира пройдены обычным вводом, по 20 комнат/5 миссий, с финалом и сохранённым результатом после reload. Четыре модели E/F с повторным входом также PASS. Локальный runtime — неизменённая alpha.12; тестовая правка соответствует 683cba7bb027327bf94fb807a21c095e0c2f4c15. Более поздние изменения YU05 проверяются отдельно.\n+\n+## Дополнительная диагностика C02\n+\n+Exact-head artifact run 44685391664: runtime и C03 PASS; C02 останавливался в SW03-B при возврате на нижнюю линию. Автодрайвер выбирал x248, где тело стоя помещается лишь с зазором 1 px; фактическая допустимая остановка x242.5 оставляла Миру на краю опоры y272. При допуске хода до 7 px это неустойчивая плановая позиция. Выбор позиции теперь резервирует по 19 px от центра (11 px полутела + 7 px допуска + 1 px запаса). Модель воспроизводит исходное пересечение и проверяет безопасную позицию для каждого отклонения от −7 до +7. Штатное тело, скорость, прыжок и координаты игры не меняются. Локальная модель PASS; новый exact-head CI должен повторить весь маршрут.\n+\n+На последующем локальном alpha.14 source f4e5e7001346b3f21e1e49208b72a131b5356c4f оба мира и оба варианта Cargo с Retry прошли: 4/4, 10.2 минуты. Это независимое подтверждение штатных маршрутов; оно не заменяет повтор последней правки планировщика.\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 0b0fbd3..e4de3bd 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -7,6 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';\n import {state} from './helpers';\n import {writeFile} from 'node:fs/promises';\n import {standingJump,ground} from './route-helpers';\n+import {standingLaneClear,standingHalfWidth} from './world-route-clearance';\n \n // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.\n async function unlocked(page:Page){\n@@ -32,7 +33,10 @@ async function walk(page:Page,target:number,allowExit=false){\n   }\n   const feet=p.y+22;\n   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);\n-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n+  // A shelf whose underside is below the crouched head blocks the approach too.\n+  // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision\n+  // crouching, and then tried to jump while crouch was held forever.\n+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);\n   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;\n   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);\n   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}\n@@ -43,8 +47,8 @@ async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboar\n function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){\n  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;\n  const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610\n-  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-11>=r.x&&x+11<=r.x+r.width)\n-  &&!s.solids.some((r:any)=>r.y<y&&r.y+r.height>y-44&&r.x<x+11&&r.x+r.width>x-11)\n+  &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)\n+  &&standingLaneClear(s.solids,x,y)\n   // Plan the standing point separately from waiting for the actual safe phase.\n   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);\n  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;\n@@ -98,7 +102,7 @@ async function combat(page:Page){\n   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));\n   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);\n   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);\n-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));\n   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));\n   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');\n   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');\ndiff --git a/tests/world-route-clearance.spec.ts b/tests/world-route-clearance.spec.ts\nnew file mode 100644\nindex 0000000..03e6fad\n--- /dev/null\n+++ b/tests/world-route-clearance.spec.ts\n@@ -0,0 +1,12 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import {approachError,standingLaneClear} from './world-route-clearance';\n+\n+test('SW03-B floor firing points reserve the actual approach error at the raised ledge',()=>{\n+ const solids=rooms['SW03-B'].solids;\n+ expect(standingLaneClear(solids,248)).toBe(false);\n+ expect(intersects({x:242.5-11,y:276,width:22,height:44},solids.find(r=>r.x===212)!)).toBe(true);\n+ const safe=[256,264,272].find(x=>standingLaneClear(solids,x))!;expect(safe).toBeDefined();\n+ for(let delta=-approachError;delta<=approachError;delta++)expect(solids.some(r=>intersects({x:safe+delta-11,y:276,width:22,height:44},r))).toBe(false);\n+});\ndiff --git a/tests/world-route-clearance.ts b/tests/world-route-clearance.ts\nnew file mode 100644\nindex 0000000..e1ca239\n--- /dev/null\n+++ b/tests/world-route-clearance.ts\n@@ -0,0 +1,11 @@\n+import {intersects} from '../games/cinder-shift/src/geometry';\n+import type {Rect} from '../games/cinder-shift/src/room-data';\n+\n+// walk() accepts a settled x within seven pixels. Reserve that error plus one\n+// pixel at each side when choosing a place to stand, rather than planning a\n+// theoretical 22px body one pixel beside a raised ledge.\n+export const approachError=7;\n+export const standingHalfWidth=11+approachError+1;\n+export function standingLaneClear(solids:readonly Rect[],x:number,feet=320){\n+ return !solids.some(r=>intersects({x:x-standingHalfWidth,y:feet-44,width:standingHalfWidth*2,height:44},r));\n+}",
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "snapshotDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "headless": true,
+          "locale": "ru-RU",
+          "viewport": {
+            "width": 1280,
+            "height": 844
+          },
+          "launchOptions": {
+            "args": [
+              "--mute-audio"
+            ]
+          },
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/build-rework-harness.mjs && npm run preview",
+      "env": {
+        "CINDER_QA_MUTE": "0",
+        "CINDER_QA_HARNESS": "1"
+      },
+      "url": "http://127.0.0.1:4175/games/cinder-shift/",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "sprint2-media.spec.ts",
+      "file": "sprint2-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "RW2 atlas airlock A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3469,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:21:44.190Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1b4b285050659d11381f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3257,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:21:49.413Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4443431d155715d129eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3329,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:21:52.691Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f9976ca74fb928b95479",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3722,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:21:56.034Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4e875bdf7d732e256ed9",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3715,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:21:59.772Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9c479fd2f778b0d972f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3271,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:03.506Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f753abb7a569ff5444c0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3284,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:06.791Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-24cc5198737cee26f514",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3441,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:10.093Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-68767e4f4cfe33da9d28",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3409,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:13.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-21a702fff591c5476c68",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3272,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:16.973Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7e9883cb762114bce11b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3303,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:20.259Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-85502fa49890477ff235",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3236,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:23.574Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-8561a94337798d81af26",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3260,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:26.823Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b86477d468b148bacba7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3199,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:30.096Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e246567293bd40bf9f06",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3287,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:33.309Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d577898d4de003d6ebea",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3237,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:36.610Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e874b94f83a19b427073",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3267,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:39.861Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-db01690e207019570f19",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3273,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:43.141Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-19e5ffa54f8416cec8d3",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3250,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:46.426Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-aec5644e0e6bd6b7ddcf",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3292,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:49.690Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-2672a4da4663da1e821c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3219,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:52.992Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-46558dfc15781cd2b8ce",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3323,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:56.224Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-705f85795ab64640dad7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3281,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:22:59.564Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c86ad89e05408701d9e0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3J",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3268,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:02.858Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7f2ca94829e3de612a7a",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3K",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3269,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:06.140Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-a725ed176942b050b380",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3351,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:09.423Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-32eb1907149e876c4e77",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3471,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:12.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-120f5283347864d30674",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3269,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:16.276Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1111fa5738f61ef6076e",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3249,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:19.557Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-dacf339092dc2e17f13c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3235,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:22.822Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-80b789570afee5ecea84",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3211,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:26.069Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9d809b96f90841132251",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3372,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:29.291Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-53c8ca85fb0c2f86bacd",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3328,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:32.677Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-50977b8791aca16e47eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3249,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:36.020Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-76ada261c688352ffea0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3278,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:39.283Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b77124b9213d8d1d290f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3305,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:42.572Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-38145a3b0ad2d4aea7f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3290,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:45.890Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6e8591ee921194c68a0b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3296,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:49.192Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-13fa3c377137f8ad0a55",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3233,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:52.501Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-afb00db3087bdbb681a6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3205,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:55.750Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-3a61e6555d4d63bd95c6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3253,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:23:58.971Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4bf76a70bf11cf488c5f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3345,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:24:02.241Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d3f4fe4b63abacab718f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3350,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:24:05.608Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c728c6b9d929f3fda8a4",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3271,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T13:24:08.971Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6dac771e7967e41fa030",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-20T13:21:38.559Z",
+    "duration": 153749.56100000002,
+    "expected": 44,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
