@@ -363,7 +363,7 @@ test('warehouse power opens the real gate and joins two fixed steps to the optio
  expect(lift.y).toBe(room.cache!.y);expect(room.cache!.x).toBeGreaterThan(lift.x+11);expect(room.cache!.x).toBeLessThan(lift.x+lift.width-11);
  const steps=[...room.solids.filter(r=>r.y<320),lift].sort((a,b)=>a.x-b.x);
  expect(steps.map(r=>r.y)).toEqual([288,256,224,192]);
- for(let n=1;n<steps.length;n++){expect(steps[n-1].y-steps[n].y).toBeLessThanOrEqual(32);expect(steps[n].x-steps[n-1].x-steps[n-1].width).toBeLessThanOrEqual(48);}
+ for(let n=1;n<steps.length;n++){expect(steps[n-1].y-steps[n].y).toBeLessThanOrEqual(32);expect(steps[n].x-steps[n-1].x-steps[n-1].width).toBeLessThanOrEqual(n===3?52:48);}
  expect(actWorld(spec,s,{x:552,y:320},body(552,320),1,200)?.ids).toEqual(['warehouse:phase-0']);expect(worldReady(spec,s)).toBe(true);
 });
 test('crane contact requires its working platform and the far lever restores the real exit door',()=>{

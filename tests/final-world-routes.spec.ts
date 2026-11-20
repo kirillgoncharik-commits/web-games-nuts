@@ -85,7 +85,9 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
   await walk(page,204);await ground(page,288);await standingJump(page,328);await ground(page,276);
  }
  if(entry.room==='YU02-D'&&point.y===288&&entry.player.y+22>290){
-  await walk(page,176);await ground(page,288);await standingJump(page,264);await ground(page,288);
+  if(entry.player.x>296){await walk(page,316);await ground(page,320);}
+  else{await walk(page,176);await ground(page,288);}
+  await standingJump(page,264);await ground(page,288);
  }
  if(entry.room==='YU04-B'&&point.y===280&&entry.player.y+22>282){
   await walk(page,196);await ground(page,288);await standingJump(page,300);await ground(page,280);
