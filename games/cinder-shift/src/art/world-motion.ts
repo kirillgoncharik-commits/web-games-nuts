@@ -43,7 +43,7 @@ export class WorldMotionArt{
       const x=roomPlacement(this.room.id),y=65;
       const p=this.rig.parts.find(p=>p.keys?.length)??this.rig.parts[0],pose=sampleMotion(p,motionNow,this.rig.duration,reduced);
       const sector=this.room.id.slice(0,4) as keyof typeof productionArt.sectors,frame=productionArt.sectors[sector][5];
-      this.sprites.draw(frame,x+80+pose.x,y+104+pose.y,160,104,1.65,1,.68+pose.alpha*.16).setAngle(Math.sin(pose.rotation*Math.PI/180)*2);
+      this.sprites.draw(frame,x+80+pose.x+(reduced?0:Math.round(Math.sin(motionNow*Math.PI/1200)*3)),y+104+pose.y+(reduced?0:Math.round(Math.cos(motionNow*Math.PI/1200)*3)),160,104,1.65,1,.68+pose.alpha*.16).setAngle(Math.sin(pose.rotation*Math.PI/180)*2);
       this.sprites.end();
     }
     const g=this.feedback;g.clear();this.cues=this.cues.filter(c=>now-c.born<480).slice(-4);

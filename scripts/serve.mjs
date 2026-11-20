@@ -26,7 +26,8 @@ const mutedAudio=`
     };
   })();
 `;
-const csp="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'";
+const sdkSources=process.env.CINDER_TARGET==='playgama'?' https://bridge.playgama.com':'';
+const csp=`default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com${sdkSources}; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self'`;
 createServer(async(req,res)=>{
   try{
     const url=new URL(req.url,'http://localhost');
