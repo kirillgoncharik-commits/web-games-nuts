@@ -1,3 +1,4 @@
+import {fireFromCover} from './defensive-fire';
 import {campaignPressure} from './campaign-pressure';
 import {powerTarget,worldContext} from '../games/cinder-shift/src/session/world-runtime';
 import {rooms} from '../games/cinder-shift/src/room-data';
@@ -114,7 +115,7 @@ async function combat(page:Page){
   // Fire while approaching cover, especially when a switchback crosses a patrol.
   await page.keyboard.down('j');
   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
-  await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
+  await fireFromCover(page,[en.id]);
  }
 }
 async function solveRoom(page:Page){

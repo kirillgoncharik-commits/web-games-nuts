@@ -1,3 +1,4 @@
+import {fireFromCover} from './defensive-fire';
 import {expect,type Page} from '@playwright/test';
 export type AirlockAction='right'|'left'|'jump'|'crouch'|'fire'|'interact';
 export type RouteInput=((action:AirlockAction,down:boolean)=>Promise<void>)&{set?:(changes:Partial<Record<AirlockAction,boolean>>)=>Promise<void>};
@@ -24,8 +25,9 @@ export function airlockDriver(page:Page,input?:RouteInput){
  return{action,ground,move,jump,clear,next,wait};
 }
 
-export async function airlockExtension(page:Page,input?:RouteInput,{salvage=false}:{salvage?:boolean}={}){
- const {action,ground,move,jump,clear,next,wait}=airlockDriver(page,input);
+export async function airlockExtension(page:Page,input?:RouteInput,{salvage=false,evade=false}:{salvage?:boolean;evade?:boolean}={}){
+ const {action,ground,move,jump,clear:holdFire,next,wait}=airlockDriver(page,input);
+ const clear=evade?(ids:string[])=>fireFromCover(page,ids):holdFire;
 
  await next('M1A');
  await jump(114,172);await ground(288);await jump(178,292);await ground(256);
