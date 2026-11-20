@@ -1,0 +1,1703 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/web-games-nuts/web-games-nuts/game/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.media.config.ts",
+      "--grep=RW2 atlas",
+      "--output=test-results/media",
+      "--reporter=line,json"
+    ],
+    "configFile": "/home/runner/work/web-games-nuts/web-games-nuts/game/playwright.media.config.ts",
+    "rootDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/d8da0b61313c9441c5e6e7619080e624da734bc8",
+        "commitHash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+        "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/17",
+        "prTitle": "Cinder Shift alpha.14: preserve personal records through platform storage",
+        "prBaseHash": "485204528c16eb4ff0559508f8315a77844fb523",
+        "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44748447002"
+      },
+      "gitCommit": {
+        "shortHash": "d8da0b6",
+        "hash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+        "subject": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523",
+        "body": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523\n",
+        "author": {
+          "name": "kirillgoncharik-commits",
+          "email": "kirill.goncharik@gmail.com",
+          "time": 1795182864000
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "time": 1795182864000
+        },
+        "branch": "HEAD"
+      },
+      "gitDiff": "diff --git a/docs/cinder-shift/alpha14-records-transports.ru.md b/docs/cinder-shift/alpha14-records-transports.ru.md\nnew file mode 100644\nindex 0000000..a5dc16d\n--- /dev/null\n+++ b/docs/cinder-shift/alpha14-records-transports.ru.md\n@@ -0,0 +1,21 @@\n+# Alpha.14 — transport-ready storage for personal records\n+\n+20 ноября 2026. Продолжение блока 08/13 поверх продуктового PR #16.\n+\n+## Поведение\n+\n+SaveService принимает тот же RecordStorage, который используют отдельные SDK-ветки. Счётчики больше не требуют прямого IndexedDB при выбранном платформенном транспорте. HostRecordStorage и BridgeRecordStorage выполняют read/merge/write профиля, полную резервную копию и при необходимости quarantine внутри единого обновления envelope. Прочие записи кампаний, PB и настроек сохраняются.\n+\n+Очередь общая для экземпляров адаптера по ключу, а Web Locks координирует вкладки одного origin, включая асинхронный SDK read/write. Ошибка не отравляет очередь; повтор с тем же накопительным фрагментом не дублирует итог. Будущая версия внешнего envelope или статистики блокирует замену. При недоступном SDK нет перехода на другое хранилище. Интерфейс получает реальный scope от SaveService: устройство или профиль площадки.\n+\n+## Проверки в этом PR\n+\n+Добавлены десять контрактных сценариев (по пять для guest/Bridge): независимые экземпляры/конкурентная запись; отказ и повтор; backup/quarantine; будущие и повреждённые форматы; повторное чтение настроек и счётчиков. Ещё два браузерных сценария используют две реальные вкладки и медленный управляемый SDK mock. Они включены в матрицу Chromium/Firefox/WebKit.\n+\n+Исходник должен пройти собственный CI. Предыдущие локальные 60/60 и полные маршруты относятся к предыдущему продуктовому source, а не являются доказательством этой новой реализации.\n+\n+## Границы\n+\n+Адаптеры подготовлены рядом с продуктовой реализацией. Подключение в initialize/lifecycle Яндекса и Playgama, сборки SDK, события pause/ad/reward и preview выполняются при переносе в существующие release-ветки. В этом PR основной web продолжает использовать IndexedDB. SDK-ветки и опубликованные сборки не изменены.\n+\n+Web Locks обеспечивает согласование в пределах origin. При отсутствии API остаётся очередь экземпляров в одном JS-контексте; межвкладочная гарантия в таком браузере не заявляется. Конфликт облачных записей с разных устройств определяется SDK и не решается локальной блокировкой. Физические устройства, настоящее SDK-хранилище, upgrade/rollback старых опубликованных runtime и общий RC остаются открытыми.\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 0e242cf..82897b5 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Team total · linked by code\",\n   \"records.secondsValue\": \"{seconds} s\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Your result\"\n+  \"records.ownResult\": \"Your result\",\n+  \"records.platform\": \"Saved in this platform profile\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 670ab0e..35b7f68 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Командный итог · связан кодом\",\n   \"records.secondsValue\": \"{seconds} с\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Твой результат\"\n+  \"records.ownResult\": \"Твой результат\",\n+  \"records.platform\": \"Сохранено в профиле этой площадки\"\n }\ndiff --git a/games/cinder-shift/src/session/host-storage.ts b/games/cinder-shift/src/session/host-storage.ts\nnew file mode 100644\nindex 0000000..f605517\n--- /dev/null\n+++ b/games/cinder-shift/src/session/host-storage.ts\n@@ -0,0 +1,44 @@\n+export type RecordMutation=(records:Readonly<Record<string,unknown>>)=>Record<string,unknown>;\n+export interface RecordStorage{\n+ read(key:string):Promise<unknown>;\n+ writeMany(values:Record<string,unknown>):Promise<void>;\n+ updateMany(mutate:RecordMutation):Promise<Record<string,unknown>>;\n+}\n+export interface BridgeStorage{get(key:string,tryParseJson?:boolean):Promise<unknown>;set(key:string,value:unknown):Promise<void>;}\n+const queues=new Map<string,Promise<void>>();\n+/** Web Locks coordinate same-origin tabs; the queue also covers browsers without that API. */\n+function serialized<T>(key:string,operation:()=>Promise<T>|T):Promise<T>{\n+ const name='cinder-records:'+key,previous=queues.get(name)||Promise.resolve();\n+ const result=previous.then(()=>typeof navigator!=='undefined'&&navigator.locks?navigator.locks.request(name,operation):operation());\n+ queues.set(name,result.then(()=>{},()=>{}));return result;\n+}\n+function records(text:unknown):Record<string,unknown>{\n+ if(text===null||text===undefined)return{};\n+ if(typeof text!=='string')throw Error('host_storage_corrupt');\n+ const data:unknown=JSON.parse(text);\n+ if(!data||typeof data!=='object'||Array.isArray(data))throw Error('host_storage_corrupt');\n+ const envelope=data as {version?:unknown;records?:unknown};\n+ if(envelope.version!==1||!envelope.records||typeof envelope.records!=='object'||Array.isArray(envelope.records))throw Error('host_storage_incompatible');\n+ return envelope.records as Record<string,unknown>;\n+}\n+const envelope=(values:Record<string,unknown>)=>JSON.stringify({version:1,records:values});\n+/** A guest profile keeps all records in one atomic localStorage envelope. */\n+export class HostRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:Pick<Storage,'getItem'|'setItem'>,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,()=>structuredClone(records(this.storage.getItem(this.key))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,()=>{\n+  const current=records(this.storage.getItem(this.key)),updates=structuredClone(mutate(structuredClone(current)));\n+  this.storage.setItem(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\n+/** Only the SDK touches its backing store; rejected writes leave the queue retryable. */\n+export class BridgeRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:BridgeStorage,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,async()=>structuredClone(records(await this.storage.get(this.key,false))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,async()=>{\n+  const current=records(await this.storage.get(this.key,false)),updates=structuredClone(mutate(structuredClone(current)));\n+  await this.storage.set(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 920e01b..1c5ef80 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -1,3 +1,4 @@\n+import type {RecordStorage} from './host-storage';\n import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';\n import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';\n import {contentVersion,type CampaignData} from './campaign';\n@@ -86,13 +87,16 @@ export class SaveService{\n   hasExistingProfile=false;baseCompleted=false;completionProfile:CompletionProfile={schema_version:1,base_game_id:'r01',completion_ids:[]};completionProfileValid=true;\n   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;\n   onStatus:()=>void=()=>{};\n-  constructor(readonly build:string){}\n+  constructor(readonly build:string,private hostStorage?:RecordStorage){}\n+  get storageScope():'device'|'platform'{return this.hostStorage?'platform':'device';}\n+  useHostStorage(storage:RecordStorage){if(this.available||this.db)throw Error('storage_already_connected');this.hostStorage=storage;}\n   private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}\n   async connect(){\n+    if(this.hostStorage){try{await this.hostStorage.read('settings');this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.message:'host_storage_error';this.available=false;this.status('unavailable');return false;}}\n     if(this.available&&this.db)return true;this.db?.close();\n     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}\n   }\n-  private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n+  private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n   async loadModeData(key:'personal-records.v1'|'personal-records.backup.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{\n     if(!await this.connect())return{ok:false};\n     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}\n@@ -107,7 +111,7 @@ export class SaveService{\n     const operation=async()=>{\n       if(!await this.connect())return null;\n       try{\n-        const result=await new Promise<PersonalRecords>((resolve,reject)=>{\n+        const result=this.hostStorage?await this.updateHostPersonalRecords(snapshot):await new Promise<PersonalRecords>((resolve,reject)=>{\n           const tx=this.db!.transaction('records','readwrite'),store=tx.objectStore('records'),request=store.get('personal-records.v1');let merged:PersonalRecords;\n           tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);\n           const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};\n@@ -117,14 +121,24 @@ export class SaveService{\n     };\n     const result=this.queue.then(operation,operation);this.queue=result;return result;\n   }\n+  private async updateHostPersonalRecords(snapshot:PersonalRecords):Promise<PersonalRecords>{\n+    const updates=await this.hostStorage!.updateMany(records=>{\n+      const raw=records['personal-records.v1'],recovered=object(raw)&&raw.version===1&&!validatePersonalRecords(raw);\n+      const backup=records['personal-records.backup.v1'];\n+      if(recovered&&!validatePersonalRecords(backup))throw Error('statistics_backup_unreadable');\n+      const merged=mergePersonalRecords(recovered?backup:raw,snapshot);\n+      return{'personal-records.v1':merged,'personal-records.backup.v1':merged,...(recovered?{'personal-records.quarantine.v1':raw}:{})};\n+    });\n+    return updates['personal-records.v1'] as PersonalRecords;\n+  }\n   async load(locale:'en'|'ru'){\n     if(!await this.connect())return{campaign:null,settings:defaults(locale)};\n-    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n+    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=this.hostStorage?null:localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n   }\n   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{\n     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;\n-    if(!this.available||!this.db)return false;\n-    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n+    if(!this.available||!this.db&&!this.hostStorage)return false;\n+    try{if(this.hostStorage)await this.hostStorage.writeMany({[key]:snapshot,...(profile?{'world-profile.v1':profile}:{})});else await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n   };const result=this.queue.then(operation,operation);this.queue=result;return result;}\n   saveCampaign(campaign:CampaignData,replace=false){\n     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}\n@@ -140,7 +154,7 @@ export class SaveService{\n     const record:WorldEnvelope={schema_version:1,content_version:'worlds-rw3.1',game_id:id,build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};\n     const issue=validateWorldSave(record,id);if(issue){this.status(issue);return Promise.resolve(false);}return this.put(`world.${id}.v1`,record);\n   }\n-  saveSettings(settings:Settings){try{localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n+  saveSettings(settings:Settings){try{if(!this.hostStorage)localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n   async recordCampaign(campaign:CampaignData){if(!this.available||this.blocked||!this.careerValid||!isCompleteBaseCampaign(campaign))return false;if(this.careerRuns.some(run=>run.campaign_id===campaign.campaign_id))return true;const run:CompletedRun={ruleset_id:campaign.run_stats.ruleset_id||'legacy-rc1',campaign_id:campaign.campaign_id,content_version:contentVersion,completed_at:new Date().toISOString(),active_ms:campaign.run_stats.active_ms,deaths:campaign.run_stats.deaths,score:campaign.run_stats.score,foundry_route:campaign.run_stats.foundry_route,nodes:[...campaign.nodes],difficulty:'standard',assistance:campaign.run_stats.assisted?'assisted':'standard',history_complete:campaign.run_stats.history_complete},runs=[...this.careerRuns,run];const saved=Boolean(await this.put('career',{version:1,runs}));if(saved)this.careerRuns=runs;return saved;}\n   async retry(campaign:CampaignData|null,settings:Settings){if(!await this.connect())return false;await this.saveSettings(settings);return campaign?this.saveCampaign(campaign):true;}\n }\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex a8c0ca8..c1a6c70 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -372,7 +372,7 @@ export class Application{\n     $('overlay').classList.remove('boot-loading');$('overlay').classList.toggle('promo-menu',this.screen==='menu');$('overlay').classList.toggle('workshop-overlay',this.screen==='research'||this.screen==='map');\n     ui.show(()=>{\n       switch(this.screen){\n-        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n+        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{scope:this.saves.storageScope,data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n         case'campaigns':{\n           const earned=this.saves.baseCompleted||isCompleteBaseCampaign(this.worldCampaigns.get('r01')?.data||null);\n           const cards=[{id:'r01',title:'world.c01',image:'./assets/m06/'+promo.menu.file},{id:'c02-small-world',title:'world.c02',image:'./assets/world-concepts/small-world.svg'},{id:'c03-adriatic-1986',title:'world.c03',image:'./assets/world-concepts/adriatic.svg'}];\ndiff --git a/games/cinder-shift/src/ui/personal-records.ts b/games/cinder-shift/src/ui/personal-records.ts\nindex 01c85c7..0a4d348 100644\n--- a/games/cinder-shift/src/ui/personal-records.ts\n+++ b/games/cinder-shift/src/ui/personal-records.ts\n@@ -10,14 +10,14 @@ import type {RunModeId} from '../session/run-clock';\n import {makeChallengeSpec} from '../session/challenge-spec';\n \n export type RecordsTab='summary'|'campaigns'|'challenges';\n-type Input={data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n+type Input={scope:'device'|'platform';data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n export function personalRecordsView(i18n:I18n,ui:Panels,input:Input){\n  const t=(key:string,params:Record<string,string|number>={})=>i18n.t(key,params),n=(value:number)=>i18n.number(value,0);\n  const duration=(ms:number)=>{const seconds=Math.floor(ms/1000);return t('records.duration',{hours:Math.floor(seconds/3600),minutes:Math.floor(seconds/60)%60,seconds:seconds%60});};\n  const trialDuration=(ms:number)=>t('records.secondsValue',{seconds:i18n.number(ms/1000,3)});\n  const metric=(title:string,value:string,testId='')=>'<div><dt>'+e(title)+'</dt><dd'+(testId?' data-testid=\"'+e(testId)+'\"':'')+'>'+e(value)+'</dd></div>';\n  const tabs='<nav class=\"records-tabs\" aria-label=\"'+e(t('records.title'))+'\">'+(['summary','campaigns','challenges'] as const).map(tab=>ui.button('records-'+tab,t('records.'+tab),()=>input.onTab(tab),{pressed:input.tab===tab})).join('')+'</nav>';\n- const notice='<p class=\"helper\">'+e(t('records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n+ const notice='<p class=\"helper\">'+e(t(input.scope==='platform'?'records.platform':'records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n  if(input.tab==='summary'){\n   const totals=statisticsTotals(input.data),percent=accuracy(totals.shots,totals.hits);\n   return tabs+notice+'<dl class=\"records-stats\">'+metric(t('records.totalTime'),duration(totals.total_ms),'records-total-time')+metric(t('records.missionTime'),duration(totals.mission_ms),'records-mission-time')+metric(t('records.shots'),n(totals.shots),'records-shots')+metric(t('records.hits'),n(totals.hits),'records-hits')+metric(t('records.accuracy'),percent===null?'—':new Intl.NumberFormat(i18n.locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(percent)+'%','records-accuracy')+metric(t('records.completions'),n(input.data.completed.length),'records-completions')+'</dl><p class=\"helper\">'+e(t('records.newCounters'))+'</p>';\ndiff --git a/playwright.product.config.ts b/playwright.product.config.ts\nindex 39de005..a84ad96 100644\n--- a/playwright.product.config.ts\n+++ b/playwright.product.config.ts\n@@ -1,6 +1,6 @@\n import {defineConfig} from '@playwright/test';\n import base from './playwright.config';\n-export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui)|radio-station)\\.spec\\.ts$/,projects:[\n+export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui|transport)|radio-station)\\.spec\\.ts$/,projects:[\n  {name:'chromium',use:{browserName:'chromium'}},\n  {name:'firefox',use:{browserName:'firefox',launchOptions:{}}},\n  {name:'webkit',use:{browserName:'webkit',launchOptions:{}}}\ndiff --git a/tests/encounter-harness.ts b/tests/encounter-harness.ts\nindex 51317a1..310ae95 100644\n--- a/tests/encounter-harness.ts\n+++ b/tests/encounter-harness.ts\n@@ -1,3 +1,5 @@\n+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n // Test-only entry, compiled outside dist/. The production entry has no fixture globals.\n import {app} from '../games/cinder-shift/src/main';\n import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n@@ -8,6 +10,12 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc\n import {MissionAttempt} from '../games/cinder-shift/src/mission';\n \n (window as any).__ENCOUNTER__={\n+ async transportStatistics(input:{kind:'guest'|'bridge';key:string;incoming:import('../games/cinder-shift/src/session/personal-records').PersonalRecords}){\n+  // The controlled SDK mock owns localStorage; production Bridge code receives only its SDK.\n+  const sdk={get:async(key:string,parse?:boolean)=>{if(parse!==false)throw Error('raw_envelope_required');await new Promise(resolve=>setTimeout(resolve,20));return localStorage.getItem(key);},set:async(key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,20));localStorage.setItem(key,String(value));}};\n+  const storage=input.kind==='guest'?new HostRecordStorage(localStorage,input.key):new BridgeRecordStorage(sdk,input.key);\n+  const saves=new SaveService('transport-fixture',storage);return saves.updatePersonalRecords(input.incoming);\n+ },\n  flushStatistics(){return app.statistics.flush();},\n  // Storage-contract fixture only; production has no mutable statistics global.\n  writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},\ndiff --git a/tests/personal-records-transport.spec.ts b/tests/personal-records-transport.spec.ts\nnew file mode 100644\nindex 0000000..a4bc6bf\n--- /dev/null\n+++ b/tests/personal-records-transport.spec.ts\n@@ -0,0 +1,59 @@\n+import {test,expect} from '@playwright/test';\n+import {HostRecordStorage,BridgeRecordStorage,type RecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n+import {PersonalStatistics,emptyFragment,emptyPersonalRecords,statisticsTotals} from '../games/cinder-shift/src/session/personal-records';\n+\n+function backing(kind:'guest'|'bridge'){\n+ let raw:string|null=null,fail=false;const parses:unknown[]=[];\n+ const key='transport-'+crypto.randomUUID();\n+ const guest={getItem:()=>raw,setItem:(_key:string,value:string)=>{if(fail)throw Error('quota');raw=value;}};\n+ const bridge={get:async(_key:string,parse?:boolean)=>{parses.push(parse);await new Promise(resolve=>setTimeout(resolve,1));return raw;},set:async(_key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,1));if(fail)throw Error('quota');raw=String(value);}};\n+ return{get raw(){return raw;},set raw(value:string|null){raw=value;},set fail(value:boolean){fail=value;},parses,\n+  adapter:():RecordStorage=>kind==='guest'?new HostRecordStorage(guest,key):new BridgeRecordStorage(bridge,key)};\n+}\n+const fragment=(id:string,shots:number,hits:number)=>{const data=emptyPersonalRecords();data.sessions[id]={...emptyFragment(),shots,hits};return data;};\n+\n+for(const kind of ['guest','bridge'] as const){\n+ test(kind+': independent save services merge concurrent statistics, preserve other records and duplicate checkpoints',async()=>{\n+  const memory=backing(kind),first=new SaveService('fixture',memory.adapter()),second=new SaveService('fixture',memory.adapter());\n+  await first.connect();await first.saveModeData('records.v1',{valuable:'legacy PB'});await first.saveModeData('world.c02-small-world.v1',{valuable:'independent campaign'});\n+  const a=fragment('a',10,4),b=fragment('b',7,2);expect((await Promise.all([first.updatePersonalRecords(a),second.updatePersonalRecords(b)])).every(Boolean)).toBe(true);\n+  a.sessions.a.shots=1;a.sessions.a.hits=0;expect(await first.updatePersonalRecords(a)).not.toBeNull();\n+  const envelope=JSON.parse(memory.raw!);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});\n+  expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);\n+  expect(envelope.records['records.v1']).toEqual({valuable:'legacy PB'});expect(envelope.records['world.c02-small-world.v1']).toEqual({valuable:'independent campaign'});\n+  if(kind==='bridge')expect(memory.parses.every(value=>value===false)).toBe(true);\n+ });\n+\n+ test(kind+': a failed SDK/guest write retains the last complete envelope and retries the same fragment',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  expect(await service.updatePersonalRecords(fragment('a',1,0))).not.toBeNull();const before=memory.raw;memory.fail=true;\n+  expect(await service.updatePersonalRecords(fragment('a',9,3))).toBeNull();expect(memory.raw).toBe(before);expect(service.issue).toBe('write_failed');\n+  memory.fail=false;expect(await service.updatePersonalRecords(fragment('a',9,3))).not.toBeNull();expect(service.issue).toBeNull();\n+  expect(statisticsTotals(JSON.parse(memory.raw!).records['personal-records.v1'])).toMatchObject({shots:9,hits:3});\n+ });\n+\n+ test(kind+': damaged known statistics recover with quarantine; a future statistics version is never replaced',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter()),backup=fragment('old',4,1),damaged={version:1,sessions:'damaged'};\n+  memory.raw=JSON.stringify({version:1,records:{'personal-records.v1':damaged,'personal-records.backup.v1':backup,campaign:{valuable:true}}});\n+  expect(await service.updatePersonalRecords(fragment('new',2,1))).not.toBeNull();let saved=JSON.parse(memory.raw!);\n+  expect(statisticsTotals(saved.records['personal-records.v1'])).toMatchObject({shots:6,hits:2});expect(saved.records['personal-records.quarantine.v1']).toEqual(damaged);expect(saved.records.campaign).toEqual({valuable:true});\n+  saved.records['personal-records.v1']={version:2,valuable:'future'};memory.raw=JSON.stringify(saved);const before=memory.raw;\n+  expect(await service.updatePersonalRecords(fragment('new',5,2))).toBeNull();expect(memory.raw).toBe(before);\n+ });\n+\n+ test(kind+': unknown outer envelopes and corrupt backups remain byte-for-byte intact',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  for(const raw of ['broken JSON',JSON.stringify({version:2,records:{valuable:true}}),JSON.stringify({version:1,records:{'personal-records.v1':{version:1,broken:true},'personal-records.backup.v1':{version:1,broken:true}}})]){\n+   memory.raw=raw;expect(await service.updatePersonalRecords(fragment('a',1,0))).toBeNull();expect(memory.raw).toBe(raw);\n+  }\n+ });\n+\n+ test(kind+': profile reload uses the selected transport for settings and statistics without requiring browser storage',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());await service.connect();\n+  const {settings}=await service.load('ru');settings.muted=true;settings.musicVolume=.42;expect(await service.saveSettings(settings)).toBe(true);\n+  const statistics=new PersonalStatistics(service);await statistics.load();statistics.combat('shots');statistics.combat('hits');expect(await statistics.flush()).toBe(true);\n+  const next=new SaveService('fixture',memory.adapter());expect((await next.load('en')).settings).toMatchObject({locale:'ru',muted:true,musicVolume:.42});\n+  const reloaded=new PersonalStatistics(next);await reloaded.load();expect(statisticsTotals(reloaded.snapshot())).toMatchObject({shots:1,hits:1});expect(next.storageScope).toBe('platform');\n+ });\n+}\ndiff --git a/tests/personal-records-ui.spec.ts b/tests/personal-records-ui.spec.ts\nindex 24a439c..de17585 100644\n--- a/tests/personal-records-ui.spec.ts\n+++ b/tests/personal-records-ui.spec.ts\n@@ -65,3 +65,11 @@ test('a completed automatic checkpoint survives closing the playing page',async(\n  await expect.poll(async()=>{const saved=await read(page,'personal-records.v1');return saved?statisticsTotals(saved).shots:0;},{timeout:20000,intervals:[500]}).toBeGreaterThan(0);\n  const shots=statisticsTotals(await read(page,'personal-records.v1')).shots;await page.close();const next=await context.newPage();await next.goto('/games/cinder-shift/');await next.getByTestId('menu-records').click();await expect(next.getByTestId('records-shots')).toHaveText(String(shots));await next.close();\n });\n+\n+for(const kind of ['guest','bridge'] as const)test(kind+': real tabs share one locked envelope during overlapping read/merge/write',async({page,context})=>{\n+ await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();const second=await context.newPage();await second.goto('/__encounter__/');await expect(second.getByTestId('new-shift')).toBeVisible();\n+ expect(await page.evaluate(()=>Boolean(navigator.locks))).toBe(true);\n+ const key='records-lock-'+crypto.randomUUID(),a=emptyPersonalRecords(),b=emptyPersonalRecords();a.sessions['tab-a']={...emptyFragment(),shots:10,hits:4};b.sessions['tab-b']={...emptyFragment(),shots:7,hits:2};\n+ const results=await Promise.all([page.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:a}),second.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:b})]);expect(results.every(Boolean)).toBe(true);\n+ const envelope=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);await second.close();\n+});",
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "commitHash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/17",
+            "prTitle": "Cinder Shift alpha.14: preserve personal records through platform storage",
+            "prBaseHash": "485204528c16eb4ff0559508f8315a77844fb523",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44748447002"
+          },
+          "gitCommit": {
+            "shortHash": "d8da0b6",
+            "hash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "subject": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523",
+            "body": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795182864000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795182864000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/alpha14-records-transports.ru.md b/docs/cinder-shift/alpha14-records-transports.ru.md\nnew file mode 100644\nindex 0000000..a5dc16d\n--- /dev/null\n+++ b/docs/cinder-shift/alpha14-records-transports.ru.md\n@@ -0,0 +1,21 @@\n+# Alpha.14 — transport-ready storage for personal records\n+\n+20 ноября 2026. Продолжение блока 08/13 поверх продуктового PR #16.\n+\n+## Поведение\n+\n+SaveService принимает тот же RecordStorage, который используют отдельные SDK-ветки. Счётчики больше не требуют прямого IndexedDB при выбранном платформенном транспорте. HostRecordStorage и BridgeRecordStorage выполняют read/merge/write профиля, полную резервную копию и при необходимости quarantine внутри единого обновления envelope. Прочие записи кампаний, PB и настроек сохраняются.\n+\n+Очередь общая для экземпляров адаптера по ключу, а Web Locks координирует вкладки одного origin, включая асинхронный SDK read/write. Ошибка не отравляет очередь; повтор с тем же накопительным фрагментом не дублирует итог. Будущая версия внешнего envelope или статистики блокирует замену. При недоступном SDK нет перехода на другое хранилище. Интерфейс получает реальный scope от SaveService: устройство или профиль площадки.\n+\n+## Проверки в этом PR\n+\n+Добавлены десять контрактных сценариев (по пять для guest/Bridge): независимые экземпляры/конкурентная запись; отказ и повтор; backup/quarantine; будущие и повреждённые форматы; повторное чтение настроек и счётчиков. Ещё два браузерных сценария используют две реальные вкладки и медленный управляемый SDK mock. Они включены в матрицу Chromium/Firefox/WebKit.\n+\n+Исходник должен пройти собственный CI. Предыдущие локальные 60/60 и полные маршруты относятся к предыдущему продуктовому source, а не являются доказательством этой новой реализации.\n+\n+## Границы\n+\n+Адаптеры подготовлены рядом с продуктовой реализацией. Подключение в initialize/lifecycle Яндекса и Playgama, сборки SDK, события pause/ad/reward и preview выполняются при переносе в существующие release-ветки. В этом PR основной web продолжает использовать IndexedDB. SDK-ветки и опубликованные сборки не изменены.\n+\n+Web Locks обеспечивает согласование в пределах origin. При отсутствии API остаётся очередь экземпляров в одном JS-контексте; межвкладочная гарантия в таком браузере не заявляется. Конфликт облачных записей с разных устройств определяется SDK и не решается локальной блокировкой. Физические устройства, настоящее SDK-хранилище, upgrade/rollback старых опубликованных runtime и общий RC остаются открытыми.\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 0e242cf..82897b5 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Team total · linked by code\",\n   \"records.secondsValue\": \"{seconds} s\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Your result\"\n+  \"records.ownResult\": \"Your result\",\n+  \"records.platform\": \"Saved in this platform profile\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 670ab0e..35b7f68 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Командный итог · связан кодом\",\n   \"records.secondsValue\": \"{seconds} с\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Твой результат\"\n+  \"records.ownResult\": \"Твой результат\",\n+  \"records.platform\": \"Сохранено в профиле этой площадки\"\n }\ndiff --git a/games/cinder-shift/src/session/host-storage.ts b/games/cinder-shift/src/session/host-storage.ts\nnew file mode 100644\nindex 0000000..f605517\n--- /dev/null\n+++ b/games/cinder-shift/src/session/host-storage.ts\n@@ -0,0 +1,44 @@\n+export type RecordMutation=(records:Readonly<Record<string,unknown>>)=>Record<string,unknown>;\n+export interface RecordStorage{\n+ read(key:string):Promise<unknown>;\n+ writeMany(values:Record<string,unknown>):Promise<void>;\n+ updateMany(mutate:RecordMutation):Promise<Record<string,unknown>>;\n+}\n+export interface BridgeStorage{get(key:string,tryParseJson?:boolean):Promise<unknown>;set(key:string,value:unknown):Promise<void>;}\n+const queues=new Map<string,Promise<void>>();\n+/** Web Locks coordinate same-origin tabs; the queue also covers browsers without that API. */\n+function serialized<T>(key:string,operation:()=>Promise<T>|T):Promise<T>{\n+ const name='cinder-records:'+key,previous=queues.get(name)||Promise.resolve();\n+ const result=previous.then(()=>typeof navigator!=='undefined'&&navigator.locks?navigator.locks.request(name,operation):operation());\n+ queues.set(name,result.then(()=>{},()=>{}));return result;\n+}\n+function records(text:unknown):Record<string,unknown>{\n+ if(text===null||text===undefined)return{};\n+ if(typeof text!=='string')throw Error('host_storage_corrupt');\n+ const data:unknown=JSON.parse(text);\n+ if(!data||typeof data!=='object'||Array.isArray(data))throw Error('host_storage_corrupt');\n+ const envelope=data as {version?:unknown;records?:unknown};\n+ if(envelope.version!==1||!envelope.records||typeof envelope.records!=='object'||Array.isArray(envelope.records))throw Error('host_storage_incompatible');\n+ return envelope.records as Record<string,unknown>;\n+}\n+const envelope=(values:Record<string,unknown>)=>JSON.stringify({version:1,records:values});\n+/** A guest profile keeps all records in one atomic localStorage envelope. */\n+export class HostRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:Pick<Storage,'getItem'|'setItem'>,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,()=>structuredClone(records(this.storage.getItem(this.key))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,()=>{\n+  const current=records(this.storage.getItem(this.key)),updates=structuredClone(mutate(structuredClone(current)));\n+  this.storage.setItem(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\n+/** Only the SDK touches its backing store; rejected writes leave the queue retryable. */\n+export class BridgeRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:BridgeStorage,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,async()=>structuredClone(records(await this.storage.get(this.key,false))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,async()=>{\n+  const current=records(await this.storage.get(this.key,false)),updates=structuredClone(mutate(structuredClone(current)));\n+  await this.storage.set(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 920e01b..1c5ef80 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -1,3 +1,4 @@\n+import type {RecordStorage} from './host-storage';\n import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';\n import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';\n import {contentVersion,type CampaignData} from './campaign';\n@@ -86,13 +87,16 @@ export class SaveService{\n   hasExistingProfile=false;baseCompleted=false;completionProfile:CompletionProfile={schema_version:1,base_game_id:'r01',completion_ids:[]};completionProfileValid=true;\n   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;\n   onStatus:()=>void=()=>{};\n-  constructor(readonly build:string){}\n+  constructor(readonly build:string,private hostStorage?:RecordStorage){}\n+  get storageScope():'device'|'platform'{return this.hostStorage?'platform':'device';}\n+  useHostStorage(storage:RecordStorage){if(this.available||this.db)throw Error('storage_already_connected');this.hostStorage=storage;}\n   private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}\n   async connect(){\n+    if(this.hostStorage){try{await this.hostStorage.read('settings');this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.message:'host_storage_error';this.available=false;this.status('unavailable');return false;}}\n     if(this.available&&this.db)return true;this.db?.close();\n     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}\n   }\n-  private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n+  private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n   async loadModeData(key:'personal-records.v1'|'personal-records.backup.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{\n     if(!await this.connect())return{ok:false};\n     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}\n@@ -107,7 +111,7 @@ export class SaveService{\n     const operation=async()=>{\n       if(!await this.connect())return null;\n       try{\n-        const result=await new Promise<PersonalRecords>((resolve,reject)=>{\n+        const result=this.hostStorage?await this.updateHostPersonalRecords(snapshot):await new Promise<PersonalRecords>((resolve,reject)=>{\n           const tx=this.db!.transaction('records','readwrite'),store=tx.objectStore('records'),request=store.get('personal-records.v1');let merged:PersonalRecords;\n           tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);\n           const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};\n@@ -117,14 +121,24 @@ export class SaveService{\n     };\n     const result=this.queue.then(operation,operation);this.queue=result;return result;\n   }\n+  private async updateHostPersonalRecords(snapshot:PersonalRecords):Promise<PersonalRecords>{\n+    const updates=await this.hostStorage!.updateMany(records=>{\n+      const raw=records['personal-records.v1'],recovered=object(raw)&&raw.version===1&&!validatePersonalRecords(raw);\n+      const backup=records['personal-records.backup.v1'];\n+      if(recovered&&!validatePersonalRecords(backup))throw Error('statistics_backup_unreadable');\n+      const merged=mergePersonalRecords(recovered?backup:raw,snapshot);\n+      return{'personal-records.v1':merged,'personal-records.backup.v1':merged,...(recovered?{'personal-records.quarantine.v1':raw}:{})};\n+    });\n+    return updates['personal-records.v1'] as PersonalRecords;\n+  }\n   async load(locale:'en'|'ru'){\n     if(!await this.connect())return{campaign:null,settings:defaults(locale)};\n-    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n+    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=this.hostStorage?null:localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n   }\n   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{\n     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;\n-    if(!this.available||!this.db)return false;\n-    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n+    if(!this.available||!this.db&&!this.hostStorage)return false;\n+    try{if(this.hostStorage)await this.hostStorage.writeMany({[key]:snapshot,...(profile?{'world-profile.v1':profile}:{})});else await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n   };const result=this.queue.then(operation,operation);this.queue=result;return result;}\n   saveCampaign(campaign:CampaignData,replace=false){\n     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}\n@@ -140,7 +154,7 @@ export class SaveService{\n     const record:WorldEnvelope={schema_version:1,content_version:'worlds-rw3.1',game_id:id,build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};\n     const issue=validateWorldSave(record,id);if(issue){this.status(issue);return Promise.resolve(false);}return this.put(`world.${id}.v1`,record);\n   }\n-  saveSettings(settings:Settings){try{localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n+  saveSettings(settings:Settings){try{if(!this.hostStorage)localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n   async recordCampaign(campaign:CampaignData){if(!this.available||this.blocked||!this.careerValid||!isCompleteBaseCampaign(campaign))return false;if(this.careerRuns.some(run=>run.campaign_id===campaign.campaign_id))return true;const run:CompletedRun={ruleset_id:campaign.run_stats.ruleset_id||'legacy-rc1',campaign_id:campaign.campaign_id,content_version:contentVersion,completed_at:new Date().toISOString(),active_ms:campaign.run_stats.active_ms,deaths:campaign.run_stats.deaths,score:campaign.run_stats.score,foundry_route:campaign.run_stats.foundry_route,nodes:[...campaign.nodes],difficulty:'standard',assistance:campaign.run_stats.assisted?'assisted':'standard',history_complete:campaign.run_stats.history_complete},runs=[...this.careerRuns,run];const saved=Boolean(await this.put('career',{version:1,runs}));if(saved)this.careerRuns=runs;return saved;}\n   async retry(campaign:CampaignData|null,settings:Settings){if(!await this.connect())return false;await this.saveSettings(settings);return campaign?this.saveCampaign(campaign):true;}\n }\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex a8c0ca8..c1a6c70 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -372,7 +372,7 @@ export class Application{\n     $('overlay').classList.remove('boot-loading');$('overlay').classList.toggle('promo-menu',this.screen==='menu');$('overlay').classList.toggle('workshop-overlay',this.screen==='research'||this.screen==='map');\n     ui.show(()=>{\n       switch(this.screen){\n-        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n+        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{scope:this.saves.storageScope,data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n         case'campaigns':{\n           const earned=this.saves.baseCompleted||isCompleteBaseCampaign(this.worldCampaigns.get('r01')?.data||null);\n           const cards=[{id:'r01',title:'world.c01',image:'./assets/m06/'+promo.menu.file},{id:'c02-small-world',title:'world.c02',image:'./assets/world-concepts/small-world.svg'},{id:'c03-adriatic-1986',title:'world.c03',image:'./assets/world-concepts/adriatic.svg'}];\ndiff --git a/games/cinder-shift/src/ui/personal-records.ts b/games/cinder-shift/src/ui/personal-records.ts\nindex 01c85c7..0a4d348 100644\n--- a/games/cinder-shift/src/ui/personal-records.ts\n+++ b/games/cinder-shift/src/ui/personal-records.ts\n@@ -10,14 +10,14 @@ import type {RunModeId} from '../session/run-clock';\n import {makeChallengeSpec} from '../session/challenge-spec';\n \n export type RecordsTab='summary'|'campaigns'|'challenges';\n-type Input={data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n+type Input={scope:'device'|'platform';data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n export function personalRecordsView(i18n:I18n,ui:Panels,input:Input){\n  const t=(key:string,params:Record<string,string|number>={})=>i18n.t(key,params),n=(value:number)=>i18n.number(value,0);\n  const duration=(ms:number)=>{const seconds=Math.floor(ms/1000);return t('records.duration',{hours:Math.floor(seconds/3600),minutes:Math.floor(seconds/60)%60,seconds:seconds%60});};\n  const trialDuration=(ms:number)=>t('records.secondsValue',{seconds:i18n.number(ms/1000,3)});\n  const metric=(title:string,value:string,testId='')=>'<div><dt>'+e(title)+'</dt><dd'+(testId?' data-testid=\"'+e(testId)+'\"':'')+'>'+e(value)+'</dd></div>';\n  const tabs='<nav class=\"records-tabs\" aria-label=\"'+e(t('records.title'))+'\">'+(['summary','campaigns','challenges'] as const).map(tab=>ui.button('records-'+tab,t('records.'+tab),()=>input.onTab(tab),{pressed:input.tab===tab})).join('')+'</nav>';\n- const notice='<p class=\"helper\">'+e(t('records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n+ const notice='<p class=\"helper\">'+e(t(input.scope==='platform'?'records.platform':'records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n  if(input.tab==='summary'){\n   const totals=statisticsTotals(input.data),percent=accuracy(totals.shots,totals.hits);\n   return tabs+notice+'<dl class=\"records-stats\">'+metric(t('records.totalTime'),duration(totals.total_ms),'records-total-time')+metric(t('records.missionTime'),duration(totals.mission_ms),'records-mission-time')+metric(t('records.shots'),n(totals.shots),'records-shots')+metric(t('records.hits'),n(totals.hits),'records-hits')+metric(t('records.accuracy'),percent===null?'—':new Intl.NumberFormat(i18n.locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(percent)+'%','records-accuracy')+metric(t('records.completions'),n(input.data.completed.length),'records-completions')+'</dl><p class=\"helper\">'+e(t('records.newCounters'))+'</p>';\ndiff --git a/playwright.product.config.ts b/playwright.product.config.ts\nindex 39de005..a84ad96 100644\n--- a/playwright.product.config.ts\n+++ b/playwright.product.config.ts\n@@ -1,6 +1,6 @@\n import {defineConfig} from '@playwright/test';\n import base from './playwright.config';\n-export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui)|radio-station)\\.spec\\.ts$/,projects:[\n+export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui|transport)|radio-station)\\.spec\\.ts$/,projects:[\n  {name:'chromium',use:{browserName:'chromium'}},\n  {name:'firefox',use:{browserName:'firefox',launchOptions:{}}},\n  {name:'webkit',use:{browserName:'webkit',launchOptions:{}}}\ndiff --git a/tests/encounter-harness.ts b/tests/encounter-harness.ts\nindex 51317a1..310ae95 100644\n--- a/tests/encounter-harness.ts\n+++ b/tests/encounter-harness.ts\n@@ -1,3 +1,5 @@\n+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n // Test-only entry, compiled outside dist/. The production entry has no fixture globals.\n import {app} from '../games/cinder-shift/src/main';\n import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n@@ -8,6 +10,12 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc\n import {MissionAttempt} from '../games/cinder-shift/src/mission';\n \n (window as any).__ENCOUNTER__={\n+ async transportStatistics(input:{kind:'guest'|'bridge';key:string;incoming:import('../games/cinder-shift/src/session/personal-records').PersonalRecords}){\n+  // The controlled SDK mock owns localStorage; production Bridge code receives only its SDK.\n+  const sdk={get:async(key:string,parse?:boolean)=>{if(parse!==false)throw Error('raw_envelope_required');await new Promise(resolve=>setTimeout(resolve,20));return localStorage.getItem(key);},set:async(key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,20));localStorage.setItem(key,String(value));}};\n+  const storage=input.kind==='guest'?new HostRecordStorage(localStorage,input.key):new BridgeRecordStorage(sdk,input.key);\n+  const saves=new SaveService('transport-fixture',storage);return saves.updatePersonalRecords(input.incoming);\n+ },\n  flushStatistics(){return app.statistics.flush();},\n  // Storage-contract fixture only; production has no mutable statistics global.\n  writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},\ndiff --git a/tests/personal-records-transport.spec.ts b/tests/personal-records-transport.spec.ts\nnew file mode 100644\nindex 0000000..a4bc6bf\n--- /dev/null\n+++ b/tests/personal-records-transport.spec.ts\n@@ -0,0 +1,59 @@\n+import {test,expect} from '@playwright/test';\n+import {HostRecordStorage,BridgeRecordStorage,type RecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n+import {PersonalStatistics,emptyFragment,emptyPersonalRecords,statisticsTotals} from '../games/cinder-shift/src/session/personal-records';\n+\n+function backing(kind:'guest'|'bridge'){\n+ let raw:string|null=null,fail=false;const parses:unknown[]=[];\n+ const key='transport-'+crypto.randomUUID();\n+ const guest={getItem:()=>raw,setItem:(_key:string,value:string)=>{if(fail)throw Error('quota');raw=value;}};\n+ const bridge={get:async(_key:string,parse?:boolean)=>{parses.push(parse);await new Promise(resolve=>setTimeout(resolve,1));return raw;},set:async(_key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,1));if(fail)throw Error('quota');raw=String(value);}};\n+ return{get raw(){return raw;},set raw(value:string|null){raw=value;},set fail(value:boolean){fail=value;},parses,\n+  adapter:():RecordStorage=>kind==='guest'?new HostRecordStorage(guest,key):new BridgeRecordStorage(bridge,key)};\n+}\n+const fragment=(id:string,shots:number,hits:number)=>{const data=emptyPersonalRecords();data.sessions[id]={...emptyFragment(),shots,hits};return data;};\n+\n+for(const kind of ['guest','bridge'] as const){\n+ test(kind+': independent save services merge concurrent statistics, preserve other records and duplicate checkpoints',async()=>{\n+  const memory=backing(kind),first=new SaveService('fixture',memory.adapter()),second=new SaveService('fixture',memory.adapter());\n+  await first.connect();await first.saveModeData('records.v1',{valuable:'legacy PB'});await first.saveModeData('world.c02-small-world.v1',{valuable:'independent campaign'});\n+  const a=fragment('a',10,4),b=fragment('b',7,2);expect((await Promise.all([first.updatePersonalRecords(a),second.updatePersonalRecords(b)])).every(Boolean)).toBe(true);\n+  a.sessions.a.shots=1;a.sessions.a.hits=0;expect(await first.updatePersonalRecords(a)).not.toBeNull();\n+  const envelope=JSON.parse(memory.raw!);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});\n+  expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);\n+  expect(envelope.records['records.v1']).toEqual({valuable:'legacy PB'});expect(envelope.records['world.c02-small-world.v1']).toEqual({valuable:'independent campaign'});\n+  if(kind==='bridge')expect(memory.parses.every(value=>value===false)).toBe(true);\n+ });\n+\n+ test(kind+': a failed SDK/guest write retains the last complete envelope and retries the same fragment',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  expect(await service.updatePersonalRecords(fragment('a',1,0))).not.toBeNull();const before=memory.raw;memory.fail=true;\n+  expect(await service.updatePersonalRecords(fragment('a',9,3))).toBeNull();expect(memory.raw).toBe(before);expect(service.issue).toBe('write_failed');\n+  memory.fail=false;expect(await service.updatePersonalRecords(fragment('a',9,3))).not.toBeNull();expect(service.issue).toBeNull();\n+  expect(statisticsTotals(JSON.parse(memory.raw!).records['personal-records.v1'])).toMatchObject({shots:9,hits:3});\n+ });\n+\n+ test(kind+': damaged known statistics recover with quarantine; a future statistics version is never replaced',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter()),backup=fragment('old',4,1),damaged={version:1,sessions:'damaged'};\n+  memory.raw=JSON.stringify({version:1,records:{'personal-records.v1':damaged,'personal-records.backup.v1':backup,campaign:{valuable:true}}});\n+  expect(await service.updatePersonalRecords(fragment('new',2,1))).not.toBeNull();let saved=JSON.parse(memory.raw!);\n+  expect(statisticsTotals(saved.records['personal-records.v1'])).toMatchObject({shots:6,hits:2});expect(saved.records['personal-records.quarantine.v1']).toEqual(damaged);expect(saved.records.campaign).toEqual({valuable:true});\n+  saved.records['personal-records.v1']={version:2,valuable:'future'};memory.raw=JSON.stringify(saved);const before=memory.raw;\n+  expect(await service.updatePersonalRecords(fragment('new',5,2))).toBeNull();expect(memory.raw).toBe(before);\n+ });\n+\n+ test(kind+': unknown outer envelopes and corrupt backups remain byte-for-byte intact',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  for(const raw of ['broken JSON',JSON.stringify({version:2,records:{valuable:true}}),JSON.stringify({version:1,records:{'personal-records.v1':{version:1,broken:true},'personal-records.backup.v1':{version:1,broken:true}}})]){\n+   memory.raw=raw;expect(await service.updatePersonalRecords(fragment('a',1,0))).toBeNull();expect(memory.raw).toBe(raw);\n+  }\n+ });\n+\n+ test(kind+': profile reload uses the selected transport for settings and statistics without requiring browser storage',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());await service.connect();\n+  const {settings}=await service.load('ru');settings.muted=true;settings.musicVolume=.42;expect(await service.saveSettings(settings)).toBe(true);\n+  const statistics=new PersonalStatistics(service);await statistics.load();statistics.combat('shots');statistics.combat('hits');expect(await statistics.flush()).toBe(true);\n+  const next=new SaveService('fixture',memory.adapter());expect((await next.load('en')).settings).toMatchObject({locale:'ru',muted:true,musicVolume:.42});\n+  const reloaded=new PersonalStatistics(next);await reloaded.load();expect(statisticsTotals(reloaded.snapshot())).toMatchObject({shots:1,hits:1});expect(next.storageScope).toBe('platform');\n+ });\n+}\ndiff --git a/tests/personal-records-ui.spec.ts b/tests/personal-records-ui.spec.ts\nindex 24a439c..de17585 100644\n--- a/tests/personal-records-ui.spec.ts\n+++ b/tests/personal-records-ui.spec.ts\n@@ -65,3 +65,11 @@ test('a completed automatic checkpoint survives closing the playing page',async(\n  await expect.poll(async()=>{const saved=await read(page,'personal-records.v1');return saved?statisticsTotals(saved).shots:0;},{timeout:20000,intervals:[500]}).toBeGreaterThan(0);\n  const shots=statisticsTotals(await read(page,'personal-records.v1')).shots;await page.close();const next=await context.newPage();await next.goto('/games/cinder-shift/');await next.getByTestId('menu-records').click();await expect(next.getByTestId('records-shots')).toHaveText(String(shots));await next.close();\n });\n+\n+for(const kind of ['guest','bridge'] as const)test(kind+': real tabs share one locked envelope during overlapping read/merge/write',async({page,context})=>{\n+ await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();const second=await context.newPage();await second.goto('/__encounter__/');await expect(second.getByTestId('new-shift')).toBeVisible();\n+ expect(await page.evaluate(()=>Boolean(navigator.locks))).toBe(true);\n+ const key='records-lock-'+crypto.randomUUID(),a=emptyPersonalRecords(),b=emptyPersonalRecords();a.sessions['tab-a']={...emptyFragment(),shots:10,hits:4};b.sessions['tab-b']={...emptyFragment(),shots:7,hits:2};\n+ const results=await Promise.all([page.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:a}),second.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:b})]);expect(results.every(Boolean)).toBe(true);\n+ const envelope=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);await second.close();\n+});",
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/sprint2-media\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "commitHash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/17",
+            "prTitle": "Cinder Shift alpha.14: preserve personal records through platform storage",
+            "prBaseHash": "485204528c16eb4ff0559508f8315a77844fb523",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44748447002"
+          },
+          "gitCommit": {
+            "shortHash": "d8da0b6",
+            "hash": "d8da0b61313c9441c5e6e7619080e624da734bc8",
+            "subject": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523",
+            "body": "Merge 82c49240ae5080c334928afe63e0074ca23d33f0 into 485204528c16eb4ff0559508f8315a77844fb523\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795182864000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795182864000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/alpha14-records-transports.ru.md b/docs/cinder-shift/alpha14-records-transports.ru.md\nnew file mode 100644\nindex 0000000..a5dc16d\n--- /dev/null\n+++ b/docs/cinder-shift/alpha14-records-transports.ru.md\n@@ -0,0 +1,21 @@\n+# Alpha.14 — transport-ready storage for personal records\n+\n+20 ноября 2026. Продолжение блока 08/13 поверх продуктового PR #16.\n+\n+## Поведение\n+\n+SaveService принимает тот же RecordStorage, который используют отдельные SDK-ветки. Счётчики больше не требуют прямого IndexedDB при выбранном платформенном транспорте. HostRecordStorage и BridgeRecordStorage выполняют read/merge/write профиля, полную резервную копию и при необходимости quarantine внутри единого обновления envelope. Прочие записи кампаний, PB и настроек сохраняются.\n+\n+Очередь общая для экземпляров адаптера по ключу, а Web Locks координирует вкладки одного origin, включая асинхронный SDK read/write. Ошибка не отравляет очередь; повтор с тем же накопительным фрагментом не дублирует итог. Будущая версия внешнего envelope или статистики блокирует замену. При недоступном SDK нет перехода на другое хранилище. Интерфейс получает реальный scope от SaveService: устройство или профиль площадки.\n+\n+## Проверки в этом PR\n+\n+Добавлены десять контрактных сценариев (по пять для guest/Bridge): независимые экземпляры/конкурентная запись; отказ и повтор; backup/quarantine; будущие и повреждённые форматы; повторное чтение настроек и счётчиков. Ещё два браузерных сценария используют две реальные вкладки и медленный управляемый SDK mock. Они включены в матрицу Chromium/Firefox/WebKit.\n+\n+Исходник должен пройти собственный CI. Предыдущие локальные 60/60 и полные маршруты относятся к предыдущему продуктовому source, а не являются доказательством этой новой реализации.\n+\n+## Границы\n+\n+Адаптеры подготовлены рядом с продуктовой реализацией. Подключение в initialize/lifecycle Яндекса и Playgama, сборки SDK, события pause/ad/reward и preview выполняются при переносе в существующие release-ветки. В этом PR основной web продолжает использовать IndexedDB. SDK-ветки и опубликованные сборки не изменены.\n+\n+Web Locks обеспечивает согласование в пределах origin. При отсутствии API остаётся очередь экземпляров в одном JS-контексте; межвкладочная гарантия в таком браузере не заявляется. Конфликт облачных записей с разных устройств определяется SDK и не решается локальной блокировкой. Физические устройства, настоящее SDK-хранилище, upgrade/rollback старых опубликованных runtime и общий RC остаются открытыми.\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 0e242cf..82897b5 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Team total · linked by code\",\n   \"records.secondsValue\": \"{seconds} s\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Your result\"\n+  \"records.ownResult\": \"Your result\",\n+  \"records.platform\": \"Saved in this platform profile\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 670ab0e..35b7f68 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -962,5 +962,6 @@\n   \"records.teamCode\": \"Командный итог · связан кодом\",\n   \"records.secondsValue\": \"{seconds} с\",\n   \"records.dnf\": \"DNF\",\n-  \"records.ownResult\": \"Твой результат\"\n+  \"records.ownResult\": \"Твой результат\",\n+  \"records.platform\": \"Сохранено в профиле этой площадки\"\n }\ndiff --git a/games/cinder-shift/src/session/host-storage.ts b/games/cinder-shift/src/session/host-storage.ts\nnew file mode 100644\nindex 0000000..f605517\n--- /dev/null\n+++ b/games/cinder-shift/src/session/host-storage.ts\n@@ -0,0 +1,44 @@\n+export type RecordMutation=(records:Readonly<Record<string,unknown>>)=>Record<string,unknown>;\n+export interface RecordStorage{\n+ read(key:string):Promise<unknown>;\n+ writeMany(values:Record<string,unknown>):Promise<void>;\n+ updateMany(mutate:RecordMutation):Promise<Record<string,unknown>>;\n+}\n+export interface BridgeStorage{get(key:string,tryParseJson?:boolean):Promise<unknown>;set(key:string,value:unknown):Promise<void>;}\n+const queues=new Map<string,Promise<void>>();\n+/** Web Locks coordinate same-origin tabs; the queue also covers browsers without that API. */\n+function serialized<T>(key:string,operation:()=>Promise<T>|T):Promise<T>{\n+ const name='cinder-records:'+key,previous=queues.get(name)||Promise.resolve();\n+ const result=previous.then(()=>typeof navigator!=='undefined'&&navigator.locks?navigator.locks.request(name,operation):operation());\n+ queues.set(name,result.then(()=>{},()=>{}));return result;\n+}\n+function records(text:unknown):Record<string,unknown>{\n+ if(text===null||text===undefined)return{};\n+ if(typeof text!=='string')throw Error('host_storage_corrupt');\n+ const data:unknown=JSON.parse(text);\n+ if(!data||typeof data!=='object'||Array.isArray(data))throw Error('host_storage_corrupt');\n+ const envelope=data as {version?:unknown;records?:unknown};\n+ if(envelope.version!==1||!envelope.records||typeof envelope.records!=='object'||Array.isArray(envelope.records))throw Error('host_storage_incompatible');\n+ return envelope.records as Record<string,unknown>;\n+}\n+const envelope=(values:Record<string,unknown>)=>JSON.stringify({version:1,records:values});\n+/** A guest profile keeps all records in one atomic localStorage envelope. */\n+export class HostRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:Pick<Storage,'getItem'|'setItem'>,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,()=>structuredClone(records(this.storage.getItem(this.key))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,()=>{\n+  const current=records(this.storage.getItem(this.key)),updates=structuredClone(mutate(structuredClone(current)));\n+  this.storage.setItem(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\n+/** Only the SDK touches its backing store; rejected writes leave the queue retryable. */\n+export class BridgeRecordStorage implements RecordStorage{\n+ constructor(private readonly storage:BridgeStorage,private readonly key='cinder-shift-records.v1'){}\n+ read(key:string){return serialized(this.key,async()=>structuredClone(records(await this.storage.get(this.key,false))[key]));}\n+ async writeMany(values:Record<string,unknown>){const snapshot=structuredClone(values);await this.updateMany(()=>snapshot);}\n+ updateMany(mutate:RecordMutation){return serialized(this.key,async()=>{\n+  const current=records(await this.storage.get(this.key,false)),updates=structuredClone(mutate(structuredClone(current)));\n+  await this.storage.set(this.key,envelope({...current,...updates}));return updates;\n+ });}\n+}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 920e01b..1c5ef80 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -1,3 +1,4 @@\n+import type {RecordStorage} from './host-storage';\n import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';\n import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';\n import {contentVersion,type CampaignData} from './campaign';\n@@ -86,13 +87,16 @@ export class SaveService{\n   hasExistingProfile=false;baseCompleted=false;completionProfile:CompletionProfile={schema_version:1,base_game_id:'r01',completion_ids:[]};completionProfileValid=true;\n   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;\n   onStatus:()=>void=()=>{};\n-  constructor(readonly build:string){}\n+  constructor(readonly build:string,private hostStorage?:RecordStorage){}\n+  get storageScope():'device'|'platform'{return this.hostStorage?'platform':'device';}\n+  useHostStorage(storage:RecordStorage){if(this.available||this.db)throw Error('storage_already_connected');this.hostStorage=storage;}\n   private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}\n   async connect(){\n+    if(this.hostStorage){try{await this.hostStorage.read('settings');this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.message:'host_storage_error';this.available=false;this.status('unavailable');return false;}}\n     if(this.available&&this.db)return true;this.db?.close();\n     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}\n   }\n-  private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n+  private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}\n   async loadModeData(key:'personal-records.v1'|'personal-records.backup.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{\n     if(!await this.connect())return{ok:false};\n     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}\n@@ -107,7 +111,7 @@ export class SaveService{\n     const operation=async()=>{\n       if(!await this.connect())return null;\n       try{\n-        const result=await new Promise<PersonalRecords>((resolve,reject)=>{\n+        const result=this.hostStorage?await this.updateHostPersonalRecords(snapshot):await new Promise<PersonalRecords>((resolve,reject)=>{\n           const tx=this.db!.transaction('records','readwrite'),store=tx.objectStore('records'),request=store.get('personal-records.v1');let merged:PersonalRecords;\n           tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);\n           const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};\n@@ -117,14 +121,24 @@ export class SaveService{\n     };\n     const result=this.queue.then(operation,operation);this.queue=result;return result;\n   }\n+  private async updateHostPersonalRecords(snapshot:PersonalRecords):Promise<PersonalRecords>{\n+    const updates=await this.hostStorage!.updateMany(records=>{\n+      const raw=records['personal-records.v1'],recovered=object(raw)&&raw.version===1&&!validatePersonalRecords(raw);\n+      const backup=records['personal-records.backup.v1'];\n+      if(recovered&&!validatePersonalRecords(backup))throw Error('statistics_backup_unreadable');\n+      const merged=mergePersonalRecords(recovered?backup:raw,snapshot);\n+      return{'personal-records.v1':merged,'personal-records.backup.v1':merged,...(recovered?{'personal-records.quarantine.v1':raw}:{})};\n+    });\n+    return updates['personal-records.v1'] as PersonalRecords;\n+  }\n   async load(locale:'en'|'ru'){\n     if(!await this.connect())return{campaign:null,settings:defaults(locale)};\n-    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n+    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=this.hostStorage?null:localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}\n   }\n   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{\n     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;\n-    if(!this.available||!this.db)return false;\n-    try{await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n+    if(!this.available||!this.db&&!this.hostStorage)return false;\n+    try{if(this.hostStorage)await this.hostStorage.writeMany({[key]:snapshot,...(profile?{'world-profile.v1':profile}:{})});else await new Promise<void>((resolve,reject)=>{const tx=this.db!.transaction('records','readwrite');tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);try{tx.objectStore('records').put(snapshot,key);if(profile)tx.objectStore('records').put(profile,'world-profile.v1');}catch(error){tx.abort();reject(error);}});if(profile){this.completionProfile=profile;this.baseCompleted=true;}if(key==='campaign'){this.savedAt=(snapshot as Envelope).saved_at;}if(!this.blocked)this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'write_error';this.available=false;this.status('write_failed');return false;}\n   };const result=this.queue.then(operation,operation);this.queue=result;return result;}\n   saveCampaign(campaign:CampaignData,replace=false){\n     if(this.blocked&&!replace)return Promise.resolve(false);if(replace){this.blocked=false;if(this.issue==='corrupt'||this.issue==='incompatible'||this.issue==='unknown_nodes')this.status(null);}\n@@ -140,7 +154,7 @@ export class SaveService{\n     const record:WorldEnvelope={schema_version:1,content_version:'worlds-rw3.1',game_id:id,build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};\n     const issue=validateWorldSave(record,id);if(issue){this.status(issue);return Promise.resolve(false);}return this.put(`world.${id}.v1`,record);\n   }\n-  saveSettings(settings:Settings){try{localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n+  saveSettings(settings:Settings){try{if(!this.hostStorage)localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}\n   async recordCampaign(campaign:CampaignData){if(!this.available||this.blocked||!this.careerValid||!isCompleteBaseCampaign(campaign))return false;if(this.careerRuns.some(run=>run.campaign_id===campaign.campaign_id))return true;const run:CompletedRun={ruleset_id:campaign.run_stats.ruleset_id||'legacy-rc1',campaign_id:campaign.campaign_id,content_version:contentVersion,completed_at:new Date().toISOString(),active_ms:campaign.run_stats.active_ms,deaths:campaign.run_stats.deaths,score:campaign.run_stats.score,foundry_route:campaign.run_stats.foundry_route,nodes:[...campaign.nodes],difficulty:'standard',assistance:campaign.run_stats.assisted?'assisted':'standard',history_complete:campaign.run_stats.history_complete},runs=[...this.careerRuns,run];const saved=Boolean(await this.put('career',{version:1,runs}));if(saved)this.careerRuns=runs;return saved;}\n   async retry(campaign:CampaignData|null,settings:Settings){if(!await this.connect())return false;await this.saveSettings(settings);return campaign?this.saveCampaign(campaign):true;}\n }\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex a8c0ca8..c1a6c70 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -372,7 +372,7 @@ export class Application{\n     $('overlay').classList.remove('boot-loading');$('overlay').classList.toggle('promo-menu',this.screen==='menu');$('overlay').classList.toggle('workshop-overlay',this.screen==='research'||this.screen==='map');\n     ui.show(()=>{\n       switch(this.screen){\n-        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n+        case'records':return this.wrap(t('records.title'),personalRecordsView(this.i18n,ui,{scope:this.saves.storageScope,data:this.statistics.snapshot(),temporary:!this.statistics.writable||this.statistics.saveFailed,unlocked:this.saves.baseCompleted,tab:this.recordsTab,mode:this.recordsMode,mission:this.recordsMission,campaigns:new Map([...this.worldCampaigns].map(([id,c])=>[id,c?.data||null])),challenges:this.challengeRecords,archive:this.challengeArchive,relay:this.relayRecords,onTab:tab=>{this.recordsTab=tab;this.render();},onMode:mode=>{this.recordsMode=mode;this.render();},onMission:mission=>{this.recordsMission=mission;this.render();}}),this.button('records-back','common.back',()=>this.back()));\n         case'campaigns':{\n           const earned=this.saves.baseCompleted||isCompleteBaseCampaign(this.worldCampaigns.get('r01')?.data||null);\n           const cards=[{id:'r01',title:'world.c01',image:'./assets/m06/'+promo.menu.file},{id:'c02-small-world',title:'world.c02',image:'./assets/world-concepts/small-world.svg'},{id:'c03-adriatic-1986',title:'world.c03',image:'./assets/world-concepts/adriatic.svg'}];\ndiff --git a/games/cinder-shift/src/ui/personal-records.ts b/games/cinder-shift/src/ui/personal-records.ts\nindex 01c85c7..0a4d348 100644\n--- a/games/cinder-shift/src/ui/personal-records.ts\n+++ b/games/cinder-shift/src/ui/personal-records.ts\n@@ -10,14 +10,14 @@ import type {RunModeId} from '../session/run-clock';\n import {makeChallengeSpec} from '../session/challenge-spec';\n \n export type RecordsTab='summary'|'campaigns'|'challenges';\n-type Input={data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n+type Input={scope:'device'|'platform';data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};\n export function personalRecordsView(i18n:I18n,ui:Panels,input:Input){\n  const t=(key:string,params:Record<string,string|number>={})=>i18n.t(key,params),n=(value:number)=>i18n.number(value,0);\n  const duration=(ms:number)=>{const seconds=Math.floor(ms/1000);return t('records.duration',{hours:Math.floor(seconds/3600),minutes:Math.floor(seconds/60)%60,seconds:seconds%60});};\n  const trialDuration=(ms:number)=>t('records.secondsValue',{seconds:i18n.number(ms/1000,3)});\n  const metric=(title:string,value:string,testId='')=>'<div><dt>'+e(title)+'</dt><dd'+(testId?' data-testid=\"'+e(testId)+'\"':'')+'>'+e(value)+'</dd></div>';\n  const tabs='<nav class=\"records-tabs\" aria-label=\"'+e(t('records.title'))+'\">'+(['summary','campaigns','challenges'] as const).map(tab=>ui.button('records-'+tab,t('records.'+tab),()=>input.onTab(tab),{pressed:input.tab===tab})).join('')+'</nav>';\n- const notice='<p class=\"helper\">'+e(t('records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n+ const notice='<p class=\"helper\">'+e(t(input.scope==='platform'?'records.platform':'records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role=\"status\" class=\"warning\">'+e(t('records.temporary'))+'</p>':'');\n  if(input.tab==='summary'){\n   const totals=statisticsTotals(input.data),percent=accuracy(totals.shots,totals.hits);\n   return tabs+notice+'<dl class=\"records-stats\">'+metric(t('records.totalTime'),duration(totals.total_ms),'records-total-time')+metric(t('records.missionTime'),duration(totals.mission_ms),'records-mission-time')+metric(t('records.shots'),n(totals.shots),'records-shots')+metric(t('records.hits'),n(totals.hits),'records-hits')+metric(t('records.accuracy'),percent===null?'—':new Intl.NumberFormat(i18n.locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(percent)+'%','records-accuracy')+metric(t('records.completions'),n(input.data.completed.length),'records-completions')+'</dl><p class=\"helper\">'+e(t('records.newCounters'))+'</p>';\ndiff --git a/playwright.product.config.ts b/playwright.product.config.ts\nindex 39de005..a84ad96 100644\n--- a/playwright.product.config.ts\n+++ b/playwright.product.config.ts\n@@ -1,6 +1,6 @@\n import {defineConfig} from '@playwright/test';\n import base from './playwright.config';\n-export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui)|radio-station)\\.spec\\.ts$/,projects:[\n+export default defineConfig({...base,use:{...base.use,video:process.env.CINDER_RECORD_VIDEO==='1'?'on':'retain-on-failure',trace:'retain-on-failure'},testMatch:/(personal-records-(model|ui|transport)|radio-station)\\.spec\\.ts$/,projects:[\n  {name:'chromium',use:{browserName:'chromium'}},\n  {name:'firefox',use:{browserName:'firefox',launchOptions:{}}},\n  {name:'webkit',use:{browserName:'webkit',launchOptions:{}}}\ndiff --git a/tests/encounter-harness.ts b/tests/encounter-harness.ts\nindex 51317a1..310ae95 100644\n--- a/tests/encounter-harness.ts\n+++ b/tests/encounter-harness.ts\n@@ -1,3 +1,5 @@\n+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n // Test-only entry, compiled outside dist/. The production entry has no fixture globals.\n import {app} from '../games/cinder-shift/src/main';\n import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n@@ -8,6 +10,12 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc\n import {MissionAttempt} from '../games/cinder-shift/src/mission';\n \n (window as any).__ENCOUNTER__={\n+ async transportStatistics(input:{kind:'guest'|'bridge';key:string;incoming:import('../games/cinder-shift/src/session/personal-records').PersonalRecords}){\n+  // The controlled SDK mock owns localStorage; production Bridge code receives only its SDK.\n+  const sdk={get:async(key:string,parse?:boolean)=>{if(parse!==false)throw Error('raw_envelope_required');await new Promise(resolve=>setTimeout(resolve,20));return localStorage.getItem(key);},set:async(key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,20));localStorage.setItem(key,String(value));}};\n+  const storage=input.kind==='guest'?new HostRecordStorage(localStorage,input.key):new BridgeRecordStorage(sdk,input.key);\n+  const saves=new SaveService('transport-fixture',storage);return saves.updatePersonalRecords(input.incoming);\n+ },\n  flushStatistics(){return app.statistics.flush();},\n  // Storage-contract fixture only; production has no mutable statistics global.\n  writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},\ndiff --git a/tests/personal-records-transport.spec.ts b/tests/personal-records-transport.spec.ts\nnew file mode 100644\nindex 0000000..a4bc6bf\n--- /dev/null\n+++ b/tests/personal-records-transport.spec.ts\n@@ -0,0 +1,59 @@\n+import {test,expect} from '@playwright/test';\n+import {HostRecordStorage,BridgeRecordStorage,type RecordStorage} from '../games/cinder-shift/src/session/host-storage';\n+import {SaveService} from '../games/cinder-shift/src/session/save';\n+import {PersonalStatistics,emptyFragment,emptyPersonalRecords,statisticsTotals} from '../games/cinder-shift/src/session/personal-records';\n+\n+function backing(kind:'guest'|'bridge'){\n+ let raw:string|null=null,fail=false;const parses:unknown[]=[];\n+ const key='transport-'+crypto.randomUUID();\n+ const guest={getItem:()=>raw,setItem:(_key:string,value:string)=>{if(fail)throw Error('quota');raw=value;}};\n+ const bridge={get:async(_key:string,parse?:boolean)=>{parses.push(parse);await new Promise(resolve=>setTimeout(resolve,1));return raw;},set:async(_key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,1));if(fail)throw Error('quota');raw=String(value);}};\n+ return{get raw(){return raw;},set raw(value:string|null){raw=value;},set fail(value:boolean){fail=value;},parses,\n+  adapter:():RecordStorage=>kind==='guest'?new HostRecordStorage(guest,key):new BridgeRecordStorage(bridge,key)};\n+}\n+const fragment=(id:string,shots:number,hits:number)=>{const data=emptyPersonalRecords();data.sessions[id]={...emptyFragment(),shots,hits};return data;};\n+\n+for(const kind of ['guest','bridge'] as const){\n+ test(kind+': independent save services merge concurrent statistics, preserve other records and duplicate checkpoints',async()=>{\n+  const memory=backing(kind),first=new SaveService('fixture',memory.adapter()),second=new SaveService('fixture',memory.adapter());\n+  await first.connect();await first.saveModeData('records.v1',{valuable:'legacy PB'});await first.saveModeData('world.c02-small-world.v1',{valuable:'independent campaign'});\n+  const a=fragment('a',10,4),b=fragment('b',7,2);expect((await Promise.all([first.updatePersonalRecords(a),second.updatePersonalRecords(b)])).every(Boolean)).toBe(true);\n+  a.sessions.a.shots=1;a.sessions.a.hits=0;expect(await first.updatePersonalRecords(a)).not.toBeNull();\n+  const envelope=JSON.parse(memory.raw!);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});\n+  expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);\n+  expect(envelope.records['records.v1']).toEqual({valuable:'legacy PB'});expect(envelope.records['world.c02-small-world.v1']).toEqual({valuable:'independent campaign'});\n+  if(kind==='bridge')expect(memory.parses.every(value=>value===false)).toBe(true);\n+ });\n+\n+ test(kind+': a failed SDK/guest write retains the last complete envelope and retries the same fragment',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  expect(await service.updatePersonalRecords(fragment('a',1,0))).not.toBeNull();const before=memory.raw;memory.fail=true;\n+  expect(await service.updatePersonalRecords(fragment('a',9,3))).toBeNull();expect(memory.raw).toBe(before);expect(service.issue).toBe('write_failed');\n+  memory.fail=false;expect(await service.updatePersonalRecords(fragment('a',9,3))).not.toBeNull();expect(service.issue).toBeNull();\n+  expect(statisticsTotals(JSON.parse(memory.raw!).records['personal-records.v1'])).toMatchObject({shots:9,hits:3});\n+ });\n+\n+ test(kind+': damaged known statistics recover with quarantine; a future statistics version is never replaced',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter()),backup=fragment('old',4,1),damaged={version:1,sessions:'damaged'};\n+  memory.raw=JSON.stringify({version:1,records:{'personal-records.v1':damaged,'personal-records.backup.v1':backup,campaign:{valuable:true}}});\n+  expect(await service.updatePersonalRecords(fragment('new',2,1))).not.toBeNull();let saved=JSON.parse(memory.raw!);\n+  expect(statisticsTotals(saved.records['personal-records.v1'])).toMatchObject({shots:6,hits:2});expect(saved.records['personal-records.quarantine.v1']).toEqual(damaged);expect(saved.records.campaign).toEqual({valuable:true});\n+  saved.records['personal-records.v1']={version:2,valuable:'future'};memory.raw=JSON.stringify(saved);const before=memory.raw;\n+  expect(await service.updatePersonalRecords(fragment('new',5,2))).toBeNull();expect(memory.raw).toBe(before);\n+ });\n+\n+ test(kind+': unknown outer envelopes and corrupt backups remain byte-for-byte intact',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());\n+  for(const raw of ['broken JSON',JSON.stringify({version:2,records:{valuable:true}}),JSON.stringify({version:1,records:{'personal-records.v1':{version:1,broken:true},'personal-records.backup.v1':{version:1,broken:true}}})]){\n+   memory.raw=raw;expect(await service.updatePersonalRecords(fragment('a',1,0))).toBeNull();expect(memory.raw).toBe(raw);\n+  }\n+ });\n+\n+ test(kind+': profile reload uses the selected transport for settings and statistics without requiring browser storage',async()=>{\n+  const memory=backing(kind),service=new SaveService('fixture',memory.adapter());await service.connect();\n+  const {settings}=await service.load('ru');settings.muted=true;settings.musicVolume=.42;expect(await service.saveSettings(settings)).toBe(true);\n+  const statistics=new PersonalStatistics(service);await statistics.load();statistics.combat('shots');statistics.combat('hits');expect(await statistics.flush()).toBe(true);\n+  const next=new SaveService('fixture',memory.adapter());expect((await next.load('en')).settings).toMatchObject({locale:'ru',muted:true,musicVolume:.42});\n+  const reloaded=new PersonalStatistics(next);await reloaded.load();expect(statisticsTotals(reloaded.snapshot())).toMatchObject({shots:1,hits:1});expect(next.storageScope).toBe('platform');\n+ });\n+}\ndiff --git a/tests/personal-records-ui.spec.ts b/tests/personal-records-ui.spec.ts\nindex 24a439c..de17585 100644\n--- a/tests/personal-records-ui.spec.ts\n+++ b/tests/personal-records-ui.spec.ts\n@@ -65,3 +65,11 @@ test('a completed automatic checkpoint survives closing the playing page',async(\n  await expect.poll(async()=>{const saved=await read(page,'personal-records.v1');return saved?statisticsTotals(saved).shots:0;},{timeout:20000,intervals:[500]}).toBeGreaterThan(0);\n  const shots=statisticsTotals(await read(page,'personal-records.v1')).shots;await page.close();const next=await context.newPage();await next.goto('/games/cinder-shift/');await next.getByTestId('menu-records').click();await expect(next.getByTestId('records-shots')).toHaveText(String(shots));await next.close();\n });\n+\n+for(const kind of ['guest','bridge'] as const)test(kind+': real tabs share one locked envelope during overlapping read/merge/write',async({page,context})=>{\n+ await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();const second=await context.newPage();await second.goto('/__encounter__/');await expect(second.getByTestId('new-shift')).toBeVisible();\n+ expect(await page.evaluate(()=>Boolean(navigator.locks))).toBe(true);\n+ const key='records-lock-'+crypto.randomUUID(),a=emptyPersonalRecords(),b=emptyPersonalRecords();a.sessions['tab-a']={...emptyFragment(),shots:10,hits:4};b.sessions['tab-b']={...emptyFragment(),shots:7,hits:2};\n+ const results=await Promise.all([page.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:a}),second.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:b})]);expect(results.every(Boolean)).toBe(true);\n+ const envelope=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);await second.close();\n+});",
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "snapshotDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "headless": true,
+          "locale": "ru-RU",
+          "viewport": {
+            "width": 1280,
+            "height": 844
+          },
+          "launchOptions": {
+            "args": [
+              "--mute-audio"
+            ]
+          },
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/build-rework-harness.mjs && npm run preview",
+      "env": {
+        "CINDER_QA_MUTE": "0",
+        "CINDER_QA_HARNESS": "1"
+      },
+      "url": "http://127.0.0.1:4175/games/cinder-shift/",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "sprint2-media.spec.ts",
+      "file": "sprint2-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "RW2 atlas airlock A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3277,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:20.441Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1b4b285050659d11381f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3326,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:24.877Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4443431d155715d129eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3166,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:28.218Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f9976ca74fb928b95479",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:31.396Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4e875bdf7d732e256ed9",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:34.374Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9c479fd2f778b0d972f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2986,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:37.363Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f753abb7a569ff5444c0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:40.359Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-24cc5198737cee26f514",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2946,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:43.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-68767e4f4cfe33da9d28",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:46.302Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-21a702fff591c5476c68",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2987,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:49.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7e9883cb762114bce11b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2995,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:52.328Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-85502fa49890477ff235",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3005,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:55.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-8561a94337798d81af26",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2988,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:07:58.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b86477d468b148bacba7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2978,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:01.345Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e246567293bd40bf9f06",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3027,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:04.332Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d577898d4de003d6ebea",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2956,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:07.367Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e874b94f83a19b427073",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:10.334Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-db01690e207019570f19",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2989,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:13.296Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-19e5ffa54f8416cec8d3",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2977,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:16.295Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-aec5644e0e6bd6b7ddcf",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2972,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:19.281Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-2672a4da4663da1e821c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2976,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:22.261Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-46558dfc15781cd2b8ce",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2986,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:25.246Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-705f85795ab64640dad7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:28.242Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c86ad89e05408701d9e0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3J",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3041,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:31.230Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7f2ca94829e3de612a7a",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3K",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2987,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:34.281Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-a725ed176942b050b380",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3004,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:37.277Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-32eb1907149e876c4e77",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2924,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:40.292Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-120f5283347864d30674",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3009,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:43.226Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1111fa5738f61ef6076e",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2957,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:46.244Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-dacf339092dc2e17f13c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2974,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:49.211Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-80b789570afee5ecea84",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:52.196Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9d809b96f90841132251",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2974,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:55.162Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-53c8ca85fb0c2f86bacd",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2973,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:08:58.145Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-50977b8791aca16e47eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2997,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:01.127Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-76ada261c688352ffea0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3023,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:04.132Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b77124b9213d8d1d290f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3081,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:07.165Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-38145a3b0ad2d4aea7f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3003,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:10.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6e8591ee921194c68a0b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3007,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:13.275Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-13fa3c377137f8ad0a55",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2977,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:16.291Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-afb00db3087bdbb681a6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2971,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:19.278Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-3a61e6555d4d63bd95c6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2993,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:22.259Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4bf76a70bf11cf488c5f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2938,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:25.262Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d3f4fe4b63abacab718f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3037,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:28.210Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c728c6b9d929f3fda8a4",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3010,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T15:09:31.257Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6dac771e7967e41fa030",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-20T15:07:15.408Z",
+    "duration": 138922.125,
+    "expected": 44,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
