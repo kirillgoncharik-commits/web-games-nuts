@@ -92,6 +92,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){
   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);
  }
+ if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){
+  // The first feed arms the real warning. Read the pulse from the marked
+  // canopy, then leave shelter only while the second contact's window is open.
+  await walk(page,348);
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});
+ }
  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
@@ -120,7 +126,7 @@ async function solveRoom(page:Page){
  s=await state(page);if(s.world.power){
   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
-  for(let phase=0;phase<sequence.length;phase++){
+  for(let phase=s.world.phase;phase<sequence.length;phase++){
    s=await state(page);if(s.world.power.circuit!==sequence[phase]){
     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;
     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];

@@ -31,6 +31,7 @@ export class RoomScene extends Phaser.Scene{
  private entry:'left'|'right'='left';private art!:SceneArt;private solidRemovers=new Map<string,()=>void>();private encountered=new Set<string>();
  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;
  private feedback=new CombatFeedback();private feedbackLayer!:Phaser.GameObjects.Graphics;private feedbackHp=0;private previousAbilityRemaining=0;private previousExitOpen=false;
+ onWorldCheckpoint:()=>void=()=>{};
  constructor(readonly hooks:RoomHooks){super('Room');}
  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
  preload(){
@@ -169,7 +170,7 @@ export class RoomScene extends Phaser.Scene{
   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;
   if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){
    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);
-   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}
+   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();if(a.current==='YU05-C'&&result.action==='activate')this.onWorldCheckpoint();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}
   }
   if(def.powerSwitch&&a.missionId==='reactor'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleReactorPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'reactor_power',choice:a.reactorCircuit});return;}
   if(def.powerSwitch&&a.missionId==='cargo'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleCargoPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'cargo_power',choice:a.cargoCircuit});return;}
