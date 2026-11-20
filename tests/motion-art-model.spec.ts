@@ -33,7 +33,7 @@ test('render cadence does not change poses at a shared simulation instant',()=>{
 function setup(id:'YU02-B'|'YU02-D'|'YU04-D'){
   const room=rooms[id],state={world:createWorldState(id,room.world!)} as RoomState;
   const layers:{calls:any[];object:any}[]=[];
-  const scene={add:{graphics:()=>{const calls:any[]=[];let object:any;object=new Proxy({},{get:(_,method)=>(...args:any[])=>{calls.push([method,...args]);return object;}});layers.push({calls,object});return object;}}};
+  const scene={add:{image:()=>{let image:any;image=new Proxy({},{get:(_,method)=>(...args:any[])=>{layers[0].calls.push(['sprite:'+String(method),...args]);return image;}});return image;},graphics:()=>{const calls:any[]=[];let object:any;object=new Proxy({},{get:(_,method)=>(...args:any[])=>{calls.push([method,...args]);return object;}});layers.push({calls,object});return object;}}};
   return{state,layers,art:new WorldMotionArt(scene as any,room)};
 }
 test('rendering never mutates gameplay state and a repeat frame does not redraw the backdrop',()=>{
