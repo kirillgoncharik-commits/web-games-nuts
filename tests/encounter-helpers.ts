@@ -13,7 +13,7 @@ export async function encounter(page:import('@playwright/test').Page,input:{miss
  await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();
  // Fixtures bypass normal mission buttons; retain the real gesture/decode contract.
  await page.getByTestId('menu-settings').click();
- await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);
+ await expect.poll(async()=>{const s=await state(page);return{ready:s.audioStatus.ready,failed:s.audioStatus.unavailableResources,probe:await page.evaluate(()=>(window as any).__AUDIO_PROBE__)};}).toMatchObject({ready:true});
  await expect.poll(async()=>(await state(page)).audio).toBe('running');
  if(input.touch)await page.locator('#touch-mode').selectOption('on');
  await page.getByTestId('settings-back').click();
