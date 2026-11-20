@@ -33,9 +33,42 @@
       "video_uploaded": true,
       "video_processing_verified": false
     },
-    "en_media_saved": false,
+    "en_media_saved": true,
     "postpone_publication": true,
-    "submitted": false
+    "submitted": false,
+    "archive_file_id": 14707566,
+    "archive_sha256": "f4e1fe2fdb05d915b475d4bdbd5b3f574069abfbfa69b478f11b149499c089e2",
+    "source_sha": "da52cf96f25556162d5ee6ca1014bc54fd8d1a66",
+    "build_id": "verify.44679055806.a1",
+    "archive_processing": "done",
+    "preview_url": "https://yandex.com/games/app/655191?debug-mode=16&draft=true",
+    "host_smoke": {
+      "context": "signed-in desktop Chrome; not independent guest/mobile/full campaign",
+      "sdk_loader": "IT",
+      "game_ready_reported_ms": [
+        550,
+        7
+      ],
+      "cold_network_load_measured": false,
+      "gameplay_active_and_stopped": true,
+      "movement_observed": true,
+      "continue_blocked_during_host_pause": true,
+      "manual_pause_preserved_after_host_resume": true,
+      "reload_restored_mission_entrance_and_zero_points": true,
+      "purchased_module_directly_reinspected_after_reload": false,
+      "actual_interstitial_fill_verified": false,
+      "independent_audio_capture_verified": false
+    },
+    "locales": [
+      "en",
+      "ru"
+    ],
+    "age_draft": "12+",
+    "categories": [
+      "Action",
+      "Arcade"
+    ],
+    "video_preview_status": "processed_player_reports_Unable_to_play_media"
   },
   "full_playtest_verified": false,
   "physical_mobile_verified": false,
@@ -47,5 +80,14 @@
       "real input full c03-adriatic-1986"
     ]
   },
-  "resume_blocker": "work_environment_unavailable"
+  "resume_blocker": "full-route and independent-playtest verification; other SDK targets pending",
+  "updated_at_utc": "2026-11-20T05:22:39.809479+00:00",
+  "latest_global_artifact": {
+    "run": 44679062489,
+    "runtime_checks": "success",
+    "c02_full_route": "success",
+    "c03_full_route": "failure",
+    "failure": "walk blocked 264",
+    "production_artifact": "skipped"
+  }
 }

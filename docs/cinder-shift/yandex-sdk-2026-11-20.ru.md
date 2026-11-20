@@ -16,8 +16,22 @@ Interstitial допускается по пользовательскому пе
 - `npm run art:check`: PASS.
 - `npm run test:platform`: 8/8 PASS.
 - Сборка Yandex: PASS; SDK-free Basic/itch не загружают YaGames по тесту адаптера.
-- Три теста реального приложения с контролируемым SDK и регрессия локальных сохранений itch вынесены в workflow `Cinder Shift Yandex integration`: выполнение и результат проверить после push.
-- Реальный host QA, реклама в кабинете и гостевое восстановление на Yandex: PENDING. SDK-кандидат не является подтверждённой модерационной готовностью.
-- Два прежних теста полных маршрутов дополнительных миров всё ещё требуют разбора; это отдельный продуктовый блокер.
+- Три теста реального приложения с контролируемым SDK и регрессия локальных сохранений itch вынесены в workflow `Cinder Shift Yandex integration`: PASS: 3/3 теста Yandex-приложения, 21/21 регрессионный тест itch. [CI](https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679055806).
+- Реальный host smoke в авторизованном Chrome: PASS для запуска SDK/готовности/управления/паузы и сохранения при reload. Полная host-проверка, реальный interstitial и независимый гостевой запуск остаются PENDING. SDK-кандидат не является подтверждённой модерационной готовностью.
+- Актуальный общий artifact-прогон: runtime-checks PASS, полный маршрут c02-small-world PASS, маршрут c03-adriatic-1986 FAIL (walk blocked 264). Общий artifact job пропущен. Это отдельный блокер общей готовности.
 
 Официальные контракты проверены 20.11.2026: [подключение](https://yandex.com/dev/games/doc/en/sdk/sdk-about), [Game Ready / Gameplay](https://yandex.com/dev/games/doc/en/sdk/sdk-game-events), [пауза](https://yandex.com/dev/games/doc/en/sdk/sdk-events), [гостевое хранилище](https://yandex.com/dev/games/doc/en/sdk/sdk-player), [реклама](https://yandex.com/dev/games/doc/en/sdk/sdk-adv), [язык](https://yandex.com/dev/games/doc/en/sdk/sdk-environment).
+
+## Точная сборка и проверка в консоли
+
+- Source: `da52cf96f25556162d5ee6ca1014bc54fd8d1a66`; build `verify.44679055806.a1`; чистое CI-дерево.
+- ZIP: `Cinder-Shift-64-0.8.0-alpha.12-yandex.zip`, 4 554 306 байт; SHA-256 `f4e1fe2fdb05d915b475d4bdbd5b3f574069abfbfa69b478f11b149499c089e2`.
+- Архив загружен в черновик 655191, file-id `14707566`. Обработка завершилась, появились Draft и Debug. [Тестовая ссылка](https://yandex.com/games/app/655191?debug-mode=16&draft=true) требует разрешённого доступа к черновику.
+- В отладчике: IT; Game Ready 550 мс в первой открытой сессии и 7 мс после тёплого reload. Это не измерение полной холодной сетевой загрузки.
+- В игровом iframe видны точные source/build. Пройдены меню, карта, мастерская, подтверждённая покупка Splitter, вступление, старт Airlock, движение клавишей D.
+- При платформенной паузе кнопка Continue не возобновляет игру. После platform resume сохраняется ручная/фокусная пауза; явный Continue возвращает Gameplay is active. При ручной паузе отладчик показывает Gameplay is stopped.
+- После reload меню показывает сохранённый вход в миссию и 0 RP, кампания продолжилась. Конкретный модуль после reload отдельно в мастерской не переосматривался: Prepare в активной миссии правильно отключён. Не называть эту проверку полным плейтестом или независимым гостевым запуском.
+- Сохранены тексты и медиа EN/RU, Desktop/Landscape, Action/Arcade, черновая отметка 12+. Cloud save выключен; Postpone publication включён. На модерацию не отправлено.
+- Промовидео обработано, но встроенный проигрыватель показывает Unable to play media. Этот медиапункт не отмечен PASS; нужна отдельная проверка воспроизведения/повторный экспорт при необходимости.
+
+Последний общий прогон: https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44679062489 . Целевой Yandex ZIP выпущен отдельным verification workflow для тестового черновика; принятым production RC не объявлялся.
