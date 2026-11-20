@@ -1,0 +1,1703 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/web-games-nuts/web-games-nuts/game/node_modules/.bin/playwright",
+      "test",
+      "--config=playwright.media.config.ts",
+      "--grep=RW2 atlas",
+      "--output=test-results/media",
+      "--reporter=line,json"
+    ],
+    "configFile": "/home/runner/work/web-games-nuts/web-games-nuts/game/playwright.media.config.ts",
+    "rootDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/2c658f53677c9fb50d191dfb101a248825f195c7",
+        "commitHash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+        "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/15",
+        "prTitle": "Cinder Shift alpha.13: radio routes, antenna checkpoints and rift closure",
+        "prBaseHash": "81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+        "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44686839941"
+      },
+      "gitCommit": {
+        "shortHash": "2c658f5",
+        "hash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+        "subject": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+        "body": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8\n",
+        "author": {
+          "name": "kirillgoncharik-commits",
+          "email": "kirill.goncharik@gmail.com",
+          "time": 1795155490000
+        },
+        "committer": {
+          "name": "GitHub",
+          "email": "noreply@github.com",
+          "time": 1795155490000
+        },
+        "branch": "HEAD"
+      },
+      "gitDiff": "diff --git a/docs/cinder-shift/alpha13-radio.ru.md b/docs/cinder-shift/alpha13-radio.ru.md\nnew file mode 100644\nindex 0000000..121405b\n--- /dev/null\n+++ b/docs/cinder-shift/alpha13-radio.ru.md\n@@ -0,0 +1,25 @@\n+# Alpha.13 — радио над заливом\n+\n+20 ноября 2026. Игровой блок 03 из продуктового ТЗ, после отдельного [PR #13](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13) с диагностикой 01–02. Реализация в локальном коммите `d483b05`; следующий `5dda94f` меняет только версию C01-реестра.\n+\n+| Комната | Реализация |\n+|---|---|\n+| YU05-A | Видимая карта цели над заливом, освещаемая линия B, четыре знакомых уступа и необязательный ресурс наверху. Вход не запускает катсцену. |\n+| YU05-B | Нижний путь через импульс и верхний мост B. Три рубильника доступны с обеих сторон; возврат A и второй контакт прекращают импульс. Сохранён штатный дрон. |\n+| YU05-C | Три контакта B/A/B со старыми ID `antenna:phase-0..2`, физическая карта связей. Только подтверждённый префикс записывается в сейв этой кампании. При Retry/Continue восстанавливаются связи и их контур; положение и часы Миры не восстанавливаются в опасности. Новый Replay создаёт новый campaign ID без связей. |\n+| YU05-D | Первый контакт настраивает B и запускает полное предупреждение 1800 мс. Под навесом x304…392 есть реальное укрытие. Второй контакт доступен только в безопасное окно, снимает физический экран; последний B прекращает импульс и открывает финал. Сохранены итог, история мира и существующий сюжетный переход возвращения Миры. |\n+\n+## Сохранения и откат\n+\n+Поле `radio_links` добавлено к существующей кампании C03, без смены ключа или оболочки `schema_version=1 / worlds-rw3.1`. Валидатор принимает только последовательный префикс трёх известных контактов и только после завершённой YU04. Старые профили без поля остаются валидны. Неизвестные/повреждённые данные не заменяются пустой историей. Прежняя alpha.12 игнорирует дополнительное поле; отдельная проверка фактического отката на каждом хосте остаётся в матрице 08.\n+\n+## Проверки\n+\n+- `npm run check`: PASS, 930 согласованных EN/RU ключей на радио-кандидате.\n+- `npm run art:check`: PASS; это проверка действующих контрактов, не закрытие полного production manifest.\n+- 49 моделей: PASS, включая все 40 комнат, standing positions, спавны, ремонт и четыре E/F повторных входа.\n+- Три новые модели: PASS — порядок/границы связей, старые/повреждённые сейвы, предупреждение/укрытие/окно/физический экран/окончательная остановка импульса.\n+- Chromium: **7/7 PASS, 7.3 минуты**. Полные C02 и C03 по 20 комнат/5 миссий, финал и persisted result после reload; три модели; два реальных сохранения/перезапуска двух связей (normal/reduced).\n+- Прогон использовал собранный локальный alpha.13 runtime, manifest source `34644e26ce618542751ab85a164b3aee61b99f67`, `source_dirty=true`. Встроенный runtime соответствует зафиксированным изменениям `d483b05`. Это локальное доказательство, не clean CI artifact. Дальнейшие изменения личных рекордов в этот runtime не входят.\n+\n+История изменений дополнена alpha.11/12/13. Схема героя, снаряжение, SDK, опубликованные версии и ветки каналов этим блоком не обновляются. Новые композиции финала, полный арт/звук, физические телефоны и человеческие наблюдения остаются открытыми в общем ТЗ. Следующая локальная итерация — блок 13; общий RC не объявлен.\ndiff --git a/docs/cinder-shift/product-backlog-progress.ru.md b/docs/cinder-shift/product-backlog-progress.ru.md\nnew file mode 100644\nindex 0000000..23c65cd\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-progress.ru.md\n@@ -0,0 +1,23 @@\n+# Продуктовый бэклог 01–13 — фактическая ведомость\n+\n+Основание: ТЗ от 20.11.2026 `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`. Исходные RW IDs и тесты в `rework-coverage.json` сохранены. Все шесть исходных RW3 требований продолжают быть PARTIAL: отдельные выполненные блоки не заменяют их полного производственного объёма.\n+\n+Оценки ниже — предварительные инженерные рабочие дни, без ожидания внешнего доступа и игроков; после диагностики каждой области уточняются.\n+\n+| № | Фактическое состояние / недостающее | Ближайшая проверка | Оценка остатка | Зависимость |\n+|---|---|---|---|---|\n+| 01 | Обе полные цепи прошли локально и на integration; тестовый дефект YU04-C возвращён в продуктовый PR #13 | Exact-head CI продуктового PR | <0.5 | CI |\n+| 02 | E/F обычным вводом PASS; исходный пользовательский freeze E не воспроизведён | Cargo Retry/re-entry и исходный сейв, если сбой повторится | 0.5–1 | воспроизводимый freeze для его диагностики |\n+| 03 | Четыре комнаты YU05, сохранение связей и финальный цикл реализованы; локальный полный C03 и reload PASS | Exact-head CI, отдельные кадры/клип всех четырёх комнат | 0.5–1 | радио-кандидат |\n+| 04 | 40 runtime-комнат существуют, модели всех комнат PASS; глубокая матрица каждого проектного выбора ещё не закрыта | Покомнатная сверка с brief 10, обязательный base-route без урона | 3–5 | 03 |\n+| 05 | 10 rigs / 44 слоя — только часть производства | Матрица полного brief 08, состояния и экспорты | 4–8 | 04, Figma quota для импорта |\n+| 06 | Существующая музыка/SFX подключены; полный объём brief 09 не подтверждён | Инвентаризация 10 тем/переходов/сигналов и игровых записей | 3–5 | 04 |\n+| 07 | Независимые профили и legacy unlock проверялись; свежий C01 → два мира одним записанным путём открыт | Полный fresh C01, обе ветви/финал, выбор миров/reload/Replay | 1–2 | 01, 03 |\n+| 08 | Валидаторы/namespace есть, радиосвязи совместимы со старой оболочкой | Повреждение/будущая версия/последняя целая копия и транспорты каналов | 2–4 | 13, integration |\n+| 09 | Пять форматов есть на прежних испытаниях; новые миссии не включены целиком | Матрица 5 режимов и versioned presets принятых новых миссий | 2–4 | 04, 13 |\n+| 10 | Новые подсказки EN/RU, история alpha.11–13 добавлены; 50 локалей/RTL не закрыты | Ведомость каталогов и малые/RTL раскладки | 3–6 | 04–06, 13 |\n+| 11 | Автоматические touch/browser проверки не заменяют физические телефоны | Реальные iPhone/Safari и Android/Chrome, p50/p95/загрузка | 1–2 | доступные устройства и кандидат |\n+| 12 | Общего RC пока нет | Один SHA, web-preview, профили каналов, полный evidence pack | 1–2 | 01–11, 13 |\n+| 13 | Учёт событий, совместимый профиль и экран разрабатываются отдельным следующим коммитом | Контроль 10/4/40.0%, 39/25 с, два таба, старый профиль и UI | 2–4 | integration для host transport |\n+\n+Принятые публичные nuts.bid/itch alpha.12 остаются отдельными поставками. Переход продукта через integration и каналы выполняется после проверки общего кандидата, с сохранением прежних пакетов. Реальный хост SDK, Figma и физические устройства отмечаются отдельно; их отсутствие не превращается в PASS.\ndiff --git a/docs/cinder-shift/rework-room-registry.json b/docs/cinder-shift/rework-room-registry.json\nindex b9431bf..eee14de 100644\n--- a/docs/cinder-shift/rework-room-registry.json\n+++ b/docs/cinder-shift/rework-room-registry.json\n@@ -1,6 +1,6 @@\n {\n   \"schema_version\": 1,\n-  \"build_id\": \"0.8.0-alpha.12\",\n+  \"build_id\": \"0.8.0-alpha.13\",\n   \"source_hash\": \"9820c4515327a592b70be5a8f33dd1eff8fb66e11439eef5be5a48c8bb8a2141\",\n   \"status\": \"SOURCE_INVENTORY; M-RW1 engineering proof in sprint-1-b6-verification.json; human acceptance deferred\",\n   \"campaign_room_count\": 44,\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 3375f22..4208f8a 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Upper feed secured. Restore A at the far lever and confirm the lower exit feed: {action}.\",\n   \"worlds.factory.drive.0\": \"Select B and climb to the isolator. {action}: release the first screen; this starts the drive warning.\",\n   \"worlds.factory.drive.1\": \"Use the upper walkway or cross on green. Select A at the far support and reset the drive in its safe window: {action}.\",\n-  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\"\n+  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\",\n+  \"worlds.radio.ascent\": \"The station is above the bay. Switch to B to light the safe line; the upper ledges hold optional salvage.\",\n+  \"worlds.radio.galleryBridge\": \"Power B: take the fast lower lane between pulses, or climb onto the protected bridge.\",\n+  \"worlds.radio.galleryReturn\": \"First feed secured. Return to a lever and restore A; both routes remain open to the switches.\",\n+  \"worlds.radio.link0\": \"Secure link 1 of 3 on B. Confirmed antenna links survive Retry and reload.\",\n+  \"worlds.radio.link1\": \"Link 1 saved. Restore A and confirm the middle connection.\",\n+  \"worlds.radio.link2\": \"Two links saved. Select B and confirm the final connection.\",\n+  \"worlds.radio.tune\": \"Tune B at the first contact. This starts a full warning before the rift pulse.\",\n+  \"worlds.radio.shelter\": \"Shelter under the marked canopy during the pulse. Restore A and confirm the second feed in the safe window.\",\n+  \"worlds.radio.close\": \"Containment released. Select B and close the rift at the final contact.\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 1f7c0f3..f3a8ba0 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Верхняя линия закреплена. Дальним рубильником верни A и подтверди нижнюю линию выхода: {action}.\",\n   \"worlds.factory.drive.0\": \"Включи B и поднимись к изолятору. {action}: снять первый экран; затем начнётся предупреждение привода.\",\n   \"worlds.factory.drive.1\": \"Перейди привод по верхнему мостку или на зелёный. Включи A у дальней опоры и сбрось привод в безопасное окно: {action}.\",\n-  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\"\n+  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\",\n+  \"worlds.radio.ascent\": \"Станция видна над заливом. Контур B освещает безопасную линию; наверху — необязательный ресурс.\",\n+  \"worlds.radio.galleryBridge\": \"Контур B: короткий нижний путь между импульсами или защищённый верхний мост.\",\n+  \"worlds.radio.galleryReturn\": \"Первая линия закреплена. Вернись к рубильнику и восстанови A; оба пути ведут обратно к переключателям.\",\n+  \"worlds.radio.link0\": \"Закрепи связь 1 из 3 на контуре B. Подтверждённые связи сохраняются при повторе и перезагрузке.\",\n+  \"worlds.radio.link1\": \"Первая связь сохранена. Восстанови A и подтверди среднее соединение.\",\n+  \"worlds.radio.link2\": \"Две связи сохранены. Выбери B и закрепи последнее соединение.\",\n+  \"worlds.radio.tune\": \"Настрой B на первом контакте. Затем начнётся полное предупреждение об импульсе разлома.\",\n+  \"worlds.radio.shelter\": \"Во время импульса укройся под отмеченным навесом. Восстанови A и закрепи вторую линию в безопасное окно.\",\n+  \"worlds.radio.close\": \"Защита снята. Выбери B и закрой разлом на последнем контакте.\"\n }\ndiff --git a/games/cinder-shift/src/room-scene.ts b/games/cinder-shift/src/room-scene.ts\nindex 9609e6e..366b4e5 100644\n--- a/games/cinder-shift/src/room-scene.ts\n+++ b/games/cinder-shift/src/room-scene.ts\n@@ -31,6 +31,7 @@ export class RoomScene extends Phaser.Scene{\n  private entry:'left'|'right'='left';private art!:SceneArt;private solidRemovers=new Map<string,()=>void>();private encountered=new Set<string>();\n  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;\n  private feedback=new CombatFeedback();private feedbackLayer!:Phaser.GameObjects.Graphics;private feedbackHp=0;private previousAbilityRemaining=0;private previousExitOpen=false;\n+ onWorldCheckpoint:()=>void=()=>{};\n  constructor(readonly hooks:RoomHooks){super('Room');}\n  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}\n  preload(){\n@@ -169,7 +170,7 @@ export class RoomScene extends Phaser.Scene{\n   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;\n   if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){\n    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);\n-   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n+   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();if(a.current==='YU05-C'&&result.action==='activate')this.onWorldCheckpoint();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n   }\n   if(def.powerSwitch&&a.missionId==='reactor'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleReactorPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'reactor_power',choice:a.reactorCircuit});return;}\n   if(def.powerSwitch&&a.missionId==='cargo'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleCargoPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'cargo_power',choice:a.cargoCircuit});return;}\ndiff --git a/games/cinder-shift/src/session/campaign.ts b/games/cinder-shift/src/session/campaign.ts\nindex 64edd7c..727ab38 100644\n--- a/games/cinder-shift/src/session/campaign.ts\n+++ b/games/cinder-shift/src/session/campaign.ts\n@@ -10,7 +10,7 @@ export type RelaySupport='none'|'power'|'repair';\n export type MissionEntry={mission_id:PlayableMissionId;seed:number;build:Loadout;max_hp:number;initial_hp:number;initial_score:number;event_plan:EventPlan;relay_template?:string;relay_leg?:'A'|'B';relay_support?:RelaySupport};\n export type AttemptResult={attempt_id:string;mission_id:PlayableMissionId;result:'victory'|'death';reason:string;hp:number;max_hp:number;score:number;active_ms:number;screen_ms:number;nodes:NodeId[];reward_granted:boolean;applied:boolean};\n export type RunStats={ruleset_id?:string;active_ms:number;deaths:number;score:number;foundry_route:'service'|'press'|null;history_complete:boolean;assisted:boolean};\n-export type CampaignData={world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n+export type CampaignData={radio_links?:string[];world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n export function newCampaign(seed:number):CampaignData{return{character_id:'mira',campaign_id:crypto.randomUUID(),campaign_seed:seed>>>0,mission_id:'airlock',location_id:'airlock',stage:'map',nodes:[],active:null,points:1,completed_missions:[],reward_ledger:[],processed_attempts:[],run_stats:{ruleset_id:campaignRuleset,active_ms:0,deaths:0,score:0,foundry_route:null,history_complete:true,assisted:false},entry:null,result:null};}\n export function newWorldCampaign(id:NewCampaignId,seed:number):CampaignData{const data=newCampaign(seed);data.mission_id=data.location_id=newCampaignMissions[id][0] as PlayableMissionId;data.world_facts=[];return data;}\n export class Campaign{\ndiff --git a/games/cinder-shift/src/session/radio-links.ts b/games/cinder-shift/src/session/radio-links.ts\nnew file mode 100644\nindex 0000000..805c4dd\n--- /dev/null\n+++ b/games/cinder-shift/src/session/radio-links.ts\n@@ -0,0 +1,13 @@\n+import type {WorldRoomState} from './world-runtime';\n+\n+// These are the existing contact IDs, in transmission order. Only confirmed\n+// links survive a mission restart; position, timing and transient input do not.\n+export const radioLinkIds=['antenna:phase-0','antenna:phase-1','antenna:phase-2'] as const;\n+export function validRadioLinks(value:unknown):value is string[]{\n+ return Array.isArray(value)&&value.length<=radioLinkIds.length&&value.every((id,index)=>id===radioLinkIds[index]);\n+}\n+export function restoreRadioLinks(state:WorldRoomState,links:readonly string[]){\n+ if(!validRadioLinks(links)||!state.power)throw new TypeError('invalid_radio_links');\n+ state.phase=links.length;state.ledger=[...links];\n+ state.power.circuit=links.length===0||links.length===2?'A':'B';\n+}\ndiff --git a/games/cinder-shift/src/session/release-notes.ts b/games/cinder-shift/src/session/release-notes.ts\nindex 9c682aa..e054e45 100644\n--- a/games/cinder-shift/src/session/release-notes.ts\n+++ b/games/cinder-shift/src/session/release-notes.ts\n@@ -11,6 +11,9 @@ export const releaseNotes:readonly ReleaseNote[]=[\n ,{id:'0.8.0-alpha.8',date:'2026-11-18',en:{summary:'Reliable silence and mobile menu controls.',changes:['Zero bus volume takes effect immediately, including while the audio clock is suspended.','A warning cannot restore the previous music volume after it has been set to zero.','Compact menu and campaign-map buttons retain a minimum height of 48 pixels.']},ru:{summary:'Надёжное отключение звука и мобильные кнопки.',changes:['Нулевая громкость шины применяется сразу, в том числе при остановленном аудиовремени.','Предупреждение не возвращает прежнюю громкость музыки после её установки на ноль.','Кнопки компактного меню и карты кампании сохраняют высоту не менее 48 пикселей.']}}\n ,{id:'0.8.0-alpha.9',date:'2026-11-18',en:{summary:'The House of Communications.',changes:['The courtyard lever opens a real entrance and lights the staircase; an upper alcove holds optional salvage.','Cross the powered bridge, then restore the exit circuit from the far side.','The rooftop offers lower cover and a climb to salvage.','Prepare both feeds before the first transmitter pulse; the physical map records every confirmed connection.']},ru:{summary:'Дом связи.',changes:['Рубильник во дворе открывает дверь и включает лестничный свет; в верхней нише есть ресурс.','Перейдите по мосту под питанием, затем верните выходной контур с дальней стороны.','На крыше доступны нижнее укрытие и подъём за ресурсом.','Подготовьте обе линии до первого импульса передатчика; физическая карта отмечает каждое подтверждённое соединение.']}}\n ,{\"id\":\"0.8.0-alpha.10\",\"date\":\"2026-11-18\",\"en\":{\"summary\":\"Night harbor.\",\"changes\":[\"The warehouse lift connects a reachable upper salvage route.\",\"Climb onto the crane platform, wait for the marked suspended load, and restore the exit feed from the far lever.\",\"Quay lamps use circuit A; water signals remain visible when the lamps are off.\",\"The port relay requires the cargo platform, shield feed and final transmitter contact before its map lights up.\"]},\"ru\":{\"summary\":\"Ночная гавань.\",\"changes\":[\"Складская платформа соединена с доступным верхним маршрутом за ресурсом.\",\"Поднимитесь на платформу крана, переждите отмеченный груз и верните питание выхода дальним рубильником.\",\"Фонари причала работают от A; метки воды остаются видны без освещения.\",\"Портовый ретранслятор требует подключения грузовой платформы, щита и последнего контакта передатчика.\"]}}\n+,{id:'0.8.0-alpha.11',date:'2026-11-19',en:{summary:'World mechanism animation.',changes:['Ten environment rigs use 44 authored layers with readable normal and reduced-motion states.']},ru:{summary:'Анимации механизмов новых миров.',changes:['Десять наборов окружения используют 44 слоя с обычными состояниями и уменьшенным движением.']}}\n+,{id:'0.8.0-alpha.12',date:'2026-11-19',en:{summary:'The factory power network.',changes:['Choose the conveyor route, ride the hoist and connect both distributor feeds.','Reset the drive in three physical phases and secure the radio line.']},ru:{summary:'Электросеть завода.',changes:['Выберите путь конвейера, используйте подъёмник и подключите оба контакта распределителя.','Сбросьте привод в три физических этапа и закрепите радиоканал.']}}\n+,{id:'0.8.0-alpha.13',date:'2026-11-20',en:{summary:'Radio above the bay.',changes:['Light the station approach and choose the gallery floor or powered upper bridge.','Three confirmed antenna links survive Retry and reload within the same campaign.','Tune the circuit, shelter beneath the marked canopy and close the rift in its safe window.']},ru:{summary:'Радио над заливом.',changes:['Осветите подход к станции и выберите нижнюю галерею или верхний мост под питанием.','Три подтверждённые связи антенны сохраняются при повторе и перезагрузке этой кампании.','Настройте контур, укройтесь под отмеченным навесом и закройте разлом в безопасное окно.']}}\n ];\n type Version={core:number[];pre:string[]};\n function parseVersion(value:string):Version|null{const m=/^(\\d+)\\.(\\d+)\\.(\\d+)(?:-([\\da-z.-]+))?(?:\\+[\\da-z.-]+)?$/i.exec(value);return m?{core:m.slice(1,4).map(Number),pre:m[4]?.split('.')||[]}:null;}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 4326cae..50f03c3 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -6,6 +6,7 @@ import {migrateEventPlan,validPlan} from './events';\n import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';\n import {validateLegacySave} from './legacy-save';\n import {actions,bindingAllowed,type Action} from '../input';\n+import {validRadioLinks} from './radio-links';\n export const databaseName='cinder-shift-r01';\n export const schemaVersion=1;\n export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};\n@@ -131,6 +132,7 @@ export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_\n export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{\n  if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';\n  const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';\n+ if(d.radio_links!==undefined&&(id!=='c03-adriatic-1986'||!validRadioLinks(d.radio_links)||!d.completed_missions.includes('YU04')))return'corrupt';\n  const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';\n  if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';\n  if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex bedc902..ff1eb6d 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -1,5 +1,6 @@\n import {newCampaignIds,newCampaignMissions,isWorldMission,worldForMission,type NewCampaignId} from '../session/new-campaign-content';\n import {worldContext} from '../session/world-runtime';\n+import {restoreRadioLinks} from '../session/radio-links';\n import {worldAvailability,isCompleteBaseCampaign} from '../session/world-progress';\n import {buildMetadata,buildLabel,buildDiagnostics} from '../build';\n import {ReleaseNotesSession,releaseNotes} from '../session/release-notes';\n@@ -94,7 +95,7 @@ export class Application{\n     setTimeout(()=>{if(this.state==='loading')this.failure('boot_timeout');},15000);\n   }\n   readonly hooks:RoomHooks={failure:code=>this.failure(code),controls:this.controls,effects:this.effects,emit:(name,params)=>this.emit(name,params),pause:()=>this.pause('manual'),playAllowed:()=>this.state==='playing',ghostFrame:room=>this.ghostFrame(room),result:result=>{void this.finish(result);},dying:()=>{this.state='dying';},objective:(key,params)=>this.objective(key,params),hud:(attempt,player,hold)=>this.hud(attempt,player,hold),container:slot=>this.openEvent(slot),fork:()=>this.openFork(),autoFire:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.autofire,debug:()=>this.settings.debugBodies,combatAssist:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.combatAssist,feedbackIntensity:()=>this.settings.effectsIntensity,reducedFlashes:()=>this.settings.reducedFlashes||this.settings.reducedMotion||this.settings.effectsIntensity===0||matchMedia('(prefers-reduced-motion: reduce)').matches,transition:active=>{$('transition').hidden=!active;}};\n-  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n+  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;room.onWorldCheckpoint=()=>{if(this.challengeEntry||this.activeWorld!=='c03-adriatic-1986'||this.attempt?.current!=='YU05-C'||!this.campaign)return;this.campaign.data.radio_links=[...(this.attempt.room().world?.ledger||[])];void this.persist();};game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n   async initialize(){const loaded=await this.saves.load(this.i18n.locale);this.settings=loaded.settings;this.controls.setBindings(this.settings.keyBindings);this.syncAccessibility();this.effects.configure(this.settings);this.i18n.setLocale(this.settings.locale);if(loaded.campaign){this.campaign=new Campaign(loaded.campaign);if(loaded.campaign.stage==='campaign_complete')void this.saves.recordCampaign(loaded.campaign);}this.worldCampaigns.set('r01',this.campaign);for(const id of newCampaignIds){const world=await this.saves.loadWorldCampaign(id);this.worldCampaigns.set(id,world.campaign?new Campaign(world.campaign):null);if(!world.ok)this.worldLoadFailed.add(id);}try{const selected=localStorage.getItem('cinder-active-world-v1');if(newCampaignIds.includes(selected as NewCampaignId)&&worldAvailability(selected!,this.saves.baseCompleted,true,!this.worldLoadFailed.has(selected!))==='available'){this.activeWorld=selected as NewCampaignId;this.campaign=this.worldCampaigns.get(selected!)||null;}}catch{}const marker=await this.saves.loadModeData('release-notes.v1');this.notes=new ReleaseNotesSession(buildMetadata.release_id,marker.value,this.saves.hasExistingProfile);if(marker.ok&&marker.value===undefined&&this.notes.marker.installed_release)await this.saves.saveModeData('release-notes.v1',this.notes.marker);this.settingsReady=true;this.ready();}\n   private loadingArtFinished(fallback:boolean){if(this.loadingArtSettled)return;this.loadingArtSettled=true;clearTimeout(this.loadingArtFallbackTimer);if(fallback){const loadingArt=$('loading-art');if(loadingArt)loadingArt.hidden=true;$('overlay').classList.add('loading-art-fallback');}else $('overlay').classList.remove('loading-art-fallback');this.maybeShowInitialMenu();}\n   private afterVisibleLoadingFrame(){if(!this.introStarted||document.hidden||this.state==='error')return;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!this.introStarted||document.hidden||this.state==='error')return;if(!this.introLastFrame)this.introLastFrame=performance.now();this.runIntroClock();}));}\n@@ -265,6 +266,7 @@ export class Application{\n     const entry=challengeEntry||(mode==='mission'?this.campaign?.data.entry:undefined);if(mode==='mission'&&!entry)return;\n     this.emit('play_pressed',{mode,mission_id:entry?.mission_id||'airlock'});\n     const previous=this.attempt?.id||this.campaign?.data.result?.attempt_id;this.game.scene.stop('Room');this.game.scene.stop('Backdrop');this.attempt=new MissionAttempt(mode,entry||undefined,challengeEntry?this.challengeLedger||undefined:undefined);\n+    if(!challengeEntry&&mode==='mission'&&this.activeWorld==='c03-adriatic-1986'&&entry?.mission_id==='YU05'&&this.campaign?.data.radio_links)restoreRadioLinks(this.attempt.room('YU05-C').world!,this.campaign.data.radio_links);\n     if(this.campaign&&mode==='mission'&&!challengeEntry){this.campaign.begin();this.busy=true;await this.persist();this.busy=false;}\n     if(retry)this.emit('retry',{previous_attempt_id:previous||''});\n     $('transition').hidden=true;\ndiff --git a/games/cinder-shift/src/world-rooms.ts b/games/cinder-shift/src/world-rooms.ts\nindex 30470be..804f11c 100644\n--- a/games/cinder-shift/src/world-rooms.ts\n+++ b/games/cinder-shift/src/world-rooms.ts\n@@ -76,10 +76,10 @@ const authored:Authored[]=[\n  {id:'YU04-B',solids:[platform(144,288,64),platform(376,256,80),platform(416,224,48)],world:{landmark:'conveyor',switches:[{x:112,y:320},{x:480,y:320}],powerObjects:[power('hoist-A','A',232,244,112),power('hoist-B','B',232,280,112),{...power('hoist-door-B','B',532,272,16,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:300,y:280},{x:552,y:320}],sequenceHints:['worlds.factory.hoist.0','worlds.factory.hoist.1'],powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:336},{x:284,y:336},{x:284,y:292}]},{on:'A',points:[{x:480,y:278},{x:480,y:184},{x:532,y:184},{x:532,y:272}]}]},cache:{x:440,y:224}},\n  {id:'YU04-C',solids:[cover(160,32,48),platform(248,288,32),platform(304,244,88),cover(480,32,48)],world:{landmark:'distributor',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('feed-A','A',240,272,20,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:340,y:244},{x:552,y:320}],sequenceHints:['worlds.factory.distributor.0','worlds.factory.distributor.1'],repair:{x:584,y:320},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:444,y:176},{x:524,y:176}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:140},{x:340,y:140},{x:340,y:244}]},{on:'A',points:[{x:432,y:278},{x:432,y:336},{x:552,y:336},{x:552,y:320}]}]},enemies:[enemy('yu04c-scanner',448)]},\n  {id:'YU04-D',solids:[cover(152,32,48),platform(232,288,40),platform(296,244,88),cover(464,32,40)],world:{landmark:'drive',switches:[{x:112,y:320},{x:416,y:320}],powerObjects:[{...power('drive-A','A',528,264,20,56),role:'door'}],phaseDoors:[{id:'c03-adriatic-1986:YU04-D:isolation-screen',untilPhase:1,rect:platform(296,272,20,48)},{id:'c03-adriatic-1986:YU04-D:drive-shield',untilPhase:2,rect:platform(448,272,16,48)}],sequence:['B','A','B'],sequenceTargets:[{x:264,y:288},{x:408,y:320},{x:552,y:320}],sequenceHints:['worlds.factory.drive.0','worlds.factory.drive.1','worlds.factory.drive.2'],pulse:{x:328,width:48,cycle:4600,warning:1600,active:800,fromPhase:1,untilPhase:2,signals:[{x:304,y:234},{x:400,y:234}]},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:440,y:176},{x:480,y:176},{x:520,y:176}]}}},\n- {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[power('bay-A','A',352,276,24,44)],sequence:['B']},cache:{x:424,y:208}},\n- {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320}],powerObjects:[power('gallery-A','A',240,272,20,48),power('gallery-B','B',432,240,80)],sequence:['B','A']},enemies:[enemy('yu05b-drone',448)]},\n- {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[power('antenna-A','A',240,272,20,48)],sequence:['B','A','B'],repair:{x:584,y:320}}},\n- {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[power('rift-A','A',544,264,20,56)],sequence:['B','A','B'],pulse:{x:240,width:56,cycle:4400,warning:1500,active:800}}},\n+ {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[{...power('bay-A','A',352,276,24,44),role:'door'}],sequence:['B'],sequenceHints:['worlds.radio.ascent'],powerLight:{area:platform(224,274,336,46),on:'B'},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:552,y:340},{x:552,y:310}]}],transmissionMap:{panel:platform(400,72,188,104),nodes:[{x:424,y:150},{x:476,y:112},{x:556,y:92}]}},cache:{x:424,y:208}},\n+ {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320},{x:568,y:320}],powerObjects:[{...power('gallery-A','A',240,272,20,48),role:'door'},power('gallery-B','B',384,240,128)],sequence:['B','A'],sequenceHints:['worlds.radio.galleryBridge','worlds.radio.galleryReturn'],pulse:{x:344,width:56,cycle:6000,warning:1800,active:700,untilPhase:2,signals:[{x:320,y:222},{x:424,y:222}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:448,y:340},{x:448,y:252}]},{on:'A',points:[{x:424,y:278},{x:424,y:336},{x:250,y:336},{x:250,y:268}]}]},enemies:[enemy('yu05b-drone',448)]},\n+ {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[{...power('antenna-A','A',240,272,20,48),role:'door'}],sequence:['B','A','B'],sequenceHints:['worlds.radio.link0','worlds.radio.link1','worlds.radio.link2'],transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:400,y:278},{x:400,y:338},{x:408,y:338},{x:408,y:312}]},{on:'B',points:[{x:552,y:278},{x:552,y:312}]}],repair:{x:584,y:320}}},\n+ {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('rift-A','A',544,264,20,56),role:'door'}],phaseDoors:[{id:'rift-containment',untilPhase:2,rect:platform(496,228,20,60)}],sequence:['B','A','B'],sequenceHints:['worlds.radio.tune','worlds.radio.shelter','worlds.radio.close'],pulse:{x:240,width:192,cycle:6000,warning:1800,active:900,fromPhase:1,untilPhase:3,shelters:[platform(304,274,88,46)],signals:[{x:216,y:222},{x:456,y:222}]},transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:432,y:278},{x:432,y:342},{x:408,y:342},{x:408,y:312}]}]}},\n ];\n export const worldRooms=Object.fromEntries(authored.map((room):[WorldRoomId,RoomDefinition]=>{\n  const mission=room.id.slice(0,4) as WorldMissionId,letter=room.id.at(-1)!,prev=String.fromCharCode(letter.charCodeAt(0)-1),next=String.fromCharCode(letter.charCodeAt(0)+1);\ndiff --git a/package-lock.json b/package-lock.json\nindex 14b2b09..c4d9d61 100644\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1,12 +1,12 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"lockfileVersion\": 3,\n   \"requires\": true,\n   \"packages\": {\n     \"\": {\n       \"name\": \"nuts-web-games\",\n-      \"version\": \"0.8.0-alpha.12\",\n+      \"version\": \"0.8.0-alpha.13\",\n       \"dependencies\": {\n         \"phaser\": \"3.90.0\"\n       },\ndiff --git a/package.json b/package.json\nindex b4bd21f..a0f095a 100644\n--- a/package.json\n+++ b/package.json\n@@ -1,6 +1,6 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"private\": true,\n   \"type\": \"module\",\n   \"scripts\": {\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 683cba7..ce555e3 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -92,6 +92,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num\n  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){\n   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);\n  }\n+ if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){\n+  // The first feed arms the real warning. Read the pulse from the marked\n+  // canopy, then leave shelter only while the second contact's window is open.\n+  await walk(page,348);\n+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});\n+ }\n  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});\n }\n async function combat(page:Page){\n@@ -120,7 +126,7 @@ async function solveRoom(page:Page){\n  s=await state(page);if(s.world.power){\n   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.\n   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];\n-  for(let phase=0;phase<sequence.length;phase++){\n+  for(let phase=s.world.phase;phase<sequence.length;phase++){\n    s=await state(page);if(s.world.power.circuit!==sequence[phase]){\n     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;\n     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];\ndiff --git a/tests/radio-station.spec.ts b/tests/radio-station.spec.ts\nnew file mode 100644\nindex 0000000..5cbafc9\n--- /dev/null\n+++ b/tests/radio-station.spec.ts\n@@ -0,0 +1,76 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {Campaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n+import {newCampaignMissions} from '../games/cinder-shift/src/session/new-campaign-content';\n+import {createWorldState,actWorld,powerTarget,worldPulse,worldPulseHits,worldSolids,worldReady} from '../games/cinder-shift/src/session/world-runtime';\n+import {radioLinkIds,restoreRadioLinks,validRadioLinks} from '../games/cinder-shift/src/session/radio-links';\n+import {validateWorldSave} from '../games/cinder-shift/src/session/save';\n+import {encounter} from './encounter-helpers';\n+import {state} from './helpers';\n+import {to,ground} from './route-helpers';\n+\n+test('model radio link checkpoints are ordered, bounded and restore only confirmed contacts',()=>{\n+ const spec=rooms['YU05-C'].world!;\n+ for(let count=0;count<=3;count++){\n+  const links=radioLinkIds.slice(0,count),s=createWorldState('YU05-C',spec);\n+  restoreRadioLinks(s,links);expect(s.phase).toBe(count);expect(s.ledger).toEqual(links);\n+  expect(worldReady(spec,s)).toBe(count===3);\n+  expect(powerTarget(spec,s)).toEqual(count===3?null:{x:[264,408,552][count],y:320});\n+ }\n+ for(const invalid of [null,{},['antenna:phase-1'],['antenna:phase-0','antenna:phase-0'],[...radioLinkIds,'future']])expect(validRadioLinks(invalid)).toBe(false);\n+});\n+\n+test('model old world saves remain valid and malformed radio checkpoints are rejected',()=>{\n+ const c=new Campaign(newWorldCampaign('c03-adriatic-1986',4));\n+ for(const id of newCampaignMissions['c03-adriatic-1986'].slice(0,4)){\n+  c.prepare();c.begin();c.applyResult({attempt_id:'fixture-'+id,mission_id:id as any,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:1,screen_ms:0,nodes:[]});c.advance();\n+ }\n+ c.prepare();c.begin();\n+ const envelope=()=>({schema_version:1,content_version:'worlds-rw3.1',game_id:'c03-adriatic-1986',build_id:'radio-model',saved_at:new Date().toISOString(),campaign:c.snapshot()});\n+ expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=radioLinkIds.slice(0,2);expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=['antenna:phase-2'];expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBe('corrupt');\n+ expect(newWorldCampaign('c03-adriatic-1986',4).radio_links).toBeUndefined();\n+});\n+\n+test('model radio finale arms a fresh warning, provides real shelter, gates the window and stops on closure',()=>{\n+ const spec=rooms['YU05-D'].world!,s=createWorldState('YU05-D',spec);\n+ const body=(x:number)=>({x:x-11,y:276,width:22,height:44});\n+ expect(worldPulse(spec,50000,s)).toBe('safe');\n+ actWorld(spec,s,{x:112,y:320},body(112),1,50000);expect(s.power?.circuit).toBe('B');\n+ expect(actWorld(spec,s,{x:264,y:320},body(264),1,50000)?.action).toBe('activate');\n+ expect(worldPulse(spec,50000,s)).toBe('warning');expect(worldPulse(spec,51799,s)).toBe('warning');\n+ expect(worldPulse(spec,51800,s)).toBe('active');expect(worldPulseHits(spec,body(264),51800,s)).toBe(true);\n+ expect(worldPulseHits(spec,body(348),51800,s)).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,51800);expect(s.power?.circuit).toBe('A');\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,51800)).toBeNull();\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(true);\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,52700)).toMatchObject({action:'activate',geometry:true});\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,52700);\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,52700)?.action).toBe('activate');\n+ expect(worldReady(spec,s)).toBe(true);expect(worldPulse(spec,57800,s)).toBe('safe');\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,57800)).toBeNull();expect(s.ledger).toHaveLength(3);\n+});\n+\n+for(const reduced of [false,true])test(`radio links persist after real activation and reload, reduced ${reduced}`,async({page},info)=>{\n+ test.setTimeout(60000);await encounter(page,{mission:'YU05',room:'YU05-C',reduced});\n+ // The only initial fixture is world entry with C01 unlocked. No position,\n+ // contact or time writes occur once play starts.\n+ await page.evaluate(()=>new Promise<void>((resolve,reject)=>{\n+  localStorage.setItem('cinder-active-world-v1','c03-adriatic-1986');\n+  const request=indexedDB.open('cinder-shift-r01',1);request.onsuccess=()=>{const db=request.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put({schema_version:1,base_game_id:'r01',completion_ids:['legacy-c01-unlocked']},'world-profile.v1');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};\n+ }));\n+ const before=await state(page);await to(page,112);await ground(page,320);await page.keyboard.press('e');\n+ await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');\n+ await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);\n+ await to(page,400);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');\n+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);\n+ await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();\n+ await expect.poll(async()=>{const s=await state(page);return s.campaign.radio_links;}).toEqual(radioLinkIds.slice(0,2));\n+ await page.reload();await expect(page.getByTestId('continue')).toBeVisible();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();\n+ await expect.poll(async()=>(await state(page)).state).toBe('playing');\n+ const after=await state(page);expect(after.campaign.campaign_id).toBe(before.campaign.campaign_id);expect(after.campaign.points).toBe(before.campaign.points);\n+ expect(after.roomStates['YU05-C'].world.phase).toBe(2);expect(after.roomStates['YU05-C'].world.ledger).toEqual(radioLinkIds.slice(0,2));\n+ await page.screenshot({path:info.outputPath('radio-links-reloaded.png')});\n+});",
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/2c658f53677c9fb50d191dfb101a248825f195c7",
+            "commitHash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/15",
+            "prTitle": "Cinder Shift alpha.13: radio routes, antenna checkpoints and rift closure",
+            "prBaseHash": "81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44686839941"
+          },
+          "gitCommit": {
+            "shortHash": "2c658f5",
+            "hash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+            "subject": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+            "body": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795155490000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795155490000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/alpha13-radio.ru.md b/docs/cinder-shift/alpha13-radio.ru.md\nnew file mode 100644\nindex 0000000..121405b\n--- /dev/null\n+++ b/docs/cinder-shift/alpha13-radio.ru.md\n@@ -0,0 +1,25 @@\n+# Alpha.13 — радио над заливом\n+\n+20 ноября 2026. Игровой блок 03 из продуктового ТЗ, после отдельного [PR #13](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13) с диагностикой 01–02. Реализация в локальном коммите `d483b05`; следующий `5dda94f` меняет только версию C01-реестра.\n+\n+| Комната | Реализация |\n+|---|---|\n+| YU05-A | Видимая карта цели над заливом, освещаемая линия B, четыре знакомых уступа и необязательный ресурс наверху. Вход не запускает катсцену. |\n+| YU05-B | Нижний путь через импульс и верхний мост B. Три рубильника доступны с обеих сторон; возврат A и второй контакт прекращают импульс. Сохранён штатный дрон. |\n+| YU05-C | Три контакта B/A/B со старыми ID `antenna:phase-0..2`, физическая карта связей. Только подтверждённый префикс записывается в сейв этой кампании. При Retry/Continue восстанавливаются связи и их контур; положение и часы Миры не восстанавливаются в опасности. Новый Replay создаёт новый campaign ID без связей. |\n+| YU05-D | Первый контакт настраивает B и запускает полное предупреждение 1800 мс. Под навесом x304…392 есть реальное укрытие. Второй контакт доступен только в безопасное окно, снимает физический экран; последний B прекращает импульс и открывает финал. Сохранены итог, история мира и существующий сюжетный переход возвращения Миры. |\n+\n+## Сохранения и откат\n+\n+Поле `radio_links` добавлено к существующей кампании C03, без смены ключа или оболочки `schema_version=1 / worlds-rw3.1`. Валидатор принимает только последовательный префикс трёх известных контактов и только после завершённой YU04. Старые профили без поля остаются валидны. Неизвестные/повреждённые данные не заменяются пустой историей. Прежняя alpha.12 игнорирует дополнительное поле; отдельная проверка фактического отката на каждом хосте остаётся в матрице 08.\n+\n+## Проверки\n+\n+- `npm run check`: PASS, 930 согласованных EN/RU ключей на радио-кандидате.\n+- `npm run art:check`: PASS; это проверка действующих контрактов, не закрытие полного production manifest.\n+- 49 моделей: PASS, включая все 40 комнат, standing positions, спавны, ремонт и четыре E/F повторных входа.\n+- Три новые модели: PASS — порядок/границы связей, старые/повреждённые сейвы, предупреждение/укрытие/окно/физический экран/окончательная остановка импульса.\n+- Chromium: **7/7 PASS, 7.3 минуты**. Полные C02 и C03 по 20 комнат/5 миссий, финал и persisted result после reload; три модели; два реальных сохранения/перезапуска двух связей (normal/reduced).\n+- Прогон использовал собранный локальный alpha.13 runtime, manifest source `34644e26ce618542751ab85a164b3aee61b99f67`, `source_dirty=true`. Встроенный runtime соответствует зафиксированным изменениям `d483b05`. Это локальное доказательство, не clean CI artifact. Дальнейшие изменения личных рекордов в этот runtime не входят.\n+\n+История изменений дополнена alpha.11/12/13. Схема героя, снаряжение, SDK, опубликованные версии и ветки каналов этим блоком не обновляются. Новые композиции финала, полный арт/звук, физические телефоны и человеческие наблюдения остаются открытыми в общем ТЗ. Следующая локальная итерация — блок 13; общий RC не объявлен.\ndiff --git a/docs/cinder-shift/product-backlog-progress.ru.md b/docs/cinder-shift/product-backlog-progress.ru.md\nnew file mode 100644\nindex 0000000..23c65cd\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-progress.ru.md\n@@ -0,0 +1,23 @@\n+# Продуктовый бэклог 01–13 — фактическая ведомость\n+\n+Основание: ТЗ от 20.11.2026 `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`. Исходные RW IDs и тесты в `rework-coverage.json` сохранены. Все шесть исходных RW3 требований продолжают быть PARTIAL: отдельные выполненные блоки не заменяют их полного производственного объёма.\n+\n+Оценки ниже — предварительные инженерные рабочие дни, без ожидания внешнего доступа и игроков; после диагностики каждой области уточняются.\n+\n+| № | Фактическое состояние / недостающее | Ближайшая проверка | Оценка остатка | Зависимость |\n+|---|---|---|---|---|\n+| 01 | Обе полные цепи прошли локально и на integration; тестовый дефект YU04-C возвращён в продуктовый PR #13 | Exact-head CI продуктового PR | <0.5 | CI |\n+| 02 | E/F обычным вводом PASS; исходный пользовательский freeze E не воспроизведён | Cargo Retry/re-entry и исходный сейв, если сбой повторится | 0.5–1 | воспроизводимый freeze для его диагностики |\n+| 03 | Четыре комнаты YU05, сохранение связей и финальный цикл реализованы; локальный полный C03 и reload PASS | Exact-head CI, отдельные кадры/клип всех четырёх комнат | 0.5–1 | радио-кандидат |\n+| 04 | 40 runtime-комнат существуют, модели всех комнат PASS; глубокая матрица каждого проектного выбора ещё не закрыта | Покомнатная сверка с brief 10, обязательный base-route без урона | 3–5 | 03 |\n+| 05 | 10 rigs / 44 слоя — только часть производства | Матрица полного brief 08, состояния и экспорты | 4–8 | 04, Figma quota для импорта |\n+| 06 | Существующая музыка/SFX подключены; полный объём brief 09 не подтверждён | Инвентаризация 10 тем/переходов/сигналов и игровых записей | 3–5 | 04 |\n+| 07 | Независимые профили и legacy unlock проверялись; свежий C01 → два мира одним записанным путём открыт | Полный fresh C01, обе ветви/финал, выбор миров/reload/Replay | 1–2 | 01, 03 |\n+| 08 | Валидаторы/namespace есть, радиосвязи совместимы со старой оболочкой | Повреждение/будущая версия/последняя целая копия и транспорты каналов | 2–4 | 13, integration |\n+| 09 | Пять форматов есть на прежних испытаниях; новые миссии не включены целиком | Матрица 5 режимов и versioned presets принятых новых миссий | 2–4 | 04, 13 |\n+| 10 | Новые подсказки EN/RU, история alpha.11–13 добавлены; 50 локалей/RTL не закрыты | Ведомость каталогов и малые/RTL раскладки | 3–6 | 04–06, 13 |\n+| 11 | Автоматические touch/browser проверки не заменяют физические телефоны | Реальные iPhone/Safari и Android/Chrome, p50/p95/загрузка | 1–2 | доступные устройства и кандидат |\n+| 12 | Общего RC пока нет | Один SHA, web-preview, профили каналов, полный evidence pack | 1–2 | 01–11, 13 |\n+| 13 | Учёт событий, совместимый профиль и экран разрабатываются отдельным следующим коммитом | Контроль 10/4/40.0%, 39/25 с, два таба, старый профиль и UI | 2–4 | integration для host transport |\n+\n+Принятые публичные nuts.bid/itch alpha.12 остаются отдельными поставками. Переход продукта через integration и каналы выполняется после проверки общего кандидата, с сохранением прежних пакетов. Реальный хост SDK, Figma и физические устройства отмечаются отдельно; их отсутствие не превращается в PASS.\ndiff --git a/docs/cinder-shift/rework-room-registry.json b/docs/cinder-shift/rework-room-registry.json\nindex b9431bf..eee14de 100644\n--- a/docs/cinder-shift/rework-room-registry.json\n+++ b/docs/cinder-shift/rework-room-registry.json\n@@ -1,6 +1,6 @@\n {\n   \"schema_version\": 1,\n-  \"build_id\": \"0.8.0-alpha.12\",\n+  \"build_id\": \"0.8.0-alpha.13\",\n   \"source_hash\": \"9820c4515327a592b70be5a8f33dd1eff8fb66e11439eef5be5a48c8bb8a2141\",\n   \"status\": \"SOURCE_INVENTORY; M-RW1 engineering proof in sprint-1-b6-verification.json; human acceptance deferred\",\n   \"campaign_room_count\": 44,\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 3375f22..4208f8a 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Upper feed secured. Restore A at the far lever and confirm the lower exit feed: {action}.\",\n   \"worlds.factory.drive.0\": \"Select B and climb to the isolator. {action}: release the first screen; this starts the drive warning.\",\n   \"worlds.factory.drive.1\": \"Use the upper walkway or cross on green. Select A at the far support and reset the drive in its safe window: {action}.\",\n-  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\"\n+  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\",\n+  \"worlds.radio.ascent\": \"The station is above the bay. Switch to B to light the safe line; the upper ledges hold optional salvage.\",\n+  \"worlds.radio.galleryBridge\": \"Power B: take the fast lower lane between pulses, or climb onto the protected bridge.\",\n+  \"worlds.radio.galleryReturn\": \"First feed secured. Return to a lever and restore A; both routes remain open to the switches.\",\n+  \"worlds.radio.link0\": \"Secure link 1 of 3 on B. Confirmed antenna links survive Retry and reload.\",\n+  \"worlds.radio.link1\": \"Link 1 saved. Restore A and confirm the middle connection.\",\n+  \"worlds.radio.link2\": \"Two links saved. Select B and confirm the final connection.\",\n+  \"worlds.radio.tune\": \"Tune B at the first contact. This starts a full warning before the rift pulse.\",\n+  \"worlds.radio.shelter\": \"Shelter under the marked canopy during the pulse. Restore A and confirm the second feed in the safe window.\",\n+  \"worlds.radio.close\": \"Containment released. Select B and close the rift at the final contact.\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 1f7c0f3..f3a8ba0 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Верхняя линия закреплена. Дальним рубильником верни A и подтверди нижнюю линию выхода: {action}.\",\n   \"worlds.factory.drive.0\": \"Включи B и поднимись к изолятору. {action}: снять первый экран; затем начнётся предупреждение привода.\",\n   \"worlds.factory.drive.1\": \"Перейди привод по верхнему мостку или на зелёный. Включи A у дальней опоры и сбрось привод в безопасное окно: {action}.\",\n-  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\"\n+  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\",\n+  \"worlds.radio.ascent\": \"Станция видна над заливом. Контур B освещает безопасную линию; наверху — необязательный ресурс.\",\n+  \"worlds.radio.galleryBridge\": \"Контур B: короткий нижний путь между импульсами или защищённый верхний мост.\",\n+  \"worlds.radio.galleryReturn\": \"Первая линия закреплена. Вернись к рубильнику и восстанови A; оба пути ведут обратно к переключателям.\",\n+  \"worlds.radio.link0\": \"Закрепи связь 1 из 3 на контуре B. Подтверждённые связи сохраняются при повторе и перезагрузке.\",\n+  \"worlds.radio.link1\": \"Первая связь сохранена. Восстанови A и подтверди среднее соединение.\",\n+  \"worlds.radio.link2\": \"Две связи сохранены. Выбери B и закрепи последнее соединение.\",\n+  \"worlds.radio.tune\": \"Настрой B на первом контакте. Затем начнётся полное предупреждение об импульсе разлома.\",\n+  \"worlds.radio.shelter\": \"Во время импульса укройся под отмеченным навесом. Восстанови A и закрепи вторую линию в безопасное окно.\",\n+  \"worlds.radio.close\": \"Защита снята. Выбери B и закрой разлом на последнем контакте.\"\n }\ndiff --git a/games/cinder-shift/src/room-scene.ts b/games/cinder-shift/src/room-scene.ts\nindex 9609e6e..366b4e5 100644\n--- a/games/cinder-shift/src/room-scene.ts\n+++ b/games/cinder-shift/src/room-scene.ts\n@@ -31,6 +31,7 @@ export class RoomScene extends Phaser.Scene{\n  private entry:'left'|'right'='left';private art!:SceneArt;private solidRemovers=new Map<string,()=>void>();private encountered=new Set<string>();\n  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;\n  private feedback=new CombatFeedback();private feedbackLayer!:Phaser.GameObjects.Graphics;private feedbackHp=0;private previousAbilityRemaining=0;private previousExitOpen=false;\n+ onWorldCheckpoint:()=>void=()=>{};\n  constructor(readonly hooks:RoomHooks){super('Room');}\n  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}\n  preload(){\n@@ -169,7 +170,7 @@ export class RoomScene extends Phaser.Scene{\n   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;\n   if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){\n    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);\n-   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n+   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();if(a.current==='YU05-C'&&result.action==='activate')this.onWorldCheckpoint();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n   }\n   if(def.powerSwitch&&a.missionId==='reactor'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleReactorPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'reactor_power',choice:a.reactorCircuit});return;}\n   if(def.powerSwitch&&a.missionId==='cargo'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleCargoPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'cargo_power',choice:a.cargoCircuit});return;}\ndiff --git a/games/cinder-shift/src/session/campaign.ts b/games/cinder-shift/src/session/campaign.ts\nindex 64edd7c..727ab38 100644\n--- a/games/cinder-shift/src/session/campaign.ts\n+++ b/games/cinder-shift/src/session/campaign.ts\n@@ -10,7 +10,7 @@ export type RelaySupport='none'|'power'|'repair';\n export type MissionEntry={mission_id:PlayableMissionId;seed:number;build:Loadout;max_hp:number;initial_hp:number;initial_score:number;event_plan:EventPlan;relay_template?:string;relay_leg?:'A'|'B';relay_support?:RelaySupport};\n export type AttemptResult={attempt_id:string;mission_id:PlayableMissionId;result:'victory'|'death';reason:string;hp:number;max_hp:number;score:number;active_ms:number;screen_ms:number;nodes:NodeId[];reward_granted:boolean;applied:boolean};\n export type RunStats={ruleset_id?:string;active_ms:number;deaths:number;score:number;foundry_route:'service'|'press'|null;history_complete:boolean;assisted:boolean};\n-export type CampaignData={world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n+export type CampaignData={radio_links?:string[];world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n export function newCampaign(seed:number):CampaignData{return{character_id:'mira',campaign_id:crypto.randomUUID(),campaign_seed:seed>>>0,mission_id:'airlock',location_id:'airlock',stage:'map',nodes:[],active:null,points:1,completed_missions:[],reward_ledger:[],processed_attempts:[],run_stats:{ruleset_id:campaignRuleset,active_ms:0,deaths:0,score:0,foundry_route:null,history_complete:true,assisted:false},entry:null,result:null};}\n export function newWorldCampaign(id:NewCampaignId,seed:number):CampaignData{const data=newCampaign(seed);data.mission_id=data.location_id=newCampaignMissions[id][0] as PlayableMissionId;data.world_facts=[];return data;}\n export class Campaign{\ndiff --git a/games/cinder-shift/src/session/radio-links.ts b/games/cinder-shift/src/session/radio-links.ts\nnew file mode 100644\nindex 0000000..805c4dd\n--- /dev/null\n+++ b/games/cinder-shift/src/session/radio-links.ts\n@@ -0,0 +1,13 @@\n+import type {WorldRoomState} from './world-runtime';\n+\n+// These are the existing contact IDs, in transmission order. Only confirmed\n+// links survive a mission restart; position, timing and transient input do not.\n+export const radioLinkIds=['antenna:phase-0','antenna:phase-1','antenna:phase-2'] as const;\n+export function validRadioLinks(value:unknown):value is string[]{\n+ return Array.isArray(value)&&value.length<=radioLinkIds.length&&value.every((id,index)=>id===radioLinkIds[index]);\n+}\n+export function restoreRadioLinks(state:WorldRoomState,links:readonly string[]){\n+ if(!validRadioLinks(links)||!state.power)throw new TypeError('invalid_radio_links');\n+ state.phase=links.length;state.ledger=[...links];\n+ state.power.circuit=links.length===0||links.length===2?'A':'B';\n+}\ndiff --git a/games/cinder-shift/src/session/release-notes.ts b/games/cinder-shift/src/session/release-notes.ts\nindex 9c682aa..e054e45 100644\n--- a/games/cinder-shift/src/session/release-notes.ts\n+++ b/games/cinder-shift/src/session/release-notes.ts\n@@ -11,6 +11,9 @@ export const releaseNotes:readonly ReleaseNote[]=[\n ,{id:'0.8.0-alpha.8',date:'2026-11-18',en:{summary:'Reliable silence and mobile menu controls.',changes:['Zero bus volume takes effect immediately, including while the audio clock is suspended.','A warning cannot restore the previous music volume after it has been set to zero.','Compact menu and campaign-map buttons retain a minimum height of 48 pixels.']},ru:{summary:'Надёжное отключение звука и мобильные кнопки.',changes:['Нулевая громкость шины применяется сразу, в том числе при остановленном аудиовремени.','Предупреждение не возвращает прежнюю громкость музыки после её установки на ноль.','Кнопки компактного меню и карты кампании сохраняют высоту не менее 48 пикселей.']}}\n ,{id:'0.8.0-alpha.9',date:'2026-11-18',en:{summary:'The House of Communications.',changes:['The courtyard lever opens a real entrance and lights the staircase; an upper alcove holds optional salvage.','Cross the powered bridge, then restore the exit circuit from the far side.','The rooftop offers lower cover and a climb to salvage.','Prepare both feeds before the first transmitter pulse; the physical map records every confirmed connection.']},ru:{summary:'Дом связи.',changes:['Рубильник во дворе открывает дверь и включает лестничный свет; в верхней нише есть ресурс.','Перейдите по мосту под питанием, затем верните выходной контур с дальней стороны.','На крыше доступны нижнее укрытие и подъём за ресурсом.','Подготовьте обе линии до первого импульса передатчика; физическая карта отмечает каждое подтверждённое соединение.']}}\n ,{\"id\":\"0.8.0-alpha.10\",\"date\":\"2026-11-18\",\"en\":{\"summary\":\"Night harbor.\",\"changes\":[\"The warehouse lift connects a reachable upper salvage route.\",\"Climb onto the crane platform, wait for the marked suspended load, and restore the exit feed from the far lever.\",\"Quay lamps use circuit A; water signals remain visible when the lamps are off.\",\"The port relay requires the cargo platform, shield feed and final transmitter contact before its map lights up.\"]},\"ru\":{\"summary\":\"Ночная гавань.\",\"changes\":[\"Складская платформа соединена с доступным верхним маршрутом за ресурсом.\",\"Поднимитесь на платформу крана, переждите отмеченный груз и верните питание выхода дальним рубильником.\",\"Фонари причала работают от A; метки воды остаются видны без освещения.\",\"Портовый ретранслятор требует подключения грузовой платформы, щита и последнего контакта передатчика.\"]}}\n+,{id:'0.8.0-alpha.11',date:'2026-11-19',en:{summary:'World mechanism animation.',changes:['Ten environment rigs use 44 authored layers with readable normal and reduced-motion states.']},ru:{summary:'Анимации механизмов новых миров.',changes:['Десять наборов окружения используют 44 слоя с обычными состояниями и уменьшенным движением.']}}\n+,{id:'0.8.0-alpha.12',date:'2026-11-19',en:{summary:'The factory power network.',changes:['Choose the conveyor route, ride the hoist and connect both distributor feeds.','Reset the drive in three physical phases and secure the radio line.']},ru:{summary:'Электросеть завода.',changes:['Выберите путь конвейера, используйте подъёмник и подключите оба контакта распределителя.','Сбросьте привод в три физических этапа и закрепите радиоканал.']}}\n+,{id:'0.8.0-alpha.13',date:'2026-11-20',en:{summary:'Radio above the bay.',changes:['Light the station approach and choose the gallery floor or powered upper bridge.','Three confirmed antenna links survive Retry and reload within the same campaign.','Tune the circuit, shelter beneath the marked canopy and close the rift in its safe window.']},ru:{summary:'Радио над заливом.',changes:['Осветите подход к станции и выберите нижнюю галерею или верхний мост под питанием.','Три подтверждённые связи антенны сохраняются при повторе и перезагрузке этой кампании.','Настройте контур, укройтесь под отмеченным навесом и закройте разлом в безопасное окно.']}}\n ];\n type Version={core:number[];pre:string[]};\n function parseVersion(value:string):Version|null{const m=/^(\\d+)\\.(\\d+)\\.(\\d+)(?:-([\\da-z.-]+))?(?:\\+[\\da-z.-]+)?$/i.exec(value);return m?{core:m.slice(1,4).map(Number),pre:m[4]?.split('.')||[]}:null;}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 4326cae..50f03c3 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -6,6 +6,7 @@ import {migrateEventPlan,validPlan} from './events';\n import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';\n import {validateLegacySave} from './legacy-save';\n import {actions,bindingAllowed,type Action} from '../input';\n+import {validRadioLinks} from './radio-links';\n export const databaseName='cinder-shift-r01';\n export const schemaVersion=1;\n export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};\n@@ -131,6 +132,7 @@ export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_\n export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{\n  if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';\n  const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';\n+ if(d.radio_links!==undefined&&(id!=='c03-adriatic-1986'||!validRadioLinks(d.radio_links)||!d.completed_missions.includes('YU04')))return'corrupt';\n  const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';\n  if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';\n  if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex bedc902..ff1eb6d 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -1,5 +1,6 @@\n import {newCampaignIds,newCampaignMissions,isWorldMission,worldForMission,type NewCampaignId} from '../session/new-campaign-content';\n import {worldContext} from '../session/world-runtime';\n+import {restoreRadioLinks} from '../session/radio-links';\n import {worldAvailability,isCompleteBaseCampaign} from '../session/world-progress';\n import {buildMetadata,buildLabel,buildDiagnostics} from '../build';\n import {ReleaseNotesSession,releaseNotes} from '../session/release-notes';\n@@ -94,7 +95,7 @@ export class Application{\n     setTimeout(()=>{if(this.state==='loading')this.failure('boot_timeout');},15000);\n   }\n   readonly hooks:RoomHooks={failure:code=>this.failure(code),controls:this.controls,effects:this.effects,emit:(name,params)=>this.emit(name,params),pause:()=>this.pause('manual'),playAllowed:()=>this.state==='playing',ghostFrame:room=>this.ghostFrame(room),result:result=>{void this.finish(result);},dying:()=>{this.state='dying';},objective:(key,params)=>this.objective(key,params),hud:(attempt,player,hold)=>this.hud(attempt,player,hold),container:slot=>this.openEvent(slot),fork:()=>this.openFork(),autoFire:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.autofire,debug:()=>this.settings.debugBodies,combatAssist:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.combatAssist,feedbackIntensity:()=>this.settings.effectsIntensity,reducedFlashes:()=>this.settings.reducedFlashes||this.settings.reducedMotion||this.settings.effectsIntensity===0||matchMedia('(prefers-reduced-motion: reduce)').matches,transition:active=>{$('transition').hidden=!active;}};\n-  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n+  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;room.onWorldCheckpoint=()=>{if(this.challengeEntry||this.activeWorld!=='c03-adriatic-1986'||this.attempt?.current!=='YU05-C'||!this.campaign)return;this.campaign.data.radio_links=[...(this.attempt.room().world?.ledger||[])];void this.persist();};game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n   async initialize(){const loaded=await this.saves.load(this.i18n.locale);this.settings=loaded.settings;this.controls.setBindings(this.settings.keyBindings);this.syncAccessibility();this.effects.configure(this.settings);this.i18n.setLocale(this.settings.locale);if(loaded.campaign){this.campaign=new Campaign(loaded.campaign);if(loaded.campaign.stage==='campaign_complete')void this.saves.recordCampaign(loaded.campaign);}this.worldCampaigns.set('r01',this.campaign);for(const id of newCampaignIds){const world=await this.saves.loadWorldCampaign(id);this.worldCampaigns.set(id,world.campaign?new Campaign(world.campaign):null);if(!world.ok)this.worldLoadFailed.add(id);}try{const selected=localStorage.getItem('cinder-active-world-v1');if(newCampaignIds.includes(selected as NewCampaignId)&&worldAvailability(selected!,this.saves.baseCompleted,true,!this.worldLoadFailed.has(selected!))==='available'){this.activeWorld=selected as NewCampaignId;this.campaign=this.worldCampaigns.get(selected!)||null;}}catch{}const marker=await this.saves.loadModeData('release-notes.v1');this.notes=new ReleaseNotesSession(buildMetadata.release_id,marker.value,this.saves.hasExistingProfile);if(marker.ok&&marker.value===undefined&&this.notes.marker.installed_release)await this.saves.saveModeData('release-notes.v1',this.notes.marker);this.settingsReady=true;this.ready();}\n   private loadingArtFinished(fallback:boolean){if(this.loadingArtSettled)return;this.loadingArtSettled=true;clearTimeout(this.loadingArtFallbackTimer);if(fallback){const loadingArt=$('loading-art');if(loadingArt)loadingArt.hidden=true;$('overlay').classList.add('loading-art-fallback');}else $('overlay').classList.remove('loading-art-fallback');this.maybeShowInitialMenu();}\n   private afterVisibleLoadingFrame(){if(!this.introStarted||document.hidden||this.state==='error')return;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!this.introStarted||document.hidden||this.state==='error')return;if(!this.introLastFrame)this.introLastFrame=performance.now();this.runIntroClock();}));}\n@@ -265,6 +266,7 @@ export class Application{\n     const entry=challengeEntry||(mode==='mission'?this.campaign?.data.entry:undefined);if(mode==='mission'&&!entry)return;\n     this.emit('play_pressed',{mode,mission_id:entry?.mission_id||'airlock'});\n     const previous=this.attempt?.id||this.campaign?.data.result?.attempt_id;this.game.scene.stop('Room');this.game.scene.stop('Backdrop');this.attempt=new MissionAttempt(mode,entry||undefined,challengeEntry?this.challengeLedger||undefined:undefined);\n+    if(!challengeEntry&&mode==='mission'&&this.activeWorld==='c03-adriatic-1986'&&entry?.mission_id==='YU05'&&this.campaign?.data.radio_links)restoreRadioLinks(this.attempt.room('YU05-C').world!,this.campaign.data.radio_links);\n     if(this.campaign&&mode==='mission'&&!challengeEntry){this.campaign.begin();this.busy=true;await this.persist();this.busy=false;}\n     if(retry)this.emit('retry',{previous_attempt_id:previous||''});\n     $('transition').hidden=true;\ndiff --git a/games/cinder-shift/src/world-rooms.ts b/games/cinder-shift/src/world-rooms.ts\nindex 30470be..804f11c 100644\n--- a/games/cinder-shift/src/world-rooms.ts\n+++ b/games/cinder-shift/src/world-rooms.ts\n@@ -76,10 +76,10 @@ const authored:Authored[]=[\n  {id:'YU04-B',solids:[platform(144,288,64),platform(376,256,80),platform(416,224,48)],world:{landmark:'conveyor',switches:[{x:112,y:320},{x:480,y:320}],powerObjects:[power('hoist-A','A',232,244,112),power('hoist-B','B',232,280,112),{...power('hoist-door-B','B',532,272,16,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:300,y:280},{x:552,y:320}],sequenceHints:['worlds.factory.hoist.0','worlds.factory.hoist.1'],powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:336},{x:284,y:336},{x:284,y:292}]},{on:'A',points:[{x:480,y:278},{x:480,y:184},{x:532,y:184},{x:532,y:272}]}]},cache:{x:440,y:224}},\n  {id:'YU04-C',solids:[cover(160,32,48),platform(248,288,32),platform(304,244,88),cover(480,32,48)],world:{landmark:'distributor',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('feed-A','A',240,272,20,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:340,y:244},{x:552,y:320}],sequenceHints:['worlds.factory.distributor.0','worlds.factory.distributor.1'],repair:{x:584,y:320},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:444,y:176},{x:524,y:176}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:140},{x:340,y:140},{x:340,y:244}]},{on:'A',points:[{x:432,y:278},{x:432,y:336},{x:552,y:336},{x:552,y:320}]}]},enemies:[enemy('yu04c-scanner',448)]},\n  {id:'YU04-D',solids:[cover(152,32,48),platform(232,288,40),platform(296,244,88),cover(464,32,40)],world:{landmark:'drive',switches:[{x:112,y:320},{x:416,y:320}],powerObjects:[{...power('drive-A','A',528,264,20,56),role:'door'}],phaseDoors:[{id:'c03-adriatic-1986:YU04-D:isolation-screen',untilPhase:1,rect:platform(296,272,20,48)},{id:'c03-adriatic-1986:YU04-D:drive-shield',untilPhase:2,rect:platform(448,272,16,48)}],sequence:['B','A','B'],sequenceTargets:[{x:264,y:288},{x:408,y:320},{x:552,y:320}],sequenceHints:['worlds.factory.drive.0','worlds.factory.drive.1','worlds.factory.drive.2'],pulse:{x:328,width:48,cycle:4600,warning:1600,active:800,fromPhase:1,untilPhase:2,signals:[{x:304,y:234},{x:400,y:234}]},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:440,y:176},{x:480,y:176},{x:520,y:176}]}}},\n- {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[power('bay-A','A',352,276,24,44)],sequence:['B']},cache:{x:424,y:208}},\n- {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320}],powerObjects:[power('gallery-A','A',240,272,20,48),power('gallery-B','B',432,240,80)],sequence:['B','A']},enemies:[enemy('yu05b-drone',448)]},\n- {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[power('antenna-A','A',240,272,20,48)],sequence:['B','A','B'],repair:{x:584,y:320}}},\n- {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[power('rift-A','A',544,264,20,56)],sequence:['B','A','B'],pulse:{x:240,width:56,cycle:4400,warning:1500,active:800}}},\n+ {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[{...power('bay-A','A',352,276,24,44),role:'door'}],sequence:['B'],sequenceHints:['worlds.radio.ascent'],powerLight:{area:platform(224,274,336,46),on:'B'},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:552,y:340},{x:552,y:310}]}],transmissionMap:{panel:platform(400,72,188,104),nodes:[{x:424,y:150},{x:476,y:112},{x:556,y:92}]}},cache:{x:424,y:208}},\n+ {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320},{x:568,y:320}],powerObjects:[{...power('gallery-A','A',240,272,20,48),role:'door'},power('gallery-B','B',384,240,128)],sequence:['B','A'],sequenceHints:['worlds.radio.galleryBridge','worlds.radio.galleryReturn'],pulse:{x:344,width:56,cycle:6000,warning:1800,active:700,untilPhase:2,signals:[{x:320,y:222},{x:424,y:222}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:448,y:340},{x:448,y:252}]},{on:'A',points:[{x:424,y:278},{x:424,y:336},{x:250,y:336},{x:250,y:268}]}]},enemies:[enemy('yu05b-drone',448)]},\n+ {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[{...power('antenna-A','A',240,272,20,48),role:'door'}],sequence:['B','A','B'],sequenceHints:['worlds.radio.link0','worlds.radio.link1','worlds.radio.link2'],transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:400,y:278},{x:400,y:338},{x:408,y:338},{x:408,y:312}]},{on:'B',points:[{x:552,y:278},{x:552,y:312}]}],repair:{x:584,y:320}}},\n+ {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('rift-A','A',544,264,20,56),role:'door'}],phaseDoors:[{id:'rift-containment',untilPhase:2,rect:platform(496,228,20,60)}],sequence:['B','A','B'],sequenceHints:['worlds.radio.tune','worlds.radio.shelter','worlds.radio.close'],pulse:{x:240,width:192,cycle:6000,warning:1800,active:900,fromPhase:1,untilPhase:3,shelters:[platform(304,274,88,46)],signals:[{x:216,y:222},{x:456,y:222}]},transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:432,y:278},{x:432,y:342},{x:408,y:342},{x:408,y:312}]}]}},\n ];\n export const worldRooms=Object.fromEntries(authored.map((room):[WorldRoomId,RoomDefinition]=>{\n  const mission=room.id.slice(0,4) as WorldMissionId,letter=room.id.at(-1)!,prev=String.fromCharCode(letter.charCodeAt(0)-1),next=String.fromCharCode(letter.charCodeAt(0)+1);\ndiff --git a/package-lock.json b/package-lock.json\nindex 14b2b09..c4d9d61 100644\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1,12 +1,12 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"lockfileVersion\": 3,\n   \"requires\": true,\n   \"packages\": {\n     \"\": {\n       \"name\": \"nuts-web-games\",\n-      \"version\": \"0.8.0-alpha.12\",\n+      \"version\": \"0.8.0-alpha.13\",\n       \"dependencies\": {\n         \"phaser\": \"3.90.0\"\n       },\ndiff --git a/package.json b/package.json\nindex b4bd21f..a0f095a 100644\n--- a/package.json\n+++ b/package.json\n@@ -1,6 +1,6 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"private\": true,\n   \"type\": \"module\",\n   \"scripts\": {\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 683cba7..ce555e3 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -92,6 +92,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num\n  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){\n   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);\n  }\n+ if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){\n+  // The first feed arms the real warning. Read the pulse from the marked\n+  // canopy, then leave shelter only while the second contact's window is open.\n+  await walk(page,348);\n+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});\n+ }\n  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});\n }\n async function combat(page:Page){\n@@ -120,7 +126,7 @@ async function solveRoom(page:Page){\n  s=await state(page);if(s.world.power){\n   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.\n   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];\n-  for(let phase=0;phase<sequence.length;phase++){\n+  for(let phase=s.world.phase;phase<sequence.length;phase++){\n    s=await state(page);if(s.world.power.circuit!==sequence[phase]){\n     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;\n     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];\ndiff --git a/tests/radio-station.spec.ts b/tests/radio-station.spec.ts\nnew file mode 100644\nindex 0000000..5cbafc9\n--- /dev/null\n+++ b/tests/radio-station.spec.ts\n@@ -0,0 +1,76 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {Campaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n+import {newCampaignMissions} from '../games/cinder-shift/src/session/new-campaign-content';\n+import {createWorldState,actWorld,powerTarget,worldPulse,worldPulseHits,worldSolids,worldReady} from '../games/cinder-shift/src/session/world-runtime';\n+import {radioLinkIds,restoreRadioLinks,validRadioLinks} from '../games/cinder-shift/src/session/radio-links';\n+import {validateWorldSave} from '../games/cinder-shift/src/session/save';\n+import {encounter} from './encounter-helpers';\n+import {state} from './helpers';\n+import {to,ground} from './route-helpers';\n+\n+test('model radio link checkpoints are ordered, bounded and restore only confirmed contacts',()=>{\n+ const spec=rooms['YU05-C'].world!;\n+ for(let count=0;count<=3;count++){\n+  const links=radioLinkIds.slice(0,count),s=createWorldState('YU05-C',spec);\n+  restoreRadioLinks(s,links);expect(s.phase).toBe(count);expect(s.ledger).toEqual(links);\n+  expect(worldReady(spec,s)).toBe(count===3);\n+  expect(powerTarget(spec,s)).toEqual(count===3?null:{x:[264,408,552][count],y:320});\n+ }\n+ for(const invalid of [null,{},['antenna:phase-1'],['antenna:phase-0','antenna:phase-0'],[...radioLinkIds,'future']])expect(validRadioLinks(invalid)).toBe(false);\n+});\n+\n+test('model old world saves remain valid and malformed radio checkpoints are rejected',()=>{\n+ const c=new Campaign(newWorldCampaign('c03-adriatic-1986',4));\n+ for(const id of newCampaignMissions['c03-adriatic-1986'].slice(0,4)){\n+  c.prepare();c.begin();c.applyResult({attempt_id:'fixture-'+id,mission_id:id as any,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:1,screen_ms:0,nodes:[]});c.advance();\n+ }\n+ c.prepare();c.begin();\n+ const envelope=()=>({schema_version:1,content_version:'worlds-rw3.1',game_id:'c03-adriatic-1986',build_id:'radio-model',saved_at:new Date().toISOString(),campaign:c.snapshot()});\n+ expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=radioLinkIds.slice(0,2);expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=['antenna:phase-2'];expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBe('corrupt');\n+ expect(newWorldCampaign('c03-adriatic-1986',4).radio_links).toBeUndefined();\n+});\n+\n+test('model radio finale arms a fresh warning, provides real shelter, gates the window and stops on closure',()=>{\n+ const spec=rooms['YU05-D'].world!,s=createWorldState('YU05-D',spec);\n+ const body=(x:number)=>({x:x-11,y:276,width:22,height:44});\n+ expect(worldPulse(spec,50000,s)).toBe('safe');\n+ actWorld(spec,s,{x:112,y:320},body(112),1,50000);expect(s.power?.circuit).toBe('B');\n+ expect(actWorld(spec,s,{x:264,y:320},body(264),1,50000)?.action).toBe('activate');\n+ expect(worldPulse(spec,50000,s)).toBe('warning');expect(worldPulse(spec,51799,s)).toBe('warning');\n+ expect(worldPulse(spec,51800,s)).toBe('active');expect(worldPulseHits(spec,body(264),51800,s)).toBe(true);\n+ expect(worldPulseHits(spec,body(348),51800,s)).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,51800);expect(s.power?.circuit).toBe('A');\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,51800)).toBeNull();\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(true);\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,52700)).toMatchObject({action:'activate',geometry:true});\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,52700);\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,52700)?.action).toBe('activate');\n+ expect(worldReady(spec,s)).toBe(true);expect(worldPulse(spec,57800,s)).toBe('safe');\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,57800)).toBeNull();expect(s.ledger).toHaveLength(3);\n+});\n+\n+for(const reduced of [false,true])test(`radio links persist after real activation and reload, reduced ${reduced}`,async({page},info)=>{\n+ test.setTimeout(60000);await encounter(page,{mission:'YU05',room:'YU05-C',reduced});\n+ // The only initial fixture is world entry with C01 unlocked. No position,\n+ // contact or time writes occur once play starts.\n+ await page.evaluate(()=>new Promise<void>((resolve,reject)=>{\n+  localStorage.setItem('cinder-active-world-v1','c03-adriatic-1986');\n+  const request=indexedDB.open('cinder-shift-r01',1);request.onsuccess=()=>{const db=request.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put({schema_version:1,base_game_id:'r01',completion_ids:['legacy-c01-unlocked']},'world-profile.v1');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};\n+ }));\n+ const before=await state(page);await to(page,112);await ground(page,320);await page.keyboard.press('e');\n+ await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');\n+ await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);\n+ await to(page,400);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');\n+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);\n+ await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();\n+ await expect.poll(async()=>{const s=await state(page);return s.campaign.radio_links;}).toEqual(radioLinkIds.slice(0,2));\n+ await page.reload();await expect(page.getByTestId('continue')).toBeVisible();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();\n+ await expect.poll(async()=>(await state(page)).state).toBe('playing');\n+ const after=await state(page);expect(after.campaign.campaign_id).toBe(before.campaign.campaign_id);expect(after.campaign.points).toBe(before.campaign.points);\n+ expect(after.roomStates['YU05-C'].world.phase).toBe(2);expect(after.roomStates['YU05-C'].world.ledger).toEqual(radioLinkIds.slice(0,2));\n+ await page.screenshot({path:info.outputPath('radio-links-reloaded.png')});\n+});",
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "/sprint2-media\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/test-results/media",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/commit/2c658f53677c9fb50d191dfb101a248825f195c7",
+            "commitHash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+            "prHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/15",
+            "prTitle": "Cinder Shift alpha.13: radio routes, antenna checkpoints and rift closure",
+            "prBaseHash": "81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+            "buildHref": "https://github.com/kirillgoncharik-commits/web-games-nuts/actions/runs/44686839941"
+          },
+          "gitCommit": {
+            "shortHash": "2c658f5",
+            "hash": "2c658f53677c9fb50d191dfb101a248825f195c7",
+            "subject": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8",
+            "body": "Merge 99611934668424067965e2a6a374248b6e59d917 into 81477d58ad0c8ebbdc01beaceacd3c6fab94e1d8\n",
+            "author": {
+              "name": "kirillgoncharik-commits",
+              "email": "kirill.goncharik@gmail.com",
+              "time": 1795155490000
+            },
+            "committer": {
+              "name": "GitHub",
+              "email": "noreply@github.com",
+              "time": 1795155490000
+            },
+            "branch": "HEAD"
+          },
+          "gitDiff": "diff --git a/docs/cinder-shift/alpha13-radio.ru.md b/docs/cinder-shift/alpha13-radio.ru.md\nnew file mode 100644\nindex 0000000..121405b\n--- /dev/null\n+++ b/docs/cinder-shift/alpha13-radio.ru.md\n@@ -0,0 +1,25 @@\n+# Alpha.13 — радио над заливом\n+\n+20 ноября 2026. Игровой блок 03 из продуктового ТЗ, после отдельного [PR #13](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/13) с диагностикой 01–02. Реализация в локальном коммите `d483b05`; следующий `5dda94f` меняет только версию C01-реестра.\n+\n+| Комната | Реализация |\n+|---|---|\n+| YU05-A | Видимая карта цели над заливом, освещаемая линия B, четыре знакомых уступа и необязательный ресурс наверху. Вход не запускает катсцену. |\n+| YU05-B | Нижний путь через импульс и верхний мост B. Три рубильника доступны с обеих сторон; возврат A и второй контакт прекращают импульс. Сохранён штатный дрон. |\n+| YU05-C | Три контакта B/A/B со старыми ID `antenna:phase-0..2`, физическая карта связей. Только подтверждённый префикс записывается в сейв этой кампании. При Retry/Continue восстанавливаются связи и их контур; положение и часы Миры не восстанавливаются в опасности. Новый Replay создаёт новый campaign ID без связей. |\n+| YU05-D | Первый контакт настраивает B и запускает полное предупреждение 1800 мс. Под навесом x304…392 есть реальное укрытие. Второй контакт доступен только в безопасное окно, снимает физический экран; последний B прекращает импульс и открывает финал. Сохранены итог, история мира и существующий сюжетный переход возвращения Миры. |\n+\n+## Сохранения и откат\n+\n+Поле `radio_links` добавлено к существующей кампании C03, без смены ключа или оболочки `schema_version=1 / worlds-rw3.1`. Валидатор принимает только последовательный префикс трёх известных контактов и только после завершённой YU04. Старые профили без поля остаются валидны. Неизвестные/повреждённые данные не заменяются пустой историей. Прежняя alpha.12 игнорирует дополнительное поле; отдельная проверка фактического отката на каждом хосте остаётся в матрице 08.\n+\n+## Проверки\n+\n+- `npm run check`: PASS, 930 согласованных EN/RU ключей на радио-кандидате.\n+- `npm run art:check`: PASS; это проверка действующих контрактов, не закрытие полного production manifest.\n+- 49 моделей: PASS, включая все 40 комнат, standing positions, спавны, ремонт и четыре E/F повторных входа.\n+- Три новые модели: PASS — порядок/границы связей, старые/повреждённые сейвы, предупреждение/укрытие/окно/физический экран/окончательная остановка импульса.\n+- Chromium: **7/7 PASS, 7.3 минуты**. Полные C02 и C03 по 20 комнат/5 миссий, финал и persisted result после reload; три модели; два реальных сохранения/перезапуска двух связей (normal/reduced).\n+- Прогон использовал собранный локальный alpha.13 runtime, manifest source `34644e26ce618542751ab85a164b3aee61b99f67`, `source_dirty=true`. Встроенный runtime соответствует зафиксированным изменениям `d483b05`. Это локальное доказательство, не clean CI artifact. Дальнейшие изменения личных рекордов в этот runtime не входят.\n+\n+История изменений дополнена alpha.11/12/13. Схема героя, снаряжение, SDK, опубликованные версии и ветки каналов этим блоком не обновляются. Новые композиции финала, полный арт/звук, физические телефоны и человеческие наблюдения остаются открытыми в общем ТЗ. Следующая локальная итерация — блок 13; общий RC не объявлен.\ndiff --git a/docs/cinder-shift/product-backlog-progress.ru.md b/docs/cinder-shift/product-backlog-progress.ru.md\nnew file mode 100644\nindex 0000000..23c65cd\n--- /dev/null\n+++ b/docs/cinder-shift/product-backlog-progress.ru.md\n@@ -0,0 +1,23 @@\n+# Продуктовый бэклог 01–13 — фактическая ведомость\n+\n+Основание: ТЗ от 20.11.2026 `Cinder_Shift_64_Product_Backlog_Work_Order_RU.md`. Исходные RW IDs и тесты в `rework-coverage.json` сохранены. Все шесть исходных RW3 требований продолжают быть PARTIAL: отдельные выполненные блоки не заменяют их полного производственного объёма.\n+\n+Оценки ниже — предварительные инженерные рабочие дни, без ожидания внешнего доступа и игроков; после диагностики каждой области уточняются.\n+\n+| № | Фактическое состояние / недостающее | Ближайшая проверка | Оценка остатка | Зависимость |\n+|---|---|---|---|---|\n+| 01 | Обе полные цепи прошли локально и на integration; тестовый дефект YU04-C возвращён в продуктовый PR #13 | Exact-head CI продуктового PR | <0.5 | CI |\n+| 02 | E/F обычным вводом PASS; исходный пользовательский freeze E не воспроизведён | Cargo Retry/re-entry и исходный сейв, если сбой повторится | 0.5–1 | воспроизводимый freeze для его диагностики |\n+| 03 | Четыре комнаты YU05, сохранение связей и финальный цикл реализованы; локальный полный C03 и reload PASS | Exact-head CI, отдельные кадры/клип всех четырёх комнат | 0.5–1 | радио-кандидат |\n+| 04 | 40 runtime-комнат существуют, модели всех комнат PASS; глубокая матрица каждого проектного выбора ещё не закрыта | Покомнатная сверка с brief 10, обязательный base-route без урона | 3–5 | 03 |\n+| 05 | 10 rigs / 44 слоя — только часть производства | Матрица полного brief 08, состояния и экспорты | 4–8 | 04, Figma quota для импорта |\n+| 06 | Существующая музыка/SFX подключены; полный объём brief 09 не подтверждён | Инвентаризация 10 тем/переходов/сигналов и игровых записей | 3–5 | 04 |\n+| 07 | Независимые профили и legacy unlock проверялись; свежий C01 → два мира одним записанным путём открыт | Полный fresh C01, обе ветви/финал, выбор миров/reload/Replay | 1–2 | 01, 03 |\n+| 08 | Валидаторы/namespace есть, радиосвязи совместимы со старой оболочкой | Повреждение/будущая версия/последняя целая копия и транспорты каналов | 2–4 | 13, integration |\n+| 09 | Пять форматов есть на прежних испытаниях; новые миссии не включены целиком | Матрица 5 режимов и versioned presets принятых новых миссий | 2–4 | 04, 13 |\n+| 10 | Новые подсказки EN/RU, история alpha.11–13 добавлены; 50 локалей/RTL не закрыты | Ведомость каталогов и малые/RTL раскладки | 3–6 | 04–06, 13 |\n+| 11 | Автоматические touch/browser проверки не заменяют физические телефоны | Реальные iPhone/Safari и Android/Chrome, p50/p95/загрузка | 1–2 | доступные устройства и кандидат |\n+| 12 | Общего RC пока нет | Один SHA, web-preview, профили каналов, полный evidence pack | 1–2 | 01–11, 13 |\n+| 13 | Учёт событий, совместимый профиль и экран разрабатываются отдельным следующим коммитом | Контроль 10/4/40.0%, 39/25 с, два таба, старый профиль и UI | 2–4 | integration для host transport |\n+\n+Принятые публичные nuts.bid/itch alpha.12 остаются отдельными поставками. Переход продукта через integration и каналы выполняется после проверки общего кандидата, с сохранением прежних пакетов. Реальный хост SDK, Figma и физические устройства отмечаются отдельно; их отсутствие не превращается в PASS.\ndiff --git a/docs/cinder-shift/rework-room-registry.json b/docs/cinder-shift/rework-room-registry.json\nindex b9431bf..eee14de 100644\n--- a/docs/cinder-shift/rework-room-registry.json\n+++ b/docs/cinder-shift/rework-room-registry.json\n@@ -1,6 +1,6 @@\n {\n   \"schema_version\": 1,\n-  \"build_id\": \"0.8.0-alpha.12\",\n+  \"build_id\": \"0.8.0-alpha.13\",\n   \"source_hash\": \"9820c4515327a592b70be5a8f33dd1eff8fb66e11439eef5be5a48c8bb8a2141\",\n   \"status\": \"SOURCE_INVENTORY; M-RW1 engineering proof in sprint-1-b6-verification.json; human acceptance deferred\",\n   \"campaign_room_count\": 44,\ndiff --git a/games/cinder-shift/src/i18n/en.json b/games/cinder-shift/src/i18n/en.json\nindex 3375f22..4208f8a 100644\n--- a/games/cinder-shift/src/i18n/en.json\n+++ b/games/cinder-shift/src/i18n/en.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Upper feed secured. Restore A at the far lever and confirm the lower exit feed: {action}.\",\n   \"worlds.factory.drive.0\": \"Select B and climb to the isolator. {action}: release the first screen; this starts the drive warning.\",\n   \"worlds.factory.drive.1\": \"Use the upper walkway or cross on green. Select A at the far support and reset the drive in its safe window: {action}.\",\n-  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\"\n+  \"worlds.factory.drive.2\": \"Drive stopped. Select B, pass the open screen and secure the radio feed at the last contact: {action}.\",\n+  \"worlds.radio.ascent\": \"The station is above the bay. Switch to B to light the safe line; the upper ledges hold optional salvage.\",\n+  \"worlds.radio.galleryBridge\": \"Power B: take the fast lower lane between pulses, or climb onto the protected bridge.\",\n+  \"worlds.radio.galleryReturn\": \"First feed secured. Return to a lever and restore A; both routes remain open to the switches.\",\n+  \"worlds.radio.link0\": \"Secure link 1 of 3 on B. Confirmed antenna links survive Retry and reload.\",\n+  \"worlds.radio.link1\": \"Link 1 saved. Restore A and confirm the middle connection.\",\n+  \"worlds.radio.link2\": \"Two links saved. Select B and confirm the final connection.\",\n+  \"worlds.radio.tune\": \"Tune B at the first contact. This starts a full warning before the rift pulse.\",\n+  \"worlds.radio.shelter\": \"Shelter under the marked canopy during the pulse. Restore A and confirm the second feed in the safe window.\",\n+  \"worlds.radio.close\": \"Containment released. Select B and close the rift at the final contact.\"\n }\ndiff --git a/games/cinder-shift/src/i18n/ru.json b/games/cinder-shift/src/i18n/ru.json\nindex 1f7c0f3..f3a8ba0 100644\n--- a/games/cinder-shift/src/i18n/ru.json\n+++ b/games/cinder-shift/src/i18n/ru.json\n@@ -919,5 +919,14 @@\n   \"worlds.factory.distributor.1\": \"Верхняя линия закреплена. Дальним рубильником верни A и подтверди нижнюю линию выхода: {action}.\",\n   \"worlds.factory.drive.0\": \"Включи B и поднимись к изолятору. {action}: снять первый экран; затем начнётся предупреждение привода.\",\n   \"worlds.factory.drive.1\": \"Перейди привод по верхнему мостку или на зелёный. Включи A у дальней опоры и сбрось привод в безопасное окно: {action}.\",\n-  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\"\n+  \"worlds.factory.drive.2\": \"Привод остановлен. Включи B, пройди открытый экран и закрепи радиоканал у последнего контакта: {action}.\",\n+  \"worlds.radio.ascent\": \"Станция видна над заливом. Контур B освещает безопасную линию; наверху — необязательный ресурс.\",\n+  \"worlds.radio.galleryBridge\": \"Контур B: короткий нижний путь между импульсами или защищённый верхний мост.\",\n+  \"worlds.radio.galleryReturn\": \"Первая линия закреплена. Вернись к рубильнику и восстанови A; оба пути ведут обратно к переключателям.\",\n+  \"worlds.radio.link0\": \"Закрепи связь 1 из 3 на контуре B. Подтверждённые связи сохраняются при повторе и перезагрузке.\",\n+  \"worlds.radio.link1\": \"Первая связь сохранена. Восстанови A и подтверди среднее соединение.\",\n+  \"worlds.radio.link2\": \"Две связи сохранены. Выбери B и закрепи последнее соединение.\",\n+  \"worlds.radio.tune\": \"Настрой B на первом контакте. Затем начнётся полное предупреждение об импульсе разлома.\",\n+  \"worlds.radio.shelter\": \"Во время импульса укройся под отмеченным навесом. Восстанови A и закрепи вторую линию в безопасное окно.\",\n+  \"worlds.radio.close\": \"Защита снята. Выбери B и закрой разлом на последнем контакте.\"\n }\ndiff --git a/games/cinder-shift/src/room-scene.ts b/games/cinder-shift/src/room-scene.ts\nindex 9609e6e..366b4e5 100644\n--- a/games/cinder-shift/src/room-scene.ts\n+++ b/games/cinder-shift/src/room-scene.ts\n@@ -31,6 +31,7 @@ export class RoomScene extends Phaser.Scene{\n  private entry:'left'|'right'='left';private art!:SceneArt;private solidRemovers=new Map<string,()=>void>();private encountered=new Set<string>();\n  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;\n  private feedback=new CombatFeedback();private feedbackLayer!:Phaser.GameObjects.Graphics;private feedbackHp=0;private previousAbilityRemaining=0;private previousExitOpen=false;\n+ onWorldCheckpoint:()=>void=()=>{};\n  constructor(readonly hooks:RoomHooks){super('Room');}\n  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}\n  preload(){\n@@ -169,7 +170,7 @@ export class RoomScene extends Phaser.Scene{\n   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;\n   if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){\n    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);\n-   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n+   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();if(a.current==='YU05-C'&&result.action==='activate')this.onWorldCheckpoint();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}\n   }\n   if(def.powerSwitch&&a.missionId==='reactor'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleReactorPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'reactor_power',choice:a.reactorCircuit});return;}\n   if(def.powerSwitch&&a.missionId==='cargo'&&terminalInReach(this.player.x,this.player.feet,def.powerSwitch)&&frame.pressed.has('interact')&&a.toggleCargoPower()){this.art.powerConnection(a,def.powerSwitch,a.clock.now);this.hooks.effects.play('power_restore');this.hooks.emit('event_choice',{event_id:'cargo_power',choice:a.cargoCircuit});return;}\ndiff --git a/games/cinder-shift/src/session/campaign.ts b/games/cinder-shift/src/session/campaign.ts\nindex 64edd7c..727ab38 100644\n--- a/games/cinder-shift/src/session/campaign.ts\n+++ b/games/cinder-shift/src/session/campaign.ts\n@@ -10,7 +10,7 @@ export type RelaySupport='none'|'power'|'repair';\n export type MissionEntry={mission_id:PlayableMissionId;seed:number;build:Loadout;max_hp:number;initial_hp:number;initial_score:number;event_plan:EventPlan;relay_template?:string;relay_leg?:'A'|'B';relay_support?:RelaySupport};\n export type AttemptResult={attempt_id:string;mission_id:PlayableMissionId;result:'victory'|'death';reason:string;hp:number;max_hp:number;score:number;active_ms:number;screen_ms:number;nodes:NodeId[];reward_granted:boolean;applied:boolean};\n export type RunStats={ruleset_id?:string;active_ms:number;deaths:number;score:number;foundry_route:'service'|'press'|null;history_complete:boolean;assisted:boolean};\n-export type CampaignData={world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n+export type CampaignData={radio_links?:string[];world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};\n export function newCampaign(seed:number):CampaignData{return{character_id:'mira',campaign_id:crypto.randomUUID(),campaign_seed:seed>>>0,mission_id:'airlock',location_id:'airlock',stage:'map',nodes:[],active:null,points:1,completed_missions:[],reward_ledger:[],processed_attempts:[],run_stats:{ruleset_id:campaignRuleset,active_ms:0,deaths:0,score:0,foundry_route:null,history_complete:true,assisted:false},entry:null,result:null};}\n export function newWorldCampaign(id:NewCampaignId,seed:number):CampaignData{const data=newCampaign(seed);data.mission_id=data.location_id=newCampaignMissions[id][0] as PlayableMissionId;data.world_facts=[];return data;}\n export class Campaign{\ndiff --git a/games/cinder-shift/src/session/radio-links.ts b/games/cinder-shift/src/session/radio-links.ts\nnew file mode 100644\nindex 0000000..805c4dd\n--- /dev/null\n+++ b/games/cinder-shift/src/session/radio-links.ts\n@@ -0,0 +1,13 @@\n+import type {WorldRoomState} from './world-runtime';\n+\n+// These are the existing contact IDs, in transmission order. Only confirmed\n+// links survive a mission restart; position, timing and transient input do not.\n+export const radioLinkIds=['antenna:phase-0','antenna:phase-1','antenna:phase-2'] as const;\n+export function validRadioLinks(value:unknown):value is string[]{\n+ return Array.isArray(value)&&value.length<=radioLinkIds.length&&value.every((id,index)=>id===radioLinkIds[index]);\n+}\n+export function restoreRadioLinks(state:WorldRoomState,links:readonly string[]){\n+ if(!validRadioLinks(links)||!state.power)throw new TypeError('invalid_radio_links');\n+ state.phase=links.length;state.ledger=[...links];\n+ state.power.circuit=links.length===0||links.length===2?'A':'B';\n+}\ndiff --git a/games/cinder-shift/src/session/release-notes.ts b/games/cinder-shift/src/session/release-notes.ts\nindex 9c682aa..e054e45 100644\n--- a/games/cinder-shift/src/session/release-notes.ts\n+++ b/games/cinder-shift/src/session/release-notes.ts\n@@ -11,6 +11,9 @@ export const releaseNotes:readonly ReleaseNote[]=[\n ,{id:'0.8.0-alpha.8',date:'2026-11-18',en:{summary:'Reliable silence and mobile menu controls.',changes:['Zero bus volume takes effect immediately, including while the audio clock is suspended.','A warning cannot restore the previous music volume after it has been set to zero.','Compact menu and campaign-map buttons retain a minimum height of 48 pixels.']},ru:{summary:'Надёжное отключение звука и мобильные кнопки.',changes:['Нулевая громкость шины применяется сразу, в том числе при остановленном аудиовремени.','Предупреждение не возвращает прежнюю громкость музыки после её установки на ноль.','Кнопки компактного меню и карты кампании сохраняют высоту не менее 48 пикселей.']}}\n ,{id:'0.8.0-alpha.9',date:'2026-11-18',en:{summary:'The House of Communications.',changes:['The courtyard lever opens a real entrance and lights the staircase; an upper alcove holds optional salvage.','Cross the powered bridge, then restore the exit circuit from the far side.','The rooftop offers lower cover and a climb to salvage.','Prepare both feeds before the first transmitter pulse; the physical map records every confirmed connection.']},ru:{summary:'Дом связи.',changes:['Рубильник во дворе открывает дверь и включает лестничный свет; в верхней нише есть ресурс.','Перейдите по мосту под питанием, затем верните выходной контур с дальней стороны.','На крыше доступны нижнее укрытие и подъём за ресурсом.','Подготовьте обе линии до первого импульса передатчика; физическая карта отмечает каждое подтверждённое соединение.']}}\n ,{\"id\":\"0.8.0-alpha.10\",\"date\":\"2026-11-18\",\"en\":{\"summary\":\"Night harbor.\",\"changes\":[\"The warehouse lift connects a reachable upper salvage route.\",\"Climb onto the crane platform, wait for the marked suspended load, and restore the exit feed from the far lever.\",\"Quay lamps use circuit A; water signals remain visible when the lamps are off.\",\"The port relay requires the cargo platform, shield feed and final transmitter contact before its map lights up.\"]},\"ru\":{\"summary\":\"Ночная гавань.\",\"changes\":[\"Складская платформа соединена с доступным верхним маршрутом за ресурсом.\",\"Поднимитесь на платформу крана, переждите отмеченный груз и верните питание выхода дальним рубильником.\",\"Фонари причала работают от A; метки воды остаются видны без освещения.\",\"Портовый ретранслятор требует подключения грузовой платформы, щита и последнего контакта передатчика.\"]}}\n+,{id:'0.8.0-alpha.11',date:'2026-11-19',en:{summary:'World mechanism animation.',changes:['Ten environment rigs use 44 authored layers with readable normal and reduced-motion states.']},ru:{summary:'Анимации механизмов новых миров.',changes:['Десять наборов окружения используют 44 слоя с обычными состояниями и уменьшенным движением.']}}\n+,{id:'0.8.0-alpha.12',date:'2026-11-19',en:{summary:'The factory power network.',changes:['Choose the conveyor route, ride the hoist and connect both distributor feeds.','Reset the drive in three physical phases and secure the radio line.']},ru:{summary:'Электросеть завода.',changes:['Выберите путь конвейера, используйте подъёмник и подключите оба контакта распределителя.','Сбросьте привод в три физических этапа и закрепите радиоканал.']}}\n+,{id:'0.8.0-alpha.13',date:'2026-11-20',en:{summary:'Radio above the bay.',changes:['Light the station approach and choose the gallery floor or powered upper bridge.','Three confirmed antenna links survive Retry and reload within the same campaign.','Tune the circuit, shelter beneath the marked canopy and close the rift in its safe window.']},ru:{summary:'Радио над заливом.',changes:['Осветите подход к станции и выберите нижнюю галерею или верхний мост под питанием.','Три подтверждённые связи антенны сохраняются при повторе и перезагрузке этой кампании.','Настройте контур, укройтесь под отмеченным навесом и закройте разлом в безопасное окно.']}}\n ];\n type Version={core:number[];pre:string[]};\n function parseVersion(value:string):Version|null{const m=/^(\\d+)\\.(\\d+)\\.(\\d+)(?:-([\\da-z.-]+))?(?:\\+[\\da-z.-]+)?$/i.exec(value);return m?{core:m.slice(1,4).map(Number),pre:m[4]?.split('.')||[]}:null;}\ndiff --git a/games/cinder-shift/src/session/save.ts b/games/cinder-shift/src/session/save.ts\nindex 4326cae..50f03c3 100644\n--- a/games/cinder-shift/src/session/save.ts\n+++ b/games/cinder-shift/src/session/save.ts\n@@ -6,6 +6,7 @@ import {migrateEventPlan,validPlan} from './events';\n import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';\n import {validateLegacySave} from './legacy-save';\n import {actions,bindingAllowed,type Action} from '../input';\n+import {validRadioLinks} from './radio-links';\n export const databaseName='cinder-shift-r01';\n export const schemaVersion=1;\n export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};\n@@ -131,6 +132,7 @@ export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_\n export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{\n  if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';\n  const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';\n+ if(d.radio_links!==undefined&&(id!=='c03-adriatic-1986'||!validRadioLinks(d.radio_links)||!d.completed_missions.includes('YU04')))return'corrupt';\n  const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';\n  if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';\n  if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';\ndiff --git a/games/cinder-shift/src/ui/application.ts b/games/cinder-shift/src/ui/application.ts\nindex bedc902..ff1eb6d 100644\n--- a/games/cinder-shift/src/ui/application.ts\n+++ b/games/cinder-shift/src/ui/application.ts\n@@ -1,5 +1,6 @@\n import {newCampaignIds,newCampaignMissions,isWorldMission,worldForMission,type NewCampaignId} from '../session/new-campaign-content';\n import {worldContext} from '../session/world-runtime';\n+import {restoreRadioLinks} from '../session/radio-links';\n import {worldAvailability,isCompleteBaseCampaign} from '../session/world-progress';\n import {buildMetadata,buildLabel,buildDiagnostics} from '../build';\n import {ReleaseNotesSession,releaseNotes} from '../session/release-notes';\n@@ -94,7 +95,7 @@ export class Application{\n     setTimeout(()=>{if(this.state==='loading')this.failure('boot_timeout');},15000);\n   }\n   readonly hooks:RoomHooks={failure:code=>this.failure(code),controls:this.controls,effects:this.effects,emit:(name,params)=>this.emit(name,params),pause:()=>this.pause('manual'),playAllowed:()=>this.state==='playing',ghostFrame:room=>this.ghostFrame(room),result:result=>{void this.finish(result);},dying:()=>{this.state='dying';},objective:(key,params)=>this.objective(key,params),hud:(attempt,player,hold)=>this.hud(attempt,player,hold),container:slot=>this.openEvent(slot),fork:()=>this.openFork(),autoFire:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.autofire,debug:()=>this.settings.debugBodies,combatAssist:()=>this.challengeEntry?this.challengeSpec?.assist_profile==='assisted':this.settings.combatAssist,feedbackIntensity:()=>this.settings.effectsIntensity,reducedFlashes:()=>this.settings.reducedFlashes||this.settings.reducedMotion||this.settings.effectsIntensity===0||matchMedia('(prefers-reduced-motion: reduce)').matches,transition:active=>{$('transition').hidden=!active;}};\n-  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n+  attach(game:Phaser.Game,room:RoomScene){this.game=game;this.room=room;room.onWorldCheckpoint=()=>{if(this.challengeEntry||this.activeWorld!=='c03-adriatic-1986'||this.attempt?.current!=='YU05-C'||!this.campaign)return;this.campaign.data.radio_links=[...(this.attempt.room().world?.ledger||[])];void this.persist();};game.events.on(Phaser.Core.Events.POST_RENDER,()=>this.frame());game.events.on(Phaser.Core.Events.READY,()=>game.canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();this.failure('webgl_context_lost');}));this.layout();}\n   async initialize(){const loaded=await this.saves.load(this.i18n.locale);this.settings=loaded.settings;this.controls.setBindings(this.settings.keyBindings);this.syncAccessibility();this.effects.configure(this.settings);this.i18n.setLocale(this.settings.locale);if(loaded.campaign){this.campaign=new Campaign(loaded.campaign);if(loaded.campaign.stage==='campaign_complete')void this.saves.recordCampaign(loaded.campaign);}this.worldCampaigns.set('r01',this.campaign);for(const id of newCampaignIds){const world=await this.saves.loadWorldCampaign(id);this.worldCampaigns.set(id,world.campaign?new Campaign(world.campaign):null);if(!world.ok)this.worldLoadFailed.add(id);}try{const selected=localStorage.getItem('cinder-active-world-v1');if(newCampaignIds.includes(selected as NewCampaignId)&&worldAvailability(selected!,this.saves.baseCompleted,true,!this.worldLoadFailed.has(selected!))==='available'){this.activeWorld=selected as NewCampaignId;this.campaign=this.worldCampaigns.get(selected!)||null;}}catch{}const marker=await this.saves.loadModeData('release-notes.v1');this.notes=new ReleaseNotesSession(buildMetadata.release_id,marker.value,this.saves.hasExistingProfile);if(marker.ok&&marker.value===undefined&&this.notes.marker.installed_release)await this.saves.saveModeData('release-notes.v1',this.notes.marker);this.settingsReady=true;this.ready();}\n   private loadingArtFinished(fallback:boolean){if(this.loadingArtSettled)return;this.loadingArtSettled=true;clearTimeout(this.loadingArtFallbackTimer);if(fallback){const loadingArt=$('loading-art');if(loadingArt)loadingArt.hidden=true;$('overlay').classList.add('loading-art-fallback');}else $('overlay').classList.remove('loading-art-fallback');this.maybeShowInitialMenu();}\n   private afterVisibleLoadingFrame(){if(!this.introStarted||document.hidden||this.state==='error')return;requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!this.introStarted||document.hidden||this.state==='error')return;if(!this.introLastFrame)this.introLastFrame=performance.now();this.runIntroClock();}));}\n@@ -265,6 +266,7 @@ export class Application{\n     const entry=challengeEntry||(mode==='mission'?this.campaign?.data.entry:undefined);if(mode==='mission'&&!entry)return;\n     this.emit('play_pressed',{mode,mission_id:entry?.mission_id||'airlock'});\n     const previous=this.attempt?.id||this.campaign?.data.result?.attempt_id;this.game.scene.stop('Room');this.game.scene.stop('Backdrop');this.attempt=new MissionAttempt(mode,entry||undefined,challengeEntry?this.challengeLedger||undefined:undefined);\n+    if(!challengeEntry&&mode==='mission'&&this.activeWorld==='c03-adriatic-1986'&&entry?.mission_id==='YU05'&&this.campaign?.data.radio_links)restoreRadioLinks(this.attempt.room('YU05-C').world!,this.campaign.data.radio_links);\n     if(this.campaign&&mode==='mission'&&!challengeEntry){this.campaign.begin();this.busy=true;await this.persist();this.busy=false;}\n     if(retry)this.emit('retry',{previous_attempt_id:previous||''});\n     $('transition').hidden=true;\ndiff --git a/games/cinder-shift/src/world-rooms.ts b/games/cinder-shift/src/world-rooms.ts\nindex 30470be..804f11c 100644\n--- a/games/cinder-shift/src/world-rooms.ts\n+++ b/games/cinder-shift/src/world-rooms.ts\n@@ -76,10 +76,10 @@ const authored:Authored[]=[\n  {id:'YU04-B',solids:[platform(144,288,64),platform(376,256,80),platform(416,224,48)],world:{landmark:'conveyor',switches:[{x:112,y:320},{x:480,y:320}],powerObjects:[power('hoist-A','A',232,244,112),power('hoist-B','B',232,280,112),{...power('hoist-door-B','B',532,272,16,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:300,y:280},{x:552,y:320}],sequenceHints:['worlds.factory.hoist.0','worlds.factory.hoist.1'],powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:336},{x:284,y:336},{x:284,y:292}]},{on:'A',points:[{x:480,y:278},{x:480,y:184},{x:532,y:184},{x:532,y:272}]}]},cache:{x:440,y:224}},\n  {id:'YU04-C',solids:[cover(160,32,48),platform(248,288,32),platform(304,244,88),cover(480,32,48)],world:{landmark:'distributor',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('feed-A','A',240,272,20,48),role:'door'}],sequence:['B','A'],sequenceTargets:[{x:340,y:244},{x:552,y:320}],sequenceHints:['worlds.factory.distributor.0','worlds.factory.distributor.1'],repair:{x:584,y:320},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:444,y:176},{x:524,y:176}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:140},{x:340,y:140},{x:340,y:244}]},{on:'A',points:[{x:432,y:278},{x:432,y:336},{x:552,y:336},{x:552,y:320}]}]},enemies:[enemy('yu04c-scanner',448)]},\n  {id:'YU04-D',solids:[cover(152,32,48),platform(232,288,40),platform(296,244,88),cover(464,32,40)],world:{landmark:'drive',switches:[{x:112,y:320},{x:416,y:320}],powerObjects:[{...power('drive-A','A',528,264,20,56),role:'door'}],phaseDoors:[{id:'c03-adriatic-1986:YU04-D:isolation-screen',untilPhase:1,rect:platform(296,272,20,48)},{id:'c03-adriatic-1986:YU04-D:drive-shield',untilPhase:2,rect:platform(448,272,16,48)}],sequence:['B','A','B'],sequenceTargets:[{x:264,y:288},{x:408,y:320},{x:552,y:320}],sequenceHints:['worlds.factory.drive.0','worlds.factory.drive.1','worlds.factory.drive.2'],pulse:{x:328,width:48,cycle:4600,warning:1600,active:800,fromPhase:1,untilPhase:2,signals:[{x:304,y:234},{x:400,y:234}]},transmissionMap:{panel:platform(416,152,160,88),nodes:[{x:440,y:176},{x:480,y:176},{x:520,y:176}]}}},\n- {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[power('bay-A','A',352,276,24,44)],sequence:['B']},cache:{x:424,y:208}},\n- {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320}],powerObjects:[power('gallery-A','A',240,272,20,48),power('gallery-B','B',432,240,80)],sequence:['B','A']},enemies:[enemy('yu05b-drone',448)]},\n- {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[power('antenna-A','A',240,272,20,48)],sequence:['B','A','B'],repair:{x:584,y:320}}},\n- {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[power('rift-A','A',544,264,20,56)],sequence:['B','A','B'],pulse:{x:240,width:56,cycle:4400,warning:1500,active:800}}},\n+ {id:'YU05-A',solids:[platform(144,280,80),platform(264,244,80),platform(384,208,80),platform(504,244,72)],world:{landmark:'bay',switches:[{x:112,y:320},{x:568,y:320}],powerObjects:[{...power('bay-A','A',352,276,24,44),role:'door'}],sequence:['B'],sequenceHints:['worlds.radio.ascent'],powerLight:{area:platform(224,274,336,46),on:'B'},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:552,y:340},{x:552,y:310}]}],transmissionMap:{panel:platform(400,72,188,104),nodes:[{x:424,y:150},{x:476,y:112},{x:556,y:92}]}},cache:{x:424,y:208}},\n+ {id:'YU05-B',solids:[cover(152,32,48),platform(296,248,88),cover(480,32,40)],world:{landmark:'gallery',switches:[{x:112,y:320},{x:424,y:320},{x:568,y:320}],powerObjects:[{...power('gallery-A','A',240,272,20,48),role:'door'},power('gallery-B','B',384,240,128)],sequence:['B','A'],sequenceHints:['worlds.radio.galleryBridge','worlds.radio.galleryReturn'],pulse:{x:344,width:56,cycle:6000,warning:1800,active:700,untilPhase:2,signals:[{x:320,y:222},{x:424,y:222}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:448,y:340},{x:448,y:252}]},{on:'A',points:[{x:424,y:278},{x:424,y:336},{x:250,y:336},{x:250,y:268}]}]},enemies:[enemy('yu05b-drone',448)]},\n+ {id:'YU05-C',solids:[platform(144,248,80),platform(288,248,80),platform(440,248,80)],world:{landmark:'antenna',switches:[{x:112,y:320},{x:400,y:320},{x:552,y:320}],powerObjects:[{...power('antenna-A','A',240,272,20,48),role:'door'}],sequence:['B','A','B'],sequenceHints:['worlds.radio.link0','worlds.radio.link1','worlds.radio.link2'],transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:400,y:278},{x:400,y:338},{x:408,y:338},{x:408,y:312}]},{on:'B',points:[{x:552,y:278},{x:552,y:312}]}],repair:{x:584,y:320}}},\n+ {id:'YU05-D',solids:[cover(160,32,48),platform(304,244,88),cover(480,32,40)],world:{landmark:'rift',switches:[{x:112,y:320},{x:432,y:320}],powerObjects:[{...power('rift-A','A',544,264,20,56),role:'door'}],phaseDoors:[{id:'rift-containment',untilPhase:2,rect:platform(496,228,20,60)}],sequence:['B','A','B'],sequenceHints:['worlds.radio.tune','worlds.radio.shelter','worlds.radio.close'],pulse:{x:240,width:192,cycle:6000,warning:1800,active:900,fromPhase:1,untilPhase:3,shelters:[platform(304,274,88,46)],signals:[{x:216,y:222},{x:456,y:222}]},transmissionMap:{panel:platform(400,104,188,112),nodes:[{x:426,y:186},{x:476,y:142},{x:556,y:126}]},powerWires:[{on:'B',points:[{x:112,y:278},{x:112,y:340},{x:264,y:340},{x:264,y:312}]},{on:'A',points:[{x:432,y:278},{x:432,y:342},{x:408,y:342},{x:408,y:312}]}]}},\n ];\n export const worldRooms=Object.fromEntries(authored.map((room):[WorldRoomId,RoomDefinition]=>{\n  const mission=room.id.slice(0,4) as WorldMissionId,letter=room.id.at(-1)!,prev=String.fromCharCode(letter.charCodeAt(0)-1),next=String.fromCharCode(letter.charCodeAt(0)+1);\ndiff --git a/package-lock.json b/package-lock.json\nindex 14b2b09..c4d9d61 100644\n--- a/package-lock.json\n+++ b/package-lock.json\n@@ -1,12 +1,12 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"lockfileVersion\": 3,\n   \"requires\": true,\n   \"packages\": {\n     \"\": {\n       \"name\": \"nuts-web-games\",\n-      \"version\": \"0.8.0-alpha.12\",\n+      \"version\": \"0.8.0-alpha.13\",\n       \"dependencies\": {\n         \"phaser\": \"3.90.0\"\n       },\ndiff --git a/package.json b/package.json\nindex b4bd21f..a0f095a 100644\n--- a/package.json\n+++ b/package.json\n@@ -1,6 +1,6 @@\n {\n   \"name\": \"nuts-web-games\",\n-  \"version\": \"0.8.0-alpha.12\",\n+  \"version\": \"0.8.0-alpha.13\",\n   \"private\": true,\n   \"type\": \"module\",\n   \"scripts\": {\ndiff --git a/tests/final-world-routes.spec.ts b/tests/final-world-routes.spec.ts\nindex 683cba7..ce555e3 100644\n--- a/tests/final-world-routes.spec.ts\n+++ b/tests/final-world-routes.spec.ts\n@@ -92,6 +92,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num\n  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){\n   await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);\n  }\n+ if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){\n+  // The first feed arms the real warning. Read the pulse from the marked\n+  // canopy, then leave shelter only while the second contact's window is open.\n+  await walk(page,348);\n+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});\n+ }\n  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});\n }\n async function combat(page:Page){\n@@ -120,7 +126,7 @@ async function solveRoom(page:Page){\n  s=await state(page);if(s.world.power){\n   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.\n   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];\n-  for(let phase=0;phase<sequence.length;phase++){\n+  for(let phase=s.world.phase;phase<sequence.length;phase++){\n    s=await state(page);if(s.world.power.circuit!==sequence[phase]){\n     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;\n     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];\ndiff --git a/tests/radio-station.spec.ts b/tests/radio-station.spec.ts\nnew file mode 100644\nindex 0000000..5cbafc9\n--- /dev/null\n+++ b/tests/radio-station.spec.ts\n@@ -0,0 +1,76 @@\n+import {test,expect} from '@playwright/test';\n+import {rooms} from '../games/cinder-shift/src/room-data';\n+import {Campaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';\n+import {newCampaignMissions} from '../games/cinder-shift/src/session/new-campaign-content';\n+import {createWorldState,actWorld,powerTarget,worldPulse,worldPulseHits,worldSolids,worldReady} from '../games/cinder-shift/src/session/world-runtime';\n+import {radioLinkIds,restoreRadioLinks,validRadioLinks} from '../games/cinder-shift/src/session/radio-links';\n+import {validateWorldSave} from '../games/cinder-shift/src/session/save';\n+import {encounter} from './encounter-helpers';\n+import {state} from './helpers';\n+import {to,ground} from './route-helpers';\n+\n+test('model radio link checkpoints are ordered, bounded and restore only confirmed contacts',()=>{\n+ const spec=rooms['YU05-C'].world!;\n+ for(let count=0;count<=3;count++){\n+  const links=radioLinkIds.slice(0,count),s=createWorldState('YU05-C',spec);\n+  restoreRadioLinks(s,links);expect(s.phase).toBe(count);expect(s.ledger).toEqual(links);\n+  expect(worldReady(spec,s)).toBe(count===3);\n+  expect(powerTarget(spec,s)).toEqual(count===3?null:{x:[264,408,552][count],y:320});\n+ }\n+ for(const invalid of [null,{},['antenna:phase-1'],['antenna:phase-0','antenna:phase-0'],[...radioLinkIds,'future']])expect(validRadioLinks(invalid)).toBe(false);\n+});\n+\n+test('model old world saves remain valid and malformed radio checkpoints are rejected',()=>{\n+ const c=new Campaign(newWorldCampaign('c03-adriatic-1986',4));\n+ for(const id of newCampaignMissions['c03-adriatic-1986'].slice(0,4)){\n+  c.prepare();c.begin();c.applyResult({attempt_id:'fixture-'+id,mission_id:id as any,result:'victory',reason:'',hp:6,max_hp:6,score:0,active_ms:1,screen_ms:0,nodes:[]});c.advance();\n+ }\n+ c.prepare();c.begin();\n+ const envelope=()=>({schema_version:1,content_version:'worlds-rw3.1',game_id:'c03-adriatic-1986',build_id:'radio-model',saved_at:new Date().toISOString(),campaign:c.snapshot()});\n+ expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=radioLinkIds.slice(0,2);expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBeNull();\n+ c.data.radio_links=['antenna:phase-2'];expect(validateWorldSave(envelope(),'c03-adriatic-1986')).toBe('corrupt');\n+ expect(newWorldCampaign('c03-adriatic-1986',4).radio_links).toBeUndefined();\n+});\n+\n+test('model radio finale arms a fresh warning, provides real shelter, gates the window and stops on closure',()=>{\n+ const spec=rooms['YU05-D'].world!,s=createWorldState('YU05-D',spec);\n+ const body=(x:number)=>({x:x-11,y:276,width:22,height:44});\n+ expect(worldPulse(spec,50000,s)).toBe('safe');\n+ actWorld(spec,s,{x:112,y:320},body(112),1,50000);expect(s.power?.circuit).toBe('B');\n+ expect(actWorld(spec,s,{x:264,y:320},body(264),1,50000)?.action).toBe('activate');\n+ expect(worldPulse(spec,50000,s)).toBe('warning');expect(worldPulse(spec,51799,s)).toBe('warning');\n+ expect(worldPulse(spec,51800,s)).toBe('active');expect(worldPulseHits(spec,body(264),51800,s)).toBe(true);\n+ expect(worldPulseHits(spec,body(348),51800,s)).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,51800);expect(s.power?.circuit).toBe('A');\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,51800)).toBeNull();\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(true);\n+ expect(actWorld(spec,s,{x:408,y:320},body(408),1,52700)).toMatchObject({action:'activate',geometry:true});\n+ expect(worldSolids(spec,s).some(r=>r.id==='world-phase:rift-containment')).toBe(false);\n+ actWorld(spec,s,{x:432,y:320},body(432),1,52700);\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,52700)?.action).toBe('activate');\n+ expect(worldReady(spec,s)).toBe(true);expect(worldPulse(spec,57800,s)).toBe('safe');\n+ expect(actWorld(spec,s,{x:552,y:320},body(552),1,57800)).toBeNull();expect(s.ledger).toHaveLength(3);\n+});\n+\n+for(const reduced of [false,true])test(`radio links persist after real activation and reload, reduced ${reduced}`,async({page},info)=>{\n+ test.setTimeout(60000);await encounter(page,{mission:'YU05',room:'YU05-C',reduced});\n+ // The only initial fixture is world entry with C01 unlocked. No position,\n+ // contact or time writes occur once play starts.\n+ await page.evaluate(()=>new Promise<void>((resolve,reject)=>{\n+  localStorage.setItem('cinder-active-world-v1','c03-adriatic-1986');\n+  const request=indexedDB.open('cinder-shift-r01',1);request.onsuccess=()=>{const db=request.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put({schema_version:1,base_game_id:'r01',completion_ids:['legacy-c01-unlocked']},'world-profile.v1');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};\n+ }));\n+ const before=await state(page);await to(page,112);await ground(page,320);await page.keyboard.press('e');\n+ await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');\n+ await to(page,264);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);\n+ await to(page,400);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');\n+ await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);\n+ await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();\n+ await expect.poll(async()=>{const s=await state(page);return s.campaign.radio_links;}).toEqual(radioLinkIds.slice(0,2));\n+ await page.reload();await expect(page.getByTestId('continue')).toBeVisible();await page.getByTestId('continue').click();await page.getByTestId('restart-entry').click();\n+ await expect.poll(async()=>(await state(page)).state).toBe('playing');\n+ const after=await state(page);expect(after.campaign.campaign_id).toBe(before.campaign.campaign_id);expect(after.campaign.points).toBe(before.campaign.points);\n+ expect(after.roomStates['YU05-C'].world.phase).toBe(2);expect(after.roomStates['YU05-C'].world.ledger).toEqual(radioLinkIds.slice(0,2));\n+ await page.screenshot({path:info.outputPath('radio-links-reloaded.png')});\n+});",
+          "actualWorkers": 1
+        },
+        "name": "chromium",
+        "testDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "snapshotDir": "/home/runner/work/web-games-nuts/web-games-nuts/game/tests",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4175",
+          "headless": true,
+          "locale": "ru-RU",
+          "viewport": {
+            "width": 1280,
+            "height": 844
+          },
+          "launchOptions": {
+            "args": [
+              "--mute-audio"
+            ]
+          },
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "chromium"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "line"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.1",
+    "workers": 1,
+    "webServer": {
+      "command": "node scripts/build-rework-harness.mjs && npm run preview",
+      "env": {
+        "CINDER_QA_MUTE": "0",
+        "CINDER_QA_HARNESS": "1"
+      },
+      "url": "http://127.0.0.1:4175/games/cinder-shift/",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "sprint2-media.spec.ts",
+      "file": "sprint2-media.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "RW2 atlas airlock A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3213,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:00.542Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1b4b285050659d11381f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3187,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:04.007Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4443431d155715d129eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3200,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:07.211Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f9976ca74fb928b95479",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2944,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:10.418Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4e875bdf7d732e256ed9",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock M1C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2969,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:13.370Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9c479fd2f778b0d972f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas airlock C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2984,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:16.349Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-f753abb7a569ff5444c0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2974,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:19.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-24cc5198737cee26f514",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:22.334Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-68767e4f4cfe33da9d28",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2939,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:25.302Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-21a702fff591c5476c68",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2912,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:28.252Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7e9883cb762114bce11b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3022,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:31.171Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-85502fa49890477ff235",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2993,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:34.202Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-8561a94337798d81af26",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:37.205Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b86477d468b148bacba7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo M2E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2938,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:40.171Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e246567293bd40bf9f06",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas cargo G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2953,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:43.119Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d577898d4de003d6ebea",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2981,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:46.082Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-e874b94f83a19b427073",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2917,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:49.074Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-db01690e207019570f19",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2990,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:52.003Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-19e5ffa54f8416cec8d3",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2925,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:55.001Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-aec5644e0e6bd6b7ddcf",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:44:57.933Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-2672a4da4663da1e821c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2930,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:00.916Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-46558dfc15781cd2b8ce",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2960,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:03.852Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-705f85795ab64640dad7",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2934,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:06.821Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c86ad89e05408701d9e0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3J",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2941,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:09.768Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-7f2ca94829e3de612a7a",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3K",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3001,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:12.718Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-a725ed176942b050b380",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas foundry M3D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2964,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:15.730Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-32eb1907149e876c4e77",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2915,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:18.703Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-120f5283347864d30674",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2972,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:21.633Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-1111fa5738f61ef6076e",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2922,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:24.616Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-dacf339092dc2e17f13c",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2959,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:27.548Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-80b789570afee5ecea84",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2911,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:30.516Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-9d809b96f90841132251",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2955,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:33.436Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-53c8ca85fb0c2f86bacd",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2975,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:36.400Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-50977b8791aca16e47eb",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2927,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:39.382Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-76ada261c688352ffea0",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas archive M4D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3008,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:42.318Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-b77124b9213d8d1d290f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5A",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3013,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:45.334Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-38145a3b0ad2d4aea7f5",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5F",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2950,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:48.364Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6e8591ee921194c68a0b",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5B",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3004,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:51.333Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-13fa3c377137f8ad0a55",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5G",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2993,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:54.346Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-afb00db3087bdbb681a6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5H",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3101,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:45:57.347Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-3a61e6555d4d63bd95c6",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5I",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:46:00.469Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-4bf76a70bf11cf488c5f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5C",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3031,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:46:03.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-d3f4fe4b63abacab718f",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5D",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3118,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:46:06.535Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-c728c6b9d929f3fda8a4",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        },
+        {
+          "title": "RW2 atlas reactor M5E",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3008,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-20T06:46:09.664Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8895f810c49368fcad6c-6dac771e7967e41fa030",
+          "file": "sprint2-media.spec.ts",
+          "line": 9,
+          "column": 35
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-20T06:43:55.225Z",
+    "duration": 137533.125,
+    "expected": 44,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
