@@ -1,0 +1,45 @@
+name: Cinder Shift alpha14 SDK records
+on:
+  pull_request:
+    paths:
+      - 'games/cinder-shift/**'
+      - 'tests/platform-*.spec.ts'
+      - 'scripts/test-platform-adapter.mjs'
+      - 'playwright.platform.config.ts'
+      - '.github/workflows/cinder-alpha14-sdk.yml'
+      - 'package*.json'
+  workflow_dispatch:
+concurrency:
+  group: cinder-alpha14-sdk-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  yandex:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CINDER_TARGET: yandex
+      CINDER_GAMEPLAY_BASE_SHA: 82c49240ae5080c334928afe63e0074ca23d33f0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:platform
+      - run: npm run art:check
+      - run: npm run build:target -- yandex
+      - run: npx playwright install --with-deps chromium
+      - name: Verify SDK lifecycle, profile reload, counters, pause and failed writes
+        run: npx playwright test --config=playwright.platform.config.ts tests/platform-yandex.spec.ts tests/platform-personal-records.spec.ts --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-alpha14-yandex-${{ github.run_attempt }}
+          path: |
+            dist/cinder-shift/build-manifest.json
+            test-results/

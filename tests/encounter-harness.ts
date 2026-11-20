@@ -1,3 +1,5 @@
+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage';
+import {SaveService} from '../games/cinder-shift/src/session/save';
 // Test-only entry, compiled outside dist/. The production entry has no fixture globals.
 import {app} from '../games/cinder-shift/src/main';
 import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';
@@ -8,6 +10,15 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
+ async transportStatistics(input:{kind:'guest'|'bridge';key:string;incoming:import('../games/cinder-shift/src/session/personal-records').PersonalRecords}){
+  // The controlled SDK mock owns localStorage; production Bridge code receives only its SDK.
+  const sdk={get:async(key:string,parse?:boolean)=>{if(parse!==false)throw Error('raw_envelope_required');await new Promise(resolve=>setTimeout(resolve,20));return localStorage.getItem(key);},set:async(key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,20));localStorage.setItem(key,String(value));}};
+  const storage=input.kind==='guest'?new HostRecordStorage(localStorage,input.key):new BridgeRecordStorage(sdk,input.key);
+  const saves=new SaveService('transport-fixture',storage);return saves.updatePersonalRecords(input.incoming);
+ },
+ flushStatistics(){return app.statistics.flush();},
+ // Storage-contract fixture only; production has no mutable statistics global.
+ writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},
  async audioClock(action:'suspend'|'resume'){const service=app.effects as any,ctx=service.context as AudioContext;await ctx[action]();return{state:ctx.state,time:ctx.currentTime};},
  audioMixer(input?:{warning?:boolean;musicVolume?:number}){const service=app.effects as any;if(input?.warning)app.effects.play('warn_turret');if(input?.musicVolume!==undefined)app.effects.configure({...app.settings,musicVolume:input.musicVolume});return{gain:service.musicBus?.gain.value,context:service.context?.state,snapshot:app.effects.snapshot()};},
  capture(){return new Promise(resolve=>app.game.renderer.snapshot(image=>{
