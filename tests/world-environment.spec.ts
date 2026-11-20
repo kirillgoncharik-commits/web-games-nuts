@@ -4,9 +4,9 @@ import {encounter} from './encounter-helpers';
 import {state} from './helpers';
 import {jump,standingJump,to,ground,until} from './route-helpers';
 
-test('warehouse lift joins the optional salvage route and opens the gate without a first-show threat',async({page},info)=>{
- test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-A'});
- const before=await state(page);expect(before.enemies).toHaveLength(0);expect(before.solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(true);
+test('warehouse lift joins the optional salvage route and opens the gate in the cleared warehouse',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-A',cleared:true});
+ const before=await state(page);expect(before.enemies.map((e:any)=>[e.kind,e.hp])).toEqual([['walker',0],['drone',0]]);expect(before.solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(true);
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  expect((await state(page)).solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(false);
  await jump(page,124,180);await ground(page,288);await to(page,204);await ground(page,288);await standingJump(page,288);await ground(page,256);

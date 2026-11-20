@@ -6,7 +6,7 @@ import {rooms} from '../games/cinder-shift/src/room-data';
 import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
-import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
+import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
 import {standingJump,ground} from './route-helpers';
@@ -114,11 +114,17 @@ async function combat(page:Page){
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
   const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&standingLaneClear(s.solids,x)).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
-  const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
+  // The cutter fires horizontally. A diagonal visibility ray to the enemy's centre
+  // can pass under a shelf that actually stops every standing shot.
+  const walls=s.solids.map((rect:any)=>expand(rect,4,1.5));
+  const lane=candidates.flatMap(x=>(en.kind==='drone'?[292]:[292,305]).map(y=>({x,y})))
+   .find(({x,y})=>clearLine({x:x+Math.sign(en.x-x)*19,y},{x:en.x,y},walls));
+  if(!lane)throw Error('no baseline firing lane '+JSON.stringify(s));
+  const at=lane.x;
   // Fire while approaching cover, especially when a switchback crosses a patrol.
   await page.keyboard.down('j');
-  await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
-  await fireFromCover(page,[en.id]);
+  await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);if(lane.y===305)await page.keyboard.down('s');await page.keyboard.down('j');
+  try{await fireFromCover(page,[en.id]);}finally{await page.keyboard.up('s');}
  }
 }
 async function solveRoom(page:Page){
@@ -167,7 +173,12 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.player?.vy===0;});const before=await state(page);visited.push(before.room);try{await solveRoom(page);}catch(error){const failed=await state(page);console.error('ROUTE_FAILURE '+JSON.stringify({visited,room:failed.room,state:failed.state,player:failed.player,hp:failed.hp,world:failed.world,solids:failed.solids,enemies:failed.enemies}));await info.attach('route-failure.json',{body:JSON.stringify(await state(page),null,2),contentType:'application/json'});throw error;}
   }
   });
-  pressure.push(...campaignPressure((await state(page)).roomStates));
+  const cleared=await state(page),result=cleared.campaign.result,sectorPressure=campaignPressure(cleared.roomStates);
+  expect(result.score_breakdown.rooms).toBe(400);
+  expect(result.score_breakdown.combat).toBeGreaterThan(0);
+  expect(result.score_breakdown.extraction).toBeGreaterThanOrEqual(1000);
+  pressure.push(...sectorPressure);
+  await writeFile(info.outputPath('sector-'+result.mission_id+'.json'),JSON.stringify({difficulty,seed:4,source_sha:cleared.sha,result,pressure:sectorPressure,losses:losses.filter(loss=>loss.mission===result.mission_id)},null,2));
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
  await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);

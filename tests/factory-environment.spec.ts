@@ -7,8 +7,8 @@ import {state} from './helpers';
 import {jump,standingJump,to,ground} from './route-helpers';
 
 test('factory first show offers the resource walkway and the stopped-belt shortcut at base movement',async({page},info)=>{
- test.setTimeout(45000);await encounter(page,{mission:'YU04',room:'YU04-A'});
- const before=await state(page);expect(before.enemies).toHaveLength(0);
+ test.setTimeout(45000);await encounter(page,{mission:'YU04',room:'YU04-A',cleared:true});
+ const before=await state(page);expect(before.enemies.map((e:any)=>[e.kind,e.hp])).toEqual([['walker',0],['drone',0]]);
  await jump(page,124,176);await ground(page,288);await to(page,196);await ground(page,288);await standingJump(page,280);await ground(page,256);
  await to(page,328);await ground(page,256);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).roomStates['YU04-A'].cacheUsed).toBe(true);
  await page.screenshot({path:info.outputPath('factory-upper-walkway-A.png')});

@@ -9,7 +9,7 @@ const body=(x:number,y:number)=>({x:x-11,y:y-44,width:22,height:44});
 
 test('factory first show is safe and both circuits keep a permanent upper walkway',()=>{
  const room=rooms['YU04-A'],spec=room.world!,s=createWorldState(room.id,spec),fixed=structuredClone(room.solids);
- expect(room.enemies).toHaveLength(0);expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
+ expect(room.enemies.map(e=>e.kind)).toEqual(['walker','drone']);expect(room.enemies.every(e=>e.activateX>112)).toBe(true);expect(spec.pulse).toBeUndefined();expect(spec.powerField).toBeUndefined();
  expect(worldSolids(spec,s).find(r=>r.id==='world-power:belt-A')).toMatchObject({x:264,y:272,height:48});
  expect(actWorld(spec,s,{x:112,y:320},body(112,320),1,100)?.action).toBe('switch');
  expect(worldSolids(spec,s).some(r=>r.id==='world-power:belt-A')).toBe(false);expect(room.solids).toEqual(fixed);

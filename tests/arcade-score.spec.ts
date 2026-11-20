@@ -74,9 +74,8 @@ test('Airlock pays on the HUD, saves the result and equips the next attempt from
  await completeFromB(page,{coveringFire:true});
  await expect(page.getByTestId('arcade-total')).toBeVisible();
  const result=(await state(page)).campaign.result;
- expect(result.score_breakdown.rooms).toBe(600);
- expect(result.score_breakdown.extraction).toBe(1000);
- expect(result.score).toBeGreaterThan(1600);
+ expect(result.score_breakdown).toEqual({combat:675,rooms:600,salvage:0,extraction:1000});
+ expect(result.score).toBe(2275);
  await page.reload();await page.getByTestId('continue').click();
  await expect(page.getByTestId('arcade-total')).toBeVisible();
  await page.getByTestId('retry-loadout').click();
