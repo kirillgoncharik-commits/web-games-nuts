@@ -24,12 +24,12 @@ test('host language, single ready and gameplay markup match the actual app state
  await page.waitForTimeout(200);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).player).toEqual(paused.player);
  await page.keyboard.up('d');await page.evaluate(()=>(window as any).__HOST_TEST.resume());
  await expect.poll(async()=>(await state(page)).state).toBe('playing');
- await page.keyboard.press('Escape');await page.evaluate(()=>(window as any).__HOST_TEST.pause());await page.evaluate(()=>(window as any).__HOST_TEST.resume());
+ await page.locator('#hud-pause').click();await expect.poll(async()=>(await state(page)).state).toBe('paused');await page.evaluate(()=>(window as any).__HOST_TEST.pause());await page.evaluate(()=>(window as any).__HOST_TEST.resume());
  expect((await state(page)).state).toBe('paused');expect((await state(page)).platform.playing).toBe(false);
 });
 test('host storage restores workshop progress and an intentional locale after reload',async({page})=>{
  await mock(page);await startMission(page,{locale:'ru',node:'W1'});
- await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();
+ await page.locator('#hud-pause').click();await expect.poll(async()=>(await state(page)).state).toBe('paused');await page.getByTestId('pause-menu').click();
  const before=await state(page);expect(before.campaign.nodes).toContain('W1');
  await expect.poll(()=>page.evaluate(()=>JSON.parse(localStorage.getItem('cinder-shift-records.v1')||'{}').records?.campaign?.campaign?.nodes||[])).toContain('W1');
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();

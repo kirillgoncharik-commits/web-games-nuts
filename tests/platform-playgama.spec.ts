@@ -32,11 +32,11 @@ test('Bridge alone supplies locale and storage; game readiness and host pause fo
  const paused=await state(page);expect(paused.state).toBe('paused');expect(paused.platform.playing).toBe(false);expect(paused.audioStatus.hidden).toBe(true);
  await page.waitForTimeout(200);expect((await state(page)).simMs).toBe(paused.simMs);expect((await state(page)).player).toEqual(paused.player);await page.keyboard.up('d');
  await page.evaluate(()=>(window as any).__BRIDGE_TEST.resume());await expect.poll(async()=>(await state(page)).state).toBe('playing');
- await page.keyboard.press('Escape');await page.evaluate(()=>{(window as any).__BRIDGE_TEST.pause();(window as any).__BRIDGE_TEST.resume()});expect((await state(page)).state).toBe('paused');
+ await page.locator('#hud-pause').click();await expect.poll(async()=>(await state(page)).state).toBe('paused');await page.evaluate(()=>{(window as any).__BRIDGE_TEST.pause();(window as any).__BRIDGE_TEST.resume()});expect((await state(page)).state).toBe('paused');
  expect(await page.evaluate(()=>(window as any).__BRIDGE_TEST.violations)).toEqual([]);
 });
 test('Bridge envelope restores purchased progress, with startup language always from Bridge',async({page})=>{
- await mock(page);await startMission(page,{locale:'ru',node:'W1'});await page.keyboard.press('Escape');await page.getByTestId('pause-menu').click();
+ await mock(page);await startMission(page,{locale:'ru',node:'W1'});await page.locator('#hud-pause').click();await expect.poll(async()=>(await state(page)).state).toBe('paused');await page.getByTestId('pause-menu').click();
  const before=await state(page);expect(before.campaign.nodes).toContain('W1');
  await expect.poll(()=>page.evaluate(()=>(window as any).__BRIDGE_TEST.read().records?.campaign?.campaign?.nodes||[])).toContain('W1');
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();const after=await state(page);
