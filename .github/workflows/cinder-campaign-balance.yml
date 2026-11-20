@@ -1,0 +1,42 @@
+name: Cinder Shift campaign balance
+on:
+  pull_request:
+    branches: ['codex/cinder-shift-alpha16-unified']
+    paths:
+      - 'games/cinder-shift/src/**'
+      - 'tests/**'
+      - 'playwright.balance.config.ts'
+      - '.github/workflows/cinder-campaign-balance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: campaign-balance-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  campaign-routes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        route: ['a fresh profile completes five sectors', c02-small-world, c03-adriatic-1986]
+        difficulty: [easy, hard, nightmare]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Play the full campaign using ordinary input
+        run: npx playwright test --config=playwright.balance.config.ts --project=${{ matrix.difficulty }} --grep '${{ matrix.route }}' --output=test-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-route-${{ matrix.difficulty }}-${{ matrix.route }}
+          path: test-results

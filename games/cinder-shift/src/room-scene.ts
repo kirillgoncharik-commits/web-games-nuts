@@ -117,15 +117,18 @@ export class RoomScene extends Phaser.Scene{
   if(bossPattern?.phase==='active'&&bossPattern.rects.some(rect=>intersects(this.player.rect(),rect))){this.damage('regulator-beam',Math.sign(this.player.x-(bossPattern.rects[0]?.x||320))||1);if(attempt.hp<=0)return;}
   if(def.boss&&attempt.bossHp>0&&regulatorHitboxes(regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height)).armor.some(rect=>intersects(this.player.rect(),rect))){this.damage('regulator-contact',Math.sign(this.player.x-def.boss.x)||-1);if(attempt.hp<=0)return;}
   const playerPoint={x:this.player.x,y:this.player.feet-25};
+  let enemyContact=false;
   for(const enemy of saved.enemies){
    if(!attempt.enemyPowered(enemy))continue;
    const canActivate=roomThreatCanActivate(attempt.current,enemy,saved.enemies,playerPoint,def.solids);
    const wasLocked=enemy.aimLocked,body=this.player.rect(),target=enemy.aimed?{x:this.player.x,y:body.y+body.height/2}:playerPoint;
-   stepEnemy(enemy,ms,target,def.solids,this.projectiles,kind=>this.hooks.effects.play(kind==='walker'?'warn_walker':kind==='turret'?'warn_turret':'warn_drone'),Math.max(this.hooks.combatAssist()?1.5:1,attempt.enemyTelegraphScale()),canActivate);
+   stepEnemy(enemy,ms,target,def.solids,this.projectiles,kind=>this.hooks.effects.play(kind==='walker'?'warn_walker':kind==='turret'?'warn_turret':'warn_drone'),Math.max(this.hooks.combatAssist()?1.5:1,attempt.enemyTelegraphScale()),canActivate,attempt.balance.aggression);
+   if(enemy.active&&enemy.hp>0)enemyContact=true;
    if(enemy.aimLocked&&!wasLocked)this.hooks.effects.play('warn_turret');
    const key=attempt.id+':'+enemy.id;if(enemy.active&&!this.encountered.has(key)){this.encountered.add(key);this.hooks.emit('enemy_encounter',{enemy_id:enemy.id,enemy_kind:enemy.kind,behavior:enemy.behavior});}
    if(enemy.id==='e-turret'&&enemy.first&&enemy.attackPhase==='recovery'&&!attempt.tutorial.has('turret_hint')&&enemy.hp===4){attempt.tutorial.add('turret_hint');this.hooks.emit('tutorial_step',{step:'turret_open_window'});}
   }
+  if(enemyContact)saved.enemyContactMs+=ms;
   this.projectiles.step(ms,def.solids,(shot,from,to)=>{
    if(shot.team==='enemy'){
     if(def.safeZones?.some(zone=>zone.shielded&&segmentRect(from,to,zone)))return true;

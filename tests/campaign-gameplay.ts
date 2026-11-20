@@ -5,7 +5,11 @@ import {ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} fro
 
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
-  await to(page,100);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
+  await page.keyboard.down('s');
+  await to(page,112);
+  await page.keyboard.up('s');
+  await ground(page,320);
+  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3e-ram');
   await to(page,384);await drone(page,'m3e-drone');await cross(page,'m3e-furnace');await next(page,'M3F',560);
   await jump(page,160,270);await ground(page,320);await clear(page,['m3f-security']);await to(page,556);await ground(page,320);

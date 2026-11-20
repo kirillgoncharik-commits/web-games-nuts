@@ -1,11 +1,14 @@
 import {airlockExtension} from './airlock-gameplay';
 import {expect,type Page} from '@playwright/test';
 import {seedsForPlans} from '../games/cinder-shift/src/session/events';
+import type {Difficulty} from '../games/cinder-shift/src/session/difficulty';
 import type {NodeId} from '../games/cinder-shift/src/session/research';
 export const state=(page:Page)=>page.evaluate(()=>(window as any).__CINDER__());
 export async function x(page:Page,value:number){await page.waitForFunction(x=>(window as any).__CINDER__().player?.x>=x,value,{timeout:8000}).catch(async()=>{throw Error('Movement stopped '+JSON.stringify(await state(page)));});}
-export async function startMission(page:Page,{seed=seedsForPlans().none,node,locale='ru'}:{seed?:number;node?:NodeId;locale?:'ru'|'en'}={}){
-  await page.goto('/games/cinder-shift/?seed='+seed);await page.getByTestId('menu-settings').click();await page.getByTestId('locale').selectOption(locale);await page.getByTestId('settings-back').click();await page.getByTestId('new-shift').click();
+export async function startMission(page:Page,{seed=seedsForPlans().none,node,locale='ru',difficulty}:{difficulty?:Difficulty;seed?:number;node?:NodeId;locale?:'ru'|'en'}={}){
+  await page.goto('/games/cinder-shift/?seed='+seed);await page.getByTestId('menu-settings').click();await page.getByTestId('locale').selectOption(locale);await page.getByTestId('settings-back').click();
+  if(difficulty)await page.getByTestId('campaign-difficulty').selectOption(difficulty);
+  await page.getByTestId('new-shift').click();
   if(await page.getByTestId('confirm-new').isVisible())await page.getByTestId('confirm-new').click();await page.getByTestId('map-prepare').click();
   await expect.poll(async()=>(await state(page)).screen).toBe('research');
   if(node){await page.getByTestId('buy-'+node).click();await page.getByTestId('confirm-buy').click();await expect.poll(async()=>(await state(page)).campaign.nodes).toContain(node);}

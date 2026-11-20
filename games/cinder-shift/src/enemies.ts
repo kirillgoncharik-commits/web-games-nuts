@@ -65,29 +65,29 @@ export function suspendEnemy(e:EnemyState){
  if(e.state==='attack'&&e.attackPhase!=='recovery')recovery(e);
  e.active=false;e.provoked=false;e.aimLocked=false;e.lastSeen=null;e.acquireMs=0;e.memoryMs=0;e.noticeMs=0;e.attackPhase=null;e.state=e.behavior==='aggressive'?'return':hasRoute(e)?'patrol':'idle';
 }
-export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shots:Projectiles,warn:(kind:string)=>void,telegraphScale=1,canActivate=true){
+export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shots:Projectiles,warn:(kind:string)=>void,telegraphScale=1,canActivate=true,aggression=1){
  if(e.hp<=0){e.state='dead';e.attackPhase=null;return;}
- if(!e.active){if(!canActivate||(player.x<e.activateX&&!e.provoked))return;e.active=true;}
+ if(!e.active){if(!canActivate||(player.x<Math.max(0,e.activateX-(aggression-1)*100)&&!e.provoked))return;e.active=true;}
  const mob=e.mob?worldEnemyProfiles[e.mob]:null,cfg={...config.combat[e.kind],...mob},ai=config.m05b1.ai;
  e.shotFlashMs=Math.max(0,e.shotFlashMs-ms);
  const distance=Math.hypot(e.x-player.x,e.y-player.y),visible=distance<=cfg.range&&clearLine(enemyMuzzle(e),player,solids);
- e.cooldown=Math.max(0,e.cooldown-ms);e.noticeMs=Math.max(0,e.noticeMs-ms);
+ e.cooldown=Math.max(0,e.cooldown-ms*aggression);e.noticeMs=Math.max(0,e.noticeMs-ms);
  if(e.state==='return'){
   if(Math.abs(e.x-e.home.x)<1&&Math.abs(e.y-e.home.y)<1){e.state=hasRoute(e)?'patrol':'idle';e.direction=1;e.phaseMs=250;return;}
   move(e,e.home,ai.chase_speed,ms,solids);return;
  }
  if(e.behavior==='aggressive'){
-  if(visible&&distance<=(e.provoked||e.aimed?cfg.range:ai.release_radius)){e.lastSeen={...player};e.memoryMs=ai.memory_ms;}else e.memoryMs=Math.max(0,e.memoryMs-ms);
+  if(visible&&distance<=(e.provoked||e.aimed?cfg.range:ai.release_radius*aggression)){e.lastSeen={...player};e.memoryMs=ai.memory_ms;}else e.memoryMs=Math.max(0,e.memoryMs-ms);
   if(e.state==='idle'||e.state==='patrol'){
-   e.acquireMs=visible&&(distance<=(e.aimed?cfg.range:ai.detection_radius)||e.provoked)?e.acquireMs+ms:0;
+   e.acquireMs=visible&&(distance<=(e.aimed?cfg.range:ai.detection_radius*aggression)||e.provoked)?e.acquireMs+ms*aggression:0;
    if(e.acquireMs+1e-6>=ai.acquire_ms){e.state='chase';e.noticeMs=250;e.stuckMs=0;}
   }
-  if((e.state==='chase'||e.state==='attack')&&(distance>(e.provoked||e.aimed?cfg.range:ai.release_radius)||e.memoryMs<=0)){returnHome(e);return;}
+  if((e.state==='chase'||e.state==='attack')&&(distance>(e.provoked||e.aimed?cfg.range:ai.release_radius*aggression)||e.memoryMs<=0)){returnHome(e);return;}
  }
  const beginAttack=()=>{e.state='attack';e.attackPhase='telegraph';e.aimLocked=false;const teaching=e.first&&e.warnings===0;e.phaseMs=(mob?mob.telegraph_ms:e.aimed?aimedGuardRules.warningMs:e.kind==='walker'&&teaching?config.combat.walker.first_telegraph_ms:cfg.telegraph_ms)*Math.max(1,telegraphScale)*(e.kind==='turret'&&teaching?2:1);if(visible)e.aim={...player};e.warnings++;warn(e.kind);};
  if(e.state==='attack'){
     if(e.attackPhase==='telegraph'){
-   if(e.behavior==='aggressive'&&(!visible||distance>(e.provoked||e.aimed?cfg.range:ai.attack_release_radius))){recovery(e);return;}
+   if(e.behavior==='aggressive'&&(!visible||distance>(e.provoked||e.aimed?cfg.range:ai.attack_release_radius*aggression))){recovery(e);return;}
    if(visible&&!e.aimLocked)e.aim={...player};e.phaseMs-=ms;if((e.aimed||mob?.lockMs)&&e.phaseMs<=(mob?.lockMs??aimedGuardRules.lockMs)*Math.max(1,telegraphScale))e.aimLocked=true;
      if(e.phaseMs<=0){e.attackPhase='fire';e.phaseMs=e.preset==='ram_charge'?config.m05b2.ram_charge_ms:0;e.shots=0;}
   }else if(e.attackPhase==='fire'){
@@ -110,9 +110,9 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
   return;
  }
  if(e.state==='chase'){
-  if(visible&&distance<=(e.provoked||e.aimed?cfg.range:ai.attack_radius)&&e.cooldown<=0){beginAttack();return;}
-  if(e.lastSeen&&(!visible||distance>ai.attack_radius)){
-   const moved=move(e,e.lastSeen,ai.chase_speed,ms,solids);e.stuckMs=moved?0:e.stuckMs+ms;
+  if(visible&&distance<=(e.provoked||e.aimed?cfg.range:ai.attack_radius*aggression)&&e.cooldown<=0){beginAttack();return;}
+  if(e.lastSeen&&(!visible||distance>ai.attack_radius*aggression)){
+   const moved=move(e,e.lastSeen,ai.chase_speed*aggression,ms,solids);e.stuckMs=moved?0:e.stuckMs+ms;
    if(e.stuckMs>=ai.stuck_ms||!visible&&Math.abs(e.lastSeen.x-e.x)<2)returnHome(e);
   }
   return;

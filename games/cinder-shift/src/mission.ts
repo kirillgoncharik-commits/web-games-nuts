@@ -1,4 +1,5 @@
 import {createWorldState,worldSolids,worldReady,worldAbsorb,clearWorldTransient,type WorldRoomState} from './session/world-runtime';
+import {combatBalance} from './session/difficulty';
 import {RegulatorEncounter} from './boss';
 import config from '../game.config.json' with {type:'json'};
 import type {MissionEntry} from './session/campaign';
@@ -13,15 +14,16 @@ export type {RoomId,Rect,Point,EnemyDefinition,RoomDefinition} from './room-data
 export type {EnemyState} from './enemies';
 import {rooms,type RoomId,type RoomDefinition} from './room-data';
 export type Mode='mission'|'training';
-export type RoomState={world?:WorldRoomState;powerCircuit:'press'|'furnace';targetHp:number;terminal:boolean;enemies:EnemyState[];visited:boolean;containerUsed:boolean;repairUsed:boolean;cacheUsed:boolean;bufferUsed:boolean;brokenPanels:string[];route:'ground'|'service'|'press'|'archive'};
+export type RoomState={enemyContactMs:number;hpLost:number;world?:WorldRoomState;powerCircuit:'press'|'furnace';targetHp:number;terminal:boolean;enemies:EnemyState[];visited:boolean;containerUsed:boolean;repairUsed:boolean;cacheUsed:boolean;bufferUsed:boolean;brokenPanels:string[];route:'ground'|'service'|'press'|'archive'};
 export type Result='victory'|'death';
 export class MissionAttempt{
+ readonly balance:ReturnType<typeof combatBalance>;
  readonly id=crypto.randomUUID();readonly missionId:PlayableMissionId;private harmEvent=0;
  current:RoomId;hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;score:number;relayIntelCollected=false;relayRepairUsed=false;
  reactorCircuit:'cooling'|'isolation'='isolation';reactorRerouted=false;
  cargoCircuit:'conveyor'|'security'='security';cargoRerouted=false;objective=false;cellCollected=false;cellInstalled=false;archiveCarrierCollected=false;archiveUploadPowered=false;dataUploaded=false;scoutedArchive=false;s05Accepted=false;e06Rewarded=false;d4Used=false;lastDeathSaved=false;readonly regulator=new RegulatorEncounter();abilityReadyAt=0;foundryRoute:'service'|'press'|null=null;activeMs=0;hurtUntil=-1;damageFlashUntil=-1;lastDamageAbsorbed=false;
  result:Result|'abandoned'|null=null;reason='';tutorial=new Set<string>();clock=new SimulationClock();states:Partial<Record<RoomId,RoomState>>={};
- constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger){this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power'&&this.missionId==='cargo'&&hasEvent(this.eventPlan,'E01'))this.room('F').terminal=true;}
+ constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger){this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.balance=combatBalance(this.missionId,this.entry.difficulty);this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active,this.entry.difficulty);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.score=this.entry.initial_score;if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power'&&this.missionId==='cargo'&&hasEvent(this.eventPlan,'E01'))this.room('F').terminal=true;}
  get bossHp(){return this.regulator.hp;}
  set bossHp(value:number){this.regulator.hp=value;}
  get bossElapsedMs(){return this.regulator.elapsedMs;}
@@ -41,7 +43,7 @@ export class MissionAttempt{
  toggleFoundryPower(){if(this.current!=='M3E'||!this.definition().powerSwitch)return false;const saved=this.room();saved.powerCircuit=saved.powerCircuit==='press'?'furnace':'press';return true;}
  chooseFoundryRoute(route:'service'|'press'){if(this.mode!=='mission'||this.missionId!=='foundry'||this.current!=='M3F'||!this.room('M3F').terminal||this.room('M3F').route!=='ground')return false;this.room('M3F').route=route;this.foundryRoute=route;return true;}
  claimRepair(slot:'R01'|'R02'|'R03'|'R04'|'R05'){const required=this.missionId==='airlock'?'R01':this.missionId==='cargo'?'R02':this.missionId==='foundry'?'R03':this.missionId==='archive'?'R04':this.missionId==='reactor'?'R05':null;if(this.mode!=='mission'||slot!==required||this.hp>=this.maxHp||slot==='R02'&&!this.cellCollected||slot==='R04'&&!this.dataUploaded)return false;const roomId=slot==='R01'?'B':slot==='R02'?'M2E':slot==='R03'?'M3K':slot==='R04'?'M4C':'M5C',state=this.room(roomId),def=rooms[roomId];if(this.current!==roomId||!def.repair&&slot!=='R01'||state.repairUsed)return false;state.repairUsed=true;state.containerUsed=true;this.hp=Math.min(this.maxHp,this.hp+eventConfig.repairHp);return true;}
- room(id=this.current):RoomState{return this.states[id]||=( {powerCircuit:'press',world:rooms[id].world?createWorldState(id,rooms[id].world!):undefined,targetHp:rooms[id].target?3:0,terminal:false,visited:false,containerUsed:false,repairUsed:false,cacheUsed:false,bufferUsed:false,brokenPanels:[],route:'ground',enemies:rooms[id].enemies.map(createEnemy)} );}
+ room(id=this.current):RoomState{return this.states[id]||=( {enemyContactMs:0,hpLost:0,powerCircuit:'press',world:rooms[id].world?createWorldState(id,rooms[id].world!):undefined,targetHp:rooms[id].target?3:0,terminal:false,visited:false,containerUsed:false,repairUsed:false,cacheUsed:false,bufferUsed:false,brokenPanels:[],route:'ground',enemies:rooms[id].enemies.map(createEnemy)} );}
  enemyPowered(enemy?:EnemyState){if(this.current==='M5I'&&enemy?.id==='m5i-turret')return this.reactorRerouted&&this.reactorCircuit==='cooling';if(this.current==='M2D'&&enemy?.id==='m2d-routed-turret')return this.cargoRerouted&&this.cargoCircuit==='security';if(this.current==='F'&&enemy?.id==='f-event-turret'){if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power')return false;return hasEvent(this.eventPlan,'E01')&&this.room().terminal;}return true;}
  /** Every powered live enemy counts, including one that has not detected Mira yet. */
  combatRemaining(){return this.mode==='training'?0:this.room().enemies.filter(enemy=>enemy.hp>0&&this.enemyPowered(enemy)).length+(this.definition().boss&&this.bossHp>0?1:0);}
@@ -72,7 +74,7 @@ export class MissionAttempt{
   this.hurtUntil=now+config.initial_balance.hurt_invulnerability_seconds*1000;
   if(this.build.buffer&&!this.room().bufferUsed){this.room().bufferUsed=true;this.lastDamageAbsorbed=true;return true;}
   if(worldAbsorb(this.room().world)){this.lastDamageAbsorbed=true;return true;}
-  const hpBefore=this.hp;this.hp=Math.max(0,this.hp-1);if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
+  const hpBefore=this.hp;this.hp=Math.max(0,this.hp-this.balance.damage);if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.room().hpLost+=hpBefore-this.hp;this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
  }
  finish(result:Result|'abandoned'){if(this.result)return false;this.result=result;return true;}
 }
