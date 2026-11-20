@@ -32,6 +32,7 @@ export class RoomScene extends Phaser.Scene{
  private readyAnnounced=false;private modalOpened=false;private deathMs=0;private pendingPressed=new Set<Action>();private pendingReleased=new Set<Action>();private hazardCycles=new Map<string,number>();private ghostMarker?:Phaser.GameObjects.Graphics;private serviceMarkers?:Phaser.GameObjects.Graphics;
  private feedback=new CombatFeedback();private feedbackLayer!:Phaser.GameObjects.Graphics;private feedbackHp=0;private previousAbilityRemaining=0;private previousExitOpen=false;
  onWorldCheckpoint:()=>void=()=>{};
+ onCombatCount:(kind:'shots'|'hits')=>void=()=>{};
  constructor(readonly hooks:RoomHooks){super('Room');}
  init(data:{attempt:MissionAttempt;entry?:'left'|'right'}){this.attempt=data.attempt;this.entry=data.entry||'left';}
  preload(){
@@ -46,6 +47,7 @@ export class RoomScene extends Phaser.Scene{
   this.ghostMarker=undefined;this.serviceMarkers=undefined;
   this.events.on(Phaser.Scenes.Events.PAUSE,this.clearFeedback,this);
   this.readyAnnounced=false;this.hold=0;this.transition=null;this.deathMs=0;this.modalOpened=false;this.pendingPressed.clear();this.pendingReleased.clear();this.hazardCycles.clear();this.projectiles=new Projectiles();this.solidRemovers.clear();
+  this.projectiles.onPlayerShot=()=>this.onCombatCount('shots');this.projectiles.onPlayerHit=()=>this.onCombatCount('hits');
   const a=this.attempt,id=a.current,def=a.definition(),saved=a.room();this.physics.world.setBounds(0,40,640,280);const platforms=this.platforms=this.physics.add.staticGroup();
   def.solids.forEach((s,index)=>{const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0xffffff,0);this.physics.add.existing(r,true);platforms.add(r);r.setData('worldSolidId',s.id||'fixed-'+index);if(s.id)this.solidRemovers.set(s.id,()=>{(r.body as Phaser.Physics.Arcade.StaticBody).destroy();r.destroy();});});
   this.player=new Player(this,this.entry==='right'?584:64);this.player.dashReady=a.abilityReadyAt;this.player.chargeReady=a.abilityReadyAt;this.physics.add.collider(this.player.sprite,platforms,undefined,(_player,platform)=>{if(this.attempt.clock.now>=this.player.dashUntil||!a.build.wallMove&&!a.build.phaseDash)return true;const object=platform as Phaser.GameObjects.Rectangle;return !def.solids.some(s=>(s.material==='wall'&&a.build.wallMove||s.material==='phase'&&a.build.phaseDash)&&Math.abs(s.x+s.width/2-object.x)<1&&Math.abs(s.y+s.height/2-object.y)<1);});this.art=new SceneArt(this,def,a.eventPlan,this.hooks.debug);this.worldArt=def.world?new WorldArt(this,def):undefined;
@@ -128,16 +130,16 @@ export class RoomScene extends Phaser.Scene{
    }
    if(def.boss&&attempt.bossHp>0&&!shot.hitIds.includes('regulator')){
     const impact=regulatorImpact(regulatorBody(def.boss.x,def.boss.y,def.boss.width,def.boss.height),from,to,attempt.regulator.pattern().phase==='core');
-    if(impact){shot.hitIds.push('regulator');const accepted=impact==='core'?attempt.regulator.hit(shot.damage):0;
+    if(impact){shot.hitIds.push('regulator');const accepted=impact==='core'?attempt.regulator.hit(shot.damage):0;this.projectiles.recordDamage(shot,accepted);
      this.art.cue(accepted?(attempt.bossHp===0?'shutdown':'hit'):'armour',to,now,Math.sign(shot.vx));
      this.hooks.effects.play(accepted?(attempt.bossHp===0?'enemy_break':'hit_enemy'):'hit_armour');
      if(accepted&&attempt.bossHp===0){this.feedback.trigger('heavy',now);this.hooks.effects.startWorld('shutdown');this.hooks.effects.play('boss_shutdown');this.hooks.emit('boss_defeated',{boss_id:'regulator'});}return true;
     }
    }
-   if(def.target&&saved.targetHp>0&&!shot.hitIds.includes('target')&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){shot.hitIds.push('target');saved.targetHp-=shot.damage;this.art.cue('hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');if(shot.pierces>0){shot.pierces--;return false;}return true;}
+   if(def.target&&saved.targetHp>0&&!shot.hitIds.includes('target')&&segmentRect(from,to,expand({x:def.target.x-10,y:def.target.y-18,width:20,height:36},4,1.5))){shot.hitIds.push('target');saved.targetHp-=shot.damage;this.projectiles.recordDamage(shot,shot.damage);this.art.cue('hit',to,now,Math.sign(shot.vx));this.hooks.effects.play(saved.targetHp<=0?'enemy_break':'hit_enemy');if(shot.pierces>0){shot.pierces--;return false;}return true;}
    for(const e of saved.enemies)if(e.hp>0&&!shot.hitIds.includes(e.id)&&segmentRect(from,to,expand(enemyRect(e),4,1.5))){
     shot.hitIds.push(e.id);alertEnemyOnHit(e,attempt.enemyPowered(e));if(!ramVulnerable(e)||!guardVulnerable(e)){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}if(e.kind==='turret'&&!turretPresentation(e,attempt.enemyPowered(e)).damageable){this.art.cue('armour',to,now,Math.sign(shot.vx));this.hooks.effects.play('hit_armour');return true;}
-    e.hp-=shot.damage;this.art.enemyHit(e.id,now);this.art.cue(e.hp<=0?'shutdown':'hit',e.hp<=0?{x:e.x,y:e.y-10}:to,now,Math.sign(shot.vx));if(e.id==='e-turret'&&e.hp<4)attempt.tutorial.add('turret_hit');if(e.hp<=0){e.state='dead';e.attackPhase=null;attempt.scoreLedger?.kill(e.id,e.kind);if(e.id==='m5b-e06-ram'){attempt.scoreLedger?.goal('optional:E06');if(!attempt.e06Rewarded){attempt.e06Rewarded=true;attempt.score+=config.m05b3.e06_score;this.hooks.emit('event_choice',{event_id:'E06',choice:'defeated_patrol',score:attempt.score});}}}this.hooks.effects.play(e.hp<=0?'enemy_break':e.kind==='turret'?'hit_open':'hit_enemy');if(shot.pierces>0&&e.kind!=='turret'){shot.pierces--;return false;}return true;
+    e.hp-=shot.damage;this.projectiles.recordDamage(shot,shot.damage);this.art.enemyHit(e.id,now);this.art.cue(e.hp<=0?'shutdown':'hit',e.hp<=0?{x:e.x,y:e.y-10}:to,now,Math.sign(shot.vx));if(e.id==='e-turret'&&e.hp<4)attempt.tutorial.add('turret_hit');if(e.hp<=0){e.state='dead';e.attackPhase=null;attempt.scoreLedger?.kill(e.id,e.kind);if(e.id==='m5b-e06-ram'){attempt.scoreLedger?.goal('optional:E06');if(!attempt.e06Rewarded){attempt.e06Rewarded=true;attempt.score+=config.m05b3.e06_score;this.hooks.emit('event_choice',{event_id:'E06',choice:'defeated_patrol',score:attempt.score});}}}this.hooks.effects.play(e.hp<=0?'enemy_break':e.kind==='turret'?'hit_open':'hit_enemy');if(shot.pierces>0&&e.kind!=='turret'){shot.pierces--;return false;}return true;
    }return false;
   },solid=>{attempt.breakPanel(solid.id!);this.removeSolid(solid.id!);this.hooks.effects.play('enemy_break');this.hooks.emit('route_choice',{route:'piercing-sheet',room_id:attempt.current});},(shot,_solid,point)=>{if(shot.team==='player'){this.art.cue('wall',point,now,Math.sign(shot.vx));this.hooks.effects.play('hit_wall');}});
   if(def.boss&&attempt.bossHp<=0)this.projectiles.clearTeam('enemy');

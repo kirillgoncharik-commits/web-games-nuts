@@ -7,6 +7,7 @@ import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,mission
 import {validateLegacySave} from './legacy-save';
 import {actions,bindingAllowed,type Action} from '../input';
 import {validRadioLinks} from './radio-links';
+import {mergePersonalRecords,validatePersonalRecords,type PersonalRecords} from './personal-records';
 export const databaseName='cinder-shift-r01';
 export const schemaVersion=1;
 export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};
@@ -92,13 +93,29 @@ export class SaveService{
     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}
   }
   private read(key:string){return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
-  async loadModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
+  async loadModeData(key:'personal-records.v1'|'personal-records.backup.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
     if(!await this.connect())return{ok:false};
     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}
   }
-  async saveModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`,value:unknown){
+  async saveModeData(key:'personal-records.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`,value:unknown){
     if(!this.available&&!await this.connect())return false;
     return Boolean(await this.put(key,value));
+  }
+  /** The read and merge share one transaction, including across browser tabs. */
+  async updatePersonalRecords(incoming:PersonalRecords):Promise<PersonalRecords|null>{
+    const snapshot=structuredClone(incoming);
+    const operation=async()=>{
+      if(!await this.connect())return null;
+      try{
+        const result=await new Promise<PersonalRecords>((resolve,reject)=>{
+          const tx=this.db!.transaction('records','readwrite'),store=tx.objectStore('records'),request=store.get('personal-records.v1');let merged:PersonalRecords;
+          tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);
+          const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};
+          request.onsuccess=()=>{const raw=request.result;if(raw&&raw.version===1&&!validatePersonalRecords(raw)){const backup=store.get('personal-records.backup.v1');backup.onsuccess=()=>{if(validatePersonalRecords(backup.result))write(backup.result,true);else{tx.abort();reject(Error('statistics_backup_unreadable'));}};}else write(raw);};
+        });if(!this.blocked&&(this.issue==='write_failed'||this.issue==='unavailable'))this.status(null);return result;
+      }catch(error){this.lastError=error instanceof Error?error.message:'statistics_write_error';this.status('write_failed');return null;}
+    };
+    const result=this.queue.then(operation,operation);this.queue=result;return result;
   }
   async load(locale:'en'|'ru'){
     if(!await this.connect())return{campaign:null,settings:defaults(locale)};
