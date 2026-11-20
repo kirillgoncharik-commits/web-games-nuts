@@ -32,7 +32,10 @@ async function walk(page:Page,target:number,allowExit=false){
   }
   const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);
-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-20&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
+  // A shelf whose underside is below the crouched head blocks the approach too.
+  // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision
+  // crouching, and then tried to jump while crouch was held forever.
+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;
   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);
   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}
@@ -92,13 +95,17 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
+ // walk() may settle 7 px from its requested x. Keep that tolerance plus
+ // one pixel outside the 11 px half-body so a ground firing point cannot
+ // leave Mira standing on a shelf edge (SW03-B: x=248, actual x=242.5).
+ const standingHalfWidth=11+7+1;
  for(let n=0;n<12;n++){
   const s=await state(page),en=s.enemies.find((e:any)=>e.hp>0);if(!en)return;
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
-  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-11,y:276,width:22,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
+  const candidates=[s.player.x,...gapCenters,en.x-90,en.x+90,en.x-120,en.x+120,en.x-60,en.x+60,...fallback].filter(x=>x>40&&x<600&&Math.abs(x-en.x)>=(en.kind==='turret'?64:40)&&(!pulse||x+20<pulse.x||x-20>pulse.x+pulse.width)&&!s.solids.some((r:any)=>intersects({x:x-standingHalfWidth,y:276,width:standingHalfWidth*2,height:44},r))).sort((a,b)=>Math.abs(a-s.player.x)-Math.abs(b-s.player.x));
   const at=candidates.find(x=>clearLine({x:x+Math.sign(en.x-x)*19,y:292},{x:en.x,y:en.y},s.solids));if(at===undefined)throw Error('no baseline firing lane '+JSON.stringify(s));
   await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);await page.keyboard.down('j');
   await expect.poll(async()=>(await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp,{timeout:18000}).toBeLessThanOrEqual(0);await page.keyboard.up('j');
