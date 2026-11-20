@@ -7,7 +7,7 @@ import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
 import {standingJump,ground} from './route-helpers';
-import {standingLaneClear,standingHalfWidth} from './world-route-clearance';
+import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
 async function unlocked(page:Page){
@@ -46,7 +46,7 @@ async function walk(page:Page,target:number,allowExit=false){
 async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
 function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
- const x=[point.x,point.x-20,point.x+20,point.x-10,point.x+10].find(x=>x>32&&x<610
+ const x=contextCandidates(point.x).find(x=>x>32&&x<610
   &&s.solids.some((r:any)=>Math.abs(r.y-y)<1&&x-standingHalfWidth>=r.x&&x+standingHalfWidth<=r.x+r.width)
   &&standingLaneClear(s.solids,x,y)
   // Plan the standing point separately from waiting for the actual safe phase.

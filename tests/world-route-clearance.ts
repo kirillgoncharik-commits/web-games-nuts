@@ -9,3 +9,6 @@ export const standingHalfWidth=11+approachError+1;
 export function standingLaneClear(solids:readonly Rect[],x:number,feet=320){
  return !solids.some(r=>intersects({x:x-standingHalfWidth,y:feet-44,width:standingHalfWidth*2,height:44},r));
 }
+
+// Narrow contact shelves need finer candidates than the old 10/20px offsets.
+export function contextCandidates(x:number){return[...new Set([x,x-20,x+20,x-10,x+10,...Array.from({length:28},(_,i)=>[x-i-1,x+i+1]).flat()])];}
