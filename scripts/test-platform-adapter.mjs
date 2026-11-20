@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {HostRecordStorage} from '../games/cinder-shift/src/session/host-storage.ts';
+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage.ts';
 
 async function adapter(target='yandex',overrides={}){
  const calls=[],events=new Map(),data=new Map();let callbacks;
@@ -82,4 +82,67 @@ test('quota failure leaves the previous atomic envelope intact',async()=>{
  const store=new HostRecordStorage({getItem:()=>original,setItem:()=>{throw Error('quota');}});
  await assert.rejects(store.writeMany({campaign:{replace:true}}),/quota/);
  assert.deepEqual(await store.read('campaign'),{keep:true});
+});
+
+async function bridgeAdapter(overrides={}){
+ const calls=[],events=new Map(),data=new Map();
+ const bridge={
+  initialize:async()=>{calls.push('init');},
+  platform:{language:'ru',isPaused:false,isAudioEnabled:true,sendMessage:async message=>{calls.push(message);},on:(name,fn)=>events.set(name,fn)},
+  storage:{get:async key=>data.get(key)??null,set:async(key,value)=>{data.set(key,value);}},
+  advertisement:{isInterstitialSupported:true,interstitialState:'closed',rewardedState:'closed',showInterstitial(){calls.push('ad');},on:(name,fn)=>events.set(name,fn)},
+  ...overrides
+ };
+ globalThis.window={bridge,YaGames:{init:()=>assert.fail('wrong native SDK')}};
+ globalThis.__BUILD_TARGET__='playgama';
+ globalThis.__TARGET_PROFILE__={integration_status:'sdk_candidate_audio_and_host_qa_pending',ads:['mission_complete_next'],storage:'Bridge',analytics:'Bridge'};
+ const module=await import('../games/cinder-shift/src/platform.ts?bridge='+Math.random());
+ return{host:new module.PlatformAdapter(),bridge,calls,events,data};
+}
+test('Bridge initializes once, uses host language and initial audio/pause state',async()=>{
+ const a=await bridgeAdapter();a.bridge.platform.isPaused=true;a.bridge.platform.isAudioEnabled=false;
+ const audio=[];a.host.onAudio(value=>audio.push(value));
+ await Promise.all([a.host.initialize(),a.host.initialize()]);a.host.ready();a.host.ready();a.host.gameplay(true);
+ assert.deepEqual(a.calls,['init','game_ready']);assert.equal(a.host.locale(),'ru');assert.equal(a.host.paused,true);assert.deepEqual(audio,[true,false]);
+ a.events.get('pause_state_changed')(false);assert.equal(a.host.snapshot().playing,true);
+ a.events.get('audio_state_changed')(true);assert.equal(a.host.snapshot().audioEnabled,true);assert.deepEqual(audio,[true,false,true]);
+ assert.deepEqual(a.calls,['init','game_ready','gameplay_started']);
+});
+test('Bridge interstitial events compose with host pause and deduplicate a transition',async()=>{
+ const a=await bridgeAdapter();await a.host.initialize();a.host.ready();
+ const p=a.host.requestInterstitial('mission_complete_next','one');
+ assert.equal(a.host.requestInterstitial('mission_complete_next','one'),p);
+ a.events.get('interstitial_state_changed')('loading');a.events.get('interstitial_state_changed')('opened');
+ a.events.get('pause_state_changed')(true);a.events.get('interstitial_state_changed')('closed');a.events.get('interstitial_state_changed')('closed');
+ assert.equal((await p).status,'completed');assert.equal(a.host.paused,true);
+ a.events.get('pause_state_changed')(false);assert.equal(a.host.paused,false);assert.equal(a.calls.filter(x=>x==='ad').length,1);
+});
+test('Bridge no-fill/failed/throw outcomes release pause without inventing ad completion',async()=>{
+ for(const scenario of ['closed','failed','throw']){
+  const a=await bridgeAdapter();await a.host.initialize();a.host.ready();
+  a.bridge.advertisement.showInterstitial=()=>{if(scenario==='throw')throw Error('network');a.events.get('interstitial_state_changed')(scenario);};
+  const result=await a.host.requestInterstitial('mission_complete_next',scenario);
+  assert.equal(result.status,scenario==='closed'?'no_fill':'failed');assert.equal(a.host.paused,false);
+ }
+});
+test('concurrent Bridge envelope updates retain all records and survive a new service',async()=>{
+ let text=null;const storage={get:async(_key,parse)=>{assert.equal(parse,false);await Promise.resolve();return text;},set:async(_key,value)=>{text=value;}};
+ const store=new BridgeRecordStorage(storage);
+ await Promise.all([store.writeMany({campaign:{points:1}}),store.writeMany({settings:{muted:true}}),store.writeMany({'active-world.v1':'c03-adriatic-1986'})]);
+ const reloaded=new BridgeRecordStorage(storage);assert.deepEqual(await reloaded.read('campaign'),{points:1});assert.deepEqual(await reloaded.read('settings'),{muted:true});assert.equal(await reloaded.read('active-world.v1'),'c03-adriatic-1986');
+});
+test('Bridge corrupt/future or denied reads never replace previous data',async()=>{
+ for(const initial of ['broken','{"version":2,"records":{"keep":true}}','{"version":1,"records":[]}']){
+  let text=initial,writes=0;
+  const store=new BridgeRecordStorage({get:async()=>text,set:async(_key,value)=>{text=value;writes++;}});
+  await assert.rejects(store.read('campaign'));await assert.rejects(store.writeMany({campaign:{}}));assert.equal(text,initial);assert.equal(writes,0);
+ }
+ const denied=new BridgeRecordStorage({get:async()=>{throw Error('denied');},set:async()=>assert.fail('must not overwrite')});
+ await assert.rejects(denied.writeMany({campaign:{}}),/denied/);
+});
+test('Bridge write failures retain the envelope and do not poison a later retry',async()=>{
+ let text='{"version":1,"records":{"settings":{"keep":true}}}',fail=true;
+ const store=new BridgeRecordStorage({get:async()=>text,set:async(_key,value)=>{if(fail)throw Error('quota');text=value;}});
+ await assert.rejects(store.writeMany({campaign:{points:1}}),/quota/);assert.deepEqual(await store.read('settings'),{keep:true});
+ fail=false;await store.writeMany({campaign:{points:2}});assert.deepEqual(await store.read('campaign'),{points:2});assert.deepEqual(await store.read('settings'),{keep:true});
 });
