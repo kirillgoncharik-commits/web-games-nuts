@@ -10,14 +10,14 @@ import type {RunModeId} from '../session/run-clock';
 import {makeChallengeSpec} from '../session/challenge-spec';
 
 export type RecordsTab='summary'|'campaigns'|'challenges';
-type Input={data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};
+type Input={scope:'device'|'platform';data:PersonalRecords;temporary:boolean;unlocked:boolean;tab:RecordsTab;mode:RunModeId;mission:string;campaigns:Map<string,CampaignData|null>;challenges:ChallengeRecords;archive:ChallengeArchive;relay:RelayRecords;onTab:(tab:RecordsTab)=>void;onMode:(mode:RunModeId)=>void;onMission:(mission:string)=>void;};
 export function personalRecordsView(i18n:I18n,ui:Panels,input:Input){
  const t=(key:string,params:Record<string,string|number>={})=>i18n.t(key,params),n=(value:number)=>i18n.number(value,0);
  const duration=(ms:number)=>{const seconds=Math.floor(ms/1000);return t('records.duration',{hours:Math.floor(seconds/3600),minutes:Math.floor(seconds/60)%60,seconds:seconds%60});};
  const trialDuration=(ms:number)=>t('records.secondsValue',{seconds:i18n.number(ms/1000,3)});
  const metric=(title:string,value:string,testId='')=>'<div><dt>'+e(title)+'</dt><dd'+(testId?' data-testid="'+e(testId)+'"':'')+'>'+e(value)+'</dd></div>';
  const tabs='<nav class="records-tabs" aria-label="'+e(t('records.title'))+'">'+(['summary','campaigns','challenges'] as const).map(tab=>ui.button('records-'+tab,t('records.'+tab),()=>input.onTab(tab),{pressed:input.tab===tab})).join('')+'</nav>';
- const notice='<p class="helper">'+e(t('records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role="status" class="warning">'+e(t('records.temporary'))+'</p>':'');
+ const notice='<p class="helper">'+e(t(input.scope==='platform'?'records.platform':'records.device'))+' · '+e(t('records.since',{date:i18n.date(input.data.started_at)}))+'</p>'+(input.temporary?'<p role="status" class="warning">'+e(t('records.temporary'))+'</p>':'');
  if(input.tab==='summary'){
   const totals=statisticsTotals(input.data),percent=accuracy(totals.shots,totals.hits);
   return tabs+notice+'<dl class="records-stats">'+metric(t('records.totalTime'),duration(totals.total_ms),'records-total-time')+metric(t('records.missionTime'),duration(totals.mission_ms),'records-mission-time')+metric(t('records.shots'),n(totals.shots),'records-shots')+metric(t('records.hits'),n(totals.hits),'records-hits')+metric(t('records.accuracy'),percent===null?'—':new Intl.NumberFormat(i18n.locale,{minimumFractionDigits:1,maximumFractionDigits:1}).format(percent)+'%','records-accuracy')+metric(t('records.completions'),n(input.data.completed.length),'records-completions')+'</dl><p class="helper">'+e(t('records.newCounters'))+'</p>';
