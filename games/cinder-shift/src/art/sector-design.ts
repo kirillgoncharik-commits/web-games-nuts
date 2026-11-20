@@ -14,6 +14,8 @@ export function roomDesign(room:RoomDefinition){return sectorDesign[roomSector(r
 
 /** Static architecture is drawn once per scene, below all collision surfaces. */
 export function drawSectorArchitecture(scene:Phaser.Scene,room:RoomDefinition){
+ const texture='production-bg-base-'+(room.boss?'regulator':roomSector(room));
+ if(scene.textures.exists(texture)){scene.add.image(0,40,texture).setOrigin(0).setDisplaySize(640,280).setDepth(1.1);return;}
  const g=scene.add.graphics().setDepth(1.05),d=roomDesign(room),sector=roomSector(room);
  const variant=[...room.id].reduce((sum,c)=>sum+c.charCodeAt(0),0)%3;
  g.fillStyle(d.shadow,.14).fillRect(0,40,640,280);

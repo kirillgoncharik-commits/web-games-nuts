@@ -20,7 +20,9 @@ const occupied=[];
 for(const [family,details] of Object.entries(manifest.families)){
  const source=await readFile(root+details.source);
  assert.equal(digest(source),details.source_sha256,`${family} source hash`);
- assert.ok(render.includes(details.id.replaceAll('-','-')),`${family} runtime binding ${details.id}`);
+ const replacement={'security-walker':'base-walker','ram-charger':'base-ram'}[details.id];
+ if(replacement){const current=JSON.parse(await readFile('games/cinder-shift/public/assets/world-production/manifest.json','utf8'));for(const state of ['idle','warning','attack','recovery','destroyed'])assert.ok(current.frames[replacement+'-'+state],`${family} replacement ${state}`);assert.ok(render.includes(replacement),`${family} replacement binding`);}
+ else assert.ok(render.includes(details.id),`${family} runtime binding ${details.id}`);
  for(const state of details.states){
   const name=`${details.id}_${state}`,meta=manifest.frames[name],entry=atlasJson.frames[name];
   assert.ok(meta&&entry,`${family} frame ${name}`);
