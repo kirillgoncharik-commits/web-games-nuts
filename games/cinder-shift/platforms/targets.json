@@ -49,15 +49,17 @@
       "analytics": "platform metrics; external off"
     },
     "playgama": {
-      "integration_status": "blocked_bridge_access",
+      "integration_status": "sdk_candidate_audio_and_host_qa_pending",
       "ads": [
         "mission_complete_next",
         "mission_failed_retry"
       ],
-      "storage": "Bridge only; pending",
-      "analytics": "Bridge only; pending",
-      "locale": "Bridge; pending",
-      "audio": "tool-produced or recorded OGG/MP3 still required"
+      "storage": "Bridge storage envelope only; cloud not claimed",
+      "analytics": "Bridge lifecycle only; no external SDK",
+      "locale": "Bridge platform.language; English fallback",
+      "audio": "BLOCKER: procedural Web Audio must be replaced with tool-produced/recorded OGG or MP3",
+      "sdk_source": "https://bridge.playgama.com/v2/stable/playgama-bridge.js",
+      "sdk_docs_verified": "2026-11-20"
     },
     "yandex": {
       "integration_status": "sdk_candidate_host_qa_pending",

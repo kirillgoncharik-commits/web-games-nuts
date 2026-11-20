@@ -1,0 +1,104 @@
+name: Cinder Shift Playgama integration
+on:
+  push:
+    branches:
+      - release/cinder-shift/playgama
+    paths:
+      - 'games/cinder-shift/**'
+      - 'scripts/test-platform-adapter.mjs'
+      - 'tests/platform-playgama.spec.ts'
+      - 'playwright.bridge.config.ts'
+      - 'vite.config.ts'
+      - '.github/workflows/cinder-playgama.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: cinder-playgama-integration
+  cancel-in-progress: true
+jobs:
+  playgama:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CINDER_TARGET: playgama
+      CINDER_GAMEPLAY_BASE_SHA: 836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run test:platform
+      - run: npm run art:check
+      - run: npm run build:target -- playgama
+      - run: npx playwright install --with-deps chromium
+      - name: Verify actual application with a controlled SDK
+        run: npx playwright test --config=playwright.bridge.config.ts --reporter=line
+      - name: Package the exact tested draft
+        run: |
+          python3 - <<'PY'
+          import json,hashlib,zipfile
+          from pathlib import Path
+          root=Path('dist/cinder-shift')
+          manifest=json.loads((root/'build-manifest.json').read_text())
+          assert manifest['target']=='playgama' and not manifest['source_dirty']
+          html=(root/'index.html').read_text()
+          assert 'https://bridge.playgama.com/v2/stable/playgama-bridge.js' in html
+          assert '/sdk.js' not in html
+          config=json.loads((root/'playgama-bridge-config.json').read_text())
+          assert config['advertisement']['interstitial']['autoShow']==[]
+          assert 'game-analytics.js' not in html and 'href="https://nuts.bid' not in html
+          for item in manifest['files']:
+              assert hashlib.sha256((root/item['path']).read_bytes()).hexdigest()==item['sha256']
+          out=Path('Cinder-Shift-64-0.8.0-alpha.12-playgama.zip')
+          with zipfile.ZipFile(out,'w',zipfile.ZIP_DEFLATED) as z:
+              for p in sorted(root.rglob('*')):
+                  if p.is_file(): z.write(p,p.relative_to(root).as_posix())
+          report={k:manifest[k] for k in ['target','version','build_id','source_sha','gameplay_base_sha','source_dirty']}
+          report.update(zip_bytes=out.stat().st_size,zip_sha256=hashlib.sha256(out.read_bytes()).hexdigest(),host_qa='pending',cloud_save_claimed=False,audio_acceptance='blocked_procedural_audio_requires_replacement')
+          Path('playgama-package-report.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-playgama-${{ github.run_number }}-${{ github.run_attempt }}
+          path: |
+            Cinder-Shift-64-0.8.0-alpha.12-playgama.zip
+            playgama-package-report.json
+            dist/cinder-shift/build-manifest.json
+            test-results
+          retention-days: 30
+  itch-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build:target -- itch
+      - run: npx playwright install --with-deps chromium
+      - name: Verify unchanged local-save and input behavior on the SDK-free channel
+        run: npx playwright test --project=chromium tests/m04-save.spec.ts tests/m05a-profile-save.spec.ts tests/mission.spec.ts --grep 'save|profile|focus returns' --reporter=line
+
+  yandex-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      CINDER_TARGET: yandex
+      CINDER_GAMEPLAY_BASE_SHA: 836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run build:target -- yandex
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --config=playwright.platform.config.ts --reporter=line

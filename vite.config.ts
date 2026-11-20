@@ -21,10 +21,12 @@ export default defineConfig({
       handler(html) {
         if (target === 'web') return html;
         if(target==='yandex')html=html.replace('<head>','<head>\n<script src="/sdk.js"></script>');
+        if(target==='playgama')html=html.replace('<head>','<head>\n<script src="https://bridge.playgama.com/v2/stable/playgama-bridge.js"></script>');
         return html.replace(/<!-- web-channel:start -->[\s\S]*?<!-- web-channel:end -->/, '')
           .replace(/<a class="brand"[^>]*>([\s\S]*?)<\/a>/, '<span class="brand" aria-label="Nuts Games">$1</span>');
       }
-    }
+    },
+    generateBundle(){if(target==='playgama')this.emitFile({type:'asset',fileName:'playgama-bridge-config.json',source:JSON.stringify({loadingScreenType:'none',disableAutoNotifications:true,advertisement:{interstitial:{autoShow:[]},banner:{disable:true},rewarded:{disable:true},advancedBanners:{disable:true},minimumDelayBetweenInterstitial:60,initialInterstitialDelay:60}},null,2)+'\n'});}
   }],
   define: { __BUILD_META__:JSON.stringify(metadata), __BUILD_ID__: JSON.stringify(version), __SOURCE_SHA__: JSON.stringify(sha), __BUILD_TARGET__:JSON.stringify(target), __TARGET_PROFILE__:JSON.stringify(targetProfile) },
   build: { outDir: '../../dist/cinder-shift', emptyOutDir: true, chunkSizeWarningLimit: 1600 },
