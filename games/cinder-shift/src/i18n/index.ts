@@ -1,9 +1,10 @@
+import {buildTarget} from '../platform';
 import en from './en.json' with {type:'json'};
 import ru from './ru.json' with {type:'json'};
 export type Locale='en'|'ru';
 export type Params=Record<string,string|number>;
 export const catalogs:Record<Locale,Record<string,string>>={en,ru};
-export function initialLocale():Locale{try{const saved=localStorage.getItem('cinder-shift-language-v1');if(saved==='en'||saved==='ru')return saved;}catch{/* Storage may be denied. */}return /^ru(?:-|$)/i.test(navigator.language)?'ru':'en';}
+export function initialLocale():Locale{if(buildTarget==='playgama')return'en';try{const saved=localStorage.getItem('cinder-shift-language-v1');if(saved==='en'||saved==='ru')return saved;}catch{/* Storage may be denied. */}return /^ru(?:-|$)/i.test(navigator.language)?'ru':'en';}
 export class I18n{
   private missing=new Set<string>();
   constructor(public locale:Locale=initialLocale()){this.applyStatic();}
