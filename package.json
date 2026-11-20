@@ -1,6 +1,6 @@
 {
   "name": "nuts-web-games",
-  "version": "0.8.0-alpha.15",
+  "version": "0.8.0-alpha.16",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,7 +21,8 @@
     "i18n:export": "node scripts/check-i18n.mjs --export",
     "audio:export": "node scripts/m06-audio.mjs",
     "art:motion": "node scripts/export-motion-art.mjs",
-    "art:production": "node scripts/world-production-art.mjs"
+    "art:production": "node scripts/world-production-art.mjs",
+    "test:platform": "node --experimental-transform-types --test scripts/test-platform-adapter.mjs"
   },
   "engines": {
     "node": ">=22.12.0"

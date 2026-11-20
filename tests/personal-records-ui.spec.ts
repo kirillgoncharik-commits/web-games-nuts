@@ -65,3 +65,11 @@ test('a completed automatic checkpoint survives closing the playing page',async(
  await expect.poll(async()=>{const saved=await read(page,'personal-records.v1');return saved?statisticsTotals(saved).shots:0;},{timeout:20000,intervals:[500]}).toBeGreaterThan(0);
  const shots=statisticsTotals(await read(page,'personal-records.v1')).shots;await page.close();const next=await context.newPage();await next.goto('/games/cinder-shift/');await next.getByTestId('menu-records').click();await expect(next.getByTestId('records-shots')).toHaveText(String(shots));await next.close();
 });
+
+for(const kind of ['guest','bridge'] as const)test(kind+': real tabs share one locked envelope during overlapping read/merge/write',async({page,context})=>{
+ await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();const second=await context.newPage();await second.goto('/__encounter__/');await expect(second.getByTestId('new-shift')).toBeVisible();
+ expect(await page.evaluate(()=>Boolean(navigator.locks))).toBe(true);
+ const key='records-lock-'+crypto.randomUUID(),a=emptyPersonalRecords(),b=emptyPersonalRecords();a.sessions['tab-a']={...emptyFragment(),shots:10,hits:4};b.sessions['tab-b']={...emptyFragment(),shots:7,hits:2};
+ const results=await Promise.all([page.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:a}),second.evaluate(input=>(window as any).__ENCOUNTER__.transportStatistics(input),{kind,key,incoming:b})]);expect(results.every(Boolean)).toBe(true);
+ const envelope=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)!),key);expect(statisticsTotals(envelope.records['personal-records.v1'])).toMatchObject({shots:17,hits:6});expect(envelope.records['personal-records.backup.v1']).toEqual(envelope.records['personal-records.v1']);await second.close();
+});
