@@ -9,7 +9,12 @@ const queues=new Map<string,Promise<void>>();
 /** Web Locks coordinate same-origin tabs; the queue also covers browsers without that API. */
 function serialized<T>(key:string,operation:()=>Promise<T>|T):Promise<T>{
  const name='cinder-records:'+key,previous=queues.get(name)||Promise.resolve();
- const result=previous.then(()=>typeof navigator!=='undefined'&&navigator.locks?navigator.locks.request(name,async()=>operation()):operation());
+ const result=previous.then(async()=>{
+  if(typeof navigator==='undefined'||!navigator.locks)return operation();
+  let entered=false;
+  try{return await navigator.locks.request(name,async()=>{entered=true;return operation();});}
+  catch(error){if(entered)throw error;return operation();}
+ });
  queues.set(name,result.then(()=>{},()=>{}));return result;
 }
 function records(text:unknown):Record<string,unknown>{

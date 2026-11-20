@@ -20,6 +20,7 @@ const metadata=buildMetadata();process.env.CINDER_BUILD_META=JSON.stringify(meta
 await build();
 const dir='dist/cinder-shift', files=[];
 if(target!=='web')await rm(join(dir,'game-analytics.js'),{force:true});
+if(target!=='playgama')await rm(join(dir,'assets/audio-recorded'),{recursive:true,force:true});
 if(target==='playgama'){
  await rm(join(dir,'assets/audio'),{recursive:true,force:true});
  const path=join(dir,'boot-guard.js'),before=await readFile(path,'utf8');

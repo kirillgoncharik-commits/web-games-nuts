@@ -146,3 +146,15 @@ test('Bridge write failures retain the envelope and do not poison a later retry'
  await assert.rejects(store.writeMany({campaign:{points:1}}),/quota/);assert.deepEqual(await store.read('settings'),{keep:true});
  fail=false;await store.writeMany({campaign:{points:2}});assert.deepEqual(await store.read('campaign'),{points:2});assert.deepEqual(await store.read('settings'),{keep:true});
 });
+
+test('a denied Web Locks API falls back to the local queue without retrying failed storage operations',async()=>{
+ const own=Object.getOwnPropertyDescriptor(navigator,'locks');
+ try{
+  Object.defineProperty(navigator,'locks',{configurable:true,value:{request:async()=>{throw Error('lock access denied')}}});
+  let raw=null,writes=0;const storage=new HostRecordStorage({getItem:()=>raw,setItem:(_key,value)=>{writes++;raw=value}},'blocked-lock-fixture');
+  await storage.writeMany({campaign:{keep:true}});assert.deepEqual(await storage.read('campaign'),{keep:true});assert.equal(writes,1);
+  Object.defineProperty(navigator,'locks',{configurable:true,value:{request:async(_name,callback)=>callback()}});
+  const bad=new HostRecordStorage({getItem:()=>{throw Error('read denied')},setItem:()=>{writes++;}},'throwing-read-fixture');
+  await assert.rejects(bad.writeMany({campaign:{}}),/read denied/);assert.equal(writes,1);
+ }finally{if(own)Object.defineProperty(navigator,'locks',own);else delete navigator.locks;}
+});
