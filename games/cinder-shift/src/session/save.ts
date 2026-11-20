@@ -1,3 +1,4 @@
+import type {RecordStorage} from './host-storage';
 import {newCampaignMissions,newCampaignIds,isWorldMission,worldForMission,type NewCampaignId,type WorldMissionId} from './new-campaign-content';
 import {fragmentIds,isCompleteBaseCampaign,validateCompletionProfile,type CompletionProfile} from './world-progress';
 import {contentVersion,type CampaignData} from './campaign';
@@ -6,7 +7,8 @@ import {migrateEventPlan,validPlan} from './events';
 import {isBaseMission as isPlayableMission,type BaseMissionId,missionIds,missionSeed,missions,type PlayableMissionId} from './missions';
 import {validateLegacySave} from './legacy-save';
 import {actions,bindingAllowed,type Action} from '../input';
-import type {RecordStorage} from './host-storage';
+import {validRadioLinks} from './radio-links';
+import {mergePersonalRecords,validatePersonalRecords,type PersonalRecords} from './personal-records';
 export const databaseName='cinder-shift-r01';
 export const schemaVersion=1;
 export type Settings={locale:'en'|'ru';muted:boolean;touchMode:'auto'|'on'|'off';layout:'dock'|'sides';autofire:boolean;debugBodies:boolean;reducedFlashes:boolean;reducedMotion:boolean;effectsIntensity:number;combatAssist:boolean;ghostEnabled:boolean;keyBindings:Partial<Record<Action,string>>;musicVolume:number;sfxVolume:number;uiVolume:number};
@@ -86,6 +88,7 @@ export class SaveService{
   lastError:string|null=null;issue:SaveIssue=null;savedAt:string|null=null;available=false;careerRuns:CompletedRun[]=[];careerValid=true;
   onStatus:()=>void=()=>{};
   constructor(readonly build:string,private hostStorage?:RecordStorage){}
+  get storageScope():'device'|'platform'{return this.hostStorage?'platform':'device';}
   useHostStorage(storage:RecordStorage){if(this.available||this.db)throw Error('storage_already_connected');this.hostStorage=storage;}
   private status(issue:SaveIssue){this.issue=issue;if(!issue)this.lastError=null;this.onStatus();}
   async connect(){
@@ -94,17 +97,43 @@ export class SaveService{
     try{this.db=await new Promise<IDBDatabase>((resolve,reject)=>{const request=indexedDB.open(databaseName,1);let expired=false;const timer=setTimeout(()=>{expired=true;reject(Error('storage_timeout'));},5000);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('records'))request.result.createObjectStore('records');};request.onsuccess=()=>{clearTimeout(timer);if(expired){request.result.close();return;}resolve(request.result);};request.onerror=()=>{expired=true;clearTimeout(timer);reject(request.error);};request.onblocked=()=>{expired=true;clearTimeout(timer);reject(Error('storage_blocked'));};});this.db.onversionchange=()=>{this.db?.close();this.available=false;this.status('unavailable');};this.available=true;if(this.issue==='unavailable'||this.issue==='write_failed')this.status(null);return true;}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_error';this.available=false;this.status('unavailable');return false;}
   }
   private read(key:string){if(this.hostStorage)return this.hostStorage.read(key);return new Promise<unknown>((resolve,reject)=>{const tx=this.db!.transaction('records','readonly'),r=tx.objectStore('records').get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);tx.onabort=()=>reject(tx.error);});}
-  async loadModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
+  async loadModeData(key:'personal-records.v1'|'personal-records.backup.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`):Promise<{ok:boolean;value?:unknown}>{
     if(!await this.connect())return{ok:false};
     try{return{ok:true,value:await this.read(key)};}catch(error){this.lastError=error instanceof Error?error.name+':'+error.message:'storage_read_error';this.available=false;this.status('unavailable');return{ok:false};}
   }
-  async saveModeData(key:'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`,value:unknown){
+  async saveModeData(key:'personal-records.v1'|'records.v1'|'challenges.v1'|'relay.v1'|'release-notes.v1'|'world-profile.v1'|`world.${string}.v1`,value:unknown){
     if(!this.available&&!await this.connect())return false;
     return Boolean(await this.put(key,value));
   }
+  /** The read and merge share one transaction, including across browser tabs. */
+  async updatePersonalRecords(incoming:PersonalRecords):Promise<PersonalRecords|null>{
+    const snapshot=structuredClone(incoming);
+    const operation=async()=>{
+      if(!await this.connect())return null;
+      try{
+        const result=this.hostStorage?await this.updateHostPersonalRecords(snapshot):await new Promise<PersonalRecords>((resolve,reject)=>{
+          const tx=this.db!.transaction('records','readwrite'),store=tx.objectStore('records'),request=store.get('personal-records.v1');let merged:PersonalRecords;
+          tx.oncomplete=()=>resolve(merged);tx.onabort=()=>reject(tx.error||Error('statistics_write_aborted'));tx.onerror=()=>reject(tx.error);
+          const write=(source:unknown,recovered=false)=>{try{merged=mergePersonalRecords(source,snapshot);if(recovered)store.put(request.result,'personal-records.quarantine.v1');store.put(merged,'personal-records.v1');store.put(merged,'personal-records.backup.v1');}catch(error){tx.abort();reject(error);}};
+          request.onsuccess=()=>{const raw=request.result;if(raw&&raw.version===1&&!validatePersonalRecords(raw)){const backup=store.get('personal-records.backup.v1');backup.onsuccess=()=>{if(validatePersonalRecords(backup.result))write(backup.result,true);else{tx.abort();reject(Error('statistics_backup_unreadable'));}};}else write(raw);};
+        });if(!this.blocked&&(this.issue==='write_failed'||this.issue==='unavailable'))this.status(null);return result;
+      }catch(error){this.lastError=error instanceof Error?error.message:'statistics_write_error';this.status('write_failed');return null;}
+    };
+    const result=this.queue.then(operation,operation);this.queue=result;return result;
+  }
+  private async updateHostPersonalRecords(snapshot:PersonalRecords):Promise<PersonalRecords>{
+    const updates=await this.hostStorage!.updateMany(records=>{
+      const raw=records['personal-records.v1'],recovered=object(raw)&&raw.version===1&&!validatePersonalRecords(raw);
+      const backup=records['personal-records.backup.v1'];
+      if(recovered&&!validatePersonalRecords(backup))throw Error('statistics_backup_unreadable');
+      const merged=mergePersonalRecords(recovered?backup:raw,snapshot);
+      return{'personal-records.v1':merged,'personal-records.backup.v1':merged,...(recovered?{'personal-records.quarantine.v1':raw}:{})};
+    });
+    return updates['personal-records.v1'] as PersonalRecords;
+  }
   async load(locale:'en'|'ru'){
     if(!await this.connect())return{campaign:null,settings:defaults(locale)};
-    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}
+    try{const [record,rawSettings,rawCareer,rawProfile]=await Promise.all([this.read('campaign'),this.read('settings'),this.read('career'),this.read('world-profile.v1')]);this.hasExistingProfile=record!==undefined||rawSettings!==undefined||rawCareer!==undefined;if(rawProfile!==undefined){this.completionProfileValid=validateCompletionProfile(rawProfile);if(this.completionProfileValid)this.completionProfile=structuredClone(rawProfile) as CompletionProfile;}this.baseCompleted=this.completionProfile.completion_ids.length>0;const settings=validateSettings(rawSettings,locale);if(rawCareer===undefined)this.careerRuns=[];else if(object(rawCareer)&&rawCareer.version===1&&Array.isArray(rawCareer.runs)&&rawCareer.runs.every((r:unknown)=>object(r)&&typeof r.campaign_id==='string'&&typeof r.content_version==='string'&&typeof r.completed_at==='string'&&Number.isFinite(r.active_ms)&&Number.isInteger(r.deaths)&&Number.isInteger(r.score)&&Array.isArray(r.nodes)&&r.nodes.every((n:unknown)=>nodeIds.includes(n as NodeId))&&['service','press',null].includes(r.foundry_route)&&r.difficulty==='standard'&&['standard','assisted'].includes(r.assistance)&&typeof r.history_complete==='boolean'))this.careerRuns=rawCareer.runs as CompletedRun[];else{this.careerRuns=[];this.careerValid=false;}try{const mirror=this.hostStorage?null:localStorage.getItem('cinder-shift-language-v1');if(mirror==='en'||mirror==='ru')settings.locale=mirror;}catch{/* IndexedDB locale remains available. */}if(this.careerValid&&this.careerRuns.length)this.baseCompleted=true;if(record===undefined)return{campaign:null,settings};const issue=validateSave(record);if(issue){this.blocked=true;this.status(issue);return{campaign:null,settings};}const envelope=migrateSave(record);this.savedAt=envelope.saved_at;if(isCompleteBaseCampaign(envelope.campaign))this.baseCompleted=true;return{campaign:{...envelope.campaign,character_id:'mira' as const},settings};}catch{this.available=false;this.status('unavailable');return{campaign:null,settings:defaults(locale)};}
   }
   private put(key:string,value:unknown){const snapshot=structuredClone(value);const operation=async()=>{
     const completionIds=key==='campaign'&&isCompleteBaseCampaign((snapshot as Envelope).campaign)?[(snapshot as Envelope).campaign.campaign_id]:key==='career'?(snapshot as {runs:CompletedRun[]}).runs.map(run=>run.campaign_id):[];const profile=completionIds.length&&this.completionProfileValid?{...this.completionProfile,completion_ids:[...new Set([...this.completionProfile.completion_ids,...completionIds])]}:null;
@@ -125,7 +154,7 @@ export class SaveService{
     const record:WorldEnvelope={schema_version:1,content_version:'worlds-rw3.1',game_id:id,build_id:this.build,saved_at:new Date().toISOString(),campaign:structuredClone(campaign)};
     const issue=validateWorldSave(record,id);if(issue){this.status(issue);return Promise.resolve(false);}return this.put(`world.${id}.v1`,record);
   }
-  saveSettings(settings:Settings){try{localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}
+  saveSettings(settings:Settings){try{if(!this.hostStorage)localStorage.setItem('cinder-shift-language-v1',settings.locale);}catch{/* Language still applies in memory. */}return this.put('settings',settings);}
   async recordCampaign(campaign:CampaignData){if(!this.available||this.blocked||!this.careerValid||!isCompleteBaseCampaign(campaign))return false;if(this.careerRuns.some(run=>run.campaign_id===campaign.campaign_id))return true;const run:CompletedRun={ruleset_id:campaign.run_stats.ruleset_id||'legacy-rc1',campaign_id:campaign.campaign_id,content_version:contentVersion,completed_at:new Date().toISOString(),active_ms:campaign.run_stats.active_ms,deaths:campaign.run_stats.deaths,score:campaign.run_stats.score,foundry_route:campaign.run_stats.foundry_route,nodes:[...campaign.nodes],difficulty:'standard',assistance:campaign.run_stats.assisted?'assisted':'standard',history_complete:campaign.run_stats.history_complete},runs=[...this.careerRuns,run];const saved=Boolean(await this.put('career',{version:1,runs}));if(saved)this.careerRuns=runs;return saved;}
   async retry(campaign:CampaignData|null,settings:Settings){if(!await this.connect())return false;await this.saveSettings(settings);return campaign?this.saveCampaign(campaign):true;}
 }
@@ -134,6 +163,7 @@ export type WorldEnvelope={schema_version:1;content_version:'worlds-rw3.1';game_
 export function validateWorldSave(raw:unknown,id:NewCampaignId):SaveIssue{
  if(!object(raw)||raw.game_id!==id)return'corrupt';if(raw.schema_version!==1||raw.content_version!=='worlds-rw3.1')return'incompatible';
  const d=raw.campaign,chain=newCampaignMissions[id];if(!object(d)||!chain.includes(d.mission_id)||!chain.includes(d.location_id)||!Array.isArray(d.completed_missions)||d.completed_missions.some((m:unknown)=>!chain.includes(m as string)))return'corrupt';
+ if(d.radio_links!==undefined&&(id!=='c03-adriatic-1986'||!validRadioLinks(d.radio_links)||!d.completed_missions.includes('YU04')))return'corrupt';
  const expectedFacts=id==='c02-small-world'?fragmentIds.filter(f=>d.completed_missions.some((m:string)=>f.includes(':'+m+'-'))):d.completed_missions.map((m:string)=>id+':transmission:'+m);if(!Array.isArray(d.world_facts)||d.world_facts.length!==expectedFacts.length||new Set(d.world_facts).size!==d.world_facts.length||expectedFacts.some((f:string)=>!d.world_facts.includes(f)))return'corrupt';
  if(d.entry&&(!chain.includes(d.entry.mission_id)||d.entry.seed!==missionSeed(d.campaign_seed,d.entry.mission_id)||!Array.isArray(d.entry.event_plan)||d.entry.event_plan.length))return'corrupt';
  if(d.result&&!chain.includes(d.result.mission_id))return'corrupt';

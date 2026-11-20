@@ -1,27 +1,27 @@
 {
   "version": 2,
   "kind": "implementation_status_and_release_register",
-  "updated_at": "2026-11-19T06:35:40.644461+00:00",
+  "updated_at": "2026-11-19T13:31:59.407Z",
   "reference": "Alpha.11 authored environment art/motion pack integrated; local build/art contracts/51 models PASS. Browser CI and native Figma import remain unverified. RW3 partial, not RC.",
   "source_checkout": {
     "branch": "codex/cinder-shift-final",
     "code_sha": "b43629d3262271afc5f72330b80bafe874ba82ee",
     "open_source_pr": "https://github.com/kirillgoncharik-commits/web-games-nuts/pull/10",
     "working_tree": "Alpha.11 source saved in PR10. Local and remote runtime trees match 00ab3ee. Local build/art contracts/51 models PASS; browser CI queued or running.",
-    "published_game_source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "published_game_source_sha": "836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5",
     "test_source_sha": "753f3443c47cacb5224b28cb1a213410ada74d4e",
     "last_verified_alpha2_runtime": "90170441b9742ce6a2f0dee5cf6a71e689b46935"
   },
   "production": {
-    "version": "0.8.0-alpha.5",
-    "build_id": "cinder-v1.b28.a1",
-    "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "version": "0.8.0-alpha.12",
+    "build_id": "local.20261119T132107351Z",
+    "source_sha": "836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5",
     "url": "https://nuts.bid/games/cinder-shift/",
-    "site_main_sha": "1d9dc3418a2a0084bb4d693718a491389b8d6ff7",
-    "site_pr": 18,
-    "deployment_id": "8e28ce6c-9060-427a-88b7-8e43d364ea24",
-    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
-    "evidence": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "site_main_sha": "9392476bd66a65f35ef7bf6e23a05f82a6d65393",
+    "site_pr": 21,
+    "deployment_id": "b163ea99-0135-4d05-ad96-e5582203de9f",
+    "status": "PUBLISHED_AND_71_LIVE_HASHES_VERIFIED_DEVELOPMENT_ALPHA_NOT_RC",
+    "evidence": "docs/cinder-shift/alpha12-production-release-2026-11-19.json",
     "changed_by_publication_request": true
   },
   "release_register": [
@@ -106,6 +106,21 @@
       "site_merge_sha": "f9f31a615ed05fc206a93eef24cb78d2fc67bb4c",
       "status": "PUBLISHED_AND_LIVE_VERIFIED",
       "url": "https://nuts.bid/games/cinder-shift/"
+    },
+    {
+      "version": "0.8.0-alpha.12",
+      "build_id": "local.20261119T132107351Z",
+      "source_sha": "836a04fbc8dc1cdb0d8dbbcba1ec0fc5b64034a5",
+      "url": "https://nuts.bid/games/cinder-shift/",
+      "site_main_sha": "9392476bd66a65f35ef7bf6e23a05f82a6d65393",
+      "site_pr": 21,
+      "deployment_id": "b163ea99-0135-4d05-ad96-e5582203de9f",
+      "status": "PUBLISHED_AND_71_LIVE_HASHES_VERIFIED_DEVELOPMENT_ALPHA_NOT_RC",
+      "evidence": "docs/cinder-shift/alpha12-production-release-2026-11-19.json",
+      "changed_by_publication_request": true,
+      "channel": "nuts.bid web",
+      "accepted": false,
+      "full_new_world_routes": "C02_LOCAL_PASS_C03_FAIL_YU04_C; no all-green current CI claim"
     }
   ],
   "acceptance": {
@@ -2242,5 +2257,17 @@
     "verification": "docs/cinder-shift/alpha11-verification.json",
     "checkpoint": "docs/cinder-shift/alpha11-art-motion.ru.md",
     "immutable_build": "cinder-v1.b44.a1"
+  },
+  "previous_production_before_alpha12": {
+    "version": "0.8.0-alpha.5",
+    "build_id": "cinder-v1.b28.a1",
+    "source_sha": "c7f3b87f979b5531e883aac0d1fea21cd0512a04",
+    "url": "https://nuts.bid/games/cinder-shift/",
+    "site_main_sha": "1d9dc3418a2a0084bb4d693718a491389b8d6ff7",
+    "site_pr": 18,
+    "deployment_id": "8e28ce6c-9060-427a-88b7-8e43d364ea24",
+    "status": "PUBLISHED_AND_LIVE_HASH_VERIFIED",
+    "evidence": "docs/cinder-shift/alpha5-production-release-2026-11-17.json",
+    "changed_by_publication_request": true
   }
 }
