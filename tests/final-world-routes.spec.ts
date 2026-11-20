@@ -1,7 +1,7 @@
 import {encounter} from './encounter-helpers';
 import {playSector,type RouteLoss} from './campaign-retry';
 import {fireFromCover} from './defensive-fire';
-import {campaignPressure} from './campaign-pressure';
+import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {powerTarget,worldContext} from '../games/cinder-shift/src/session/world-runtime';
 import {rooms} from '../games/cinder-shift/src/room-data';
 import {test,expect,type Page} from '@playwright/test';
@@ -21,9 +21,15 @@ async function unlocked(page:Page){
  await page.evaluate(record=>new Promise<void>((resolve,reject)=>{const r=indexedDB.open('cinder-shift-r01',1);r.onsuccess=()=>{const db=r.result,tx=db.transaction('records','readwrite');tx.objectStore('records').put(record,'campaign');tx.oncomplete=()=>{db.close();resolve();};tx.onabort=()=>reject(tx.error);};}),record);
  await page.reload();await expect(page.getByTestId('continue')).toBeVisible();
 }
-async function walk(page:Page,target:number,allowExit=false){
+async function walk(page:Page,target:number,allowExit=false,enemyId?:string){
  const origin=(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
-  const s=await state(page);if(allowExit&&(s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
+  const s=await state(page);
+  if(enemyId&&s.state==='playing'&&s.room===origin&&s.enemies.find((e:any)=>e.id===enemyId)?.hp<=0){
+   await Promise.all(['a','d','s','Space'].map(key=>page.keyboard.up(key)));
+   await ground(page);
+   return;
+  }
+  if(allowExit&&(s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
    // Releasing direction mid-jump still carries horizontal momentum until the
    // next ticks. Validate the landing, rather than accepting the airborne x.
    if(Math.abs((await state(page)).player.x-target)<7)return;
@@ -57,8 +63,9 @@ function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{
   &&worldContext({...spec,pulse:undefined},s.world,{x,y},s.simMs,s.hp<s.maxHp)===action);
  if(x===undefined)throw Error('no '+action+' standing point '+JSON.stringify({room:s.room,point,player:s.player,world:s.world}));return x;
 }
-async function standAtHeight(page:Page,point:{x:number;y:number}){
- const x=point.x;await walk(page,x);
+async function standAtHeight(page:Page,point:{x:number;y:number},enemyId?:string){
+ const x=point.x;await walk(page,x,false,enemyId);
+ if(enemyId&&(await state(page)).enemies.find((e:any)=>e.id===enemyId)?.hp<=0)return;
  const landed=await state(page),feet=landed.player.y+22;
  if(feet<point.y-2){
   // Reaching the right x on an optional upper shelf is not reaching its ground target.
@@ -126,7 +133,9 @@ async function combat(page:Page){
   const at=lane.x;
   // Fire while approaching cover, especially when a switchback crosses a patrol.
   await page.keyboard.down('j');
-  await standAtHeight(page,{x:at,y:320});await face(page,en.x>at?1:-1);if(lane.y===305)await page.keyboard.down('s');await page.keyboard.down('j');
+  await standAtHeight(page,{x:at,y:320},en.id);
+  if((await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp<=0){await page.keyboard.up('j');continue;}
+  await face(page,en.x>at?1:-1);if(lane.y===305)await page.keyboard.down('s');await page.keyboard.down('j');
   try{await fireFromCover(page,[en.id]);}finally{await page.keyboard.up('s');}
  }
 }
@@ -181,7 +190,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
   expect(result.score_breakdown.combat).toBeGreaterThan(0);
   expect(result.score_breakdown.extraction).toBeGreaterThanOrEqual(1000);
   pressure.push(...sectorPressure);
-  await writeFile(info.outputPath('sector-'+result.mission_id+'.json'),JSON.stringify({difficulty,seed:4,source_sha:cleared.sha,result,pressure:sectorPressure,losses:losses.filter(loss=>loss.mission===result.mission_id)},null,2));
+  await writeFile(info.outputPath('sector-'+result.mission_id+'.json'),JSON.stringify({difficulty,seed:4,source_sha:cleared.sha,visits:campaignVisits(cleared),result,pressure:sectorPressure,losses:losses.filter(loss=>loss.mission===result.mission_id)},null,2));
   await expect(page.getByTestId('result-research')).toBeVisible();await page.getByTestId('result-research').click();
  }
  await expect.poll(async()=>(await state(page)).campaign.stage).toBe('campaign_complete');await expect(page.locator('.result-grid')).toContainText('5');const final=(await state(page)).campaign;expect(final.completed_missions).toHaveLength(5);expect(new Set(visited).size).toBe(20);expect(final.world_facts).toHaveLength(world==='c02-small-world'?3:5);await page.reload();await page.getByTestId('continue').click();expect((await state(page)).campaign).toEqual(final);
@@ -191,7 +200,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['YU01','YU01-A'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);

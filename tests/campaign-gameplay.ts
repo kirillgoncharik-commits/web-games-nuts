@@ -15,7 +15,7 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await jump(page,160,270);await ground(page,320);await clear(page,['m3f-security']);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');
   if(route==='service'){
-   await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,410);await ground(page,320);await drone(page,'m3b-drone');await next(page,'M3G',536);
+   await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,370);await ground(page,272);await clear(page,['m3b-drone']);await next(page,'M3G',536);
    // The lower drone is screened by the middle platform from floor fire.
    // Climb the real cover/platform steps, then use the crouched firing line.
    await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
@@ -32,7 +32,11 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   }
   await to(page,112);await ground(page,320);if((await state(page)).hp<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();}
   await jump(page,226,332);await ground(page,320);await to(page,556);await page.keyboard.press('e');await next(page,'M3D');
-  await jump(page,154,250);await ground(page,320);await counterRam(page,'m3d-ram');await to(page,380);await drone(page,'m3d-drone');await jump(page,490,568);await ground(page,320);
+  await jump(page,154,250);await ground(page,320);await counterRam(page,'m3d-ram');
+  // Return to the first crate, then shoot across the bay from the high shelf.
+  await jump(page,246,204);await ground(page,288);await jump(page,218,312);await ground(page,256);
+  await page.keyboard.down('s');await clear(page,['m3d-drone']);await page.keyboard.up('s');
+  await jump(page,490,568);await ground(page,320);
   await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().objective,null,'final terminal');await page.keyboard.up('e');await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().state==='complete',null,'Foundry result');await page.keyboard.up('d');
 
 }
