@@ -1,7 +1,0 @@
-import {build} from 'vite';
-import {mkdir,writeFile} from 'node:fs/promises';
-import {resolve} from 'node:path';
-const root=resolve('qa-work/world-source');await mkdir(root,{recursive:true});
-await writeFile(root+'/index.html',`<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><title>Internal mechanics graybox · NOT a campaign delivery</title><style>body{margin:0;background:#111823;color:#f1d8ae;font:16px monospace}main{max-width:900px;margin:10px auto}#game{width:100%;outline:none}canvas{display:block;width:100%!important;height:auto!important;image-rendering:pixelated}nav{display:flex;gap:8px;flex-wrap:wrap}button{min-width:52px;min-height:52px;background:#213747;border:1px solid #bac6c9;color:#fff;touch-action:none}p{min-height:40px}button.held{background:#456171}</style></head><body><main><h1>Internal mechanics sample</h1><div id="game" tabindex="0"></div><p id="status">Loading</p><nav>${['left','right','jump','crouch','interact','fire','pause'].map(a=>`<button data-action="${a}">${a}</button>`).join('')}</nav></main><script type="module" src="../../tests/world-mechanics-harness.ts"></script></body></html>`);
-await build({configFile:resolve('vite.config.ts'),root,publicDir:resolve('games/cinder-shift/public'),build:{outDir:resolve('qa-work/world-harness'),target:'esnext',emptyOutDir:true}});
-console.log('World mechanics fixture built outside production dist.');
