@@ -11,7 +11,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {alignOnLedge,standingJump,ground,jump,to,clear,drone,face} from './route-helpers';
+import {alignOnLedge,standingJump,ground,jump,to,clear,face} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -264,8 +264,10 @@ async function combat(page:Page){
    await page.keyboard.up('s');await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
    await face(page,1);await page.keyboard.down('s');
-   await fireFromCover(page,['yu05a-switchback'],'crouch');await page.keyboard.up('s');
-   await drone(page,'yu05a-hill');return;
+   await fireFromCover(page,['yu05a-switchback'],'crouch');
+   await to(page,241);await ground(page,320);await page.keyboard.up('s');
+   await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+   await fireFromCover(page,['yu05a-hill']);return;
   }
   await fireFromCover(page,['yu05a-bay'],'crouch');
   await page.keyboard.up('s');await page.keyboard.press('e');
@@ -617,7 +619,7 @@ async function solveRoom(page:Page){
      await page.keyboard.up('s');
      await page.keyboard.down('j');await page.keyboard.down('Space');
      try{
-      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0;});
+      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
       await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
      }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
     }else{
