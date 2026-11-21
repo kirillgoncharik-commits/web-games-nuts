@@ -1,13 +1,20 @@
-import {test,expect} from '@playwright/test';
+import {test,expect,type TestInfo} from '@playwright/test';
 import {encounter} from './encounter-helpers';
 import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
-import {crossReactorTransit,crossReactorHeatRoom,clearReactorEntrance,clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {clearFoundryFurnace,crossReactorTransit,crossReactorHeatRoom,clearReactorEntrance,clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
 import {jump,ground,to,next} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
+async function recordRoom(info:TestInfo,end:Awaited<ReturnType<typeof state>>,fixture:string,hpStart:number){
+ const report={fixture,source_sha:end.sha,seed:end.campaign.campaign_seed,difficulty:end.campaign.difficulty,
+  hp_start:hpStart,hp_end:end.hp,active_seconds:end.activeSeconds,score:end.score,
+  pressure:campaignPressure(end.roomStates),visits:campaignVisits(end)};
+ await writeFile(info.outputPath('focused-room.json'),JSON.stringify(report,null,2));
+}
+
 test('a fresh profile completes five sectors, saves the real campaign record and reloads it once',async({page},info)=>{await campaignJourney(page,info);});
 
 
@@ -45,6 +52,15 @@ test('focused regulator entry recovers from the floor and completes evacuation',
  expect(returned.bossHp).toBeGreaterThan(0);
  await campaignRegulator(page);
  expect((await state(page)).state).toBe('complete');
+});
+
+test('focused room entry M5D survives both Regulator patterns at one HP',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated Regulator room entry');
+ test.setTimeout(180_000);
+ await encounter(page,{mission:'reactor',room:'M5D',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
+ await campaignRegulator(page);
+ const end=await state(page);expect(end.state).toBe('complete');expect(end.hp).toBe(1);
+ await recordRoom(info,end,'M5D entry at one HP',1);
 });
 
 test('focused sector entry Reactor on stock equipment',async({page},info)=>{
@@ -103,6 +119,15 @@ test('focused service wall exit M3B from low health',async({page},info)=>{
  expect(end.hp).toBeGreaterThan(0);
 });
 
+test('focused room entry M3E crosses the furnace after both patrols',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated Foundry room entry');
+ test.setTimeout(90_000);
+ await encounter(page,{mission:'foundry',room:'M3E',difficulty:info.project.metadata.difficulty,seed:4});
+ await clearFoundryFurnace(page);
+ const end=await state(page);expect(end.room).toBe('M3F');expect(end.hp).toBeGreaterThan(0);
+ await recordRoom(info,end,'M3E room entry',end.maxHp);
+});
+
 test('focused room entry M3G overhead patrols',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
  test.setTimeout(90_000);
@@ -111,6 +136,7 @@ test('focused room entry M3G overhead patrols',async({page},info)=>{
  const end=await state(page);
  expect(end.room).toBe('M3H');
  expect(end.hp).toBeGreaterThan(0);
+ await recordRoom(info,end,'M3G room entry',end.maxHp);
 });
 
 test('focused room entry M5G reactor security and drone',async({page},info)=>{
@@ -121,6 +147,7 @@ test('focused room entry M5G reactor security and drone',async({page},info)=>{
  const end=await state(page);
  expect(end.hp).toBe(1);
  expect(end.room).toBe('M5H');
+ await recordRoom(info,end,'M5G entry at one HP',1);
 });
 
 
@@ -139,7 +166,7 @@ test('focused room entry M5F heat room after heavy damage',async({page},info)=>{
  await encounter(page,{mission:'reactor',room:'M5F',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
  await crossReactorHeatRoom(page);
  const end=await state(page); expect(end.room).toBe('M5B');expect(end.hp).toBe(1);
- await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'M5F entry at one HP',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:1,hp_end:end.hp,active_seconds:end.activeSeconds,score:end.score,pressure:campaignPressure(end.roomStates),visits:campaignVisits(end)},null,2));
+ await recordRoom(info,end,'M5F entry at one HP',1);
 });
 
 test('focused room entry M5B optional patrol at one HP',async({page},info)=>{
@@ -147,5 +174,5 @@ test('focused room entry M5B optional patrol at one HP',async({page},info)=>{
  await encounter(page,{mission:'reactor',room:'M5B',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
  await crossReactorTransit(page,true);
  const end=await state(page);expect(end.room).toBe('M5G');expect(end.hp).toBe(1);
- await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'M5B entry at one HP with the E06 patrol',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:1,hp_end:end.hp,active_seconds:end.activeSeconds,score:end.score,pressure:campaignPressure(end.roomStates),visits:campaignVisits(end)},null,2));
+ await recordRoom(info,end,'M5B entry at one HP with the E06 patrol',1);
 });

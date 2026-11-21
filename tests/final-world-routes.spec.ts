@@ -156,6 +156,16 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  // This contact now sits on a working bridge above a crouchable underpass.
  // Follow its visible entry ledge; horizontal walking alone stays below it.
  const entry=await state(page);
+ if(entry.room==='YU05-B'){
+  // Draw the gallery turret's first crossburst above the open ground lane.
+  await page.keyboard.down('j');await jump(page,122,167);await ground(page,288);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__(),turret=s.enemies.find((e:any)=>e.id==='yu05b-drone');
+   return s.hp<=0||!turret.active||turret.hp<=0||turret.aimLocked||turret.phase==='recovery';
+  },undefined,{timeout:6000});
+  await page.keyboard.down('s');await to(page,219);await ground(page,320);
+  await fireFromCover(page,['yu05b-roof','yu05b-drone'],'crouch');await page.keyboard.up('s');return;
+ }
  if(entry.room==='YU05-A'&&point.x===112&&entry.player.x<90){
   // The first radio switch sits beside a 20px book. Mira can operate it
   // standing on the book, within the switch's normal interaction reach.
@@ -218,6 +228,18 @@ async function combat(page:Page){
   }finally{await page.keyboard.up('s');await page.keyboard.up('j');}
   return;
  }
+ if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
+  // The closed ridge door screens the two distant defenders during the first duel.
+  await page.keyboard.down('j');await jump(page,66,104);await ground(page,300);
+  await to(page,131);await page.keyboard.down('s');await ground(page,320);
+  await fireFromCover(page,['yu05a-bay'],'crouch');
+  await page.keyboard.up('s');await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+  await face(page,1);await page.keyboard.down('s');await fireFromCover(page,['yu05a-switchback'],'crouch');
+  await to(page,241);await ground(page,320);await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  await fireFromCover(page,['yu05a-hill']);return;
+ }
  if(entry.room==='YU03-B'&&entry.campaign.difficulty!=='easy'){
   // Cross by the raised railway when circuit A is still protecting the train.
   await page.keyboard.down('j');await jump(page,119,184);await ground(page);
@@ -228,6 +250,22 @@ async function combat(page:Page){
   await jump(page,444,550);await ground(page,244);
   await to(page,618);await ground(page,320);await face(page,-1);
   await fireFromCover(page,['yu03b-train','yu03b-roof']);return;
+ }
+ if(entry.room==='YU03-C'&&entry.campaign.difficulty==='hard'){
+  await page.keyboard.down('j');await walk(page,203);
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),phase=(s.worldPulseElapsed??s.simMs)%5000;return s.hp<=0||phase>=2300&&phase<=3500;});
+  await jump(page,261,308);await ground(page);
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),gun=s.enemies.find((e:any)=>e.id==='yu03c-drone');return s.hp<=0||gun.phase==='recovery'&&!s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>300&&p.x<390);});
+  const start=await state(page);
+  if(start.player.y+22<290){await to(page,318);await ground(page);}
+  // If recoil drops Mira in the pocket before the closed door, she can
+  // jump to its top directly from the sheltered floor.
+  await standingJump(page,375);await ground(page,272);
+  await standingJump(page,436);await ground(page,244);await to(page,581);await ground(page,320);
+  const spec=rooms['YU03-C'].world!,rear=await state(page);
+  if(worldContext(spec,rear.world,{x:rear.player.x,y:320},rear.simMs,rear.hp<rear.maxHp)==='repair')await page.keyboard.press('e');
+  await face(page,-1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu03c-track','yu03c-drone'],'crouch');await page.keyboard.up('s');return;
  }
  if(entry.room==='YU03-C'){
   // Cross on the safe phase and fire past the right edge of the crate.
@@ -249,6 +287,21 @@ async function combat(page:Page){
   await page.keyboard.down('j');await jump(page,125,255);await ground(page,320);
   await fireFromCover(page,['yu04a-gantry']);return;
  }
+ if(entry.room==='YU04-C'&&entry.campaign.difficulty==='nightmare'){
+  // The powered gate also serves as a step onto the distributor's central deck.
+  await page.keyboard.down('j');await jump(page,130,182);await ground(page,288);
+  await standingJump(page,245);await ground(page,272);await standingJump(page,327);await ground(page,244);
+  await to(page,405);await ground(page,320);await face(page,1);
+  await fireFromCover(page,['yu04c-scanner']);await face(page,-1);
+  await page.keyboard.down('s');await fireFromCover(page,['yu04c-feed'],'crouch');await page.keyboard.up('s');return;
+ }
+ if(entry.room==='YU04-B'&&entry.campaign.difficulty!=='easy'){
+  // Circuit A holds the hoist above the cutter's standing firing lane.
+  await face(page,1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu04b-hoist'],'crouch');await page.keyboard.up('s');
+  await page.keyboard.down('j');await jump(page,128,224);await ground(page,320);
+  await face(page,1);await fireFromCover(page,['yu04b-belt']);return;
+ }
  if(entry.room==='YU04-B'){
   // The hoist deck blocks a straight standing shot at the rotor. Use the
   // opening below it for the ground guard and fire back from the far floor.
@@ -265,6 +318,13 @@ async function combat(page:Page){
   if((await state(page)).player.y+22<319)await to(page,216);
   await ground(page,320);
   await face(page,1);await fireFromCover(page,['yu04d-drive','yu04d-motor'],'crouch');
+  if(entry.campaign.difficulty!=='easy'){
+   await page.waitForFunction(()=>{
+    const s=(window as any).__CINDER__(),orb=s.enemies.find((e:any)=>e.id==='yu04d-relief');
+    return s.hp<=0||!orb.active||orb.hp<=0||orb.phase==='recovery'&&
+      !s.projectiles.some((shot:any)=>shot.team==='enemy'&&shot.vx<0&&shot.x>s.player.x-15);
+   },undefined,{timeout:10000});
+  }
   await page.keyboard.up('s');await page.keyboard.down('j');
   await jump(page,221,299);await ground(page);
   if((await state(page)).player.y+22<319)await to(page,306);
@@ -434,7 +494,11 @@ async function solveRoom(page:Page){
  }
  if(s.room==='YU01-D')await page.keyboard.down('j');
  const entrance=rooms[s.room as keyof typeof rooms].world!;
- if(s.room!=='YU01-D'&&s.room!=='YU02-C'&&(s.room!=='YU03-B'||s.campaign.difficulty==='easy')&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
+ const holdEntryCircuit=['YU01-D','YU02-C'].includes(s.room)||
+  (s.campaign.difficulty!=='easy'&&['YU03-B','YU04-B','YU05-A'].includes(s.room))||
+  (s.room==='YU04-C'&&s.campaign.difficulty==='nightmare')||
+  (s.room==='YU03-C'&&s.campaign.difficulty==='hard');
+ if(!holdEntryCircuit&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
   await approachContext(page,'switch',first);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(entrance.sequence?.[0]);

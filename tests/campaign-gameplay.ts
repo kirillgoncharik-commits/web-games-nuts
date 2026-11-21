@@ -53,7 +53,9 @@ export async function crossFoundryDroneRoom(page:Page){
  for(let approach=0;approach<2;approach++){
   await to(page,232);await ground(page,320);
   await standingJump(page,191);await ground(page,288);
-  await to(page,205);await ground(page,288);await standingJump(page,307);await ground(page);
+  await to(page,approach===0?205:198);await ground(page);
+  if((await state(page)).player.y+22>290)continue;
+  await standingJump(page,303);await ground(page);
   if(Math.abs((await state(page)).player.y+22-256)<2)break;
  }
  await ground(page,256);
@@ -75,6 +77,11 @@ export async function clearFoundryGate(page:Page){
  finally {await page.keyboard.up('s');}
 }
 
+export async function clearFoundryFurnace(page:Page){
+  await jump(page,148,250);await ground(page,320);await counterRam(page,'m3e-ram');
+  await to(page,384);await drone(page,'m3e-drone');await cross(page,'m3e-furnace');await next(page,'M3F',560);
+}
+
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
   // Land beyond the crate but outside the ram's charge lane.
   await jump(page,148,237);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
@@ -83,8 +90,7 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await page.keyboard.up('s');
   await ground(page,320);
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
-  await jump(page,148,250);await ground(page,320);await counterRam(page,'m3e-ram');
-  await to(page,384);await drone(page,'m3e-drone');await cross(page,'m3e-furnace');await next(page,'M3F',560);
+  await clearFoundryFurnace(page);
   await clearFoundryGuard(page);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');
   if(route==='service'){
@@ -189,7 +195,13 @@ export async function crossReactorTransit(page:Page,acceptE06:boolean){
     // The retreat jump may land on the lip of the previous crate. Step into
     // the ground firing lane while remaining outside the ram's 500px limit.
     if((await state(page)).player.y+22<319)await to(page,466);
-    await ground(page,320);await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face optional patrol');await page.keyboard.up('d');await clear(page,['m5b-e06-ram']);await page.keyboard.up('s');}
+    await ground(page,320);
+    await page.keyboard.down('j');
+    await page.keyboard.press('d',{delay:45});await ground(page,320);
+    const firing=await state(page);
+    expect(firing.player.facing,'face the E06 patrol').toBe(1);
+    expect(firing.player.x+11,'remain outside the charge').toBeLessThan(500);
+    await clear(page,['m5b-e06-ram']);await page.keyboard.up('s');}
   await next(page,'M5G');
 }
 
@@ -229,14 +241,33 @@ export async function leaveRegulatorShelf(page:Page){
 }
 
 export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
- const phases=new Set<string>(),windows=new Set<string>(),build=(await state(page)).loadout;let lastWarning='',firing=false,climbed=false;
+ const entry=await state(page),precise=entry.campaign.difficulty==='nightmare'&&entry.hp===1;
+ const phases=new Set<string>(),windows=new Set<string>(),build=entry.loadout;let lastWarning='',firing=false,climbed=false;
  async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
  async function climb(){
   if((await state(page)).player.x>112)await leaveRegulatorShelf(page);
   await jump(page,106,157);await ground(page,288);
-  await jump(page,173,267);await ground(page,256);climbed=true;
+  if(precise){
+   await page.keyboard.down('s');
+   // A held direction can carry the suit off the 40px crate before release.
+   for(let adjustment=0;adjustment<6;adjustment++){
+    const current=await state(page),distance=172-current.player.x;
+    if(Math.abs(distance)<=4)break;
+    const delay=Math.max(35,Math.min(100,(Math.abs(distance)-2)*1000/58));
+    await page.keyboard.press(distance>0?'d':'a',{delay});await ground(page,288);
+   }
+   await page.keyboard.up('s');
+   await ground(page,288);await standingJump(page,249);
+  }else await jump(page,173,267);
+  await ground(page,256);climbed=true;
  }
 
+ // The first pair of strikes tracks the player before the shelf is reachable.
+ // Wait beyond the left edge of both marked lanes, then climb in the core window.
+ if(precise&&entry.boss.pattern.stage==='lanes'){
+  await to(page,34);await ground(page,320);
+  await until(page,()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.boss.pattern.phase==='core';},null,'first safe climb to the core',12000);
+ }
  await climb();
   for(let i=0;i<2200;i++){
    const s=await state(page),p=s.boss.pattern;phases.add(p.stage);if(s.hp<=0||s.state!=='playing')throw Error('Boss run ended before shutdown');if(s.bossHp<=0)break;
@@ -244,7 +275,13 @@ export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
     // A real hit can knock Mira off the firing shelf. Recover with ordinary
     // movement instead of waiting forever at a height she no longer occupies.
     if(s.player.y+22>270){await fire(false);await leaveRegulatorShelf(page);await climb();lastWarning='';continue;}
-    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<272?307:237);await ground(page);}
+    if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;const aim=s.boss.aimX;
+     if(!precise){await to(page,aim<272?307:237);await ground(page);}
+     else if(Math.abs(s.player.x-aim)<39){
+      const target=aim<=272?Math.max(300,aim+37):Math.min(245,aim-37);
+      await page.keyboard.down('s');await to(page,target);await page.keyboard.up('s');
+      await ground(page);
+     }}
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
     if(p.stage==='transition'||p.phase==='warning'){

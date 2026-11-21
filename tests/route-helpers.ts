@@ -49,6 +49,9 @@ export async function cross(page:Page,id:string,end?:number){
  let s=await state(page),h=s.hazards.find((h:any)=>h.id===id);if(!h)return;
  // Keep an already safe landing beside cover instead of backtracking into it.
  if(s.player.x<h.x-24)await to(page,h.x-24);await ground(page,320);
+ // Stop before reading the final position. Momentum or knockback can carry
+ // the suit over the near edge after the approach key has been released.
+ if((await state(page)).player.x+11>h.x){await to(page,h.x-22);await ground(page,320);}
  expect((await state(page)).player.x+11,'wait outside the machine footprint').toBeLessThanOrEqual(h.x);
  const target=end??h.x+h.width+28,travel=(target-(await state(page)).player.x)/115*1000+180;
  await until(page,({id,travel})=>{const s=(window as any).__CINDER__(),h=s.hazards.find((h:any)=>h.id===id);if(!h||h.enabled===false)return true;const t=(s.simMs+(h.offset_ms||0))%h.cycle_ms;return t<h.warning_ms?h.warning_ms-t>travel:t>=h.warning_ms+h.active_ms&&h.cycle_ms-t+h.warning_ms>travel;},{id,travel},'machine window '+id,12000);
