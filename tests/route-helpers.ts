@@ -25,11 +25,11 @@ export async function counterRam(page:Page,id:string){
  await page.keyboard.down('j');await until(page,id=>{const s=(window as any).__CINDER__(),e=s.enemies.find((e:any)=>e.id===id);return s.hp<=0||e?.hp<=0||e?.phase==='telegraph'&&e.remaining<220;},id,'ram warning '+id);
  await page.keyboard.down('Space');await until(page,id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((e:any)=>e.id===id)?.hp<=0;},id,'ram counter '+id,12000);await page.keyboard.up('Space');await page.keyboard.up('j');expect((await state(page)).hp).toBeGreaterThan(0);
 }
-export async function drone(page:Page,id:string){
+export async function drone(page:Page,id:string,feet=320){
  for(let pass=0;pass<8;pass++){
   const entry=await state(page);
   if(entry.enemies.find((e:any)=>e.id===id)?.hp<=0)break;
-  await ground(page,320);
+  await ground(page,feet);
   const started=(await state(page)).simMs;
   await page.keyboard.down('Space');
   try{

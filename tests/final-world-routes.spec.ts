@@ -54,10 +54,17 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   if(exitFrom&&s.state==='transition'){
    await page.waitForFunction(origin=>{const s=(window as any).__CINDER__();return s.state==='complete'||s.state==='playing'&&s.room!==origin;},origin);
   }
-  if(exitFrom&&(s.state==='transition'||s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});
+  if(exitFrom&&(s.state==='transition'||s.state==='complete'||s.room!==origin)){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');return;}if(s.state!=='playing'||s.room!==origin)throw Error('walk interrupted '+JSON.stringify(s));const p=s.player;if(Math.abs(p.x-target)<5){await page.keyboard.up('a');await page.keyboard.up('d');await page.keyboard.up('s');await page.keyboard.up('Space');await page.waitForFunction(({exitFrom,origin})=>{
+    const s=(window as any).__CINDER__();
+    return (exitFrom&&(s.state==='complete'||s.state==='transition'||s.room!==origin))||s.hp<=0||(Math.abs(s.player.vx)<1&&s.player.vy===0);
+   },{exitFrom,origin});
+   const landed=await state(page);
+   // Completion freezes the last physics velocity on the result screen.
+   if(exitFrom&&(landed.state==='complete'||landed.state==='transition'||landed.room!==origin))return;
+   expect(landed.hp,'movement in '+origin).toBeGreaterThan(0);
    // Releasing direction mid-jump still carries horizontal momentum until the
    // next ticks. Validate the landing, rather than accepting the airborne x.
-   if(Math.abs((await state(page)).player.x-target)<7)return;
+   if(Math.abs(landed.player.x-target)<7)return;
    previous=NaN;continue;
   }
   if(exitFrom&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
@@ -211,6 +218,17 @@ async function combat(page:Page){
   }finally{await page.keyboard.up('s');await page.keyboard.up('j');}
   return;
  }
+ if(entry.room==='YU03-B'&&entry.campaign.difficulty!=='easy'){
+  // Cross by the raised railway when circuit A is still protecting the train.
+  await page.keyboard.down('j');await jump(page,119,184);await ground(page);
+  if((await state(page)).player.y+22>290)await standingJump(page,182);
+  await ground(page,288);
+  await to(page,209);await ground(page,288);await standingJump(page,278);await ground(page,248);
+  await jump(page,333,426);await ground(page,218);
+  await jump(page,444,550);await ground(page,244);
+  await to(page,618);await ground(page,320);await face(page,-1);
+  await fireFromCover(page,['yu03b-train','yu03b-roof']);return;
+ }
  if(entry.room==='YU03-C'){
   // Cross on the safe phase and fire past the right edge of the crate.
   await page.keyboard.down('j');await walk(page,203);
@@ -252,6 +270,12 @@ async function combat(page:Page){
   if((await state(page)).player.y+22<319)await to(page,306);
   await ground(page,320);
   await fireFromCover(page,['yu04d-relief']);return;
+ }
+ if(entry.room==='YU02-A'&&entry.campaign.difficulty==='nightmare'){
+  // The clear space beyond the entry crate allows a full dodge jump. Under
+  // the warehouse deck the last locked volley catches the player on landing.
+  await page.keyboard.down('j');await jump(page,133,232);await ground(page,320);
+  await fireFromCover(page,['yu02a-lift','yu02a-warehouse']);return;
  }
  if(entry.room==='YU02-B'){
   // Both crane targets are visible beneath the entry tread from a crouch.
@@ -410,7 +434,7 @@ async function solveRoom(page:Page){
  }
  if(s.room==='YU01-D')await page.keyboard.down('j');
  const entrance=rooms[s.room as keyof typeof rooms].world!;
- if(s.room!=='YU01-D'&&s.room!=='YU02-C'&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
+ if(s.room!=='YU01-D'&&s.room!=='YU02-C'&&(s.room!=='YU03-B'||s.campaign.difficulty==='easy')&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
   await approachContext(page,'switch',first);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(entrance.sequence?.[0]);
@@ -455,8 +479,8 @@ async function solveRoom(page:Page){
     await approachContext(page,'switch',point);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);
    }
    const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
-   if(room==='YU01-D'&&phase===2){
-    // The last transmission contact is inside the pulse. Read the warning at
+   if((room==='YU01-D'||room==='YU02-D')&&phase===2){
+    // Both transmitter exits put the last contact in the pulse. Read the warning at
     // the left marker, trigger the contact in passing and finish in shelter.
     await walk(page,460);
     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&5200-s.worldPulseElapsed%5200>1900;});

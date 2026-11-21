@@ -30,7 +30,15 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  const clear=evade?(ids:string[])=>fireFromCover(page,ids,'crouch'):holdFire;
 
  await next('M1A');
- await jump(114,172);await ground(288);
+ await jump(114,165);
+ await wait(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0&&Math.abs(s.player.vx)<1;},null,'entry crate landing');
+ const firstLanding=await read(page);
+ if(firstLanding.player.y+22>290){
+  // Knockback or late key release can put the player beyond the entry crate.
+  const from=firstLanding.player.x>184?firstLanding.player.x-2:114;
+  await jump(from,165);
+ }
+ await ground(288);
  if(evade&&(await read(page)).campaign.difficulty!=='easy'){
   // The first volley crosses the gap during the climb. Let it approach the
   // crate, then jump over it and open fire on the way to the higher shelf.

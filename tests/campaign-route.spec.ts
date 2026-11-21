@@ -4,7 +4,7 @@ import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
-import {clearReactorEntrance,clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {crossReactorTransit,crossReactorHeatRoom,clearReactorEntrance,clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
 import {jump,ground,to,next} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
@@ -132,4 +132,20 @@ test('focused room entry M5A phase wall and reactor gun',async({page},info)=>{
  expect(end.room).toBe('M5F');
  expect(end.hp).toBeGreaterThan(0);
  await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'room entry M5A',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:end.maxHp,hp_end:end.hp,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates)},null,2));
+});
+
+test('focused room entry M5F heat room after heavy damage',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires documented room entry');
+ await encounter(page,{mission:'reactor',room:'M5F',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
+ await crossReactorHeatRoom(page);
+ const end=await state(page); expect(end.room).toBe('M5B');expect(end.hp).toBe(1);
+ await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'M5F entry at one HP',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:1,hp_end:end.hp,active_seconds:end.activeSeconds,score:end.score,pressure:campaignPressure(end.roomStates),visits:campaignVisits(end)},null,2));
+});
+
+test('focused room entry M5B optional patrol at one HP',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated M5B entry with the real seed-four event');
+ await encounter(page,{mission:'reactor',room:'M5B',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
+ await crossReactorTransit(page,true);
+ const end=await state(page);expect(end.room).toBe('M5G');expect(end.hp).toBe(1);
+ await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'M5B entry at one HP with the E06 patrol',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:1,hp_end:end.hp,active_seconds:end.activeSeconds,score:end.score,pressure:campaignPressure(end.roomStates),visits:campaignVisits(end)},null,2));
 });
