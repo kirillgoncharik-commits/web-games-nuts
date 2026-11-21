@@ -229,11 +229,15 @@ async function combat(page:Page){
    return s.hp<=0||!turret.active||turret.hp<=0||turret.aimLocked||turret.phase==='recovery';
   },undefined,{timeout:6000});
   await page.keyboard.down('s');await to(page,219);await ground(page,320);
-  // Finish the floor patrol and let its last bolt pass while Mira remains
-  // below that lane. Only then draw and counter the gallery watcher's burst.
-  await fireFromCover(page,['yu05b-roof'],'crouch');
+  await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  // The first turret burst was locked on the raised entry cover, so it passes
+  // over this ground lane. Stay standing: both Adriatic defenders then mark a
+  // visible high jump before locking their next volley, leaving the landing
+  // point clear for stock-weapon counterfire.
+  await fireFromCover(page,['yu05b-roof']);
   await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'&&shot.source==='relay-crawler-shot'));
-  await fireFromCover(page,['yu05b-drone'],'crouch');await page.keyboard.up('s');return;
+  await fireFromCover(page,['yu05b-drone']);return;
  }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
   // The closed ridge door screens the two distant defenders during the first duel.
@@ -571,13 +575,18 @@ async function solveRoom(page:Page){
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
     try{
-     // Land just beyond the cover instead of on its top: stock shots from the
-     // 288px ledge pass above the guardian's vulnerable ground-height body.
-     await standingJump(page,326);await ground(page,320);
+     // The lead turret is only 18px beyond the cover landing, so a right-facing
+     // muzzle there starts behind its hitbox. Vault to its far side during the
+     // exposed window and fire back; the relief guardian retains the longer
+     // left-hand lane once it replaces the lead.
+     const firingX=id==='sw05d-beacon'?370:326;
+     await standingJump(page,firingX);await ground(page,320);
+     await face(page,id==='sw05d-beacon'?-1:1);
      await page.keyboard.down('j');
      await page.waitForTimeout(260);
      await page.keyboard.up('j');
      await standingJump(page,260);await ground(page,320);
+     await face(page,1);
     }finally{await page.keyboard.up('j');}
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
    }

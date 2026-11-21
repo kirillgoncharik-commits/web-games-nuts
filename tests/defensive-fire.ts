@@ -37,6 +37,7 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
         if(enemy.phase!=='telegraph'||enemy.aimLocked)return false;
         if(enemy.guardian==='beacon-warden'&&start.campaign.difficulty!=='easy')return enemy.remaining>210&&enemy.remaining<410;
         const drawTrackedAim=start.room==='YU03-C'||
+          (start.room==='YU05-A'&&start.campaign.difficulty!=='easy')||
           (start.room==='YU05-B'&&start.campaign.difficulty==='nightmare')||
           (start.room==='YU03-D'&&start.campaign.difficulty!=='easy');
         const trackedVolley=drawTrackedAim&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler');
