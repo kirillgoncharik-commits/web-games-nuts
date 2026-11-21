@@ -178,8 +178,17 @@ export async function clearReactorEntrance(page:Page){
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await ground(page,320);
   await fireFromCover(page,['m5a-security'],'crouch');await to(page,338);await page.keyboard.up('s');
   if((await state(page)).campaign.difficulty==='nightmare'){
-    await page.keyboard.down('j');await jump(page,338,396);await page.keyboard.down('s');await ground(page,320);
-    try{await fireFromCover(page,['m5a-turret'],'crouch');}finally{await page.keyboard.up('s');}
+    // The phase wall safely absorbs the first turret burst. Cross only when
+    // its shutters are open, then use the full recovery window at stock fire
+    // rate instead of trying to dodge a point-blank three-shot burst.
+    await page.waitForFunction(()=>{
+      const s=(window as any).__CINDER__(),turret=s.enemies.find((e:any)=>e.id==='m5a-turret');
+      return s.hp<=0||turret?.hp<=0||turret?.phase==='recovery'&&turret.remaining>1600;
+    },undefined,{timeout:10000});
+    await page.keyboard.down('j');await jump(page,338,386);await page.keyboard.down('s');await ground(page,320);
+    try{await until(page,()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((e:any)=>e.id==='m5a-turret')?.hp<=0;},null,'nightmare entrance turret',3000);}
+    finally{await page.keyboard.up('s');await page.keyboard.up('j');}
+    expect((await state(page)).hp,'reactor phase-wall counterfire').toBeGreaterThan(0);
   }else{
     await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
   }

@@ -275,32 +275,15 @@ async function combat(page:Page){
   // jump to its top directly from the sheltered floor.
   await standingJump(page,375);await ground(page,272);
   await standingJump(page,436);await ground(page,244);await to(page,581);await ground(page,320);
-  const spec=rooms['YU03-C'].world!,rear=await state(page);
-  if(worldContext(spec,rear.world,{x:rear.player.x,y:320},rear.simMs,rear.hp<rear.maxHp)==='repair')await page.keyboard.press('e');
+  // Keep the protected repair for the normal post-combat pass below. Spending
+  // it before the tunnel fight left the next room with damage that could no
+  // longer be recovered, despite the same cache remaining safe after combat.
   await face(page,-1);
   if(entry.campaign.difficulty==='nightmare'){
-   // The right-hand crate screens both enemies. Wait out the watcher's burst,
-   // then expose only the two stock shots needed to destroy it. Repeat for the
-   // crawler instead of fighting both enemies in their shared lane.
-   const clearFromCrate=async(id:string)=>{
-    await page.waitForFunction(id=>{
-     const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
-     return s.hp<=0||enemy?.hp<=0||(enemy?.phase==='patrol'||enemy?.phase==='recovery'&&enemy.remaining>800)&&
-      !s.projectiles.some((shot:any)=>shot.team==='enemy'&&shot.x>s.player.x-20);
-    },id,{timeout:12000});
-    if((await state(page)).enemies.find((enemy:any)=>enemy.id===id)?.hp<=0)return;
-    await page.keyboard.down('j');
-    try{
-     await standingJump(page,552);await ground(page,288);
-     await page.waitForFunction(id=>{
-      const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((enemy:any)=>enemy.id===id)?.hp<=0;
-     },id,{timeout:3000});
-    }finally{await page.keyboard.up('j');}
-    expect((await state(page)).hp,'tunnel crate counterfire').toBeGreaterThan(0);
-    await to(page,581);await ground(page,320);await face(page,-1);
-   };
-   await clearFromCrate('yu03c-drone');
-   await clearFromCrate('yu03c-track');return;
+   // The marked service pocket is a real projectile shield. Stay fully inside
+   // it (the near edge is not protected), and fire left through the open floor
+   // lane until the watcher exposes itself and both defenders are down.
+   await clear(page,['yu03c-drone','yu03c-track']);return;
   }
   await page.keyboard.down('s');
   await fireFromCover(page,['yu03c-track','yu03c-drone'],'crouch');await page.keyboard.up('s');return;
@@ -549,18 +532,65 @@ async function solveRoom(page:Page){
   await approachContext(page,'activate',target);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
- if(s.room==='SW05-D'&&s.campaign.difficulty!=='easy'){
-  // The first scanner cover blocks both the beam and the two defenders. Fire
-  // over it during their warned volleys, then collect the conductor after the
-  // room is quiet. This avoids crossing through the turret's contact box.
+ if(s.room==='SW05-D'&&s.campaign.difficulty==='hard'){
+  // The scanner stops short of the far wall. Take the two ledges on an
+  // open signal and fight from outside the beam before collecting the conductor.
   const openScan=()=>page.waitForFunction(()=>{
    const s=(window as any).__CINDER__();
    return s.hp<=0||(s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2450);
   });
+  await page.keyboard.down('j');await to(page,244);await ground(page,320);
+  await openScan();await jump(page,244,284);await ground(page,288);
+  await standingJump(page,384);await ground(page,320);await to(page,608);await ground(page,320);
+  await face(page,-1);await page.keyboard.down('s');await fireFromCover(page,['sw05d-beacon'],'crouch');
+  await page.keyboard.up('s');await fireFromCover(page,['sw05d-last']);
+  await openScan();await to(page,336);await ground(page,320);await standingJump(page,247);await ground(page,320);
+  for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
+   await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
+   await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+   if(stage===1){await jump(page,284,374);await ground(page,320);}
+   await to(page,launch);await ground(page,320);await face(page,stage===1?-1:1);
+   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1200;});
+   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
+  }
+  await page.keyboard.up('j');
+ }
+ if(s.room==='SW05-D'&&s.campaign.difficulty==='nightmare'){
+  // The first moving shield is the intended scanner shelter. The turret can
+  // only be damaged in recovery, so expose Mira on its right for that window
+  // and jump back behind the shield before the next warned scan.
   await to(page,247);await ground(page,320);await face(page,1);
-  await fireFromCover(page,['sw05d-beacon']);
-  await fireFromCover(page,['sw05d-last']);
-  await openScan();
+  const counterFromScannerCover=async(id:string)=>{
+   for(let pass=0;pass<12;pass++){
+    const before=await state(page),enemy=before.enemies.find((unit:any)=>unit.id===id);
+    if(!enemy||enemy.hp<=0)return;
+    // The relief guardian is dormant until the lead turret is gone and Mira
+    // crosses its normal activation line. Briefly show above the same cover,
+    // then wait out the warned volley before returning fire.
+    if(!enemy.activated||enemy.phase==='patrol'){
+     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
+     await standingJump(page,id==='sw05d-last'?350:315);await ground(page,320);
+     await standingJump(page,247);await ground(page,320);
+     expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
+    }
+    await page.waitForFunction(id=>{
+     const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
+     return s.hp<=0||enemy?.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900&&
+      enemy?.phase==='recovery'&&enemy.remaining>800;
+    },id,{timeout:16000});
+    if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
+    await page.keyboard.down('j');
+    try{
+     await standingJump(page,315);await ground(page,320);
+     await page.waitForTimeout(260);
+     await standingJump(page,247);await ground(page,320);
+    }finally{await page.keyboard.up('j');}
+    expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
+   }
+   throw Error('scanner-cover counter did not clear '+id);
+  };
+  await counterFromScannerCover('sw05d-beacon');
+  await counterFromScannerCover('sw05d-last');
   for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
    await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
    await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
