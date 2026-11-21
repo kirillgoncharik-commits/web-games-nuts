@@ -1,0 +1,203 @@
+{
+  "source_sha": "82ac065b73016ab2f59a2df60e5a4c0722bd4813",
+  "seed": 4,
+  "difficulty": "easy",
+  "losses": [],
+  "mission": "airlock",
+  "hp": 3,
+  "max_hp": 6,
+  "active_seconds": 48.9499999999986,
+  "score": 2275,
+  "visits": [
+    {
+      "room": "A",
+      "entered_seconds": 0,
+      "left_seconds": 7.467,
+      "score_in": 0,
+      "score_out": 150
+    },
+    {
+      "room": "B",
+      "entered_seconds": 7.467,
+      "left_seconds": 14.55,
+      "score_in": 150,
+      "score_out": 375
+    },
+    {
+      "room": "M1A",
+      "entered_seconds": 14.55,
+      "left_seconds": 20.55,
+      "score_in": 375,
+      "score_out": 550
+    },
+    {
+      "room": "M1B",
+      "entered_seconds": 20.55,
+      "left_seconds": 28.383,
+      "score_in": 550,
+      "score_out": 700
+    },
+    {
+      "room": "M1C",
+      "entered_seconds": 28.383,
+      "left_seconds": 38.283,
+      "score_in": 700,
+      "score_out": 1000
+    },
+    {
+      "room": "C",
+      "entered_seconds": 38.283,
+      "left_seconds": 48.9499999999986,
+      "score_in": 1000,
+      "score_out": 2275
+    }
+  ],
+  "pressure": [
+    {
+      "room": "A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 633,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 95
+    },
+    {
+      "room": "B",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 3150,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 38
+    },
+    {
+      "room": "M1A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1450,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 41
+    },
+    {
+      "room": "M1B",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1400,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 43
+    },
+    {
+      "room": "M1C",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 4667,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 26
+    },
+    {
+      "room": "C",
+      "enemies": 3,
+      "attacks": 3,
+      "combatMs": 6317,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 28
+    }
+  ],
+  "visited": 6,
+  "repair": [
+    "B"
+  ],
+  "events": [
+    {
+      "event_id": "E03",
+      "definition_version": 2,
+      "room_id": "B",
+      "variant": "repair-cache"
+    }
+  ],
+  "damage": [
+    {
+      "name": "hit_received",
+      "event_id": "379e197f-5962-49fb-9fb7-e93373349f58",
+      "at": 11569,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "82ac065b73016ab2f59a2df60e5a4c0722bd4813",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "edf2f9e8-bbcc-412f-9cab-7515be302108",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "B",
+        "attempt_id": "3422e84b-1904-4783-bd99-272df9f31451",
+        "active_duration": 10.217,
+        "reason": "walker-contact",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "9728b664-d659-48d4-b451-38a57fb67c0d",
+      "at": 19016,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "82ac065b73016ab2f59a2df60e5a4c0722bd4813",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "edf2f9e8-bbcc-412f-9cab-7515be302108",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1A",
+        "attempt_id": "3422e84b-1904-4783-bd99-272df9f31451",
+        "active_duration": 17.117,
+        "reason": "drone-shot",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "a32425c5-d666-45b3-b7fa-e0973aeaeaf6",
+      "at": 37049,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "82ac065b73016ab2f59a2df60e5a4c0722bd4813",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "edf2f9e8-bbcc-412f-9cab-7515be302108",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1C",
+        "attempt_id": "3422e84b-1904-4783-bd99-272df9f31451",
+        "active_duration": 34.75,
+        "reason": "turret-shot",
+        "hp": 4
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "da05b551-86a0-4231-96b9-3c99286604d8",
+      "at": 47782,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.16",
+        "source_sha": "82ac065b73016ab2f59a2df60e5a4c0722bd4813",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "edf2f9e8-bbcc-412f-9cab-7515be302108",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "C",
+        "attempt_id": "3422e84b-1904-4783-bd99-272df9f31451",
+        "active_duration": 45.283,
+        "reason": "walker-shot",
+        "hp": 3
+      }
+    }
+  ]
+}
