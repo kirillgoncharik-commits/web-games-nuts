@@ -4,7 +4,7 @@ import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
-import {clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {clearReactorEntrance,clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
 import {jump,ground,to,next} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
@@ -73,7 +73,7 @@ test('focused room entry M3F security patrol',async({page},info)=>{
 
 test('focused room entry M3H mixed patrol',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
- await encounter(page,{mission:'foundry',room:'M3H',difficulty:info.project.metadata.difficulty,seed:4});
+ await encounter(page,{mission:'foundry',room:'M3H',difficulty:info.project.metadata.difficulty,seed:4,hp:2});
  await clearFoundryGate(page);
  const end=await state(page);
  expect(end.hp).toBeGreaterThan(0);
@@ -121,4 +121,15 @@ test('focused room entry M5G reactor security and drone',async({page},info)=>{
  const end=await state(page);
  expect(end.hp).toBe(1);
  expect(end.room).toBe('M5H');
+});
+
+
+test('focused room entry M5A phase wall and reactor gun',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated room entry');
+ await encounter(page,{mission:'reactor',room:'M5A',difficulty:info.project.metadata.difficulty,seed:4});
+ await clearReactorEntrance(page);
+ const end=await state(page);
+ expect(end.room).toBe('M5F');
+ expect(end.hp).toBeGreaterThan(0);
+ await writeFile(info.outputPath('focused-room.json'),JSON.stringify({fixture:'room entry M5A',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,hp_start:end.maxHp,hp_end:end.hp,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates)},null,2));
 });

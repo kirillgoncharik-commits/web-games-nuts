@@ -25,17 +25,30 @@ export async function clearFoundryServiceRoom(page:Page){
 }
 
 export async function crossFoundryDroneRoom(page:Page){
- // The lower drone is screened by the middle platform from floor fire.
- // Climb the real cover/platform steps, then use the crouched firing line.
- await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
- await page.keyboard.down('s');await clear(page,['m3g-drone-low']);await page.keyboard.up('s');
- await page.keyboard.down('j');await jump(page,350,425);await ground(page,224);
+ // Shoot over the left edge of the gantry from the gap after the entry crate.
+ await page.keyboard.down('j');await jump(page,140,228);await ground(page,320);
+ await to(page,245);await ground(page,320);await drone(page,'m3g-drone-low');
+ for(let approach=0;approach<2;approach++){
+  await to(page,232);await ground(page,320);
+  await standingJump(page,191);await ground(page,288);
+  await to(page,205);await ground(page,288);await standingJump(page,307);await ground(page);
+  if(Math.abs((await state(page)).player.y+22-256)<2)break;
+ }
+ await ground(page,256);
+ await page.keyboard.down('j');await to(page,345);await ground(page,256);
+ await standingJump(page,426);await ground(page,224);
  await fireFromCover(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);
 }
 
 export async function clearFoundryGate(page:Page){
- await page.keyboard.down('j');await jump(page,130,216);
- await page.keyboard.down('s');await ground(page,320);
+ await page.keyboard.down('j');await jump(page,130,182);await ground(page,288);
+ await page.keyboard.down('s');
+ // Let both low shots strike the face of the crate before stepping off.
+ await page.waitForFunction(()=>{
+  const s=(window as any).__CINDER__(),guard=s.enemies.find((e:any)=>e.id==='m3h-security');
+  return s.hp<=0||guard?.phase==='recovery'&&!s.projectiles.some((p:any)=>p.source==='walker-shot'&&p.vx<0&&p.x>s.player.x);
+ });
+ await to(page,224);await ground(page,320);
  try {await fireFromCover(page,['m3h-security','m3h-turret'],'crouch');}
  finally {await page.keyboard.up('s');}
 }
@@ -68,7 +81,7 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await jump(page,226,332);await ground(page,320);await to(page,556);await page.keyboard.press('e');await next(page,'M3D');
   await jump(page,154,250);await ground(page,320);await counterRam(page,'m3d-ram');
   // Return to the first crate, then shoot across the bay from the high shelf.
-  await jump(page,246,204);await ground(page,288);await jump(page,218,312);await ground(page,256);
+  await ground(page,320);await standingJump(page,203);await ground(page,288);await jump(page,218,312);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m3d-drone']);await page.keyboard.up('s');
   await jump(page,490,568);await ground(page,320);
   await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().objective,null,'final terminal');await page.keyboard.up('e');await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().state==='complete',null,'Foundry result');await page.keyboard.up('d');
@@ -129,11 +142,15 @@ export async function clearReactorPatrol(page:Page){
  await to(page,510);await ground(page,320);await next(page,'M5H',552);
 }
 
-export async function campaignReactor(page:Page){
- const circuit:string='isolation',acceptE06=(await state(page)).eventPlan.some((e:any)=>e.event_id==='E06');
+export async function clearReactorEntrance(page:Page){
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await ground(page,320);
   await fireFromCover(page,['m5a-security'],'crouch');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
   await jump(page,426,500);await ground(page,272);await to(page,580);await ground(page,320);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().roomStates.M5A.terminal,null,'outer power');await page.keyboard.up('e');await next(page,'M5F');
+}
+
+export async function campaignReactor(page:Page){
+ const circuit:string='isolation',acceptE06=(await state(page)).eventPlan.some((e:any)=>e.event_id==='E06');
+  await clearReactorEntrance(page);
   await jump(page,130,188);await ground(page,288);await jump(page,204,306);await ground(page,256);await page.keyboard.down('s');await clear(page,['m5f-drone']);
   // Fire while descending from the hot crossing. Stay below the patrol's last shots.
   await page.keyboard.down('j');await to(page,380);await ground(page,320);

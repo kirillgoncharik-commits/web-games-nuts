@@ -183,14 +183,14 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
   await walk(page,264);await ground(page,288);await standingJump(page,340);await ground(page,244);
  }
  if(entry.room==='YU04-D'&&point.y===288&&entry.player.y+22>290){
-  await walk(page,184);await ground(page,288);await standingJump(page,256);await ground(page,288);
+  await walk(page,184);await ground(page,288);await standingJump(page,249);await ground(page);
+  // A hit can knock Mira off the narrow contact shelf. From the floor,
+  // jump back onto the same shelf before using the console.
+  const landing=await state(page);
+  if(landing.hp>0&&landing.player.y+22>290)await standingJump(page,249);
+  await ground(page,288);
  }
- if(entry.room==='YU05-D'&&action==='activate'&&entry.world.phase===1){
-  // The first feed arms the real warning. Read the pulse from the marked
-  // canopy, then leave shelter only while the second contact's window is open.
-  await walk(page,348);
-  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1200;});
- }
+
  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
@@ -212,62 +212,81 @@ async function combat(page:Page){
   return;
  }
  if(entry.room==='YU03-C'){
-  // Use the rear repair pocket and face the firing squad from outside the patrol.
-  await page.keyboard.down('j');await walk(page,310);await ground(page,288);
-  await to(page,329);await ground(page,288);await standingJump(page,405);
-  await to(page,585);await ground(page,320);
-  const pocket=await state(page),spec=rooms['YU03-C'].world!;
-  if(worldContext(spec,pocket.world,{x:pocket.player.x,y:320},pocket.simMs,pocket.hp<pocket.maxHp)==='repair'){
-   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);
-  }
-  await face(page,-1);await page.keyboard.down('s');
-  await fireFromCover(page,['yu03c-drone','yu03c-track'],'crouch');await page.keyboard.up('s');return;
- }
- if(entry.room==='YU04-A'){
-  // Cross the factory gantry and drop at its far edge, then fire back
-  // beneath the platform instead of trying to descend between two ledges.
-  await page.keyboard.down('j');await walk(page,554);await ground(page,320);
-  await face(page,-1);await fireFromCover(page,['yu04a-factory','yu04a-gantry']);return;
- }
- if(entry.room==='YU02-C'){
-  // Use the quay steps to cross the water above the arc of the ground fire.
-  await page.keyboard.down('j');await jump(page,103,145);await ground(page,288);
-  await standingJump(page,200);await ground(page,248);
-  await to(page,248);await ground(page,248);await standingJump(page,342);await ground(page,288);
-  await to(page,355);await ground(page,288);await standingJump(page,425);await ground(page,320);
-  await fireFromCover(page,['yu02c-drone']);await face(page,-1);
-  await page.keyboard.down('s');await fireFromCover(page,['yu02c-quay'],'crouch');
+  // Cross on the safe phase and fire past the right edge of the crate.
+  await page.keyboard.down('j');await walk(page,203);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__(),phase=(s.worldPulseElapsed??s.simMs)%5000;
+   return s.hp<=0||phase>=2300&&phase<=3550;
+  });
+  await jump(page,261,357);await ground(page,320);
+  await page.keyboard.down('s');
+  await fireFromCover(page,['yu03c-track','yu03c-drone'],'crouch');
   await page.keyboard.up('s');return;
  }
+ if(entry.room==='YU04-A'){
+  // The entry step has room below its tread for a crouched shot. Remove
+  // the factory guard from here, then cross the tread to fire at the orb.
+  await face(page,1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu04a-factory'],'crouch');await page.keyboard.up('s');
+  await page.keyboard.down('j');await jump(page,125,255);await ground(page,320);
+  await fireFromCover(page,['yu04a-gantry']);return;
+ }
+ if(entry.room==='YU04-B'){
+  // The hoist deck blocks a straight standing shot at the rotor. Use the
+  // opening below it for the ground guard and fire back from the far floor.
+  await face(page,1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu04b-hoist'],'crouch');await page.keyboard.up('s');
+  await page.keyboard.down('j');await jump(page,124,219);await ground(page);
+  await page.keyboard.down('s');await to(page,494);await ground(page,320);
+  await page.keyboard.up('s');await face(page,-1);await fireFromCover(page,['yu04b-belt']);return;
+ }
+ if(entry.room==='YU04-D'){
+  // From the left of the first contact, the tread screens standing shots
+  // but leaves a two-way low firing slit for the drive and its ground guard.
+  await page.keyboard.down('s');await to(page,217);await ground(page);
+  if((await state(page)).player.y+22<319)await to(page,216);
+  await ground(page,320);
+  await face(page,1);await fireFromCover(page,['yu04d-drive','yu04d-motor'],'crouch');
+  await page.keyboard.up('s');await page.keyboard.down('j');
+  await jump(page,221,299);await ground(page);
+  if((await state(page)).player.y+22<319)await to(page,306);
+  await ground(page,320);
+  await fireFromCover(page,['yu04d-relief']);return;
+ }
+ if(entry.room==='YU02-B'){
+  // Both crane targets are visible beneath the entry tread from a crouch.
+  await face(page,1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu02b-crane','yu02b-dock'],'crouch');
+  await page.keyboard.up('s');return;
+ }
+ if(entry.room==='YU02-C'){
+  // Cross the quay with A still shielding the walkway. The crane step and
+  // warehouse roof carry Mira above the screen to the far-side repair pocket.
+  await page.keyboard.down('j');await jump(page,103,145);await ground(page,288);
+  await standingJump(page,200);await ground(page,248);
+  await to(page,248);await ground(page);
+  const middle=(await state(page)).player;
+  // Knockback can land Mira directly on the next stone while the input is held.
+  if(middle.x<309||Math.abs(middle.y+22-288)>2)await standingJump(page,342);
+  await ground(page,288);
+  await to(page,355);await ground(page,288);await standingJump(page,392);await ground(page,272);
+  await standingJump(page,461);await ground(page,248);await to(page,582);await ground(page,320);
+  const spec=rooms['YU02-C'].world!,rear=await state(page);
+  if(worldContext(spec,rear.world,{x:rear.player.x,y:320},rear.simMs,rear.hp<rear.maxHp)==='repair')await page.keyboard.press('e');
+  await face(page,-1);await fireFromCover(page,['yu02c-drone']);
+  await approachContext(page,'switch',spec.switches![1]);await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+  await face(page,-1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu02c-quay'],'crouch');await page.keyboard.up('s');return;
+ }
  if(entry.room==='YU01-D'){
-  await clear(page,['yu01d-relay']);
-  await page.waitForFunction(()=>{
-   const s=(window as any).__CINDER__();
-   const incoming=s.projectiles.filter((p:any)=>p.team==='enemy'&&p.vx<0);
-   return s.hp<=0||!incoming.length||incoming.some((p:any)=>p.x>s.player.x&&p.x-s.player.x<70);
-  });
-  await page.keyboard.down('j');
-  const start=(await state(page)).simMs;
-  await Promise.all([page.keyboard.down('Space'),page.keyboard.down('d')]);
-  // Knockback can leave Mira on the floor against the left edge of the footing.
-  // Recognise that landing and jump again from the edge using the normal controls.
-  await page.waitForFunction(start=>{
-   const s=(window as any).__CINDER__(),p=s.player;
-   return s.hp<=0||p.x>=180||(s.simMs-start>900&&p.vy===0&&p.y+22>=319&&p.x>=155);
-  },start,{timeout:8000});
-  await Promise.all([page.keyboard.up('d'),page.keyboard.up('Space')]);
-  await ground(page);
-  const landing=await state(page);
-  expect(landing.hp,'transmitter footing').toBeGreaterThan(0);
-  if(landing.player.y+22>302)await standingJump(page,180);
-  await ground(page,300);
-  // Let the tracking bolts pass under the footing before dropping into the patrol lane.
-  await page.waitForFunction(()=>{
-   const s=(window as any).__CINDER__();
-   return s.hp<=0||!s.projectiles.some((p:any)=>p.source==='induction-orb-shot'&&p.vx<0&&p.x>s.player.x-20);
-  });
-  await to(page,230);await ground(page,320);
-  await fireFromCover(page,['yu01d-feed','yu01d-relief']);return;
+  // Both the watcher and relay guard are vulnerable to standing fire from
+  // the left of the transmitter footing. Keep that distance for the reserve.
+  await fireFromCover(page,['yu01d-relay','yu01d-feed']);
+  const spec=rooms['YU01-D'].world!;
+  await approachContext(page,'switch',spec.switches![0]);await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+  await face(page,1);await fireFromCover(page,['yu01d-relief']);return;
  }
  if(entry.room==='YU01-C'){
   await jump(page,100,148);await ground(page,264);
@@ -391,10 +410,18 @@ async function solveRoom(page:Page){
  }
  if(s.room==='YU01-D')await page.keyboard.down('j');
  const entrance=rooms[s.room as keyof typeof rooms].world!;
- if(s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
+ if(s.room!=='YU01-D'&&s.room!=='YU02-C'&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
   await approachContext(page,'switch',first);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(entrance.sequence?.[0]);
+ }
+ if(s.room==='YU04-D'&&s.world.phase===0){
+  // The isolation screen protects the drive until its first contact is operated.
+  // From the entry step the player can reach that contact before engaging.
+  const current=await state(page),target=powerTarget(entrance,current.world);
+  if(!target)throw Error('missing isolation contact');
+  await approachContext(page,'activate',target);await page.keyboard.press('e');
+  await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
  await combat(page);s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
@@ -409,6 +436,19 @@ async function solveRoom(page:Page){
   // The fixed contact markers are the same visible one/two-lamp goals as the HUD.
   const sequences:Record<string,string[]>={'A':['B'],'B':['B','A'],'C':['B'],'D':['B','A','B']};const room=s.room;let sequence=sequences[room.at(-1)];if(room==='YU04-C')sequence=['B','A'];if(room==='YU05-C')sequence=['B','A','B'];
   for(let phase=s.world.phase;phase<sequence.length;phase++){
+   if(room==='YU05-D'&&phase===1){
+    // The first contact arms the field. Return to dry ground during its initial
+    // warning, then cross on a fresh safe interval and use the right-hand switch.
+    await to(page,219);await ground(page,320);
+    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>2600;});
+    await to(page,452);await ground(page,320);
+    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
+    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1800;});
+    await to(page,418);await page.keyboard.press('e');await to(page,452);await ground(page,320);
+    await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+    continue;
+   }
    s=await state(page);if(s.world.power.circuit!==sequence[phase]){
     const switches=rooms[s.room as keyof typeof rooms].world!.switches!;
     const point=[...switches].sort((a,b)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
@@ -488,7 +528,10 @@ for(const {mission_id:mission,room_id:room} of newCampaignRegistry.rooms){
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
   // Nightmare route evidence in the exchange records an entry with two HP.
-  const hp=room==='SW03-C'||(['SW04-B','YU01-B','YU01-C','YU01-D'].includes(room)&&difficulty==='nightmare')?2:undefined;
+  const entryHp:Partial<Record<string,number>>={'SW03-C':2,'YU03-C':3,'YU04-D':3};
+  if(difficulty==='hard')entryHp['YU02-C']=1;
+  if(difficulty==='nightmare')for(const id of ['SW04-B','YU01-B','YU01-C','YU01-D'])entryHp[id]=2;
+  const hp=entryHp[room];
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
   if(hp!==undefined)expect((await state(page)).hp).toBe(hp);

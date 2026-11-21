@@ -33,7 +33,9 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
       if(!incoming && state.player.vy===0 && targets.every(id=>state.enemies.find((enemy:{id:string})=>enemy.id===id)?.hp<=0))return;
       // Draw the fan above the landing point before the turret finishes aiming.
       const drawAimHigh=state.enemies.some((enemy:{kind:string;mob?:string;phase:string;remaining:number;aimLocked:boolean})=>{
-        if(enemy.kind!=='turret'||enemy.phase!=='telegraph'||enemy.aimLocked)return false;
+        if(enemy.phase!=='telegraph'||enemy.aimLocked)return false;
+        if(start.room==='YU03-C'&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler'))return enemy.remaining>520&&enemy.remaining<800;
+        if(enemy.kind!=='turret')return false;
         if(enemy.mob==='lidar-guardian')return enemy.remaining>350 && enemy.remaining<660;
         return !enemy.mob && enemy.remaining>140 && enemy.remaining<380;
       });
