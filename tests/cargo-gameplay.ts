@@ -2,6 +2,18 @@ import {fireFromCover} from './defensive-fire';
 import {expect,type Page} from '@playwright/test';
 import {state} from './helpers';
 import {jump,ground,to,clear,next,until} from './route-helpers';
+export async function clearCargoDrone(page:Page){
+  await jump(page,114,172);await ground(page,288);
+  const ledge=await state(page);
+  if(ledge.campaign.difficulty==='nightmare'&&ledge.enemies.find((e:any)=>e.id==='m2d-drone')?.activated){
+   await until(page,()=>{const s=(window as any).__CINDER__();return s.projectiles.some((p:any)=>
+    p.team==='enemy'&&p.vx<0&&p.x>s.player.x+55&&p.x<s.player.x+110);},null,'cargo drone volley at the approach crate');
+   await page.keyboard.down('j');
+  }
+  await jump(page,178,300);await ground(page,256);
+  await page.keyboard.down('s');await clear(page,['m2d-drone']);await page.keyboard.up('s');
+}
+
 export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security';power?:boolean;piercing?:boolean;buffer?:boolean;info?:any}={}){
  const circuit=options.circuit??'conveyor';
   await jump(page,148,240);await ground(page,320);await page.keyboard.down('s');await clear(page,['d-security']);await next(page,'M2A');await page.keyboard.up('s');
@@ -20,8 +32,7 @@ export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security
   if(circuit==='security'){await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).cargoCircuit).toBe('security');}
   await jump(page,236,332);await ground(page,320);await next(page,'M2D');
   expect((await state(page)).conveyor.enabled).toBe(circuit==='conveyor');
-  await jump(page,114,172);await ground(page,288);await jump(page,178,300);await ground(page,256);
-  await page.keyboard.down('s');await clear(page,['m2d-drone']);await page.keyboard.up('s');await to(page,380);await ground(page,320);
+  await clearCargoDrone(page);await to(page,380);await ground(page,320);
   if(circuit==='security'){await page.keyboard.down('s');await clear(page,['m2d-routed-turret']);await page.keyboard.up('s');}
   await next(page,'F',552);
   // E01's upper shortcut stays optional. The lower cell route works with its turret off.

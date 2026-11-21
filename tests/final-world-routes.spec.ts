@@ -67,6 +67,14 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;
   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);
+  if(precise&&!enemyId&&!exitFrom&&!s.enemies.some((enemy:any)=>enemy.hp>0)){
+   // Release before querying the whole room again. At low frame rates a
+   // held direction could carry Mira back and forth across a valid contact.
+   const duration=Math.min(150,Math.max(40,(Math.abs(target-p.x)-4)/58*1000));
+   await page.waitForTimeout(duration);await page.keyboard.up(dir);
+   await ground(page);previous=NaN;
+   continue;
+  }
   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}
   previous=p.x;await page.waitForTimeout(Math.abs(target-p.x)<48?20:80);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
@@ -204,6 +212,20 @@ async function solveRoom(page:Page){
     await approachContext(page,'switch',point);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe(sequence[phase]);
    }
    const current=await state(page),target=powerTarget(rooms[current.room as keyof typeof rooms].world!,current.world);if(!target)throw Error('missing visible power contact');
+   if(room==='YU01-D'&&phase===2){
+    // The last transmission contact is inside the pulse. Read the warning at
+    // the left marker, trigger the contact in passing and finish in shelter.
+    await walk(page,460);
+    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&5200-s.worldPulseElapsed%5200>1900;});
+    await page.keyboard.down('d');
+    try{
+     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.player.x>=540&&s.worldPulse==='safe';});
+     await page.keyboard.press('e');
+     await page.waitForFunction(()=>(window as any).__CINDER__().player.x>=585);
+    }finally{await page.keyboard.up('d');}
+    await expect.poll(async()=>(await state(page)).world.phase).toBe(phase+1);
+    continue;
+   }
    // Reuse the local switch on the current side of an A wall. Returning to the
    // entrance switch can close the route before reaching the next contact.
    await approachContext(page,'activate',target);const pulse=rooms[current.room as keyof typeof rooms].world!.pulse;
@@ -243,29 +265,35 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
   // Nightmare route evidence in the exchange records an entry with two HP.
-  const hp=room==='YU01-B'&&difficulty==='nightmare'?2:undefined;
+  const hp=room==='SW03-C'||(room==='YU01-B'&&difficulty==='nightmare')?2:undefined;
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
   if(hp!==undefined)expect((await state(page)).hp).toBe(hp);
   await solveRoom(page);
   const end=await state(page);
-  expect(end.hp).toBeGreaterThan(0);expect(end.score).toBeGreaterThan(100);
+  expect(end.hp).toBeGreaterThan(0);
+  if(room==='SW03-C'){
+   expect(end.score).toBe(100);
+   expect(end.roomStates[room].world.repaired).toBe(true);
+   expect(end.hp).toBeGreaterThan(2);
+  }else expect(end.score).toBeGreaterThan(100);
   if(room.endsWith('-D'))expect(end.state).toBe('complete');else expect(end.room).not.toBe(room);
  });
 }
 
-test('focused sector entry SW02 on stock equipment',async({page},info)=>{
+for(const mission of ['SW02','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
  test.setTimeout(240_000);
  const difficulty=info.project.metadata.difficulty??'easy';
- await encounter(page,{mission:'SW02',room:'SW02-A',difficulty,seed:4});
- for(const room of ['SW02-A','SW02-B','SW02-C','SW02-D']){
+ await encounter(page,{mission,room:mission+'-A',difficulty,seed:4});
+ for(const letter of ['A','B','C','D']){
+  const room=mission+'-'+letter;
   await expect.poll(async()=>(await state(page)).room).toBe(room);
   await solveRoom(page);
  }
@@ -273,7 +301,7 @@ test('focused sector entry SW02 on stock equipment',async({page},info)=>{
  expect(end.state).toBe('complete');
  expect(end.campaign.result.score_breakdown.rooms).toBe(400);
  await writeFile(info.outputPath('focused-sector.json'),JSON.stringify({
-  fixture:'sector entry SW02-A',source_sha:end.sha,seed:4,difficulty,
+  fixture:'sector entry '+mission+'-A',source_sha:end.sha,seed:4,difficulty,
   result:end.campaign.result,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates),
  },null,2));
 });
