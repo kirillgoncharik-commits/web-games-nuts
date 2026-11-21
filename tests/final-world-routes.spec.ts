@@ -588,9 +588,9 @@ async function solveRoom(page:Page){
     if(!enemy.activated){
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
      if(id==='sw05d-last'){
-      await standingJump(page,350);await ground(page,320);
-      await standingJump(page,260);await ground(page,320);
-     await face(page,1);
+	      // Cross the moving screen during its visible open phase.  Remaining
+	      // on its right leaves a full-height stock-fire lane to the drone.
+	      await standingJump(page,350);await ground(page,320);await face(page,1);
      }else{
       await page.keyboard.press('Space',{delay:260});
       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0;});
@@ -598,26 +598,15 @@ async function solveRoom(page:Page){
      expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
     }
     if(id==='sw05d-last'){
-     // The guardian is a flying, always-damageable target; the lower slit is
-     // below it.  On each open scan, jump vertically from the marked screen
-     // and fire only after the stock muzzle clears the top edge.  Its aimed
-     // response then passes over the landing shelter.
-     // Stay low while waiting for the next open scan. Facing is already fixed
-     // by activation; tapping movement here exposes Mira to the previous fan.
-     await page.keyboard.down('s');
-     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-	    await page.keyboard.up('s');await page.keyboard.down('Space');
-     try{
-	     // The usable stock-shot lane is only 6px high: above the screen's
-	     // expanded 286.5px top and inside the drone's 280.5px hitbox. Browser
-	     // input arrives one physics tick after an ascent sample, which made the
-	     // old held shot pass above the drone. Fire once on the slower descent.
-	     await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),muzzle=s.player.y+22-28;return s.hp<=0||s.player.vy>0&&muzzle>281.5&&muzzle<284.5;});
-	     await page.keyboard.press('j',{delay:45});
-      await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
-	    }finally{await page.keyboard.up('Space');await page.keyboard.up('j');await page.keyboard.down('s');}
-     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
-     continue;
+	     // If a retry restored the activated guardian with Mira back at the left
+	     // entry, repeat the same physical crossing before counterfire.
+	     if((await state(page)).player.x<320){
+	      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
+	      await standingJump(page,350);await ground(page,320);
+	     }
+	     await face(page,1);await fireFromCover(page,[id]);
+	     expect((await state(page)).hp,'beacon open-lane counterfire').toBeGreaterThan(0);
+	     return;
     }
     // The screen is a low firing shelter, not full standing cover.  Wait for
     // the warned volley in the same crouch a player uses to read the slit.
