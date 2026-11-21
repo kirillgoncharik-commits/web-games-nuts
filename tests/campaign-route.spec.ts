@@ -4,7 +4,7 @@ import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
-import {clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
 import {jump,ground,to} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
@@ -69,4 +69,20 @@ test('focused room entry M3F security patrol',async({page},info)=>{
  const end=await state(page);
  expect(end.hp).toBe(end.maxHp);
  expect(end.enemies.find((enemy:{id:string})=>enemy.id==='m3f-security').hp).toBeLessThanOrEqual(0);
+});
+
+test('focused room entry M3H mixed patrol',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
+ await encounter(page,{mission:'foundry',room:'M3H',difficulty:info.project.metadata.difficulty,seed:4});
+ await clearFoundryGate(page);
+ const end=await state(page);
+ expect(end.hp).toBeGreaterThan(0);
+ expect(end.enemies.every((e:{hp:number})=>e.hp<=0)).toBe(true);
+});
+test('focused sector entry Foundry stock service route',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires sector entry fixture');
+ test.setTimeout(240000);
+ await encounter(page,{mission:'foundry',room:'M3A',difficulty:info.project.metadata.difficulty,seed:4});
+ await campaignFoundry(page);
+ expect((await state(page)).state).toBe('complete');
 });

@@ -166,6 +166,15 @@ async function combat(page:Page){
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||!s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>s.player.x-20);});
   await page.keyboard.up('s');return;
  }
+ if(entry.room==='SW05-B'){
+  // Use the low lane under the reserve rotor to clear the patrol behind it.
+  await page.keyboard.down('j');await jump(page,267,349);
+  await page.keyboard.down('s');await ground(page,320);
+  await fireFromCover(page,['sw05b-service'],'crouch');
+  await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  await fireFromCover(page,['sw05b-router']);return;
+ }
  if(entry.room==='SW04-B'){
   await page.keyboard.down('s');await fireFromCover(page,['sw04b-rail'],'crouch');
   await page.keyboard.up('s');await walk(page,365);
@@ -329,7 +338,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['SW05','SW05-D'],['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
@@ -351,7 +360,7 @@ for(const [mission,room] of [['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B
  });
 }
 
-for(const mission of ['SW02','SW04','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
+for(const mission of ['SW02','SW04','SW05','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
  test.setTimeout(240_000);
  const difficulty=info.project.metadata.difficulty??'easy';

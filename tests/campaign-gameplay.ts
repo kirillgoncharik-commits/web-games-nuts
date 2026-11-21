@@ -11,6 +11,13 @@ export async function clearFoundryGuard(page:Page){
  finally {await page.keyboard.up('s');}
 }
 
+export async function clearFoundryGate(page:Page){
+ await page.keyboard.down('j');await jump(page,130,216);
+ await page.keyboard.down('s');await ground(page,320);
+ try {await fireFromCover(page,['m3h-security','m3h-turret'],'crouch');}
+ finally {await page.keyboard.up('s');}
+}
+
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
   await page.keyboard.down('s');
@@ -29,7 +36,7 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
    await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
    await page.keyboard.down('s');await clear(page,['m3g-drone-low']);await page.keyboard.up('s');
    await jump(page,350,446);await ground(page,224);await clear(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);
-   await jump(page,130,216);await ground(page,320);await clear(page,['m3h-security','m3h-turret']);await page.keyboard.down('s');await to(page,384);await page.keyboard.up('s');await ground(page,320);await next(page,'M3K',520);
+   await clearFoundryGate(page);await page.keyboard.down('s');await to(page,384);await page.keyboard.up('s');await ground(page,320);await next(page,'M3K',520);
   }else{
    await jump(page,114,208);await ground(page,320);await to(page,280);await clear(page,['m3c-ram']);await cross(page,'m3c-press');await cross(page,'m3c-heat');await next(page,'M3I',552);
    // Fire from the actual shelf: standing under its edge forces crouch and blocks jumping.
