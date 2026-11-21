@@ -568,7 +568,9 @@ async function solveRoom(page:Page){
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
     await page.keyboard.down('j');
     try{
-     await standingJump(page,315);await ground(page,288);
+     // Land just beyond the cover instead of on its top: stock shots from the
+     // 288px ledge pass above the guardian's vulnerable ground-height body.
+     await standingJump(page,326);await ground(page,320);
      await page.waitForTimeout(260);
      await standingJump(page,247);await ground(page,320);
     }finally{await page.keyboard.up('j');}
