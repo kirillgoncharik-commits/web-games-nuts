@@ -1,3 +1,4 @@
+import {createEnemy,enemyRect} from '../games/cinder-shift/src/enemies';
 import {createEncounterState,encounterCompleted,stepEncounter,encounterSolids,encounterTiming,encounterThreat,syncEncounterStage,encounterThrowReserveMs} from '../games/cinder-shift/src/session/world-encounter';
 import {test,expect} from '@playwright/test';
 import {rooms} from '../games/cinder-shift/src/room-data';
@@ -242,6 +243,13 @@ test('encounter cycles remain deterministic at 30 and 60 render FPS and reset on
  const run=(fps:number)=>{const s=createEncounterState(),clock=new SimulationClock(),phases:string[]=[];for(let n=0;n<fps*7;n++)clock.advance(1000/fps,()=>{stepEncounter(dock,s,0,body(64,320),320,clock.now);phases.push(encounterTiming(dock,s,clock.now).phase);});return{s,phases};};expect(run(30)).toEqual(run(60));
  const entry={mission_id:'SW01' as const,seed:4,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]},a=new MissionAttempt('mission',entry);syncEncounterStage(dock,a.room('SW01-D').world!.encounter!,2);
  expect(new MissionAttempt('mission',entry).room('SW01-D').world!.encounter).toEqual(createEncounterState());
+});
+test('the fixed beacon turret leaves each scanner shield and conductor socket clear',()=>{
+ const room=rooms['SW05-D'];
+ const turret=room.enemies.find(enemy=>enemy.id==='sw05d-beacon')!;
+ const hitbox=enemyRect(createEnemy(turret));
+ for(const stage of room.world!.encounter!.stages)expect(intersects(hitbox,stage.cover),stage.contactId).toBe(false);
+ for(const contact of room.world!.carry!.contacts)expect(intersects(hitbox,contact.rect),contact.id).toBe(false);
 });
 test('all dock and beacon covers fit the base jump and leave their live contact clear',()=>{
  for(const id of ['SW01-D','SW05-D'] as const){const room=rooms[id];for(const stage of room.world!.encounter!.stages){

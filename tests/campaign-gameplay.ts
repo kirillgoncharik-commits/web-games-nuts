@@ -59,8 +59,11 @@ export async function crossFoundryDroneRoom(page:Page){
   if(Math.abs((await state(page)).player.y+22-256)<2)break;
  }
  await ground(page,256);
- await page.keyboard.down('j');await to(page,345);await ground(page,256);
- await standingJump(page,426);await ground(page,224);
+ // Brake on the gantry, then approach the lip crouched. At full speed
+ // a stop at x345 can leave the player grounded on the floor below.
+ await page.keyboard.down('j');await to(page,327);await ground(page,256);
+ await alignOnLedge(page,351,256);await ground(page,256);
+ await standingJump(page,436);await ground(page,224);
  await fireFromCover(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);
 }
 
@@ -72,7 +75,8 @@ export async function clearFoundryGate(page:Page){
   const s=(window as any).__CINDER__(),guard=s.enemies.find((e:any)=>e.id==='m3h-security');
   return s.hp<=0||guard?.phase==='recovery'&&!s.projectiles.some((p:any)=>p.source==='walker-shot'&&p.vx<0&&p.x>s.player.x);
  });
- await to(page,224);await ground(page,320);
+ // Keep enough floor behind Mira for the recoil of a turret shot.
+ await to(page,244);await ground(page,320);
  try {await fireFromCover(page,['m3h-security','m3h-turret'],'crouch');}
  finally {await page.keyboard.up('s');}
 }
