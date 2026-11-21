@@ -602,14 +602,33 @@ async function solveRoom(page:Page){
      }
      expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
     }
+    if(id==='sw05d-last'){
+     // Once the previous recovery ends, the passive guardian cannot see Mira
+     // through the screen and will not start another volley on its own.  Read
+     // the scanner, briefly show above the screen, then return to shelter.
+     const current=(await state(page)).enemies.find((unit:any)=>unit.id===id);
+     if(current?.phase==='recovery'&&current.remaining<=850){
+      await page.waitForFunction(id=>{const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);return s.hp<=0||enemy?.hp<=0||enemy?.phase!=='recovery';},id);
+     }
+     const afterRecovery=(await state(page)).enemies.find((unit:any)=>unit.id===id);
+     if(afterRecovery?.hp>0&&!['telegraph','attack','recovery'].includes(afterRecovery.phase)){
+      for(let draw=0;draw<4;draw++){
+       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
+       await page.keyboard.press('Space',{delay:260});
+       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0;});
+       const shown=(await state(page)).enemies.find((unit:any)=>unit.id===id);
+       if(shown?.hp<=0||shown&&['telegraph','attack','recovery'].includes(shown.phase))break;
+      }
+     }
+    }
     // The screen is a low firing shelter, not full standing cover.  Wait for
     // the warned volley in the same crouch a player uses to read the slit.
     await page.keyboard.down('s');
     try{
      await page.waitForFunction(id=>{
       const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
-      return s.hp<=0||enemy?.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900&&
-       enemy?.phase==='recovery'&&enemy.remaining>850;
+      return s.hp<=0||enemy?.hp<=0||enemy?.phase==='recovery'&&enemy.remaining>850&&
+       (id==='sw05d-last'||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900);
      },id,{timeout:16000});
     }catch(error){await page.keyboard.up('s');throw error;}
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0){await page.keyboard.up('s');return;}
