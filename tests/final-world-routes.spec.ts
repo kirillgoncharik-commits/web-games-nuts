@@ -561,7 +561,7 @@ async function solveRoom(page:Page){
   const counterFromScannerCover=async(id:string)=>{
    for(let pass=0;pass<12;pass++){
     const before=await state(page),enemy=before.enemies.find((unit:any)=>unit.id===id);
-    if(!enemy||enemy.hp<=0)return;
+    if(!enemy||enemy.hp<=0){await page.keyboard.up('s');return;}
     // The relief guardian is dormant until the lead turret is gone and Mira
     // crosses its normal activation line. Briefly show above the same cover,
     // then wait out the warned volley before returning fire.
@@ -582,13 +582,16 @@ async function solveRoom(page:Page){
      // below it.  On each open scan, jump vertically from the marked screen
      // and fire only after the stock muzzle clears the top edge.  Its aimed
      // response then passes over the landing shelter.
+     // Stay low while waiting for the next open scan. Facing is already fixed
+     // by activation; tapping movement here exposes Mira to the previous fan.
+     await page.keyboard.down('s');
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-     await page.keyboard.up('s');await face(page,1);await page.keyboard.down('Space');
+     await page.keyboard.up('s');await page.keyboard.down('Space');
      try{
       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
       await page.keyboard.down('j');
       await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
-     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
+     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');await page.keyboard.down('s');}
      expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
      continue;
     }
