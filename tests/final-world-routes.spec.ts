@@ -264,7 +264,7 @@ async function combat(page:Page){
   await fireFromCover(page,['yu03d-relief']);await page.keyboard.down('s');
   await fireFromCover(page,['yu03d-substation'],'crouch');await page.keyboard.up('s');return;
  }
- if(entry.room==='YU03-C'&&entry.campaign.difficulty==='hard'){
+ if(entry.room==='YU03-C'&&entry.campaign.difficulty!=='easy'){
   await page.keyboard.down('j');await walk(page,203);
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),phase=(s.worldPulseElapsed??s.simMs)%5000;return s.hp<=0||phase>=2300&&phase<=3500;});
   await jump(page,261,308);await ground(page);
@@ -277,7 +277,32 @@ async function combat(page:Page){
   await standingJump(page,436);await ground(page,244);await to(page,581);await ground(page,320);
   const spec=rooms['YU03-C'].world!,rear=await state(page);
   if(worldContext(spec,rear.world,{x:rear.player.x,y:320},rear.simMs,rear.hp<rear.maxHp)==='repair')await page.keyboard.press('e');
-  await face(page,-1);await page.keyboard.down('s');
+  await face(page,-1);
+  if(entry.campaign.difficulty==='nightmare'){
+   // The right-hand crate screens both enemies. Wait out the watcher's burst,
+   // then expose only the two stock shots needed to destroy it. Repeat for the
+   // crawler instead of fighting both enemies in their shared lane.
+   const clearFromCrate=async(id:string)=>{
+    await page.waitForFunction(id=>{
+     const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
+     return s.hp<=0||enemy?.hp<=0||(enemy?.phase==='patrol'||enemy?.phase==='recovery'&&enemy.remaining>800)&&
+      !s.projectiles.some((shot:any)=>shot.team==='enemy'&&shot.x>s.player.x-20);
+    },id,{timeout:12000});
+    if((await state(page)).enemies.find((enemy:any)=>enemy.id===id)?.hp<=0)return;
+    await page.keyboard.down('j');
+    try{
+     await standingJump(page,552);await ground(page,288);
+     await page.waitForFunction(id=>{
+      const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((enemy:any)=>enemy.id===id)?.hp<=0;
+     },id,{timeout:3000});
+    }finally{await page.keyboard.up('j');}
+    expect((await state(page)).hp,'tunnel crate counterfire').toBeGreaterThan(0);
+    await to(page,581);await ground(page,320);await face(page,-1);
+   };
+   await clearFromCrate('yu03c-drone');
+   await clearFromCrate('yu03c-track');return;
+  }
+  await page.keyboard.down('s');
   await fireFromCover(page,['yu03c-track','yu03c-drone'],'crouch');await page.keyboard.up('s');return;
  }
  if(entry.room==='YU03-C'){
@@ -510,7 +535,7 @@ async function solveRoom(page:Page){
  const holdEntryCircuit=['YU01-D','YU02-C'].includes(s.room)||
   (s.campaign.difficulty!=='easy'&&['YU03-B','YU04-B','YU05-A'].includes(s.room))||
   (s.room==='YU04-C'&&s.campaign.difficulty==='nightmare')||
-  (s.room==='YU03-C'&&s.campaign.difficulty==='hard');
+  (s.room==='YU03-C'&&s.campaign.difficulty!=='easy');
  if(!holdEntryCircuit&&s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
   await approachContext(page,'switch',first);await page.keyboard.press('e');
@@ -525,18 +550,17 @@ async function solveRoom(page:Page){
   await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
  if(s.room==='SW05-D'&&s.campaign.difficulty!=='easy'){
-  // The scanner stops short of the far wall. Take the two ledges on an
-  // open signal and fight from outside the beam before collecting the conductor.
+  // The first scanner cover blocks both the beam and the two defenders. Fire
+  // over it during their warned volleys, then collect the conductor after the
+  // room is quiet. This avoids crossing through the turret's contact box.
   const openScan=()=>page.waitForFunction(()=>{
    const s=(window as any).__CINDER__();
    return s.hp<=0||(s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2450);
   });
-  await page.keyboard.down('j');await to(page,244);await ground(page,320);
-  await openScan();await jump(page,244,284);await ground(page,288);
-  await standingJump(page,384);await ground(page,320);await to(page,608);await ground(page,320);
-  await face(page,-1);await page.keyboard.down('s');await fireFromCover(page,['sw05d-beacon'],'crouch');
-  await page.keyboard.up('s');await fireFromCover(page,['sw05d-last']);
-  await openScan();await to(page,336);await ground(page,320);await standingJump(page,247);await ground(page,320);
+  await to(page,247);await ground(page,320);await face(page,1);
+  await fireFromCover(page,['sw05d-beacon']);
+  await fireFromCover(page,['sw05d-last']);
+  await openScan();
   for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
    await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
    await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
@@ -545,7 +569,6 @@ async function solveRoom(page:Page){
    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1200;});
    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
   }
-  await page.keyboard.up('j');
  }
  await combat(page);s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
