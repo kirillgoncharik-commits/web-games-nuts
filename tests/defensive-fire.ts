@@ -47,10 +47,7 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
         if(enemy.mob==='lidar-guardian')return enemy.remaining>350 && enemy.remaining<660;
         return !enemy.mob && enemy.remaining>140 && enemy.remaining<380;
       });
-      // Do not stand up into the tail of the previous volley merely to draw a
-      // new aim high. Once that shot has passed, the next warning or incoming
-      // projectile still triggers the same ordinary jump input.
-      const shouldJump=drawAimHigh&&!incoming || dangerous.some((shot:{x:number;vx:number})=>(state.player.x-shot.x)/shot.vx<jumpLead);
+      const shouldJump=drawAimHigh || dangerous.some((shot:{x:number;vx:number})=>(state.player.x-shot.x)/shot.vx<jumpLead);
       if(shouldJump && !jumping && state.player.vy===0){
         await page.keyboard.up('s');
         await page.keyboard.down('Space');

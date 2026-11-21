@@ -232,7 +232,7 @@ async function combat(page:Page){
   // Finish the floor patrol and let its last bolt pass while Mira remains
   // below that lane. Only then draw and counter the gallery watcher's burst.
   await fireFromCover(page,['yu05b-roof'],'crouch');
-  await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'));
+  await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'&&shot.source==='relay-crawler-shot'));
   await fireFromCover(page,['yu05b-drone'],'crouch');await page.keyboard.up('s');return;
  }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
@@ -550,7 +550,7 @@ async function solveRoom(page:Page){
   // The first moving shield is the intended scanner shelter. The turret can
   // only be damaged in recovery, so expose Mira on its right for that window
   // and jump back behind the shield before the next warned scan.
-  await to(page,247);await ground(page,320);await face(page,1);
+  await to(page,260);await ground(page,320);await face(page,1);
   const counterFromScannerCover=async(id:string)=>{
    for(let pass=0;pass<12;pass++){
     const before=await state(page),enemy=before.enemies.find((unit:any)=>unit.id===id);
@@ -560,14 +560,14 @@ async function solveRoom(page:Page){
     // then wait out the warned volley before returning fire.
     if(!enemy.activated||enemy.phase==='patrol'){
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-     await standingJump(page,id==='sw05d-last'?350:315);await ground(page,320);
-     await standingJump(page,247);await ground(page,320);
+     await standingJump(page,id==='sw05d-last'?350:326);await ground(page,320);
+     await standingJump(page,260);await ground(page,320);
      expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
     }
     await page.waitForFunction(id=>{
      const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
      return s.hp<=0||enemy?.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900&&
-      enemy?.phase==='recovery'&&enemy.remaining>1450;
+      enemy?.phase==='recovery'&&enemy.remaining>1100;
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
     await page.keyboard.down('j');
@@ -576,7 +576,7 @@ async function solveRoom(page:Page){
      // 288px ledge pass above the guardian's vulnerable ground-height body.
      await standingJump(page,326);await ground(page,320);
      await page.waitForTimeout(260);
-     await standingJump(page,247);await ground(page,320);
+     await standingJump(page,260);await ground(page,320);
     }finally{await page.keyboard.up('j');}
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
    }
