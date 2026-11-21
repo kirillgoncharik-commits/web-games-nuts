@@ -2,7 +2,7 @@ import {createEnemy,enemyRect} from '../games/cinder-shift/src/enemies';
 import {createEncounterState,encounterCompleted,stepEncounter,encounterSolids,encounterTiming,encounterThreat,syncEncounterStage,encounterThrowReserveMs} from '../games/cinder-shift/src/session/world-encounter';
 import {test,expect} from '@playwright/test';
 import {rooms} from '../games/cinder-shift/src/room-data';
-import {clearLine,intersects} from '../games/cinder-shift/src/geometry';
+import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {MissionAttempt,SimulationClock} from '../games/cinder-shift/src/mission';
 import {loadout} from '../games/cinder-shift/src/session/research';
 import {createKeyboardState,keyboardSolids,stepKeyboard,keyboardPhase,createPaperState,paperPhase,paperSolids,stepPaper,lampPhase,createClothState,clothSolid,stepCloth,createBridgeState,stepBridge,bridgeSolids,airPhase,airVelocity} from '../games/cinder-shift/src/session/world-environment';
@@ -49,6 +49,15 @@ test('rooftop circuit swaps a screen for real lower cover while the upper salvag
  expect(rooms['YU01-C'].enemies.map(e=>e.kind)).toEqual(['walker','drone']);expect(rooms['YU01-C'].cache).toMatchObject({x:416,y:244});
  expect(rooms['YU01-C'].solids.some(r=>r.x===224&&r.y===256&&r.width===80)).toBe(true);
  expect(worldSolids(spec,state).some(r=>r.id==='world-power:screen-A')).toBe(false);
+});
+test('the final radio cabinet passes standing fire in both directions and stops fire through its base',()=>{
+ const room=rooms['YU05-D'],left={x:112,y:292},right={x:360,y:292};
+ const cutter=room.solids.map(solid=>expand(solid,4,1.5));
+ const enemyShot=room.solids.map(solid=>expand(solid,4,3));
+ expect(clearLine(left,right,cutter)).toBe(true);
+ expect(clearLine({x:right.x,y:288},{x:left.x,y:295},enemyShot)).toBe(true);
+ expect(clearLine({x:left.x,y:305},{x:right.x,y:305},cutter)).toBe(false);
+ expect(room.solids.some(solid=>intersects(body(184,320),solid))).toBe(true);
 });
 test('first transmission earns both preparations before a fresh pulse warning and preserves the original contact IDs',()=>{
  const spec=rooms['YU01-D'].world!,state=createWorldState('YU01-D',spec);

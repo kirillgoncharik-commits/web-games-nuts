@@ -2,7 +2,7 @@
 import {expect,type Page} from '@playwright/test';
 import {fireFromCover} from './defensive-fire';
 import {state} from './helpers';
-import {alignOnLedge,ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
+import {alignOnLedge,face,ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
 
 export async function clearFoundryGuard(page:Page){
  await page.keyboard.down('j');
@@ -28,6 +28,8 @@ export async function crossFoundryDroneRoom(page:Page){
  // Shoot over the left edge of the gantry from the gap after the entry crate.
  await page.keyboard.down('j');await jump(page,140,228);await ground(page,320);
  await to(page,245);await ground(page,320);
+ // Recoil can leave Mira on the far side of the requested firing position.
+ await face(page,1);
  if((await state(page)).campaign.difficulty==='nightmare'){
   // The middle platform screens muzzle heights 254.5..273.5. The stock
   // cutter can hit the moving drone through the open lane on either side.

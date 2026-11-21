@@ -11,7 +11,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {alignOnLedge,standingJump,ground,jump,to,clear} from './route-helpers';
+import {alignOnLedge,standingJump,ground,jump,to,clear,face} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -106,24 +106,6 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   if(pickup)await page.keyboard.up(dir);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
-async function face(page:Page,direction:number){
- const key=direction>0?'d':'a';
- await page.keyboard.up(direction>0?'a':'d');
- await page.keyboard.down(key);
- try{
-  await page.waitForFunction(direction=>{
-   const s=(window as any).__CINDER__();
-   return s.hp<=0||s.player.facing===direction;
-  },direction);
- }finally{await page.keyboard.up(key);}
- await page.waitForFunction(()=>{
-  const s=(window as any).__CINDER__();
-  return s.hp<=0||Math.abs(s.player.vx)<1&&s.player.vy===0;
- });
- const end=await state(page);
- expect(end.hp,'turning in '+end.room).toBeGreaterThan(0);
- expect(end.player.facing).toBe(direction);
-}
 function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
  const x=contextCandidates(point.x).find(x=>x>32&&x<610
@@ -206,6 +188,15 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='YU05-D'){
+  // Return fire through the transmitter housing. Its slot admits both sides' shots at standing height.
+  // The lower panel protects Mira against steeply descending bolts.
+  await to(page,95);await ground(page,320);await face(page,1);
+  await fireFromCover(page,['yu05d-rift','yu05d-coast','yu05d-last']);
+  // The gap is a firing slit, so climb onto its top before the first contact.
+  await jump(page,132,178);await ground(page,276);
+  await to(page,248);await ground(page,320);return;
+ }
  if(entry.room==='YU01-B'&&entry.campaign.difficulty==='nightmare'){
   // Stand in the floor-level firing lane. The cabinet slit passes the
   // cutter; the bridge and cabinet screen shots aimed above Mira's head.
@@ -575,10 +566,14 @@ async function solveRoom(page:Page){
     await to(page,219);await ground(page,320);
     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>2600;});
     await to(page,452);await ground(page,320);
+    // The pulse ends at 432 and the lever reaches 464. Stay inside that
+    // safe strip after braking before asking the contextual action to switch.
+    await alignOnLedge(page,450,320);await ground(page,320);
     await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');
     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&6000-s.worldPulseElapsed%6000>1800;});
     await to(page,418);await page.keyboard.press('e');await to(page,452);await ground(page,320);
     await expect.poll(async()=>(await state(page)).world.phase).toBe(2);
+    await alignOnLedge(page,450,320);await ground(page,320);
     await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
     continue;
    }

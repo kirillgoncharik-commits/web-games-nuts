@@ -7,7 +7,8 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
   const crouched=start.player.crouching,feet=start.player.y+22;
   const turretLane=start.enemies.some((enemy:{id:string;kind:string;mob?:string})=>
     targets.includes(enemy.id)&&enemy.kind==='turret'&&!enemy.mob);
-  const jumpLead=turretLane?0.46:0.31;
+  // Give the radio commander's volleys enough lead to clear the cabinet slot.
+  const jumpLead=turretLane?0.46:start.room==='YU05-D'?0.43:0.31;
   let jumping=false;
   await page.keyboard.down('j');
   try {

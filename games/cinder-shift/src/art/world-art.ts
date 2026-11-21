@@ -23,9 +23,18 @@ export class WorldArt{
   if(room.id==='SW01-B'){
    decorations.draw('SW01-plates',192,236,76,62,1.45,1,.65);
    decorations.draw('SW01-kettle',380,246,65,58,1.45,1,.65);
-  }else if(room.id!=='YU01-B')for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i]==='YU01-laundry'?'YU01-balcony':props[i],x,y,w,h,1.45,1,.65);
+  }else if(room.id!=='YU01-B'&&room.id!=='YU05-D')for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i]==='YU01-laundry'?'YU01-balcony':props[i],x,y,w,h,1.45,1,.65);
   decorations.end();
   for(const r of room.solids)if(!r.id)scene.add.tileSprite(r.x,r.y,r.width,r.height,'production-material-'+sector).setOrigin(0).setDepth(2.2);
+  if(room.id==='YU05-D'){
+   // Rear uprights carry the hood. Leave the open band between the lower
+   // transmitter chassis and the hood visible for fire in either direction.
+   const rack=scene.add.graphics().setDepth(2.15);
+   for(const x of [164,201]){
+    rack.fillStyle(0x203541).fillRect(x,281,4,21);
+    rack.fillStyle(0x51666c).fillRect(x,282,1,18);
+   }
+  }
   if(room.world!.pulse?.kind==='steam'){
    const area=worldPulseArea(room.world!)!;
    const feed=scene.add.graphics().setDepth(3);
@@ -80,6 +89,7 @@ export class WorldArt{
     }
    }
    if(this.room.id==='YU01-B')p.draw('YU01-exchange',436,319,35,20,3.3);
+   if(this.room.id==='YU05-D')p.draw('YU05-relay',184,320,46,20,3.3);
   }
   if(s.carry){for(const c of s.carry.contacts)p.rect('contact-'+(c.active?'locked':c.open?'ready':'inactive'),c.rect,6.4);
    const item=s.carry.item,pose=item.state==='held'?'held':item.state==='thrown'?'thrown':item.state==='ready'?'ground':'landed';

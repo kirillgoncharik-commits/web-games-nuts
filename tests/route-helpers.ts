@@ -88,3 +88,22 @@ export async function alignOnLedge(page:Page,target:number,feet:number){
   expect(Math.abs((await state(page)).player.x-target),'standing jump launch position').toBeLessThanOrEqual(4);
  }finally{await page.keyboard.up('s');}
 }
+
+export async function face(page:Page,direction:number){
+ const key=direction>0?'d':'a';
+ await page.keyboard.up(direction>0?'a':'d');
+ await page.keyboard.down(key);
+ try{
+  await page.waitForFunction(direction=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||s.player.facing===direction;
+  },direction);
+ }finally{await page.keyboard.up(key);}
+ await page.waitForFunction(()=>{
+  const s=(window as any).__CINDER__();
+  return s.hp<=0||Math.abs(s.player.vx)<1&&s.player.vy===0;
+ });
+ const end=await state(page);
+ expect(end.hp,'turning in '+end.room).toBeGreaterThan(0);
+ expect(end.player.facing).toBe(direction);
+}
