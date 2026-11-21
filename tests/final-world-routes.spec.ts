@@ -617,9 +617,13 @@ async function solveRoom(page:Page){
      // The lower slit hits the ground turret; the flying guardian is higher.
      // Fire over the same screen in a vertical jump, only during recovery.
      await page.keyboard.up('s');
-     await page.keyboard.down('j');await page.keyboard.down('Space');
+     // Jump first and only begin firing once the muzzle has physically cleared
+     // the screen.  Starting both keys together wastes the first cooldown into
+     // the cover and leaves no airborne shot for the guardian.
+     await page.keyboard.down('Space');
      try{
       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
+      await page.keyboard.down('j');
       await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
      }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
     }else{
