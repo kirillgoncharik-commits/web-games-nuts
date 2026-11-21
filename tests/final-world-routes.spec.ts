@@ -567,15 +567,16 @@ async function solveRoom(page:Page){
     await page.waitForFunction(id=>{
      const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
      return s.hp<=0||enemy?.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900&&
-      enemy?.phase==='recovery'&&enemy.remaining>1100;
+      enemy?.phase==='recovery'&&enemy.remaining>850;
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
-    await page.keyboard.down('j');
     try{
      // Land just beyond the cover instead of on its top: stock shots from the
      // 288px ledge pass above the guardian's vulnerable ground-height body.
      await standingJump(page,326);await ground(page,320);
+     await page.keyboard.down('j');
      await page.waitForTimeout(260);
+     await page.keyboard.up('j');
      await standingJump(page,260);await ground(page,320);
     }finally{await page.keyboard.up('j');}
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
