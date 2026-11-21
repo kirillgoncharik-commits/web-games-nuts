@@ -10,7 +10,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {standingJump,ground,jump} from './route-helpers';
+import {standingJump,ground,jump,to,clear} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -79,6 +79,9 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   }
   if(!head&&p.vy===0&&(obstacle||Math.abs(p.x-previous)<1)){await page.keyboard.down('Space');await page.waitForTimeout(180);await page.keyboard.up('Space');}
   previous=p.x;await page.waitForTimeout(Math.abs(target-p.x)<48?20:80);
+  // Releasing the key before the snapshot prevents a long pickup approach
+  // from carrying Mira through a cleared doorway while the browser responds.
+  if(pickup)await page.keyboard.up(dir);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
 async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
@@ -152,11 +155,28 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='YU01-C'){
+  await jump(page,100,148);await ground(page,264);
+  await to(page,201);await ground(page,320);
+  await jump(page,312,363);await ground(page,288);await page.keyboard.down('s');
+  await page.waitForFunction(()=>{const e=(window as any).__CINDER__().enemies.find((e:any)=>e.id==='yu01c-anomaly');return e.aimLocked&&e.aim.y<=275;},undefined,{timeout:8000});
+  await page.keyboard.down('j');
+  await to(page,391);await ground(page,320);
+  await clear(page,['yu01c-anomaly']);
+  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||!s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>s.player.x-20);});
+  await page.keyboard.up('s');return;
+ }
  if(entry.room==='SW04-B'){
   await page.keyboard.down('s');await fireFromCover(page,['sw04b-rail'],'crouch');
   await page.keyboard.up('s');await walk(page,365);
   await page.keyboard.down('j');await jump(page,378,436);await ground(page,280);
-  await jump(page,475,519);await ground(page,320);
+  await jump(page,475,519);await ground(page);
+  // A rotor shot can knock Mira back onto the canopy during the descent.
+  // Walk off its right edge again before aiming at ground level.
+  while((await state(page)).player.y+22<318){
+   await to(page,524);await ground(page);
+   expect((await state(page)).hp).toBeGreaterThan(0);
+  }
   await fireFromCover(page,['sw04b-cloth']);return;
  }
  if(entry.room==='SW04-A'){
@@ -205,6 +225,19 @@ async function combat(page:Page){
 }
 async function solveRoom(page:Page){
  let s=await state(page);
+ if(s.room==='YU01-C'){
+  // The parapet slit covers the near orb while the A shutter screens the patrol.
+  await page.keyboard.down('j');await to(page,94);await ground(page,320);
+  await clear(page,['yu01c-aerial']);
+  const after=await state(page);
+  if(after.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>after.player.x)){
+   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x-s.player.x>0&&p.x-s.player.x<68);});
+   await standingJump(page,151);await ground(page,264);
+   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return !s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>s.player.x-20);});
+   await to(page,98);await ground(page,320);
+  }
+  s=await state(page);
+ }
  const entrance=rooms[s.room as keyof typeof rooms].world!;
  if(s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
@@ -252,7 +285,20 @@ async function solveRoom(page:Page){
  }
  s=await state(page);if(s.room.endsWith('-D')){await walk(page,584);await page.keyboard.down('e');await expect.poll(async()=>(await state(page)).powered).toBe(true);await page.keyboard.up('e');}
  s=await state(page);const repair=rooms[s.room as keyof typeof rooms].world?.repair;if(repair&&s.hp<s.maxHp&&!s.world.repaired){await walk(page,contextPoint(s,'repair',repair));await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);}
- const before=s.room;await walk(page,600,{exitFrom:before});s=await state(page);if(s.state==='complete'||s.room!==before)return;await page.keyboard.down('d');await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state==='complete';},before,{timeout:10000});await page.keyboard.up('d');
+ const before=s.room;
+ await walk(page,600,{exitFrom:before});
+ s=await state(page);
+ if(s.state==='complete')return;
+ if(s.room===before&&s.state==='playing'){
+  await page.keyboard.down('d');
+  try {await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.room!==before||s.state!=='playing';},before);}
+  finally {await page.keyboard.up('d');}
+ }
+ // The room id changes before the destination scene finishes mounting.
+ // Let the ordinary forward transition place Mira at the new left entrance.
+ await page.waitForFunction(before=>{const s=(window as any).__CINDER__();return s.state==='complete'||
+  s.state==='playing'&&s.room!==before&&s.player?.x<128&&s.player.vy===0;},before);
+
 }
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
  // Allow five full sectors and their real retries on a hosted browser.
@@ -283,13 +329,13 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
   // Nightmare route evidence in the exchange records an entry with two HP.
-  const hp=room==='SW03-C'||(['SW04-B','YU01-B'].includes(room)&&difficulty==='nightmare')?2:undefined;
+  const hp=room==='SW03-C'||(['SW04-B','YU01-B','YU01-C'].includes(room)&&difficulty==='nightmare')?2:undefined;
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
   if(hp!==undefined)expect((await state(page)).hp).toBe(hp);
