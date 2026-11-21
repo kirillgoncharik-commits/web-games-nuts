@@ -10,7 +10,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {standingJump,ground} from './route-helpers';
+import {standingJump,ground,jump} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -124,6 +124,18 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  const x=contextPoint(await state(page),action,point);await standAtHeight(page,{x,y:point.y});
 }
 async function combat(page:Page){
+ const entry=await state(page);
+ if(entry.room==='SW02-D'){
+  // Cross the keyboard housing once. The guard and its relief turret share
+  // a ground lane; moving to aim again exposes Mira to the guard's last burst.
+  await page.keyboard.down('j');
+  await jump(page,124,215);
+  await page.keyboard.down('s');
+  await ground(page,320);
+  try{await fireFromCover(page,['sw02d-lamp','sw02d-turret']);}
+  finally{await page.keyboard.up('s');}
+  return;
+ }
  for(let n=0;n<12;n++){
   const s=await state(page),alive=s.enemies.filter((e:any)=>e.hp>0);if(!alive.length)return;
   const en=alive.filter((e:any)=>!e.afterEnemy||!alive.some((lead:any)=>lead.id===e.afterEnemy)).sort((a:any,b:any)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
@@ -136,7 +148,7 @@ async function combat(page:Page){
   // The cutter fires horizontally. A diagonal visibility ray to the enemy's centre
   // can pass under a shelf that actually stops every standing shot.
   const walls=s.solids.map((rect:any)=>expand(rect,4,1.5));
-  const lane=candidates.flatMap(x=>(en.kind==='drone'?[292]:[292,305]).map(y=>({x,y})))
+  const lane=candidates.flatMap(x=>(en.kind==='drone'?[292]:[305,292]).map(y=>({x,y})))
    .find(({x,y})=>clearLine({x:x+Math.sign(en.x-x)*19,y},{x:en.x,y},walls));
   if(!lane)throw Error('no baseline firing lane '+JSON.stringify(s));
   const at=lane.x;
@@ -144,7 +156,7 @@ async function combat(page:Page){
   await page.keyboard.down('j');
   await standAtHeight(page,{x:at,y:320},en.id);
   if((await state(page)).enemies.find((e:any)=>e.id===en.id)?.hp<=0){await page.keyboard.up('j');continue;}
-  await face(page,en.x>at?1:-1);if(lane.y===305)await page.keyboard.down('s');await page.keyboard.down('j');
+  await face(page,en.x>at?1:-1);if(lane.y===305){await page.keyboard.down('s');await page.waitForFunction(()=>(window as any).__CINDER__().player.crouching);}await page.keyboard.down('j');
   try{await fireFromCover(page,[en.id]);}finally{await page.keyboard.up('s');}
  }
 }
@@ -197,6 +209,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
   }
   });
   const cleared=await state(page),result=cleared.campaign.result,sectorPressure=campaignPressure(cleared.roomStates);
+  expect(result.reason).toBe('objective_complete');
   expect(result.score_breakdown.rooms).toBe(400);
   expect(result.score_breakdown.combat).toBeGreaterThan(0);
   expect(result.score_breakdown.extraction).toBeGreaterThanOrEqual(1000);
@@ -227,3 +240,21 @@ for(const [mission,room] of [['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B
   if(room.endsWith('-D'))expect(end.state).toBe('complete');else expect(end.room).not.toBe(room);
  });
 }
+
+test('focused sector entry SW02 on stock equipment',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
+ test.setTimeout(240_000);
+ const difficulty=info.project.metadata.difficulty??'easy';
+ await encounter(page,{mission:'SW02',room:'SW02-A',difficulty,seed:4});
+ for(const room of ['SW02-A','SW02-B','SW02-C','SW02-D']){
+  await expect.poll(async()=>(await state(page)).room).toBe(room);
+  await solveRoom(page);
+ }
+ const end=await state(page);
+ expect(end.state).toBe('complete');
+ expect(end.campaign.result.score_breakdown.rooms).toBe(400);
+ await writeFile(info.outputPath('focused-sector.json'),JSON.stringify({
+  fixture:'sector entry SW02-A',source_sha:end.sha,seed:4,difficulty,
+  result:end.campaign.result,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates),
+ },null,2));
+});

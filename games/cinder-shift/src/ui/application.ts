@@ -315,7 +315,8 @@ export class Application{
   private async finish(result:Result){
     const a=this.attempt;if(!a||!a.finish(result))return;this.statistics.tick(performance.now(),false,false);void this.statistics.flush();this.game.scene.pause('Room');this.state=result==='victory'?'complete':'dead';this.controls.setScope('menu');this.effects.pauseWorld();this.effects.play(result==='victory'?'mission_win':'mission_death','result:'+a.id);
     this.emit('attempt_time',{active_ms:Math.round(a.activeMs),screen_ms:Math.round(this.screenMs),result});if(result==='death')this.emit('death',{reason:a.reason});
-    this.emit(a.mode==='training'?'test_complete':'mission_end',{result,reason:result==='death'?a.reason:'objective_complete',score:a.score});
+    const reason=result==='death'?a.reason:'objective_complete';
+    this.emit(a.mode==='training'?'test_complete':'mission_end',{result,reason,score:a.score});
     if(this.challengeEntry&&this.challengeSpec&&this.runSession){
       const elapsed=this.runSession.clock.elapsedMs(),breakdown=this.challengeLedger?.finish(elapsed,result==='victory'?'victory':'death');this.challengeBreakdown=breakdown||null;
       const run=this.runSession.finish({outcome:result,simMs:a.activeMs,score:breakdown?.total??a.score});this.challengeResult=run;
@@ -329,7 +330,7 @@ export class Application{
       }
       this.show('result');return;
     }
-    if(a.mode==='mission'&&this.campaign){if(this.settings.combatAssist)this.campaign.data.run_stats.assisted=true;this.campaign.applyResult({attempt_id:a.id,mission_id:a.missionId,result,reason:a.reason,hp:a.hp,max_hp:a.maxHp,score:a.score,score_breakdown:a.campaignScore?.breakdown(),active_ms:a.activeMs,screen_ms:this.screenMs,nodes:[...a.build.nodes],foundry_route:a.foundryRoute});this.busy=true;this.show('result');await this.persist();this.busy=false;}
+    if(a.mode==='mission'&&this.campaign){if(this.settings.combatAssist)this.campaign.data.run_stats.assisted=true;this.campaign.applyResult({attempt_id:a.id,mission_id:a.missionId,result,reason,hp:a.hp,max_hp:a.maxHp,score:a.score,score_breakdown:a.campaignScore?.breakdown(),active_ms:a.activeMs,screen_ms:this.screenMs,nodes:[...a.build.nodes],foundry_route:a.foundryRoute});this.busy=true;this.show('result');await this.persist();this.busy=false;}
     this.show('result');
   }
   private async expireChallenge(){

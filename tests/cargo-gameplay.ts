@@ -1,3 +1,4 @@
+import {fireFromCover} from './defensive-fire';
 import {expect,type Page} from '@playwright/test';
 import {state} from './helpers';
 import {jump,ground,to,clear,next,until} from './route-helpers';
@@ -6,8 +7,8 @@ export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security
   await jump(page,148,240);await ground(page,320);await page.keyboard.down('s');await clear(page,['d-security']);await next(page,'M2A');await page.keyboard.up('s');
   await jump(page,114,172);await ground(page,288);await jump(page,178,280);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m2a-drone']);await to(page,490);await page.keyboard.up('s');await ground(page,320);await next(page,'E',536);
-  await jump(page,130,224);await ground(page,320);await page.keyboard.down('s');await clear(page,['e-turret']);if(options.piercing){await page.keyboard.up('s');await to(page,398);await page.keyboard.down('Space');await page.waitForTimeout(170);await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).roomStates.E.brokenPanels).toContain('e-sheet');await page.keyboard.up('j');await page.keyboard.up('Space');await ground(page,320);await page.keyboard.down('s');}await next(page,'M2B');await page.keyboard.up('s');
-  await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m2b-walker']);await page.keyboard.up('s');
+  await jump(page,130,224);await ground(page,320);await page.keyboard.down('s');await fireFromCover(page,['e-turret']);if(options.piercing){await page.keyboard.up('s');await to(page,398);await page.keyboard.down('Space');await page.waitForTimeout(170);await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).roomStates.E.brokenPanels).toContain('e-sheet');await page.keyboard.up('j');await page.keyboard.up('Space');await ground(page,320);await page.keyboard.down('s');}await next(page,'M2B');await page.keyboard.up('s');
+  await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await fireFromCover(page,['m2b-walker']);await page.keyboard.up('s');
   // Demonstrate the optional shelf once; the other run leaves it unclaimed.
   if(circuit==='security'){
    await ground(page,320);await jump(page,212,172);await ground(page,288);

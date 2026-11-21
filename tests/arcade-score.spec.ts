@@ -11,14 +11,35 @@ import {startMission,roomA,completeFromB,state} from './helpers';
 test('each scoring event is paid once and only extraction delivers the optional cargo',()=>{
  for(const outcome of ['victory','death','abandoned'] as const){
   const score=new CampaignScore();
+  for(const [kind,award] of [['walker',50],['drone',75],['turret',150]] as const){
+   const before=score.total;
+   score.kill(kind,kind);expect(score.total).toBe(before+award);
+   score.kill(kind,kind);expect(score.total).toBe(before+award);
+  }
   for(let repeat=0;repeat<2;repeat++){
-   score.kill('p','walker');score.kill('d','drone');score.kill('t','turret');
    score.room('SW01-A');score.cache('c',150);score.patrol('elite',250);
   }
   expect(score.total).toBe(775);
   score.finish(outcome);score.finish('victory');score.room('late');
   expect(score.breakdown()).toEqual({combat:525,rooms:100,salvage:150,extraction:outcome==='victory'?1200:0});
   expect(score.total).toBe(outcome==='victory'?1975:775);
+ }
+});
+
+test('each attachment unlocks at its exact price in the pre-run shop',()=>{
+ for(const [item,price] of [['accelerator',200],['cycler',450]] as const){
+  const campaign=new Campaign(newWorldCampaign('c02-small-world',4));
+  campaign.data.stage='research';
+  expect(campaign.chooseAttachment(null)).toBe(true);
+  expect(campaign.chooseAttachment(item)).toBe(false);
+  campaign.data.loadout_budget=price-1;
+  expect(campaign.chooseAttachment(item)).toBe(false);
+  campaign.data.loadout_budget=price;
+  expect(campaign.chooseAttachment(item)).toBe(true);
+  campaign.prepare();campaign.begin();
+  expect(campaign.data.entry?.attachment).toBe(item);
+  expect(campaign.data.loadout_budget).toBe(0);
+  expect(campaign.chooseAttachment(item)).toBe(false);
  }
 });
 
