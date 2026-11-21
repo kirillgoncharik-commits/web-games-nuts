@@ -526,6 +526,25 @@ async function solveRoom(page:Page){
   await approachContext(page,'activate',target);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
+ if(s.room==='SW05-D'&&s.campaign.difficulty==='hard'){
+  // Move the scanner cover by installing the conductor. The left firing lane
+  // is sheltered during the first scan; the second scan comes from the left.
+  await page.keyboard.down('j');
+  for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
+   await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
+   await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
+   if(stage===1){await jump(page,284,374);await ground(page,320);}
+   await to(page,launch);await ground(page,320);await face(page,stage===1?-1:1);
+   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1200;});
+   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
+   if(stage===1){
+    await page.keyboard.down('j');await face(page,-1);await page.keyboard.down('s');
+    await fireFromCover(page,['sw05d-beacon'],'crouch');await page.keyboard.up('s');
+    await to(page,396);await ground(page,320);await face(page,1);await fireFromCover(page,['sw05d-last']);
+   }
+  }
+  await page.keyboard.up('j');
+ }
  await combat(page);s=await state(page);
  if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
@@ -633,7 +652,7 @@ for(const {mission_id:mission,room_id:room} of newCampaignRegistry.rooms){
   // Nightmare route evidence in the exchange records an entry with two HP.
   const entryHp:Partial<Record<string,number>>={'SW03-C':2,'YU03-C':3,'YU04-D':3};
   if(difficulty==='hard')entryHp['YU02-C']=1;
-  if(difficulty==='nightmare')for(const id of ['SW04-B','YU01-B','YU01-C','YU01-D'])entryHp[id]=2;
+  if(difficulty==='nightmare')for(const id of ['SW04-B','YU01-B','YU01-C','YU01-D','YU05-B'])entryHp[id]=2;
   const hp=entryHp[room];
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);

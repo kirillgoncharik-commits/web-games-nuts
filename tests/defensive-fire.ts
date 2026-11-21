@@ -32,12 +32,16 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
         shot.team==='enemy' && (state.player.x-shot.x)*Math.sign(shot.vx)>=-16);
       if(!incoming && state.player.vy===0 && targets.every(id=>state.enemies.find((enemy:{id:string})=>enemy.id===id)?.hp<=0))return;
       // Draw the fan above the landing point before the turret finishes aiming.
-      const drawAimHigh=state.enemies.some((enemy:{kind:string;mob?:string;phase:string;remaining:number;aimLocked:boolean})=>{
+      const drawAimHigh=state.enemies.some((enemy:{kind:string;mob?:string;guardian?:string;phase:string;remaining:number;aimLocked:boolean})=>{
         if(enemy.phase!=='telegraph'||enemy.aimLocked)return false;
-        const tunnelVolley=start.room==='YU03-C'&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler');
+        if(enemy.guardian==='beacon-warden'&&start.campaign.difficulty==='hard')return enemy.remaining>210&&enemy.remaining<410;
+        const drawTrackedAim=start.room==='YU03-C'||
+          (start.room==='YU05-B'&&start.campaign.difficulty==='nightmare')||
+          (start.room==='YU03-D'&&start.campaign.difficulty==='hard');
+        const trackedVolley=drawTrackedAim&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler');
         const warehouseVolley=start.room==='YU02-A'&&start.campaign.difficulty==='nightmare'&&
           (enemy.mob==='relay-crawler'||enemy.mob==='induction-orb');
-        if(tunnelVolley||warehouseVolley)return enemy.remaining>520&&enemy.remaining<800;
+        if(trackedVolley||warehouseVolley)return enemy.remaining>520&&enemy.remaining<800;
         if(enemy.kind!=='turret')return false;
         if(enemy.mob==='lidar-guardian')return enemy.remaining>350 && enemy.remaining<660;
         return !enemy.mob && enemy.remaining>140 && enemy.remaining<380;

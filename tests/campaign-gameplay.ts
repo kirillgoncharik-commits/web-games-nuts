@@ -170,7 +170,13 @@ export async function clearReactorPatrol(page:Page){
 
 export async function clearReactorEntrance(page:Page){
   await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await ground(page,320);
-  await fireFromCover(page,['m5a-security'],'crouch');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
+  await fireFromCover(page,['m5a-security'],'crouch');await to(page,338);await page.keyboard.up('s');
+  if((await state(page)).campaign.difficulty==='nightmare'){
+    await page.keyboard.down('j');await jump(page,338,396);await page.keyboard.down('s');await ground(page,320);
+    try{await fireFromCover(page,['m5a-turret'],'crouch');}finally{await page.keyboard.up('s');}
+  }else{
+    await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
+  }
   await jump(page,426,500);await ground(page,272);await to(page,580);await ground(page,320);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().roomStates.M5A.terminal,null,'outer power');await page.keyboard.up('e');await next(page,'M5F');
 }
 
@@ -231,6 +237,11 @@ export async function leaveRegulatorShelf(page:Page){
   await standingJump(page,290);await ground(page,256);
  }
  p=(await state(page)).player;
+ if((await state(page)).campaign.difficulty==='nightmare'&&Math.abs(p.y+22-256)<2){
+  // Cross the gap from the firing shelf onto the entry crate before the sweep.
+  await to(page,244);await ground(page,256);await standingJump(page,155);await ground(page,288);
+  await to(page,98);await ground(page,320);return;
+ }
  if(p.x>200){await to(page,200);await ground(page);}
  p=(await state(page)).player;
  if(p.x>110){
@@ -241,7 +252,7 @@ export async function leaveRegulatorShelf(page:Page){
 }
 
 export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
- const entry=await state(page),precise=entry.campaign.difficulty==='nightmare'&&entry.hp===1;
+ const entry=await state(page),precise=entry.campaign.difficulty==='nightmare';
  const phases=new Set<string>(),windows=new Set<string>(),build=entry.loadout;let lastWarning='',firing=false,climbed=false;
  async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
  async function climb(){
