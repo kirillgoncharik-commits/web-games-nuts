@@ -1,1 +1,79 @@
-m«ë
+name: Cinder Shift Sprint 2 runtime media
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: write
+concurrency:
+  group: cinder-sprint2-media-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  media:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [baseline-atlas, candidate-atlas, candidate-c01]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: driver
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.variant == 'baseline-atlas' && '38468184f63637f53b14d369c5b656e9ac36ed04' || github.sha }}
+          path: game
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Use the same audible capture driver
+        run: |
+          cp driver/tests/sprint2-media.spec.ts driver/tests/runtime-media.ts game/tests/
+          if [ '${{ matrix.variant }}' != baseline-atlas ]; then
+            cp driver/tests/campaign-journey.ts game/tests/
+          fi
+          cp driver/playwright.media.config.ts game/
+          cp driver/scripts/report-sprint2-media.mjs game/scripts/
+      - name: Build and capture real runtime
+        id: capture
+        continue-on-error: true
+        working-directory: game
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium || (sudo apt-get update && npx playwright install --with-deps chromium)
+          npm run build
+          if [ '${{ matrix.variant }}' = candidate-c01 ]; then
+            npx playwright test --config=playwright.media.config.ts --grep='audible fresh-profile' --output=test-results/media --reporter=line,json
+          else
+            npx playwright test --config=playwright.media.config.ts --grep='RW2 atlas' --output=test-results/media --reporter=line,json
+          fi
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_FILE: test-results/media-results.json
+      - name: Export rendered room sheets and audio metrics
+        if: always()
+        working-directory: game
+        run: node scripts/report-sprint2-media.mjs
+        env:
+          MEDIA_VARIANT: ${{ matrix.variant }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-sprint2-media-${{ matrix.variant }}
+          path: game/test-results
+      - name: Preserve runtime media in an isolated evidence branch
+        if: always()
+        working-directory: game
+        shell: bash
+        run: |
+          export GIT_INDEX_FILE="$RUNNER_TEMP/cinder-media-index"
+          git read-tree --empty
+          git add -f test-results
+          tree=$(git write-tree)
+          commit=$(git -c user.name='Cinder QA' -c user.email='cinder-qa@users.noreply.github.com' commit-tree "$tree" -m 'RW2 runtime media ${{ matrix.variant }}')
+          branch="qa/cinder-rw2-media-$GITHUB_RUN_ID-${{ matrix.variant }}"
+          git push origin "$commit:refs/heads/$branch"
+          echo "CINDER_MEDIA_BRANCH=$branch"
+          echo "CINDER_MEDIA_COMMIT=$commit"
+      - name: Require actual capture success
+        if: always()
+        run: test '${{ steps.capture.outcome }}' = success
