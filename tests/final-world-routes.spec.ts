@@ -64,10 +64,12 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   // A shelf whose underside is below the crouched head blocks the approach too.
   // The old 20px test missed YU04-C's 288..300 entry ledge, selected precision
   // crouching, and then tried to jump while crouch was held forever.
-  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<p.x+f*32+12&&r.x+r.width>p.x+f*32-12);
+  // A crate beyond the requested contact must not trigger a jump at the switch.
+  const probe=p.x+f*Math.min(32,Math.abs(target-p.x));
+  const obstacle=s.solids.some((r:any)=>r.y<feet&&r.y+r.height>feet-26&&r.x<probe+12&&r.x+r.width>probe-12);
   const precise=p.vy===0&&!obstacle&&Math.abs(target-p.x)<40;
   await Promise.all([page.keyboard.up(f>0?'a':'d'),page.keyboard.down(dir),head||precise?page.keyboard.down('s'):page.keyboard.up('s')]);
-  if(precise&&!enemyId&&!exitFrom&&!s.enemies.some((enemy:any)=>enemy.hp>0)){
+  if(precise&&!enemyId&&!exitFrom&&!s.enemies.some((enemy:any)=>enemy.hp>0&&enemy.active)){
    // Release before querying the whole room again. At low frame rates a
    // held direction could carry Mira back and forth across a valid contact.
    const duration=Math.min(150,Math.max(40,(Math.abs(target-p.x)-4)/58*1000));
@@ -150,6 +152,22 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='SW04-B'){
+  await page.keyboard.down('s');await fireFromCover(page,['sw04b-rail'],'crouch');
+  await page.keyboard.up('s');await walk(page,365);
+  await page.keyboard.down('j');await jump(page,378,436);await ground(page,280);
+  await jump(page,475,519);await ground(page,320);
+  await fireFromCover(page,['sw04b-cloth']);return;
+ }
+ if(entry.room==='SW04-A'){
+  await page.keyboard.down('j');await jump(page,119,231);
+  await page.keyboard.down('s');await ground(page,320);
+  // The low shot passes under the rotor to the ground patrol behind it.
+  await fireFromCover(page,['sw04a-pot'],'crouch');
+  await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  await fireFromCover(page,['sw04a-garden']);return;
+ }
  if(entry.room==='SW02-D'){
   // Cross the keyboard housing once. The guard and its relief turret share
   // a ground lane; moving to aim again exposes Mira to the guard's last burst.
@@ -265,13 +283,13 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
   // Nightmare route evidence in the exchange records an entry with two HP.
-  const hp=room==='SW03-C'||(room==='YU01-B'&&difficulty==='nightmare')?2:undefined;
+  const hp=room==='SW03-C'||(['SW04-B','YU01-B'].includes(room)&&difficulty==='nightmare')?2:undefined;
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
   if(hp!==undefined)expect((await state(page)).hp).toBe(hp);
@@ -287,7 +305,7 @@ for(const [mission,room] of [['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D
  });
 }
 
-for(const mission of ['SW02','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
+for(const mission of ['SW02','SW04','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
  test.setTimeout(240_000);
  const difficulty=info.project.metadata.difficulty??'easy';

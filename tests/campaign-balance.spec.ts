@@ -1,3 +1,9 @@
+import {encounter} from './encounter-helpers';
+import {jump} from './route-helpers';
+import {state} from './helpers';
+import en from '../games/cinder-shift/src/i18n/en.json' with {type:'json'};
+import ru from '../games/cinder-shift/src/i18n/ru.json' with {type:'json'};
+import {worldEnemyProfiles} from '../games/cinder-shift/src/world-enemies';
 import {expect,test} from '@playwright/test';
 import {Campaign,contentVersion,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';
 import {difficulties} from '../games/cinder-shift/src/session/difficulty';
@@ -62,4 +68,30 @@ test('world patrols have clear spawn positions and every mission has combat',()=
       }
     }
   }
+});
+
+test('all campaign damage sources have a readable result in both languages',()=>{
+ const causes=[
+  ...Object.keys(worldEnemyProfiles).map(mob=>mob+'-shot'),
+  ...['walker','drone','turret'].flatMap(kind=>[kind+'-shot',kind+'-contact']),
+  'security-aimed-shot','press','heat','regulator-contact','regulator-beam',
+  'world-pulse','world-water','world-load','world-scan','world-steam','world-traction',
+ ];
+ for(const catalog of [en,ru])for(const cause of causes){
+  expect(catalog,'result for '+cause).toHaveProperty(['results.reason.'+cause],expect.any(String));
+ }
+});
+
+test('a world robot kill shows its cause and partial score on the result screen',async({page})=>{
+ // One-HP room entry fixture. The enemies use their normal AI and projectiles.
+ await encounter(page,{mission:'YU01',room:'YU01-D',difficulty:'hard',seed:4,hp:1});
+ await jump(page,142,232);
+ await expect(page.getByTestId('retry')).toBeVisible({timeout:16000});
+ const result=(await state(page)).campaign.result;
+ expect(result.result).toBe('death');
+ expect(['induction-orb-shot','relay-crawler-shot']).toContain(result.reason);
+ const catalog:Record<string,string>=(await page.locator('html').getAttribute('lang'))==='ru'?ru:en;
+ await expect(page.getByText(catalog['results.reason'].replace('{reason}',catalog['results.reason.'+result.reason]),{exact:true})).toBeVisible();
+ expect(result.score_breakdown.extraction).toBe(0);
+ expect(result.score).toBe(result.score_breakdown.rooms);
 });

@@ -1,7 +1,15 @@
 // Full-campaign trusted-input driver. No fixture imports or simulation writes.
 import {expect,type Page} from '@playwright/test';
+import {fireFromCover} from './defensive-fire';
 import {state} from './helpers';
 import {ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
+
+export async function clearFoundryGuard(page:Page){
+ await page.keyboard.down('j');
+ await jump(page,160,248);await page.keyboard.down('s');await ground(page,320);
+ try {await fireFromCover(page,['m3f-security'],'crouch');}
+ finally {await page.keyboard.up('s');}
+}
 
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
@@ -12,7 +20,7 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
   await jump(page,148,250);await ground(page,320);await counterRam(page,'m3e-ram');
   await to(page,384);await drone(page,'m3e-drone');await cross(page,'m3e-furnace');await next(page,'M3F',560);
-  await jump(page,160,270);await ground(page,320);await clear(page,['m3f-security']);await to(page,556);await ground(page,320);
+  await clearFoundryGuard(page);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');
   if(route==='service'){
    await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,370);await ground(page,272);await clear(page,['m3b-drone']);await next(page,'M3G',536);
@@ -103,10 +111,35 @@ export async function campaignReactor(page:Page){
  await jump(page,178,272);await ground(page,320);await jump(page,370,474);await ground(page,320);await to(page,568);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'preboss terminal');await page.keyboard.up('e');await next(page,'M5D');
 }
 
+// Recover after a knockback to either side of the firing shelf.
+export async function leaveRegulatorShelf(page:Page){
+ await ground(page);
+ let p=(await state(page)).player;
+ if(p.x>=314&&p.y+22>258){
+  if(p.x>390){await to(page,384);await ground(page);}
+  p=(await state(page)).player;
+  if(Math.abs(p.y+22-288)>2){await standingJump(page,326);await ground(page,288);}
+  else if(p.x>334){await to(page,326);await ground(page,288);}
+  await standingJump(page,290);await ground(page,256);
+ }
+ p=(await state(page)).player;
+ if(p.x>200){await to(page,200);await ground(page);}
+ p=(await state(page)).player;
+ if(p.x>110){
+  if(p.y+22>300&&p.x>=185)await standingJump(page,100);
+  else await to(page,100);
+  await ground(page,320);
+ }
+}
+
 export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
  const phases=new Set<string>(),windows=new Set<string>(),build=(await state(page)).loadout;let lastWarning='',firing=false,climbed=false;
  async function fire(on:boolean){if(on&&!firing&&(await state(page)).player.facing<0){await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face the core');await page.keyboard.up('d');}if(on!==firing){await page.keyboard[on?'down':'up']('j');firing=on;}}
- async function climb(){await jump(page,106,180);await ground(page,288);await standingJump(page,272);await ground(page,256);climbed=true;}
+ async function climb(){
+  if((await state(page)).player.x>112)await leaveRegulatorShelf(page);
+  await jump(page,106,157);await ground(page,288);
+  await jump(page,173,267);await ground(page,256);climbed=true;
+ }
 
  await climb();
   for(let i=0;i<2200;i++){
@@ -114,12 +147,12 @@ export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
    if(p.stage==='lanes'){
     // A real hit can knock Mira off the firing shelf. Recover with ordinary
     // movement instead of waiting forever at a height she no longer occupies.
-    if(s.player.y+22>270){await fire(false);await ground(page);await to(page,100);await ground(page,320);await climb();lastWarning='';continue;}
+    if(s.player.y+22>270){await fire(false);await leaveRegulatorShelf(page);await climb();lastWarning='';continue;}
     if(p.phase==='warning'&&p.warningId!==lastWarning){await fire(false);lastWarning=p.warningId;await to(page,s.boss.aimX<272?307:237);await ground(page);}
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
     if(p.stage==='transition'||p.phase==='warning'){
-     await fire(false);if(s.player.x>110){if(s.player.x>200){await to(page,200);await ground(page,320);}await jump(page,(await state(page)).player.x,100);await ground(page,320);}climbed=false;
+     await fire(false);await leaveRegulatorShelf(page);climbed=false;
     }else if(p.phase==='active'){
      await fire(false);if(!climbed&&p.rects[0].x>330)await climb();
     }else if(p.phase==='core'){

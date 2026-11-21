@@ -51,7 +51,9 @@ export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security
   await jump(page,226,324);await ground(page,320);await to(page,550);
   await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().cellInstalled,null,'cell installation');await page.keyboard.up('e');
   await next(page,'G');
-  await jump(page,130,224);await ground(page,320);await page.keyboard.down('s');await clear(page,['g-security','g-turret']);await page.keyboard.up('s');
+  await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await ground(page,320);
+  await to(page,263);await ground(page,320);
+  await fireFromCover(page,['g-security','g-turret'],'crouch');await page.keyboard.up('s');
   await jump(page,522,600);await ground(page,320);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'checkpoint confirmation');await page.keyboard.up('e');
   await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().state==='complete',null,'Cargo result');await page.keyboard.up('d');
  const won=await state(page);expect(won.campaign.completed_missions).toEqual(['airlock','cargo']);expect(won.campaign.reward_ledger).toHaveLength(2);expect(Object.values(won.roomStates).filter((r:any)=>r.visited)).toHaveLength(9);if(options.buffer)expect(Object.values(won.roomStates).some((r:any)=>r.bufferUsed)).toBe(true);return won;

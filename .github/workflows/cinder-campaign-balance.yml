@@ -56,8 +56,12 @@ jobs:
       - run: npm run build
       - name: Verify awards, purchases, weapon fire and old saves
         run: npx playwright test --project=chromium tests/arcade-score.spec.ts tests/personal-records-legacy.spec.ts tests/personal-records-model.spec.ts tests/personal-records-legacy-model.spec.ts tests/new-modes-core.spec.ts tests/campaign-balance.spec.ts --output=test-results
+      - name: Verify challenge results and personal records in the browser
+        run: npx playwright test --project=chromium tests/new-modes-ui.spec.ts tests/personal-records-ui.spec.ts --grep 'Time Attack finishes|Score Attack uses|actual training fire|published-format challenge PB' --output=test-results-ui
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cinder-economy-and-records
-          path: test-results
+          path: |
+            test-results
+            test-results-ui

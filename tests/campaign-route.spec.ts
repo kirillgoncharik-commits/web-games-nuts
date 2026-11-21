@@ -4,6 +4,8 @@ import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
+import {clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {jump,ground,to} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
 test('a fresh profile completes five sectors, saves the real campaign record and reloads it once',async({page},info)=>{await campaignJourney(page,info);});
@@ -28,4 +30,43 @@ test('focused sector entry Cargo on stock equipment',async({page},info)=>{
   fixture:'Cargo sector entry D',source_sha:end.sha,seed:4,difficulty,
   result:end.campaign.result,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates),
  },null,2));
+});
+
+test('focused regulator entry recovers from the floor and completes evacuation',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture');
+ test.setTimeout(180_000);
+ await encounter(page,{mission:'reactor',room:'M5D',difficulty:info.project.metadata.difficulty,seed:4});
+ await jump(page,106,157);await ground(page,288);
+ await jump(page,173,267);await ground(page,256);
+ await to(page,374);await ground(page,320);
+ await leaveRegulatorShelf(page);
+ const returned=await state(page);
+ expect(returned.player.x).toBeLessThan(112);
+ expect(returned.bossHp).toBeGreaterThan(0);
+ await campaignRegulator(page);
+ expect((await state(page)).state).toBe('complete');
+});
+
+test('focused sector entry Reactor on stock equipment',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
+ test.setTimeout(270_000);
+ const difficulty=info.project.metadata.difficulty;
+ await encounter(page,{mission:'reactor',room:'M5A',difficulty,seed:4});
+ await campaignReactor(page);
+ await campaignRegulator(page);
+ const end=await state(page);
+ expect(end.state).toBe('complete');
+ await writeFile(info.outputPath('focused-sector.json'),JSON.stringify({
+  fixture:'Reactor sector entry M5A',source_sha:end.sha,seed:4,difficulty,
+  result:end.campaign.result,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates),
+ },null,2));
+});
+
+test('focused room entry M3F security patrol',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture');
+ await encounter(page,{mission:'foundry',room:'M3F',difficulty:info.project.metadata.difficulty,seed:4});
+ await clearFoundryGuard(page);
+ const end=await state(page);
+ expect(end.hp).toBe(end.maxHp);
+ expect(end.enemies.find((enemy:{id:string})=>enemy.id==='m3f-security').hp).toBeLessThanOrEqual(0);
 });
