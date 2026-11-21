@@ -260,6 +260,20 @@ test('the fixed beacon turret leaves each scanner shield and conductor socket cl
  for(const stage of room.world!.encounter!.stages)expect(intersects(hitbox,stage.cover),stage.contactId).toBe(false);
  for(const contact of room.world!.carry!.contacts)expect(intersects(hitbox,contact.rect),contact.id).toBe(false);
 });
+test('the first beacon screen blocks its scan and keeps a crouched stock firing slit',()=>{
+ const stage=rooms['SW05-D'].world!.encounter!.stages[0],cover=stage.cover;
+ expect(clearLine(stage.origin,{x:260,y:stage.origin.y},[cover])).toBe(false);
+ expect(clearLine({x:279,y:305},{x:344,y:305},[cover])).toBe(true);
+ expect(cover.y+cover.height).toBeLessThan(305);
+});
+test('Adriatic pressure rooms keep short marked shelters without covering enemies',()=>{
+ for(const id of ['YU03-D','YU04-C','YU05-A','YU05-B'] as const){
+  const room=rooms[id],shelter=room.safeZones?.find(zone=>zone.id?.startsWith(id.slice(0,4).toLowerCase()));
+  expect(shelter,id).toBeDefined();expect(shelter!.shielded,id).toBe(true);
+  expect(shelter!.width,id).toBeLessThanOrEqual(48);
+  for(const enemy of room.enemies)expect(intersects(enemyRect(createEnemy(enemy)),shelter!),id+':'+enemy.id).toBe(false);
+ }
+});
 test('all dock and beacon covers fit the base jump and leave their live contact clear',()=>{
  for(const id of ['SW01-D','SW05-D'] as const){const room=rooms[id];for(const stage of room.world!.encounter!.stages){
   expect(stage.cover.height).toBeLessThan(50);expect(room.solids.some(r=>intersects(stage.cover,r))).toBe(false);

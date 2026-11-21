@@ -39,8 +39,9 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
         const drawTrackedAim=start.room==='YU03-C'||
           (start.room==='YU05-A'&&start.campaign.difficulty!=='easy')||
           (start.room==='YU05-B'&&start.campaign.difficulty==='nightmare')||
+          (start.room==='YU04-C'&&start.campaign.difficulty==='nightmare')||
           (start.room==='YU03-D'&&start.campaign.difficulty!=='easy');
-        const trackedVolley=drawTrackedAim&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler');
+        const trackedVolley=drawTrackedAim&&(enemy.mob==='signal-watcher'||enemy.mob==='relay-crawler'||enemy.mob==='induction-orb');
         const warehouseVolley=start.room==='YU02-A'&&start.campaign.difficulty==='nightmare'&&
           (enemy.mob==='relay-crawler'||enemy.mob==='induction-orb');
         if(trackedVolley||warehouseVolley)return enemy.remaining>520&&enemy.remaining<800;

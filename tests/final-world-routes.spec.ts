@@ -235,9 +235,12 @@ async function combat(page:Page){
   // over this ground lane. Stay standing: both Adriatic defenders then mark a
   // visible high jump before locking their next volley, leaving the landing
   // point clear for stock-weapon counterfire.
+  // Remove the exposed watcher during its first recovery before drawing the
+  // floor patrol into the same marked pocket.
+  await fireFromCover(page,['yu05b-drone']);
   await fireFromCover(page,['yu05b-roof']);
   await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'&&shot.source==='relay-crawler-shot'));
-  await fireFromCover(page,['yu05b-drone']);return;
+  return;
  }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
   // The closed ridge door screens the two distant defenders during the first duel.
@@ -551,9 +554,9 @@ async function solveRoom(page:Page){
   await page.keyboard.up('j');
  }
  if(s.room==='SW05-D'&&s.campaign.difficulty==='nightmare'){
-  // The first moving shield is the intended scanner shelter. The turret can
-  // only be damaged in recovery, so expose Mira on its right for that window
-  // and jump back behind the shield before the next warned scan.
+  // The first moving shield blocks the scan at head height and retains a low
+  // firing slit. Draw each warned volley above it, then crouch behind the same
+  // screen and counter through the slit during the exposed recovery window.
   await to(page,260);await ground(page,320);await face(page,1);
   const counterFromScannerCover=async(id:string)=>{
    for(let pass=0;pass<12;pass++){
@@ -564,8 +567,13 @@ async function solveRoom(page:Page){
     // then wait out the warned volley before returning fire.
     if(!enemy.activated||enemy.phase==='patrol'){
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-     await standingJump(page,id==='sw05d-last'?350:326);await ground(page,320);
-     await standingJump(page,260);await ground(page,320);
+     if(id==='sw05d-last'){
+      await standingJump(page,350);await ground(page,320);
+      await standingJump(page,260);await ground(page,320);
+     }else{
+      await page.keyboard.press('Space',{delay:260});
+      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0;});
+     }
      expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
     }
     await page.waitForFunction(id=>{
@@ -574,20 +582,9 @@ async function solveRoom(page:Page){
       enemy?.phase==='recovery'&&enemy.remaining>850;
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
-    try{
-     // The lead turret is only 18px beyond the cover landing, so a right-facing
-     // muzzle there starts behind its hitbox. Vault to its far side during the
-     // exposed window and fire back; the relief guardian retains the longer
-     // left-hand lane once it replaces the lead.
-     const firingX=id==='sw05d-beacon'?370:326;
-     await standingJump(page,firingX);await ground(page,320);
-     await face(page,id==='sw05d-beacon'?-1:1);
-     await page.keyboard.down('j');
-     await page.waitForTimeout(260);
-     await page.keyboard.up('j');
-     await standingJump(page,260);await ground(page,320);
-     await face(page,1);
-    }finally{await page.keyboard.up('j');}
+    await page.keyboard.down('s');
+    try{await fireFromCover(page,[id],'crouch');}
+    finally{await page.keyboard.up('s');await page.keyboard.up('j');}
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
    }
    throw Error('scanner-cover counter did not clear '+id);
