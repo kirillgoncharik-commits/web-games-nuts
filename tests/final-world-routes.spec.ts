@@ -553,32 +553,7 @@ async function solveRoom(page:Page){
   await approachContext(page,'activate',target);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
- if(s.room==='SW05-D'&&s.campaign.difficulty==='hard'){
-  // The scanner stops short of the far wall. Take the two ledges on an
-  // open signal and fight from outside the beam before collecting the conductor.
-  const openScan=()=>page.waitForFunction(()=>{
-   const s=(window as any).__CINDER__();
-   return s.hp<=0||(s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2450);
-  });
-  await page.keyboard.down('j');await to(page,244);await ground(page,320);
-  await openScan();await jump(page,244,284);await ground(page,288);
-  await standingJump(page,384);await ground(page,320);await to(page,608);await ground(page,320);
-  await face(page,-1);await page.keyboard.down('s');await fireFromCover(page,['sw05d-beacon'],'crouch');
-  await page.keyboard.up('s');await fireFromCover(page,['sw05d-last']);
-  // Start the return jump far enough from the screen for the stock jump arc
-  // to clear its right edge; launching at the edge can stop against the wall.
-  await openScan();await to(page,376);await ground(page,320);await standingJump(page,247);await ground(page,320);
-  for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
-   await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
-   await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
-   if(stage===1){await jump(page,284,374);await ground(page,320);}
-   await to(page,launch);await ground(page,320);await face(page,stage===1?-1:1);
-   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1200;});
-   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
-  }
-  await page.keyboard.up('j');
- }
- if(s.room==='SW05-D'&&s.campaign.difficulty==='nightmare'){
+ if(s.room==='SW05-D'&&s.campaign.difficulty!=='easy'){
   // The first moving shield blocks the scan at head height and retains a low
   // firing slit. Draw each warned volley above it, then crouch behind the same
   // screen and counter through the slit during the exposed recovery window.
