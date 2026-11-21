@@ -34,7 +34,7 @@ export async function fireFromCover(page:Page, targets:readonly string[],stance?
       // Draw the fan above the landing point before the turret finishes aiming.
       const drawAimHigh=state.enemies.some((enemy:{kind:string;mob?:string;guardian?:string;phase:string;remaining:number;aimLocked:boolean})=>{
         if(enemy.phase!=='telegraph'||enemy.aimLocked)return false;
-        if(enemy.guardian==='beacon-warden'&&start.campaign.difficulty==='hard')return enemy.remaining>210&&enemy.remaining<410;
+        if(enemy.guardian==='beacon-warden'&&start.campaign.difficulty!=='easy')return enemy.remaining>210&&enemy.remaining<410;
         const drawTrackedAim=start.room==='YU03-C'||
           (start.room==='YU05-B'&&start.campaign.difficulty==='nightmare')||
           (start.room==='YU03-D'&&start.campaign.difficulty==='hard');

@@ -526,10 +526,19 @@ async function solveRoom(page:Page){
   await approachContext(page,'activate',target);await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.phase).toBe(1);
  }
- if(s.room==='SW05-D'&&s.campaign.difficulty==='hard'){
-  // Move the scanner cover by installing the conductor. The left firing lane
-  // is sheltered during the first scan; the second scan comes from the left.
-  await page.keyboard.down('j');
+ if(s.room==='SW05-D'&&s.campaign.difficulty!=='easy'){
+  // The scanner stops short of the far wall. Take the two ledges on an
+  // open signal and fight from outside the beam before collecting the conductor.
+  const openScan=()=>page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||(s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2450);
+  });
+  await page.keyboard.down('j');await to(page,244);await ground(page,320);
+  await openScan();await jump(page,244,284);await ground(page,288);
+  await standingJump(page,384);await ground(page,320);await to(page,608);await ground(page,320);
+  await face(page,-1);await page.keyboard.down('s');await fireFromCover(page,['sw05d-beacon'],'crouch');
+  await page.keyboard.up('s');await fireFromCover(page,['sw05d-last']);
+  await openScan();await to(page,336);await ground(page,320);await standingJump(page,247);await ground(page,320);
   for(const [stage,pickup,launch] of [[0,108,188],[1,240,452],[2,424,496]]){
    await to(page,pickup);await ground(page,320);await page.keyboard.press('e');
    await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');
@@ -537,11 +546,6 @@ async function solveRoom(page:Page){
    await to(page,launch);await ground(page,320);await face(page,stage===1?-1:1);
    await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1200;});
    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(stage+1);
-   if(stage===1){
-    await page.keyboard.down('j');await face(page,-1);await page.keyboard.down('s');
-    await fireFromCover(page,['sw05d-beacon'],'crouch');await page.keyboard.up('s');
-    await to(page,396);await ground(page,320);await face(page,1);await fireFromCover(page,['sw05d-last']);
-   }
   }
   await page.keyboard.up('j');
  }

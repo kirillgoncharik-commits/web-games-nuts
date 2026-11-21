@@ -287,7 +287,7 @@ export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
      }}
     if(p.phase==='core'){windows.add(p.stage+':'+p.cycle);await fire(true);if(build.active==='W4')await page.keyboard.press('k');}else await fire(false);
    }else if(p.stage==='transition'||p.stage==='sweep'){
-    if(p.stage==='transition'||p.phase==='warning'){
+    if(p.stage==='transition'||p.phase==='warning'||(precise&&p.phase==='idle'&&climbed)){
      await fire(false);await leaveRegulatorShelf(page);climbed=false;
     }else if(p.phase==='active'){
      await fire(false);if(!climbed&&p.rects[0].x>330)await climb();
