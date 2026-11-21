@@ -1,3 +1,4 @@
+import {guardians,guardianBurst} from './world-guardians';
 import config from '../game.config.json' with {type:'json'};
 import type {EnemyDefinition,EnemyKind,EnemyPreset,Rect,Point} from './room-data';
 import {clearLine,intersects} from './geometry';
@@ -11,7 +12,7 @@ export type EnemyState=EnemyDefinition&{behavior:Behavior;home:Point;hp:number;s
 export function createEnemy(def:EnemyDefinition):EnemyState{
  if(def.mob&&worldEnemyProfiles[def.mob].kind!==def.kind)throw Error('invalid_world_enemy_kind');
  const preset=enemyPresets[def.preset];if(def.aimed&&def.preset!=='walker_security')throw Error('invalid_aimed_guard');if(!preset||preset.kind!==def.kind||def.kind==='turret'&&preset.behavior==='aggressive')throw Error('invalid_enemy_preset');
- return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,provoked:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0,aimLocked:false};
+ return{...structuredClone(def),behavior:preset.behavior,home:{x:def.x,y:def.y},hp:def.guardian?guardians[def.guardian].hp:config.combat[def.kind].hp,state:def.x===def.end.x&&def.y===def.end.y?'idle':'patrol',attackPhase:null,phaseMs:250,cooldown:0,direction:1,shots:0,shotFlashMs:0,aim:{x:def.x-320,y:def.y-17},active:false,provoked:false,warnings:0,acquireMs:0,memoryMs:0,lastSeen:null,noticeMs:0,stuckMs:0,aimLocked:false};
 }
 // Impacts can trigger a powered encounter before its proximity threshold. The
 // next AI tick still owns room threat limits and the full warning; repeated hits
@@ -97,14 +98,19 @@ export function stepEnemy(e:EnemyState,ms:number,player:Point,solids:Rect[],shot
    }else{e.phaseMs-=ms;}
    if(e.preset!=='ram_charge'&&e.phaseMs<=0){
     const direction=Math.sign(e.aim.x-e.x)||-1,from=enemyMuzzle(e,direction);
-    if(e.kind==='walker'){
+    const pattern=e.guardian?guardianBurst(e.guardian,e.hp):undefined;
+    if(pattern){
+     const aim=Math.atan2(e.aim.y-from.y,e.aim.x-from.x)+(pattern[e.shots]??0);
+     const velocity={x:Math.cos(aim)*cfg.projectile_speed,y:Math.sin(aim)*cfg.projectile_speed};
+     if(clearLine(from,{x:from.x+velocity.x*.1,y:from.y+velocity.y*.1},solids))shots.fire(from,velocity,'enemy',e.guardian+'-shot');
+    }else if(e.kind==='walker'){
      if(e.aimed||mob?.pattern==='locked'){const angle=Math.atan2(e.aim.y-from.y,e.aim.x-from.x);if(clearLine(from,e.aim,solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy',e.mob?e.mob+'-shot':'security-aimed-shot');}
      else if(clearLine(from,{x:e.aim.x,y:from.y},solids))shots.fire(from,{x:direction*cfg.projectile_speed,y:0},'enemy','walker-shot');
     }else{
      const center={x:e.x,y:e.kind==='drone'?e.y:e.y-17},angle=Math.atan2(e.aim.y-center.y,e.aim.x-center.x)+(e.mob?worldShotOffset(e.mob,e.shots):e.kind==='turret'?(e.shots-1)*.12:0),to={x:from.x+Math.cos(angle)*300,y:from.y+Math.sin(angle)*300};
      if(clearLine(from,{x:from.x+Math.cos(angle)*18,y:from.y+Math.sin(angle)*18},solids))shots.fire(from,{x:Math.cos(angle)*cfg.projectile_speed,y:Math.sin(angle)*cfg.projectile_speed},'enemy',(e.mob??e.kind)+'-shot');
     }
-    e.shotFlashMs=75;e.shots++;e.phaseMs=cfg.burst_interval_ms??0;if(e.shots>=(e.aimed?1:cfg.burst_count))recovery(e);
+    e.shotFlashMs=75;e.shots++;e.phaseMs=cfg.burst_interval_ms??0;if(e.shots>=(pattern?.length??(e.aimed?1:cfg.burst_count)))recovery(e);
    }
   }else if(e.cooldown<=0){e.attackPhase=null;e.state=e.behavior==='aggressive'?'chase':hasRoute(e)?'patrol':'idle';e.phaseMs=250;if(e.behavior==='passive')e.cooldown=cfg.patrol_ms;}
   return;

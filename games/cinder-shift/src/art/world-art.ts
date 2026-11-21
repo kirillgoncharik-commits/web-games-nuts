@@ -19,10 +19,16 @@ export class WorldArt{
   const props=productionArt.sectors[sector],variant=room.id.charCodeAt(room.id.length-1)-65;
   const decorations=new ProductionSprites(scene);decorations.begin();
   // Rear props remain subdued and never provide collision.
-  for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i],x,y,w,h,1.45,1,.65);
+  for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i]==='YU01-laundry'?'YU01-balcony':props[i],x,y,w,h,1.45,1,.65);
   decorations.end();
   for(const r of room.solids)if(!r.id)scene.add.tileSprite(r.x,r.y,r.width,r.height,'production-material-'+sector).setOrigin(0).setDepth(2.2);
-  for(const q of room.world!.switches??[])scene.add.text(q.x,q.y-57,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#efd6a4',backgroundColor:'#142331'}).setOrigin(.5).setDepth(6.6);
+  for(const q of room.world!.switches??[]){
+    const bezel=scene.add.graphics().setDepth(6.55);
+    bezel.fillStyle(0x15242f).fillRoundedRect(q.x-24,q.y-68,48,20,3);
+    bezel.lineStyle(2,0x8e9a94).strokeRoundedRect(q.x-24,q.y-68,48,20,3);
+    bezel.fillStyle(0xd4ac69).fillRect(q.x-21,q.y-60,2,3).fillRect(q.x+19,q.y-60,2,3);
+    scene.add.text(q.x,q.y-58,'A / B',{fontFamily:'monospace',fontSize:'10px',color:'#efd6a4',backgroundColor:'#142331'}).setOrigin(.5).setDepth(6.6);
+   }
  }
  render(player:Player,a:MissionAttempt,state:RoomState,reduced:boolean){
   const spec=this.room.world!,s=state.world!,now=a.clock.now,g=this.cues,p=this.sprites;p.begin();g.clear();this.motion.render(state,now,reduced,player.x);
@@ -41,7 +47,10 @@ export class WorldArt{
   if(spec.transmissionMap){const r=spec.transmissionMap.panel;p.rect('transmitter-'+(state.terminal?'restored':s.phase?'transmitting':'offline'),r,2.9);for(const [n,q]of spec.transmissionMap.nodes.entries())p.draw('contact-'+(n<s.phase?'locked':'inactive'),q.x,q.y+5,12,12,4);}
   if(s.power){
    for(const obj of s.power.objects){const active=obj.solidOn===s.power.circuit;plate(obj.role==='door'?'door-'+(active?'closed':'open'):'bridge-'+(active?'extended':'folded'),obj.rect,active?1:.6);}
-   for(const q of spec.switches??[])p.draw('switch-'+s.power.circuit,q.x,q.y-6,36,42,6.4);
+   for(const q of spec.switches??[]){
+    p.draw('switch-'+s.power.circuit,q.x,q.y-6,36,42,6.4);
+    g.fillStyle(0x9edbc2).fillRect(q.x+(s.power.circuit==='A'?-15:9),q.y-47,7,2);
+   }
    const target=powerTarget(spec,s);if(target)p.draw('contact-'+(spec.sequence![s.phase]===s.power.circuit&&worldPulse(spec,now,s)==='safe'?'ready':'inactive'),target.x,target.y-7,28,36,6.4);
   }
   if(s.carry){for(const c of s.carry.contacts)p.rect('contact-'+(c.active?'locked':c.open?'ready':'inactive'),c.rect,6.4);
