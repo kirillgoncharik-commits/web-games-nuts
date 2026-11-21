@@ -588,7 +588,11 @@ async function solveRoom(page:Page){
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
      await page.keyboard.up('s');await page.keyboard.down('Space');
      try{
-      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
+      // Player shots expand solids by 1.5px.  The old <287 check placed the
+      // first horizontal cutter inside the screen's expanded 286.5px top.
+      // At <285 it clears that collision hull while remaining inside the
+      // guardian's expanded 280.5..303.5px hit lane.
+      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<285;});
       await page.keyboard.down('j');
       await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
      }finally{await page.keyboard.up('Space');await page.keyboard.up('j');await page.keyboard.down('s');}
