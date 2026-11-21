@@ -4,6 +4,7 @@ import {fireFromCover} from './defensive-fire';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {powerTarget,worldContext} from '../games/cinder-shift/src/session/world-runtime';
 import {rooms} from '../games/cinder-shift/src/room-data';
+import {newCampaignRegistry,isWorldMission} from '../games/cinder-shift/src/session/new-campaign-content';
 import {test,expect,type Page} from '@playwright/test';
 import {Campaign,newCampaign,contentVersion} from '../games/cinder-shift/src/session/campaign';
 import {missionIds} from '../games/cinder-shift/src/session/missions';
@@ -26,6 +27,12 @@ async function unlocked(page:Page){
  await expect(notes.or(resume).first()).toBeVisible();
  if(await notes.isVisible())await notes.click();
  await expect(resume).toBeVisible();
+}
+function routePulse(s:any){
+ const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
+ if(!pulse||s.world.phase>=(pulse.untilPhase??Infinity))return;
+ if(pulse.fromPhase!==undefined&&(s.world.pulseStartedAt==null||s.world.phase<pulse.fromPhase))return;
+ return pulse;
 }
 async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?:string;enemyId?:string;pickup?:boolean}={}){
  const origin=exitFrom??(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
@@ -55,8 +62,8 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   }
   if(exitFrom&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
-  const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
-  if(pulse&&feetNow>274&&(pulse.fromPhase===undefined||s.world.phase>=pulse.fromPhase)){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
+  const pulse=routePulse(s),feetNow=p.y+22;
+  if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
    if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){
     await Promise.all([page.keyboard.up('a'),page.keyboard.up('d')]);
     await page.waitForFunction(({cycle,start,end})=>{
@@ -92,7 +99,24 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   if(pickup)await page.keyboard.up(dir);
  }throw Error('walk blocked '+target+' '+JSON.stringify(await state(page)));
 }
-async function face(page:Page,f:number){const key=f>0?'d':'a';await page.keyboard.down(key);await page.waitForTimeout(70);await page.keyboard.up(key);await expect.poll(async()=>(await state(page)).player.facing).toBe(f);await page.waitForFunction(()=>{const p=(window as any).__CINDER__().player;return Math.abs(p.vx)<1&&p.vy===0;});}
+async function face(page:Page,direction:number){
+ const key=direction>0?'d':'a';
+ await page.keyboard.up(direction>0?'a':'d');
+ await page.keyboard.down(key);
+ try{
+  await page.waitForFunction(direction=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||s.player.facing===direction;
+  },direction);
+ }finally{await page.keyboard.up(key);}
+ await page.waitForFunction(()=>{
+  const s=(window as any).__CINDER__();
+  return s.hp<=0||Math.abs(s.player.vx)<1&&s.player.vy===0;
+ });
+ const end=await state(page);
+ expect(end.hp,'turning in '+end.room).toBeGreaterThan(0);
+ expect(end.player.facing).toBe(direction);
+}
 function contextPoint(s:any,action:'pickup'|'switch'|'activate'|'repair',point:{x:number;y:number}){
  const spec=rooms[s.room as keyof typeof rooms].world!,y=point.y;
  const x=contextCandidates(point.x).find(x=>x>32&&x<610
@@ -125,6 +149,14 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  // This contact now sits on a working bridge above a crouchable underpass.
  // Follow its visible entry ledge; horizontal walking alone stays below it.
  const entry=await state(page);
+ if(entry.room==='YU05-A'&&point.x===112&&entry.player.x<90){
+  // The first radio switch sits beside a 20px book. Mira can operate it
+  // standing on the book, within the switch's normal interaction reach.
+  await jump(page,66,104);await ground(page,300);
+  const at=await state(page);
+  expect(worldContext(rooms['YU05-A'].world!,at.world,{x:at.player.x,y:at.player.y+22},at.simMs)).toBe(action);
+  return;
+ }
  if(entry.room==='YU01-B'&&point.y===280&&entry.player.y+22>282){
   await walk(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
  }
@@ -163,6 +195,40 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='SW02-A'){
+  // From the gap between the keys, standing shots clear the low housing.
+  // The guard fires horizontally at head height. Duck until its bolt passes.
+  await page.keyboard.down('j');await walk(page,360);await ground(page,320);
+  await face(page,1);await page.keyboard.down('j');
+  try{
+   await expect.poll(async()=>{
+    const s=await state(page);
+    expect(s.hp,'keyboard quarter firing lane').toBeGreaterThan(0);
+    const bolt=s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>s.player.x-16&&p.x<s.player.x+112);
+    if(bolt)await page.keyboard.down('s');else await page.keyboard.up('s');
+    return s.enemies.every((e:any)=>e.hp<=0)&&!s.projectiles.some((p:any)=>p.team==='enemy'&&p.x>s.player.x-16);
+   },{intervals:[35],timeout:20000}).toBe(true);
+  }finally{await page.keyboard.up('s');await page.keyboard.up('j');}
+  return;
+ }
+ if(entry.room==='YU03-C'){
+  // Use the rear repair pocket and face the firing squad from outside the patrol.
+  await page.keyboard.down('j');await walk(page,310);await ground(page,288);
+  await to(page,329);await ground(page,288);await standingJump(page,405);
+  await to(page,585);await ground(page,320);
+  const pocket=await state(page),spec=rooms['YU03-C'].world!;
+  if(worldContext(spec,pocket.world,{x:pocket.player.x,y:320},pocket.simMs,pocket.hp<pocket.maxHp)==='repair'){
+   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.repaired).toBe(true);
+  }
+  await face(page,-1);await page.keyboard.down('s');
+  await fireFromCover(page,['yu03c-drone','yu03c-track'],'crouch');await page.keyboard.up('s');return;
+ }
+ if(entry.room==='YU04-A'){
+  // Cross the factory gantry and drop at its far edge, then fire back
+  // beneath the platform instead of trying to descend between two ledges.
+  await page.keyboard.down('j');await walk(page,554);await ground(page,320);
+  await face(page,-1);await fireFromCover(page,['yu04a-factory','yu04a-gantry']);return;
+ }
  if(entry.room==='YU02-C'){
   // Use the quay steps to cross the water above the arc of the ground fire.
   await page.keyboard.down('j');await jump(page,103,145);await ground(page,288);
@@ -237,6 +303,19 @@ async function combat(page:Page){
   await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
   await fireFromCover(page,['sw05b-router']);return;
  }
+ if(entry.room==='SW04-D'){
+  await page.keyboard.down('j');await jump(page,116,208);await ground(page,320);
+  await fireFromCover(page,['sw04d-vane']);
+  // Cross the vane base during the clear interval. The patrol guards the far side.
+  await jump(page,418,465);await ground(page,288);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__(),phase=s.worldPulseElapsed%5000;
+   return s.hp<=0||phase>=2300&&phase<3500;
+  });
+  await page.keyboard.down('j');await standingJump(page,585);await ground(page,320);
+  await face(page,-1);await page.keyboard.down('s');
+  await fireFromCover(page,['sw04d-tail'],'crouch');await page.keyboard.up('s');return;
+ }
  if(entry.room==='SW04-B'){
   await page.keyboard.down('s');await fireFromCover(page,['sw04b-rail'],'crouch');
   // Crawl underneath the drying rack. Its 28px ground clearance lets
@@ -266,10 +345,16 @@ async function combat(page:Page){
   return;
  }
  for(let n=0;n<12;n++){
-  const s=await state(page),alive=s.enemies.filter((e:any)=>e.hp>0);if(!alive.length)return;
+  const s=await state(page),alive=s.enemies.filter((e:any)=>e.hp>0);
+  if(!alive.length){
+   // A target may die during the approach before its tracking volley arrives.
+   // Hold the firing position until the remaining shots pass or can be dodged.
+   if(s.projectiles.some((p:any)=>p.team==='enemy'))await fireFromCover(page,[]);
+   return;
+  }
   const en=alive.filter((e:any)=>!e.afterEnemy||!alive.some((lead:any)=>lead.id===e.afterEnemy)).sort((a:any,b:any)=>Math.abs(a.x-s.player.x)-Math.abs(b.x-s.player.x))[0];
   if(!en)throw Error('Cyclic reinforcement dependency in '+s.room);
-  const pulse=rooms[s.room as keyof typeof rooms].world?.pulse;
+  const pulse=routePulse(s);
   const fallback=Array.from({length:69},(_,i)=>48+i*8).sort((a,b)=>Math.abs(Math.abs(a-en.x)-90)-Math.abs(Math.abs(b-en.x)-90));
   const blocked=s.solids.filter((r:any)=>r.y<320&&r.y+r.height>276).map((r:any)=>[r.x,r.x+r.width]).sort((a:number[],b:number[])=>a[0]-b[0]);
   const gapCenters:number[]=[];let edge=24;for(const [left,right]of blocked){if(left-edge>=40)gapCenters.push((edge+left)/2);edge=Math.max(edge,right);}if(616-edge>=40)gapCenters.push((edge+616)/2);
@@ -396,7 +481,8 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['YU02','YU02-C'],['SW05','SW05-A'],['SW05','SW05-D'],['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const {mission_id:mission,room_id:room} of newCampaignRegistry.rooms){
+ if(!isWorldMission(mission))throw Error('Unknown mission '+mission);
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
@@ -423,7 +509,7 @@ for(const [mission,room] of [['YU02','YU02-C'],['SW05','SW05-A'],['SW05','SW05-D
  });
 }
 
-for(const mission of ['SW02','SW04','SW05','YU01','YU02'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
+for(const mission of new Set(newCampaignRegistry.rooms.map(room=>room.mission_id).filter(isWorldMission)))test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
  test.setTimeout(240_000);
  const difficulty=info.project.metadata.difficulty??'easy';

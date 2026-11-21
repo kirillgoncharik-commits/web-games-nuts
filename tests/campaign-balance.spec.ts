@@ -56,14 +56,22 @@ for (const world of ['r01', ...newCampaignIds] as const) {
 test('world patrols have clear spawn positions and every mission has combat',()=>{
   for (const world of newCampaignIds) {
     const prefix=world==='c02-small-world'?'SW':'YU';
+    const campaignRooms=Object.values(rooms).filter(room=>room.id.startsWith(prefix));
+    expect(campaignRooms).toHaveLength(20);
+    expect(campaignRooms.filter(room=>room.enemies.length>0)).toHaveLength(prefix==='SW'?19:20);
+    expect(campaignRooms.reduce((total,room)=>total+room.enemies.length,0)).toBe(prefix==='SW'?36:43);
     for (let sector=1;sector<=5;sector++) {
       const group=Object.values(rooms).filter(room=>room.id.startsWith(prefix+'0'+sector));
       expect(group.some(room=>room.enemies.length>0)).toBe(true);
       for(const room of group) {
-        const solids=[...room.solids,...worldSolids(room.world!,createWorldState(room.id,room.world!))];
-        for(const def of room.enemies) {
-          const body=enemyRect(createEnemy(def));
-          expect.soft(solids.filter(rect=>intersects(rect,body)),room.id+' / '+def.id).toEqual([]);
+        const initial=createWorldState(room.id,room.world!);
+        const states=initial.power?[initial,{...initial,power:{...initial.power,circuit:'B' as const}}]:[initial];
+        for(const state of states){
+          const solids=[...room.solids,...worldSolids(room.world!,state)];
+          for(const def of room.enemies){
+            const body=enemyRect(createEnemy(def));
+            expect.soft(solids.filter(rect=>intersects(rect,body)),[room.id,state.power?.circuit,def.id].join(' / ')).toEqual([]);
+          }
         }
       }
     }

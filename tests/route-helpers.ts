@@ -26,12 +26,24 @@ export async function counterRam(page:Page,id:string){
  await page.keyboard.down('Space');await until(page,id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((e:any)=>e.id===id)?.hp<=0;},id,'ram counter '+id,12000);await page.keyboard.up('Space');await page.keyboard.up('j');expect((await state(page)).hp).toBeGreaterThan(0);
 }
 export async function drone(page:Page,id:string){
- for(let shot=0;shot<8&&(await state(page)).enemies.find((e:any)=>e.id===id)?.hp>0;shot++){
-  await ground(page,320);await page.keyboard.down('Space');
-  await until(page,id=>{const s=(window as any).__CINDER__(),p=s.player,e=s.enemies.find((e:any)=>e.id===id);return s.hp<=0||e?.hp<=0||p.vy<0&&Math.abs(p.y+22-28-e.y)<6;},id,'drone firing line '+id,1800);
-  const before=(await state(page)).simMs;await page.keyboard.down('j');await until(page,before=>(window as any).__CINDER__().simMs>=before+50,before,'shot');await page.keyboard.up('j');await page.keyboard.up('Space');
+ for(let pass=0;pass<8;pass++){
+  const entry=await state(page);
+  if(entry.enemies.find((e:any)=>e.id===id)?.hp<=0)break;
+  await ground(page,320);
+  const started=(await state(page)).simMs;
+  await page.keyboard.down('Space');
+  try{
+   await until(page,({id,started})=>{
+    const s=(window as any).__CINDER__(),e=s.enemies.find((e:any)=>e.id===id);
+    // Hold fire through the return crossing even if a frame skipped the exact ascent height.
+    return s.hp<=0||e?.hp<=0||s.player.y+22-28<=e.y+8||s.simMs-started>700;
+   },{id,started},'drone firing lane '+id);
+   await page.keyboard.down('j');
+   await until(page,started=>{const s=(window as any).__CINDER__();return s.hp<=0||s.simMs>started+250&&s.player.vy===0;},started,'drone landing '+id);
+  }finally{await Promise.all([page.keyboard.up('j'),page.keyboard.up('Space')]);}
+  expect((await state(page)).hp).toBeGreaterThan(0);
  }
- expect((await state(page)).enemies.find((e:any)=>e.id===id)?.hp,id).toBeLessThanOrEqual(0);expect((await state(page)).hp).toBeGreaterThan(0);
+ expect((await state(page)).enemies.find((e:any)=>e.id===id)?.hp,id).toBeLessThanOrEqual(0);
 }
 export async function cross(page:Page,id:string,end?:number){
  let s=await state(page),h=s.hazards.find((h:any)=>h.id===id);if(!h)return;
