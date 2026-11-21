@@ -78,7 +78,7 @@ test('actual combat death stops input, emits one result and retry resets the mis
   test.setTimeout(35000);await start(page);await roomA(page);await forwardJump(page,194,370);
   await page.waitForFunction(()=>(window as any).__CINDER__().enemies.some((e:any)=>e.phase==='telegraph'));await page.screenshot({path:info.outputPath('attack-warning.png')});
   await expect.poll(async()=>(await state(page)).state,{timeout:15000}).toBe('dead');
-  const dead=await state(page);expect(dead.hp).toBe(0);const end=dead.eventLog.filter((e:any)=>e.name==='mission_end');expect(end).toHaveLength(1);expect(end[0].params.result).toBe('death');expect(end[0].params.reason).toBeTruthy();
+  const dead=await state(page);expect(dead.hp).toBe(0);expect(dead.campaign.result.score).toBeGreaterThanOrEqual(150);expect(dead.campaign.result.score_breakdown.extraction).toBe(0);expect(dead.campaign.loadout_budget).toBe(dead.campaign.result.score);const end=dead.eventLog.filter((e:any)=>e.name==='mission_end');expect(end).toHaveLength(1);expect(end[0].params.result).toBe('death');expect(end[0].params.reason).toBeTruthy();
   await page.keyboard.down('d');await page.waitForTimeout(250);await page.keyboard.up('d');expect((await state(page)).player).toEqual(dead.player);
   await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&Boolean(s.player)&&s.attemptId!==dead.attemptId;}).toBe(true);const fresh=await state(page);expect(fresh.hp).toBe(6);expect(fresh.room).toBe('A');expect(fresh.powered).toBe(false);expect(fresh.targetHp).toBe(0);
 });

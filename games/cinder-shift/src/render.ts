@@ -16,6 +16,8 @@ import {ProductionSprites} from './art/production-art';
 import {drawSectorArchitecture,roomSector} from './art/sector-design';
 import {CombatEffects,type CombatCue} from './art/combat-effects';
 import type {Point} from './room-data';
+import {catalogs} from './i18n';
+import {guardians} from './world-guardians';
 import type {Player} from './player';
 import type {Projectiles} from './projectiles';
 
@@ -23,6 +25,7 @@ declare const __SOURCE_SHA__:string;
 
 type AssetId=keyof typeof assets.frames;
 export function preloadArt(scene:Phaser.Scene){
+  scene.load.spritesheet('final-guardians','./assets/final-guardians.png?v='+__SOURCE_SHA__,{frameWidth:48,frameHeight:40});
   const base='./assets/m03/';
   for(const [name,atlas] of Object.entries(assets.atlases))scene.load.atlas('m03-'+name,base+atlas.image.file,base+atlas.json.file);
   for(const [name,file] of Object.entries(assets.backgrounds))scene.load.image('m03-bg-'+name,base+file.file);
@@ -34,6 +37,8 @@ export function preloadArt(scene:Phaser.Scene){
 // The pool changes textures and integer draw positions; it never steps the simulation.
 export class SceneArt{
   private pool:Phaser.GameObjects.Image[]=[];private used=0;private artPool:Phaser.GameObjects.Image[]=[];private artUsed=0;private bufferUsedLast:boolean|null=null;private bufferEffectUntil=-1;private bossHpLast:number|null=null;private bossHitUntil=-1;
+  private guardianLabel?:Phaser.GameObjects.Text;
+  private deaths=new Map<string,number>();
   private recoilUntil=-1;private enemyHitUntil=new Map<string,number>();
   private bossSprite?:Phaser.GameObjects.Image;
   private environment:EnvironmentMotion;private production:ProductionSprites;
@@ -94,6 +99,7 @@ export class SceneArt{
     for(const target of targets.slice(0,3))this.cues.connect(point,target,now);
   }
 
+  enemyDefeated(id:string,now:number){this.deaths.set(id,now);}
   enemyHit(id:string,now:number){this.enemyHitUntil.set(id,now+130);}
   clearFeedback(){this.cues.clear();this.recoilUntil=-1;this.bossHitUntil=-1;this.bufferEffectUntil=-1;this.enemyHitUntil.clear();}
 
@@ -146,9 +152,15 @@ export class SceneArt{
     const a=Math.round(toX)-Math.round(x),b=Math.round(toY)-Math.round(y);
     return this.sprite(color,x,y,7).setDisplaySize(Math.hypot(a,b),thickness).setRotation(Math.atan2(b,a));
   }
+  private machine(row:number,pose:number,x:number,feet:number,facing:number,scale=1){
+    let image=this.artPool[this.artUsed++];
+    if(!image){image=this.scene.add.image(0,0,'final-guardians');this.artPool.push(image);}
+    return image.setTexture('final-guardians',row*5+pose).setCrop().setOrigin(.5,1).setPosition(Math.round(x),Math.round(feet)).setScale(scale).setFlipX(facing>0).setAngle(0).setAlpha(1).clearTint().setDepth(5).setVisible(true);
+  }
   private turret(e:import('./enemies').EnemyState,powered:boolean){
     const g=this.threats,{state}=turretPresentation(e,powered),cx=e.x,muzzle=enemyMuzzle(e),facing=Math.sign(e.aim.x-e.x)||1;
-    const body=this.art(`turret_${state}`,cx,e.y+15,54,50,5,facing);
+    const pose=state==='destroyed'?4:state==='warning'?1:state==='burst'?2:state==='exposed'?3:0;
+    const body=this.machine(0,pose,cx,e.y+15,facing);
     if(state==='destroyed')return body;
     if(state==='off'){
       body.setTint(0x687784).setAlpha(.45);
@@ -168,7 +180,7 @@ export class SceneArt{
   private dataChip(x:number,feet:number,scale:number,empty:boolean){
     this.production.draw('block-'+(empty?'installed':'ground'),x,feet-4,16*scale,22*scale,5);
   }
-  render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,dying:boolean,reducedFlashes=false){
+  render(player:Player,attempt:MissionAttempt,state:RoomState,shots:Projectiles,hold:number,deathRemaining:number,reducedFlashes=false){
     this.used=0;this.artUsed=0;this.production.begin();this.threats.clear();const room=attempt.definition(),now=attempt.clock.now,x=Math.round(player.x),y=Math.round(player.feet),f=player.facing;
     if(!room.world)this.environment.draw(attempt,reducedFlashes);
     if(this.bossHpLast===null)this.bossHpLast=attempt.bossHp;else if(attempt.bossHp<this.bossHpLast)this.bossHitUntil=now+140;
@@ -181,7 +193,11 @@ export class SceneArt{
       // Recoil is a visual offset; the rig anchors and projectile muzzle stay fixed.
       if(id==='mira-cutter'&&state.world?.carry?.item.state==='held')s.setVisible(false);
       if(id==='mira-cutter'&&!reducedFlashes&&now<this.recoilUntil)s.setX(s.x-f*2);
-      if(dying)s.setTint(0x776b70);else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
+      if(deathRemaining>0){
+        const fall=reducedFlashes?1:1-Math.max(0,Math.min(1,deathRemaining/350));
+        const angle=f*fall*1.12,dx=s.x-x,dy=s.y-y;
+        s.setPosition(x+dx*Math.cos(angle)-dy*Math.sin(angle),y+dx*Math.sin(angle)+dy*Math.cos(angle)).setRotation(angle).setTint(0x998f92);
+      }else if(hit){if(reducedFlashes)s.setTint(0xf36d76).setAlpha(.9);else s.setTint(signals.damage);}return s;
     };
     this.sprite('mira-shadow',x,y+1,3).setAlpha(.6);
     if(now<player.dashUntil)this.sprite('mira-body-stand',x-f*30,y-40,5,f).setTintFill(0x76dcc8).setAlpha(.2);
@@ -329,16 +345,38 @@ export class SceneArt{
       this.threats.fillStyle(0x101823).fillRect(body.x,body.y-14,body.width,8);this.threats.fillStyle(0xf36d76).fillRect(body.x+2,body.y-12,(body.width-4)*Math.max(0,attempt.bossHp/room.boss.hp),4);this.threats.lineStyle(1,0xedf1ec,.9).strokeRect(body.x,body.y-14,body.width,8);
     }
     if(room.previous)this.sprite('gate-open',31,320,3);
+    this.guardianLabel?.setVisible(false);
     for(const e of state.enemies){
-      if(e.hp<=0&&e.mob){this.production.draw(e.mob+'-destroyed',e.x,e.kind==='drone'?e.y+10:e.y+15,44,34,5);continue;}
-      if(e.hp<=0){if(e.kind==='turret')this.turret(e,false);else this.production.draw((e.preset==='ram_charge'?'base-ram':e.kind==='drone'?'base-drone':'base-walker')+'-destroyed',e.x,320,44,32,5);continue;}
+      if(e.guardian&&e.afterEnemy&&state.enemies.some(lead=>lead.id===e.afterEnemy&&lead.hp>0))continue;
+      if(e.hp<=0){
+        const age=Math.max(0,now-(this.deaths.get(e.id)??-10000));
+        const flying=e.kind==='drone',start=e.y+(flying?10:15);
+        const floor=flying?Math.min(320,...room.solids.filter(r=>r.x<=e.x&&e.x<=r.x+r.width&&r.y>=start).map(r=>r.y)):start;
+        const feet=reducedFlashes?floor:Math.min(floor,start+620*(age/1000)**2);
+        const t=reducedFlashes?1:Math.min(1,age/460);
+        const family=e.mob??(e.preset==='ram_charge'?'base-ram':flying?'base-drone':'base-walker');
+        const wreck=e.guardian?this.machine(guardians[e.guardian].row,t<.35?3:4,e.x,feet,-1,1.15):
+          e.kind==='turret'?this.machine(0,t<.35?3:4,e.x,feet,-1):
+          this.production.draw(family+(t<.35?'-recovery':'-destroyed'),e.x,feet,44,34,5);
+        if(flying&&feet<floor)wreck.setAngle(30*t);
+        else if(t<1)wreck.setAngle(12*Math.sin(t*Math.PI));
+        continue;
+      }
       const phase=enemyPhase(e),facing=e.state==='attack'?Math.sign(e.aim.x-e.x)||-1:e.direction;let actorImage:Phaser.GameObjects.Image;
-      if(e.mob){
+      if(e.guardian){
+        const boss=guardians[e.guardian],pose=phase==='telegraph'?1:phase==='attack'?2:phase==='recovery'?3:0;
+        actorImage=this.machine(boss.row,pose,e.x,e.y+15,facing,1.16);
+        const title=catalogs[document.documentElement.lang==='ru'?'ru':'en']['boss.'+e.guardian];
+        this.guardianLabel??=this.scene.add.text(0,0,'',{fontFamily:'monospace',fontSize:'10px',color:'#f4dfb4',backgroundColor:'#142331'}).setOrigin(.5,1).setDepth(7);
+        this.guardianLabel.setText(title).setPosition(e.x,e.y-42).setVisible(true);
+        this.threats.fillStyle(0x142331).fillRect(e.x-22,e.y-41,44,6);
+        this.threats.fillStyle(e.hp>boss.hp/2?0xe9b158:0xf5765d).fillRect(e.x-20,e.y-39,Math.ceil(40*e.hp/boss.hp),2);
+        if(phase==='telegraph'){const m=enemyMuzzle(e);this.line(m.x,m.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.7);}
+      }else if(e.kind==='turret')actorImage=this.turret(e,attempt.enemyPowered(e));
+      else if(e.mob){
         const powered=attempt.enemyPowered(e),pose=!powered?'idle':phase==='telegraph'?'warning':phase==='attack'?'attack':phase==='recovery'?'recovery':'idle';
         actorImage=this.production.draw(e.mob+'-'+pose,e.x,e.kind==='drone'?e.y+14:e.y+15,46,e.kind==='drone'?32:42,5,-facing,powered?1:.4);
-        if(e.kind==='turret'&&phase==='telegraph'&&powered){const m=enemyMuzzle(e);this.line(m.x,m.y,e.aim.x,e.aim.y,'signal-coral').setAlpha(.7);this.sprite('warning-reticle',e.aim.x,e.aim.y,8);}
-      }else if(e.kind==='turret')actorImage=this.turret(e,attempt.enemyPowered(e));
-      else{
+      }else{
         const family=e.preset==='ram_charge'?'base-ram':e.kind==='drone'?'base-drone':'base-walker',pose=phase==='telegraph'?'warning':phase==='attack'?'attack':phase==='recovery'?'recovery':'idle';
         actorImage=this.production.draw(family+'-'+pose,e.x,e.kind==='drone'?e.y+12:e.y+15,e.preset==='ram_charge'?48:42,e.kind==='drone'?30:40,5,-facing);
       }

@@ -1,9 +1,10 @@
+import {isDifficulty,type Difficulty} from './difficulty';
 import type {CampaignData} from './campaign';
 import {makeChallengeSpec,type ChallengeSpec} from './challenge-spec';
 
 export type CombatCounters={shots:number;hits:number;total_ms:number;mission_ms:number};
 export type StatisticsFragment=CombatCounters&{campaign_ms:Record<string,number>};
-export type CampaignRecord={id:string;world:string;content_version:string;completed_at:string;active_ms:number;deaths:number;score:number;route:string|null;ruleset:string;assisted:boolean;history_complete:boolean};
+export type CampaignRecord={difficulty?:Difficulty;id:string;world:string;content_version:string;completed_at:string;active_ms:number;deaths:number;score:number;route:string|null;ruleset:string;assisted:boolean;history_complete:boolean};
 export type CampaignBaseline={active_ms:number;history_complete:boolean};
 export type PersonalRecords={version:1;started_at:string;sessions:Record<string,StatisticsFragment>;campaign_baselines:Record<string,CampaignBaseline>;completed:CampaignRecord[];specs:Record<string,ChallengeSpec>};
 const object=(v:unknown):v is Record<string,any>=>Boolean(v&&typeof v==='object'&&!Array.isArray(v));
@@ -19,7 +20,7 @@ export function validatePersonalRecords(v:unknown):v is PersonalRecords{
  if(Object.keys(v.sessions).length>10000||Object.keys(v.campaign_baselines).length>10000||v.completed.length>10000)return false;
  if(!Object.entries(v.sessions).every(([key,s])=>id(key)&&object(s)&&['shots','hits','total_ms','mission_ms'].every(k=>uint(s[k]))&&s.hits<=s.shots&&s.mission_ms<=s.total_ms&&object(s.campaign_ms)&&Object.entries(s.campaign_ms).every(([key,time])=>id(key)&&uint(time)&&time<=s.mission_ms)))return false;
  if(!Object.entries(v.campaign_baselines).every(([key,b])=>id(key)&&object(b)&&uint(b.active_ms)&&typeof b.history_complete==='boolean'))return false;
- if(!v.completed.every((r:unknown)=>object(r)&&id(r.id)&&world(r.world)&&id(r.content_version)&&date(r.completed_at)&&uint(r.active_ms)&&uint(r.deaths)&&uint(r.score)&&typeof r.ruleset==='string'&&r.ruleset.length<=100&&typeof r.assisted==='boolean'&&typeof r.history_complete==='boolean'&&(r.route===null||['service','press'].includes(r.route))))return false;
+ if(!v.completed.every((r:unknown)=>object(r)&&(r.difficulty===undefined||isDifficulty(r.difficulty))&&id(r.id)&&world(r.world)&&id(r.content_version)&&date(r.completed_at)&&uint(r.active_ms)&&uint(r.deaths)&&uint(r.score)&&typeof r.ruleset==='string'&&r.ruleset.length<=100&&typeof r.assisted==='boolean'&&typeof r.history_complete==='boolean'&&(r.route===null||['service','press'].includes(r.route))))return false;
  const sums={shots:0,hits:0,total_ms:0,mission_ms:0};for(const row of Object.values(v.sessions) as CombatCounters[])for(const key of ['shots','hits','total_ms','mission_ms'] as const)sums[key]+=row[key];if(Object.values(sums).some(value=>!Number.isSafeInteger(value)))return false;
  return new Set(v.completed.map((r:CampaignRecord)=>r.id)).size===v.completed.length;
 }
@@ -76,11 +77,11 @@ export class PersonalStatistics{
   if(c.stage!=='campaign_complete'||this.data.completed.some(r=>r.id===c.campaign_id))return;
   this.registerCampaign(c);const view=this.snapshot(),baseline=view.campaign_baselines[c.campaign_id];
   const measured=baseline.active_ms+Object.values(view.sessions).reduce((sum,row)=>sum+(row.campaign_ms[c.campaign_id]||0),0);
-  this.data.completed.push({id:c.campaign_id,world:worldId,content_version:contentId,completed_at:completedAt,active_ms:measured,deaths:c.run_stats.deaths,score:c.run_stats.score,route:c.run_stats.foundry_route,ruleset:c.run_stats.ruleset_id||'legacy',assisted:c.run_stats.assisted,history_complete:baseline.history_complete});this.unsaved=true;
+  this.data.completed.push({id:c.campaign_id,difficulty:c.difficulty,world:worldId,content_version:contentId,completed_at:completedAt,active_ms:measured,deaths:c.run_stats.deaths,score:c.run_stats.score,route:c.run_stats.foundry_route,ruleset:c.run_stats.ruleset_id||'legacy',assisted:c.run_stats.assisted,history_complete:baseline.history_complete});this.unsaved=true;
  }
- importCareer(runs:readonly {campaign_id:string;content_version:string;completed_at:string;active_ms:number;deaths:number;score:number;foundry_route:string|null;ruleset_id?:string;assistance:string;history_complete:boolean}[]){
+ importCareer(runs:readonly {difficulty?:Difficulty|"standard";campaign_id:string;content_version:string;completed_at:string;active_ms:number;deaths:number;score:number;foundry_route:string|null;ruleset_id?:string;assistance:string;history_complete:boolean}[]){
   for(const r of runs)if(!this.data.completed.some(c=>c.id===r.campaign_id)){
-   const record={id:r.campaign_id,world:'r01',content_version:r.content_version,completed_at:r.completed_at,active_ms:Math.floor(r.active_ms),deaths:r.deaths,score:r.score,route:r.foundry_route,ruleset:r.ruleset_id||'legacy',assisted:r.assistance==='assisted',history_complete:r.history_complete};
+   const record={id:r.campaign_id,difficulty:isDifficulty(r.difficulty)?r.difficulty:undefined,world:'r01',content_version:r.content_version,completed_at:r.completed_at,active_ms:Math.floor(r.active_ms),deaths:r.deaths,score:r.score,route:r.foundry_route,ruleset:r.ruleset_id||'legacy',assisted:r.assistance==='assisted',history_complete:r.history_complete};
    if(validatePersonalRecords({...emptyPersonalRecords(),completed:[record]}))this.data.completed.push(record);
   }
  }

@@ -2,11 +2,12 @@ import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {encounter} from './encounter-helpers';
 import {state} from './helpers';
+import {fireFromCover} from './defensive-fire';
 import {jump,standingJump,to,ground,until} from './route-helpers';
 
-test('warehouse lift joins the optional salvage route and opens the gate without a first-show threat',async({page},info)=>{
- test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-A'});
- const before=await state(page);expect(before.enemies).toHaveLength(0);expect(before.solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(true);
+test('warehouse lift joins the optional salvage route and opens the gate in the cleared warehouse',async({page},info)=>{
+ test.setTimeout(45000);await encounter(page,{mission:'YU02',room:'YU02-A',cleared:true});
+ const before=await state(page);expect(before.enemies.map((e:any)=>[e.kind,e.hp])).toEqual([['walker',0],['drone',0]]);expect(before.solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(true);
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
  expect((await state(page)).solids.some((r:any)=>r.id==='world-power:warehouse-A')).toBe(false);
  await jump(page,124,180);await ground(page,288);await to(page,204);await ground(page,288);await standingJump(page,288);await ground(page,256);
@@ -84,12 +85,19 @@ test('courtyard lever opens its real entrance and the optional alcove is reachab
 test('switchboard earns its elevated bridge contact and returns over the A stairs with both levers reachable',async({page},info)=>{
  test.setTimeout(60000);await encounter(page,{mission:'YU01',room:'YU01-B'});const samples:any[]=[];
  const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ const hint=page.locator('#hud-objective');
+ await expect(hint).toContainText(/включить мост B|power bridge B/i);
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
- await jump(page,120,176);await ground(page,288);await to(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
+ await expect(hint).toContainText(/с ящика|from the crate/i);await capture('exchange-B-first-jump');
+ await page.keyboard.down('j');await jump(page,120,176);await ground(page,288);
+ await to(page,231);await ground(page,320);await fireFromCover(page,['yu01b-exchange']);
+ await standingJump(page,190);await ground(page,288);await to(page,196);await ground(page,288);
+ await standingJump(page,284);await ground(page,280);
  await to(page,324);await ground(page,280);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await capture('exchange-B-bridge-connected');
  await to(page,394);await ground(page,280);await standingJump(page,456);await ground(page,280);await to(page,552);await ground(page,320);
+ await expect(hint).toContainText(/правого рубильника|right lever/i);
  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);await capture('exchange-A-exit-connected');
- await to(page,544);await ground(page,320);await standingJump(page,488);await ground(page,280);await to(page,440);await ground(page,280);await standingJump(page,384);await ground(page,256);
+ await to(page,480);await ground(page,320);await standingJump(page,436);await ground(page,280);await to(page,440);await ground(page,280);await standingJump(page,384);await ground(page,256);
  await to(page,348);await ground(page,256);await standingJump(page,280);await ground(page,288);await to(page,260);await ground(page,288);await standingJump(page,184);await ground(page,288);await to(page,112);await ground(page,320);
  const final=await state(page);expect(final.hp).toBe(6);expect(final.world.ledger).toEqual(['stairs:phase-0','stairs:phase-1']);expect(final.exitOpen).toBe(true);await capture('exchange-A-physical-return');
  await writeFile(info.outputPath('exchange-evidence.json'),JSON.stringify({fixture:'one YU01-B entry; bridge, far lever, both contacts and A-stair return use ordinary keyboard input',samples},null,2));
@@ -224,7 +232,11 @@ test('drawer contact opens its real gate through normal carry and throw input',a
 });
 
 test('kitchen lower shelter protects crouching Mira during the same live steam pulse that hits a standing Mira',async({page},info)=>{
- await encounter(page,{mission:'SW01',room:'SW01-B',cleared:true});await to(page,248);await ground(page,320);await page.keyboard.down('s');await to(page,304);await ground(page,320);
+ await encounter(page,{mission:'SW01',room:'SW01-B',cleared:true});await jump(page,160,248);await ground(page,320);await page.keyboard.down('s');await to(page,304);await ground(page,320);
+ for(const phase of ['safe','warning']){
+  await page.waitForFunction(phase=>(window as any).__CINDER__().worldPulse===phase,phase);
+  await page.screenshot({path:info.outputPath('steam-'+phase+'.png')});
+ }
  await page.waitForFunction(()=>{const t=(window as any).__CINDER__().simMs%5400;return t>=1400&&t<1550;});const before=await state(page);
  await page.waitForFunction(t=>(window as any).__CINDER__().simMs>=t+250,before.simMs);const protectedState=await state(page);expect(protectedState.hp).toBe(6);expect(protectedState.player.crouching).toBe(true);
  await page.screenshot({path:info.outputPath('steam-lower-shelter.png')});await page.keyboard.up('s');await expect.poll(async()=>(await state(page)).hp).toBeLessThan(6);
@@ -325,3 +337,31 @@ test('a closed transmitter contact beside a lever keeps the selected circuit whe
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5200<3400;});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).world.power.circuit).toBe('A');
  await writeFile(info.outputPath('closed-contact-evidence.json'),JSON.stringify({fixture:'one YU02-D entry; real switching and confirmation, including a deliberate press during a closed window',before,blocked,confirmed:await state(page)},null,2));
 });
+
+for(const locale of ['ru','en'] as const){
+ for(const mission of ['SW05','YU05'] as const){
+  test(mission+' guardian shot names the cause on the '+locale+' result screen',async({page},info)=>{
+   const beacon=mission==='SW05',room=beacon?'SW05-D':'YU05-D';
+   const cause=beacon?'beacon-warden-shot':'rift-marshal-shot';
+   const label=beacon
+    ? (locale==='ru'?'Выстрел Стража маяка':'A shot from the Beacon Warden')
+    : (locale==='ru'?'Выстрел Коменданта разлома':'A shot from the Rift Marshal');
+   await page.addInitScript(locale=>localStorage.setItem('cinder-shift-language-v1',locale),locale);
+   // Isolated result-screen fixture. The lead wave is cleared at entry.
+   await encounter(page,{mission,room,seed:4,hp:1,difficulty:'hard',
+    clearedEnemyIds:beacon?['sw05d-beacon']:['yu05d-rift','yu05d-coast']});
+   if(beacon){
+    await to(page,244);await ground(page,320);
+    await page.waitForFunction(()=>{const e=(window as any).__CINDER__().worldEncounter;return e.phase==='open'&&e.remaining>2450;});
+    await jump(page,244,284);await ground(page,288);await standingJump(page,385);
+   }else{
+    await jump(page,128,180);await ground(page,276);await to(page,230);
+    await page.keyboard.press('j',{delay:300});
+   }
+   await expect(page.getByTestId('retry')).toBeVisible();
+   expect((await state(page)).campaign.result.reason).toBe(cause);
+   await expect(page.getByText((locale==='ru'?'Причина: ':'Cause: ')+label,{exact:true})).toBeVisible();
+   await page.screenshot({path:info.outputPath(room+'-'+locale+'-cause.png')});
+  });
+ }
+}

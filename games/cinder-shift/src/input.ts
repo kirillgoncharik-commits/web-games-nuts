@@ -1,10 +1,13 @@
 export type Action = 'left' | 'right' | 'jump' | 'crouch' | 'fire' | 'interact' | 'ability' | 'pause';
 export type Frame = { down: Set<Action>; pressed: Set<Action>; released: Set<Action> };
 export const actions:readonly Action[]=['left','right','jump','crouch','fire','interact','ability','pause'];
-const defaultKeys:Record<string,Action>={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyS:'crouch',ArrowDown:'crouch',KeyJ:'fire',KeyX:'fire',KeyE:'interact',KeyK:'ability',KeyC:'ability',Escape:'pause'};
-const primaryKeys:Record<Action,string>={left:'KeyA',right:'KeyD',jump:'Space',crouch:'KeyS',fire:'KeyJ',interact:'KeyE',ability:'KeyK',pause:'Escape'};
+declare const __BUILD_TARGET__:string;
+const browserOwnsEscape=typeof __BUILD_TARGET__!=='undefined'&&__BUILD_TARGET__==='playgama';
+const pauseKey=browserOwnsEscape?'KeyP':'Escape';
+const defaultKeys:Record<string,Action>={KeyA:'left',ArrowLeft:'left',KeyD:'right',ArrowRight:'right',Space:'jump',KeyS:'crouch',ArrowDown:'crouch',KeyJ:'fire',KeyX:'fire',KeyE:'interact',KeyK:'ability',KeyC:'ability',[pauseKey]:'pause'};
+const primaryKeys:Record<Action,string>={left:'KeyA',right:'KeyD',jump:'Space',crouch:'KeyS',fire:'KeyJ',interact:'KeyE',ability:'KeyK',pause:pauseKey};
 export function keyLabel(code:string){return code==='Space'?'Space':code==='Escape'?'Esc':code.startsWith('Arrow')?({'ArrowLeft':'←','ArrowRight':'→','ArrowUp':'↑','ArrowDown':'↓'} as Record<string,string>)[code]||code:code.startsWith('Key')?code.slice(3):code.startsWith('Digit')?code.slice(5):code;}
-export function bindingAllowed(action:Action,code:string){const current=defaultKeys[code];return !current||current===action;}
+export function bindingAllowed(action:Action,code:string){if(browserOwnsEscape&&code==='Escape')return false;const current=defaultKeys[code];return !current||current===action;}
 export class Controls {
   device: 'keyboard' | 'touch' | 'gamepad' = matchMedia('(pointer:coarse)').matches ? 'touch' : 'keyboard';
   scope: 'menu' | 'play' | 'pause' = 'menu';
@@ -16,6 +19,7 @@ export class Controls {
   private padState = '';private blockedKeys=new Set<string>();private physicalKeys=new Set<string>();private blockedPad=new Set<Action>();private keyMap:Record<string,Action>={...defaultKeys};private keyOverrides:Partial<Record<Action,string>>={};private rebind:((action:Action,code:string|null)=>void)|null=null;private rebindAction:Action|null=null;
   constructor() {
     window.addEventListener('keydown', e => {
+      if(browserOwnsEscape&&e.code==='Escape')return;
       if(this.keyMap[e.code])this.physicalKeys.add(e.code);
       if(this.rebindAction){e.preventDefault();e.stopImmediatePropagation();if(e.repeat)return;const action=this.rebindAction,callback=this.rebind;this.rebindAction=null;this.rebind=null;const code=e.code==='Escape'?null:/^(Key[A-Z]|Digit[0-9]|Arrow(Left|Right|Up|Down)|Space)$/.test(e.code)?e.code:null;callback?.(action,code);return;}
       if(this.blockedKeys.has(e.code)&&e.repeat)return;if(!e.repeat)this.blockedKeys.delete(e.code);
@@ -38,7 +42,7 @@ export class Controls {
     });
   }
   get isRebinding(){return this.rebindAction!==null;}
-  setBindings(bindings:Partial<Record<Action,string>>){this.keyOverrides={...bindings};this.keyMap={...defaultKeys};for(const[action,code]of Object.entries(this.keyOverrides) as [Action,string][]){for(const[key,value]of Object.entries(this.keyMap))if(value===action)delete this.keyMap[key];this.keyMap[code]=action;}this.clear();}
+  setBindings(bindings:Partial<Record<Action,string>>){this.keyOverrides=Object.fromEntries(Object.entries(bindings).filter(([,code])=>!browserOwnsEscape||code!=='Escape'));this.keyMap={...defaultKeys};for(const[action,code]of Object.entries(this.keyOverrides) as [Action,string][]){for(const[key,value]of Object.entries(this.keyMap))if(value===action)delete this.keyMap[key];this.keyMap[code]=action;}this.clear();}
   binding(action:Action){return this.keyOverrides[action]||primaryKeys[action];}
   bindingLabel(action:Action){return keyLabel(this.binding(action));}
   actionForKey(code:string){return this.keyMap[code];}

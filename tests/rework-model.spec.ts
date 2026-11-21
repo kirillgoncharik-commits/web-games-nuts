@@ -74,9 +74,9 @@ test('purchase is atomic across duplicate callbacks and preserves the installed 
 test('continuing a legacy campaign preserves totals and separates mixed-rule career runs',()=>{
  const data=newCampaign(4);delete data.run_stats.ruleset_id;data.processed_attempts.push('historical-attempt');
  data.run_stats.active_ms=12345;data.run_stats.score=321;const c=new Campaign(data);c.prepare();c.begin();
- expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-rework',active_ms:12345,score:321});
+ expect(c.data.run_stats).toMatchObject({ruleset_id:'mixed-legacy-arcade1',active_ms:12345,score:321});
  const fresh=newCampaign(4);delete fresh.run_stats.ruleset_id;const empty=new Campaign(fresh);empty.prepare();empty.begin();
- expect(empty.data.run_stats.ruleset_id).toBe('campaign-rework9');
+ expect(empty.data.run_stats.ruleset_id).toBe('campaign-arcade1');
 });
 
 

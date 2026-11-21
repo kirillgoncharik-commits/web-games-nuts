@@ -1,3 +1,4 @@
+import {fireFromCover} from './defensive-fire';
 import {expect,type Page} from '@playwright/test';
 export type AirlockAction='right'|'left'|'jump'|'crouch'|'fire'|'interact';
 export type RouteInput=((action:AirlockAction,down:boolean)=>Promise<void>)&{set?:(changes:Partial<Record<AirlockAction,boolean>>)=>Promise<void>};
@@ -24,11 +25,28 @@ export function airlockDriver(page:Page,input?:RouteInput){
  return{action,ground,move,jump,clear,next,wait};
 }
 
-export async function airlockExtension(page:Page,input?:RouteInput,{salvage=false}:{salvage?:boolean}={}){
- const {action,ground,move,jump,clear,next,wait}=airlockDriver(page,input);
+export async function airlockExtension(page:Page,input?:RouteInput,{salvage=false,evade=false}:{salvage?:boolean;evade?:boolean}={}){
+ const {action,ground,move,jump,clear:holdFire,next,wait}=airlockDriver(page,input);
+ const clear=evade?(ids:string[])=>fireFromCover(page,ids,'crouch'):holdFire;
 
  await next('M1A');
- await jump(114,172);await ground(288);await jump(178,292);await ground(256);
+ await jump(114,165);
+ await wait(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0&&Math.abs(s.player.vx)<1;},null,'entry crate landing');
+ const firstLanding=await read(page);
+ if(firstLanding.player.y+22>290){
+  // Knockback or late key release can put the player beyond the entry crate.
+  const from=firstLanding.player.x>184?firstLanding.player.x-2:114;
+  await jump(from,165);
+ }
+ await ground(288);
+ if(evade&&(await read(page)).campaign.difficulty!=='easy'){
+  // The first volley crosses the gap during the climb. Let it approach the
+  // crate, then jump over it and open fire on the way to the higher shelf.
+  await wait(()=>{const s=(window as any).__CINDER__();return s.projectiles.some((shot:{team:string;x:number;vx:number})=>
+   shot.team==='enemy'&&shot.vx<0&&shot.x>s.player.x+55&&shot.x<s.player.x+110);},null,'incoming drone volley');
+  await action('fire',true);
+ }
+ await jump(178,292);await ground(256);
  await action('crouch',true);await clear(['m1a-drone']);await action('crouch',false);
  await move(510);await ground();await next('M1B',true);
 
@@ -39,6 +57,18 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  }else{await action('crouch',true);await move(380);await action('crouch',false);}
  await move(510);await ground();await next('M1C',true);
 
- await jump(130,224);await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
+ if(evade)await action('fire',true);
+ if(evade&&(await read(page)).campaign.difficulty!=='easy'){
+  await jump(130,175);await ground(288);
+  // Let the ground patrol's burst pass the crate before stepping down.
+  await wait(()=>{
+   const s=(window as any).__CINDER__(),guard=s.enemies.find((e:any)=>e.id==='m1c-security');
+   return (guard.hp<=0||guard.phase==='recovery') &&
+    !s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>192&&p.x<450);
+  },null,'security burst past the crate');
+  await move(224);await action('crouch',true);await ground();
+  await move(263);
+ }else await jump(130,224);
+ await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
  await next('C',true);
 }

@@ -37,13 +37,20 @@ export class WorldMotionArt{
     this.previous=current;
     const motionNow=this.room.world?.landmark==='drive'&&world.phase>=2?0:now;
     const signature=[reduced?0:Math.floor(motionNow/80),reduced].join(':');
-    if(signature!==this.signature){
+    // These two rooms draw their machinery at its physical location.
+    if(signature!==this.signature&&this.room.id!=='SW01-B'&&this.room.id!=='YU01-B'){
       this.signature=signature;const g=this.background;g.clear();this.sprites.begin();
       // Separate background prop plane above the routes. It never resembles a platform.
       const x=roomPlacement(this.room.id),y=65;
       const p=this.rig.parts.find(p=>p.keys?.length)??this.rig.parts[0],pose=sampleMotion(p,motionNow,this.rig.duration,reduced);
       const sector=this.room.id.slice(0,4) as keyof typeof productionArt.sectors,frame=productionArt.sectors[sector][5];
-      this.sprites.draw(frame,x+80+pose.x,y+104+pose.y,160,104,1.65,1,.68+pose.alpha*.16).setAngle(Math.sin(pose.rotation*Math.PI/180)*2);
+      if(sector==='YU01'){
+        // The relay cabinet is mechanically fixed, but its authored meter and
+        // status-light rig still breathe with the live signal.  Keep the prop
+        // anchored and use the rig alpha so reduced motion becomes a stable
+        // resting frame instead of disabling the visual altogether.
+        this.sprites.draw('YU01-exchange',x+80,y+110,138,104,1.65,1,.68+pose.alpha*.16);
+      }else this.sprites.draw(frame,x+80+pose.x+(reduced?0:Math.round(Math.sin(motionNow*Math.PI/1200)*3)),y+104+pose.y+(reduced?0:Math.round(Math.cos(motionNow*Math.PI/1200)*3)),160,104,1.65,1,.68+pose.alpha*.16).setAngle(Math.sin(pose.rotation*Math.PI/180)*2);
       this.sprites.end();
     }
     const g=this.feedback;g.clear();this.cues=this.cues.filter(c=>now-c.born<480).slice(-4);

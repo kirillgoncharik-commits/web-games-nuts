@@ -1,7 +1,7 @@
 import {expect} from '@playwright/test';
 import {state} from './helpers';
 
-export async function encounter(page:import('@playwright/test').Page,input:{mission:import('../games/cinder-shift/src/session/missions').PlayableMissionId;room:string;seed?:number;hp?:number;active?:'M1'|'W4'|null;reactorCircuit?:'cooling'|'isolation';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cargoCircuit?:'conveyor'|'security';cleared?:boolean;clearedEnemyIds?:string[];debug?:boolean;reduced?:boolean;touch?:boolean;nodes?:string[]}){
+export async function encounter(page:import('@playwright/test').Page,input:{difficulty?:import('../games/cinder-shift/src/session/difficulty').Difficulty;mission:import('../games/cinder-shift/src/session/missions').PlayableMissionId;room:string;seed?:number;hp?:number;active?:'M1'|'W4'|null;reactorCircuit?:'cooling'|'isolation';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cargoCircuit?:'conveyor'|'security';cleared?:boolean;clearedEnemyIds?:string[];debug?:boolean;reduced?:boolean;touch?:boolean;nodes?:string[]}){
  await page.addInitScript(()=>{
   const errors:string[]=(window as any).__AUDIO_PROBE__=[],Base=window.AudioContext as any;
   (window as any).AudioContext=class extends Base{
@@ -13,7 +13,7 @@ export async function encounter(page:import('@playwright/test').Page,input:{miss
  await page.goto('/__encounter__/');await expect(page.getByTestId('new-shift')).toBeVisible();
  // Fixtures bypass normal mission buttons; retain the real gesture/decode contract.
  await page.getByTestId('menu-settings').click();
- await expect.poll(async()=>(await state(page)).audioStatus.ready).toBe(true);
+ await expect.poll(async()=>{const s=await state(page);return{ready:s.audioStatus.ready,failed:s.audioStatus.unavailableResources,probe:await page.evaluate(()=>(window as any).__AUDIO_PROBE__)};}).toMatchObject({ready:true});
  await expect.poll(async()=>(await state(page)).audio).toBe('running');
  if(input.touch)await page.locator('#touch-mode').selectOption('on');
  await page.getByTestId('settings-back').click();

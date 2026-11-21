@@ -25,18 +25,33 @@ export async function counterRam(page:Page,id:string){
  await page.keyboard.down('j');await until(page,id=>{const s=(window as any).__CINDER__(),e=s.enemies.find((e:any)=>e.id===id);return s.hp<=0||e?.hp<=0||e?.phase==='telegraph'&&e.remaining<220;},id,'ram warning '+id);
  await page.keyboard.down('Space');await until(page,id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((e:any)=>e.id===id)?.hp<=0;},id,'ram counter '+id,12000);await page.keyboard.up('Space');await page.keyboard.up('j');expect((await state(page)).hp).toBeGreaterThan(0);
 }
-export async function drone(page:Page,id:string){
- for(let shot=0;shot<8&&(await state(page)).enemies.find((e:any)=>e.id===id)?.hp>0;shot++){
-  await ground(page,320);await page.keyboard.down('Space');
-  await until(page,id=>{const s=(window as any).__CINDER__(),p=s.player,e=s.enemies.find((e:any)=>e.id===id);return s.hp<=0||e?.hp<=0||p.vy<0&&Math.abs(p.y+22-28-e.y)<6;},id,'drone firing line '+id,1800);
-  const before=(await state(page)).simMs;await page.keyboard.down('j');await until(page,before=>(window as any).__CINDER__().simMs>=before+50,before,'shot');await page.keyboard.up('j');await page.keyboard.up('Space');
+export async function drone(page:Page,id:string,feet=320){
+ for(let pass=0;pass<8;pass++){
+  const entry=await state(page);
+  if(entry.enemies.find((e:any)=>e.id===id)?.hp<=0)break;
+  await ground(page,feet);
+  const started=(await state(page)).simMs;
+  await page.keyboard.down('Space');
+  try{
+   await until(page,({id,started})=>{
+    const s=(window as any).__CINDER__(),e=s.enemies.find((e:any)=>e.id===id);
+    // Hold fire through the return crossing even if a frame skipped the exact ascent height.
+    return s.hp<=0||e?.hp<=0||s.player.y+22-28<=e.y+8||s.simMs-started>700;
+   },{id,started},'drone firing lane '+id);
+   await page.keyboard.down('j');
+   await until(page,started=>{const s=(window as any).__CINDER__();return s.hp<=0||s.simMs>started+250&&s.player.vy===0;},started,'drone landing '+id);
+  }finally{await Promise.all([page.keyboard.up('j'),page.keyboard.up('Space')]);}
+  expect((await state(page)).hp).toBeGreaterThan(0);
  }
- expect((await state(page)).enemies.find((e:any)=>e.id===id)?.hp,id).toBeLessThanOrEqual(0);expect((await state(page)).hp).toBeGreaterThan(0);
+ expect((await state(page)).enemies.find((e:any)=>e.id===id)?.hp,id).toBeLessThanOrEqual(0);
 }
 export async function cross(page:Page,id:string,end?:number){
  let s=await state(page),h=s.hazards.find((h:any)=>h.id===id);if(!h)return;
  // Keep an already safe landing beside cover instead of backtracking into it.
  if(s.player.x<h.x-24)await to(page,h.x-24);await ground(page,320);
+ // Stop before reading the final position. Momentum or knockback can carry
+ // the suit over the near edge after the approach key has been released.
+ if((await state(page)).player.x+11>h.x){await to(page,h.x-22);await ground(page,320);}
  expect((await state(page)).player.x+11,'wait outside the machine footprint').toBeLessThanOrEqual(h.x);
  const target=end??h.x+h.width+28,travel=(target-(await state(page)).player.x)/115*1000+180;
  await until(page,({id,travel})=>{const s=(window as any).__CINDER__(),h=s.hazards.find((h:any)=>h.id===id);if(!h||h.enabled===false)return true;const t=(s.simMs+(h.offset_ms||0))%h.cycle_ms;return t<h.warning_ms?h.warning_ms-t>travel:t>=h.warning_ms+h.active_ms&&h.cycle_ms-t+h.warning_ms>travel;},{id,travel},'machine window '+id,12000);
@@ -58,4 +73,37 @@ export async function standingJump(page:Page,toX:number){
  await Promise.all([page.keyboard.down('Space'),page.keyboard.down(key)]);
  await until(page,({toX,right})=>{const p=(window as any).__CINDER__().player;return right?p.x>=toX:p.x<=toX;},{toX,right},'standing jump landing');
  await Promise.all([page.keyboard.up(key),page.keyboard.up('Space')]);
+}
+
+
+export async function alignOnLedge(page:Page,target:number,feet:number){
+ await page.keyboard.down('s');
+ try{
+  for(let adjustment=0;adjustment<8;adjustment++){
+   const current=await state(page),distance=target-current.player.x;
+   if(Math.abs(distance)<=4)return;
+   const delay=Math.max(35,Math.min(100,(Math.abs(distance)-2)*1000/58));
+   await page.keyboard.press(distance>0?'d':'a',{delay});await ground(page,feet);
+  }
+  expect(Math.abs((await state(page)).player.x-target),'standing jump launch position').toBeLessThanOrEqual(4);
+ }finally{await page.keyboard.up('s');}
+}
+
+export async function face(page:Page,direction:number){
+ const key=direction>0?'d':'a';
+ await page.keyboard.up(direction>0?'a':'d');
+ await page.keyboard.down(key);
+ try{
+  await page.waitForFunction(direction=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||s.player.facing===direction;
+  },direction);
+ }finally{await page.keyboard.up(key);}
+ await page.waitForFunction(()=>{
+  const s=(window as any).__CINDER__();
+  return s.hp<=0||Math.abs(s.player.vx)<1&&s.player.vy===0;
+ });
+ const end=await state(page);
+ expect(end.hp,'turning in '+end.room).toBeGreaterThan(0);
+ expect(end.player.facing).toBe(direction);
 }

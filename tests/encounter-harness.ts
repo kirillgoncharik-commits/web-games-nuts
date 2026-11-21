@@ -1,3 +1,5 @@
+import {HostRecordStorage,BridgeRecordStorage} from '../games/cinder-shift/src/session/host-storage';
+import {SaveService} from '../games/cinder-shift/src/session/save';
 // Test-only entry, compiled outside dist/. The production entry has no fixture globals.
 import {app} from '../games/cinder-shift/src/main';
 import {Campaign,newCampaign,newWorldCampaign} from '../games/cinder-shift/src/session/campaign';
@@ -8,6 +10,12 @@ import type {NodeId,ActiveSkill} from '../games/cinder-shift/src/session/researc
 import {MissionAttempt} from '../games/cinder-shift/src/mission';
 
 (window as any).__ENCOUNTER__={
+ async transportStatistics(input:{kind:'guest'|'bridge';key:string;incoming:import('../games/cinder-shift/src/session/personal-records').PersonalRecords}){
+  // The controlled SDK mock owns localStorage; production Bridge code receives only its SDK.
+  const sdk={get:async(key:string,parse?:boolean)=>{if(parse!==false)throw Error('raw_envelope_required');await new Promise(resolve=>setTimeout(resolve,20));return localStorage.getItem(key);},set:async(key:string,value:unknown)=>{await new Promise(resolve=>setTimeout(resolve,20));localStorage.setItem(key,String(value));}};
+  const storage=input.kind==='guest'?new HostRecordStorage(localStorage,input.key):new BridgeRecordStorage(sdk,input.key);
+  const saves=new SaveService('transport-fixture',storage);return saves.updatePersonalRecords(input.incoming);
+ },
  flushStatistics(){return app.statistics.flush();},
  // Storage-contract fixture only; production has no mutable statistics global.
  writeStatistics(value:import('../games/cinder-shift/src/session/personal-records').PersonalRecords){return app.saves.updatePersonalRecords(value);},
@@ -17,10 +25,10 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
   const s=(window as any).__CINDER__();
   resolve({png:(image as HTMLImageElement).src,state:{build:s.build,sha:s.sha,hp:s.hp,maxHp:s.maxHp,feedback:s.feedback,audioStatus:s.audioStatus,settings:s.settings}});
  }));},
- start(input:{mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];active?:ActiveSkill;reactorCircuit?:'cooling'|'isolation';cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;clearedEnemyIds?:string[];hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
+ start(input:{difficulty?:import('../games/cinder-shift/src/session/difficulty').Difficulty;mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];active?:ActiveSkill;reactorCircuit?:'cooling'|'isolation';cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;clearedEnemyIds?:string[];hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
   app.game.scene.stop('Room');app.game.scene.stop('Backdrop');
   const world=isWorldMission(input.mission)?worldForMission(input.mission):'r01';
-  const campaign=new Campaign(world==='r01'?newCampaign(input.seed??4):newWorldCampaign(world,input.seed??4));
+  const campaign=new Campaign(world==='r01'?newCampaign(input.seed??4,input.difficulty):newWorldCampaign(world,input.seed??4,input.difficulty));
   for(const id of missionChain(input.mission)){
    if(id===input.mission)break;
    campaign.selectMission(id);campaign.prepare();campaign.begin();
