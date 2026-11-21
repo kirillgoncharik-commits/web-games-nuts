@@ -1,0 +1,2505 @@
+{
+  "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+  "seed": 4,
+  "version": "0.8.0-alpha.16",
+  "stock_weapon": true,
+  "checks": [
+    {
+      "run": "bd102-quay",
+      "clean_driver_and_build": true,
+      "entry": "room entry YU02-C",
+      "evidence": {
+        "fixture": "room entry YU02-C",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 1,
+        "hp_end": 1,
+        "score": 225,
+        "active_seconds": 14.866666666666484,
+        "route": [
+          {
+            "room": "YU02-C",
+            "entered_seconds": 0,
+            "left_seconds": 14.833,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 14.833,
+            "left_seconds": 14.866666666666484,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 7733,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 23
+          }
+        ]
+      }
+    },
+    {
+      "run": "bd102-radio",
+      "clean_driver_and_build": true,
+      "entry": "sector entry YU05-A",
+      "evidence": {
+        "fixture": "sector entry YU05-A",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "36e91733-bfe1-4fea-acea-8f48eb362813",
+          "mission_id": "YU05",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 4,
+          "max_hp": 6,
+          "score": 2175,
+          "score_breakdown": {
+            "combat": 775,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 90800.00000000354,
+          "screen_ms": 1013.2000000029802,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": false,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU05-A",
+            "entered_seconds": 0,
+            "left_seconds": 12.9,
+            "score_in": 0,
+            "score_out": 275
+          },
+          {
+            "room": "YU05-B",
+            "entered_seconds": 12.9,
+            "left_seconds": 33.667,
+            "score_in": 275,
+            "score_out": 575
+          },
+          {
+            "room": "YU05-C",
+            "entered_seconds": 33.667,
+            "left_seconds": 52.717,
+            "score_in": 575,
+            "score_out": 800
+          },
+          {
+            "room": "YU05-D",
+            "entered_seconds": 52.717,
+            "left_seconds": 90.80000000000354,
+            "score_in": 800,
+            "score_out": 2175
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU05-A",
+            "enemies": 3,
+            "attacks": 3,
+            "combatMs": 3717,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 48
+          },
+          {
+            "room": "YU05-B",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 5350,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 22
+          },
+          {
+            "room": "YU05-C",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 783,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 153
+          },
+          {
+            "room": "YU05-D",
+            "enemies": 3,
+            "attacks": 2,
+            "combatMs": 3667,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 33
+          }
+        ]
+      }
+    },
+    {
+      "run": "reactor-dry-cross",
+      "clean_driver_and_build": false,
+      "entry": "M5F entry at one HP",
+      "evidence": {
+        "fixture": "M5F entry at one HP",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "hp_start": 1,
+        "hp_end": 1,
+        "pressure": [
+          {
+            "room": "M5F",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 783,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 153
+          },
+          {
+            "room": "M5B",
+            "enemies": 1,
+            "attacks": 0,
+            "combatMs": 0,
+            "hpLost": 0,
+            "attacksPerCombatMinute": null
+          }
+        ],
+        "visits": [
+          {
+            "room": "M5F",
+            "entered_seconds": 0,
+            "left_seconds": 9.383,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "M5B",
+            "entered_seconds": 9.383,
+            "left_seconds": 9.516666666666678,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ]
+      }
+    },
+    {
+      "run": "reactor-retreat",
+      "clean_driver_and_build": false,
+      "entry": "M5B entry at one HP with the E06 patrol",
+      "evidence": {
+        "fixture": "M5B entry at one HP with the E06 patrol",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "hp_start": 1,
+        "hp_end": 1,
+        "active_seconds": 12.833333333333226,
+        "score": 475,
+        "pressure": [
+          {
+            "room": "M5B",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2267,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 53
+          },
+          {
+            "room": "M5G",
+            "enemies": 2,
+            "attacks": 0,
+            "combatMs": 0,
+            "hpLost": 0,
+            "attacksPerCombatMinute": null
+          }
+        ],
+        "visits": [
+          {
+            "room": "M5B",
+            "entered_seconds": 0,
+            "left_seconds": 12.667,
+            "score_in": 0,
+            "score_out": 475
+          },
+          {
+            "room": "M5G",
+            "entered_seconds": 12.667,
+            "left_seconds": 12.833333333333226,
+            "score_in": 475,
+            "score_out": 475
+          }
+        ]
+      }
+    },
+    {
+      "run": "rail-sign-telemetry",
+      "clean_driver_and_build": false,
+      "entry": "room entry YU03-B",
+      "evidence": {
+        "fixture": "room entry YU03-B",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "hp_start": 4,
+        "hp_end": 3,
+        "score": 225,
+        "active_seconds": 23.466666666666946,
+        "route": [
+          {
+            "room": "YU03-B",
+            "entered_seconds": 0,
+            "left_seconds": 23.4,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU03-C",
+            "entered_seconds": 23.4,
+            "left_seconds": 23.466666666666946,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU03-B",
+            "enemies": 2,
+            "attacks": 4,
+            "combatMs": 5133,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 47
+          }
+        ]
+      }
+    },
+    {
+      "run": "rail-sign",
+      "clean_driver_and_build": false,
+      "entry": "room entry YU03-B",
+      "evidence": {
+        "fixture": "room entry YU03-B",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 2,
+        "score": 225,
+        "active_seconds": 39.699999999999946,
+        "route": [
+          {
+            "room": "YU03-B",
+            "entered_seconds": 0,
+            "left_seconds": 39.283,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU03-C",
+            "entered_seconds": 39.283,
+            "left_seconds": 39.699999999999946,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU03-B",
+            "enemies": 2,
+            "attacks": 5,
+            "combatMs": 6117,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 49
+          }
+        ]
+      }
+    },
+    {
+      "run": "harbor-pulse",
+      "clean_driver_and_build": false,
+      "entry": "room entry YU02-D",
+      "evidence": {
+        "fixture": "room entry YU02-D",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 5,
+        "score": 1300,
+        "active_seconds": 30.583333333334128,
+        "route": [
+          {
+            "room": "YU02-D",
+            "entered_seconds": 0,
+            "left_seconds": 30.583333333334128,
+            "score_in": 0,
+            "score_out": 1300
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-D",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 4550,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 26
+          }
+        ]
+      }
+    },
+    {
+      "run": "harbor-pulse",
+      "clean_driver_and_build": false,
+      "entry": "sector entry YU02-A",
+      "evidence": {
+        "fixture": "sector entry YU02-A",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "f2bc759e-f096-4721-b047-f7173a2a0b1e",
+          "mission_id": "YU02",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 3,
+          "max_hp": 6,
+          "score": 1975,
+          "score_breakdown": {
+            "combat": 575,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 151516.66666667003,
+          "screen_ms": 1385.7000000029802,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU02-A",
+            "entered_seconds": 0,
+            "left_seconds": 14.033,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-B",
+            "entered_seconds": 14.033,
+            "left_seconds": 48.583,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU02-C",
+            "entered_seconds": 48.583,
+            "left_seconds": 72.9,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 72.9,
+            "left_seconds": 151.51666666667003,
+            "score_in": 675,
+            "score_out": 1975
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 1850,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 65
+          },
+          {
+            "room": "YU02-B",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 783,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 77
+          },
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 10183,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 18
+          },
+          {
+            "room": "YU02-D",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 7267,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 17
+          }
+        ]
+      }
+    },
+    {
+      "run": "warehouse-last-volley",
+      "clean_driver_and_build": false,
+      "entry": "room entry YU02-A",
+      "evidence": {
+        "fixture": "room entry YU02-A",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "hp_start": 4,
+        "hp_end": 2,
+        "score": 225,
+        "active_seconds": 11.449999999999942,
+        "route": [
+          {
+            "room": "YU02-A",
+            "entered_seconds": 0,
+            "left_seconds": 11.417,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-B",
+            "entered_seconds": 11.417,
+            "left_seconds": 11.449999999999942,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2600,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 46
+          }
+        ]
+      }
+    },
+    {
+      "run": "warehouse-last-volley",
+      "clean_driver_and_build": false,
+      "entry": "sector entry YU02-A",
+      "evidence": {
+        "fixture": "sector entry YU02-A",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "result": {
+          "attempt_id": "c04b6aa8-b34b-4960-939e-2d6bff19d5ee",
+          "mission_id": "YU02",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 2,
+          "max_hp": 4,
+          "score": 1975,
+          "score_breakdown": {
+            "combat": 575,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 84533.33333333505,
+          "screen_ms": 984.2000000029802,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU02-A",
+            "entered_seconds": 0,
+            "left_seconds": 10.867,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-B",
+            "entered_seconds": 10.867,
+            "left_seconds": 34.6,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU02-C",
+            "entered_seconds": 34.6,
+            "left_seconds": 49.617,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 49.617,
+            "left_seconds": 84.53333333333505,
+            "score_in": 675,
+            "score_out": 1975
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2617,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 46
+          },
+          {
+            "room": "YU02-B",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 783,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 77
+          },
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 8183,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 22
+          },
+          {
+            "room": "YU02-D",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 3950,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 15
+          }
+        ]
+      }
+    },
+    {
+      "run": "forge-firing-slit",
+      "clean_driver_and_build": false,
+      "entry": "Foundry sector entry M3A",
+      "evidence": {
+        "fixture": "Foundry sector entry M3A",
+        "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "result": {
+          "attempt_id": "63e67aa6-64ff-421b-9f01-84fcabedf256",
+          "mission_id": "foundry",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 4,
+          "max_hp": 4,
+          "score": 2625,
+          "score_breakdown": {
+            "combat": 825,
+            "rooms": 800,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 75833.33333333251,
+          "screen_ms": 1137.3000000044703,
+          "nodes": [],
+          "foundry_route": "service",
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "M3A",
+            "entered_seconds": 0,
+            "left_seconds": 7.333,
+            "score_in": 0,
+            "score_out": 150
+          },
+          {
+            "room": "M3E",
+            "entered_seconds": 7.333,
+            "left_seconds": 16.117,
+            "score_in": 150,
+            "score_out": 375
+          },
+          {
+            "room": "M3F",
+            "entered_seconds": 16.117,
+            "left_seconds": 23.767,
+            "score_in": 375,
+            "score_out": 525
+          },
+          {
+            "room": "M3B",
+            "entered_seconds": 23.767,
+            "left_seconds": 32.233,
+            "score_in": 525,
+            "score_out": 750
+          },
+          {
+            "room": "M3G",
+            "entered_seconds": 32.233,
+            "left_seconds": 44.717,
+            "score_in": 750,
+            "score_out": 1000
+          },
+          {
+            "room": "M3H",
+            "entered_seconds": 44.717,
+            "left_seconds": 61.133,
+            "score_in": 1000,
+            "score_out": 1300
+          },
+          {
+            "room": "M3K",
+            "entered_seconds": 61.133,
+            "left_seconds": 66.75,
+            "score_in": 1300,
+            "score_out": 1400
+          },
+          {
+            "room": "M3D",
+            "entered_seconds": 66.75,
+            "left_seconds": 75.83333333333252,
+            "score_in": 1400,
+            "score_out": 2625
+          }
+        ],
+        "pressure": [
+          {
+            "room": "M3A",
+            "enemies": 1,
+            "attacks": 1,
+            "combatMs": 2067,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 29
+          },
+          {
+            "room": "M3E",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2717,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 44
+          },
+          {
+            "room": "M3F",
+            "enemies": 1,
+            "attacks": 1,
+            "combatMs": 1617,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 37
+          },
+          {
+            "room": "M3B",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 4067,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 44
+          },
+          {
+            "room": "M3G",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 4717,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 38
+          },
+          {
+            "room": "M3H",
+            "enemies": 2,
+            "attacks": 5,
+            "combatMs": 9767,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 31
+          },
+          {
+            "room": "M3K",
+            "enemies": 0,
+            "attacks": 0,
+            "combatMs": 0,
+            "hpLost": 0,
+            "attacksPerCombatMinute": null
+          },
+          {
+            "room": "M3D",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2350,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 51
+          }
+        ]
+      }
+    }
+  ],
+  "local_full_runs": [
+    {
+      "run": "bd102-c03-easy",
+      "clean_driver_and_build": true,
+      "entry_fixture": "legacy C01 unlock",
+      "full_route": false,
+      "sectors": [
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU01-A",
+              "entered_seconds": 0,
+              "left_seconds": 11.767,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU01-B",
+              "entered_seconds": 11.767,
+              "left_seconds": 33.25,
+              "score_in": 225,
+              "score_out": 400
+            },
+            {
+              "room": "YU01-C",
+              "entered_seconds": 33.25,
+              "left_seconds": 46.883,
+              "score_in": 400,
+              "score_out": 625
+            },
+            {
+              "room": "YU01-D",
+              "entered_seconds": 46.883,
+              "left_seconds": 83.05000000000128,
+              "score_in": 625,
+              "score_out": 1925
+            }
+          ],
+          "result": {
+            "attempt_id": "88e0af4a-270d-454b-9e4a-a0550e19f9c6",
+            "mission_id": "YU01",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 5,
+            "max_hp": 6,
+            "score": 1925,
+            "score_breakdown": {
+              "combat": 525,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 83050.00000000128,
+            "screen_ms": 786.3000000044703,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU01-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 2533,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 47
+            },
+            {
+              "room": "YU01-B",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 250,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 240
+            },
+            {
+              "room": "YU01-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 5083,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 35
+            },
+            {
+              "room": "YU01-D",
+              "enemies": 3,
+              "attacks": 2,
+              "combatMs": 1067,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 112
+            }
+          ],
+          "losses": []
+        }
+      ],
+      "failed_attempts": [
+        {
+          "loss": {
+            "mission": "YU02",
+            "room": "YU02-D",
+            "reason": "world-pulse",
+            "seconds": 101.60000000000667
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "easy",
+          "seed": 4,
+          "score": 875,
+          "visits": [
+            {
+              "room": "YU02-A",
+              "entered_seconds": 0,
+              "left_seconds": 17.333,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU02-B",
+              "entered_seconds": 17.333,
+              "left_seconds": 44.567,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU02-C",
+              "entered_seconds": 44.567,
+              "left_seconds": 61.983,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU02-D",
+              "entered_seconds": 61.983,
+              "left_seconds": 101.60000000000667,
+              "score_in": 675,
+              "score_out": 875
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU02-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 3683,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 33
+            },
+            {
+              "room": "YU02-B",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 767,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 78
+            },
+            {
+              "room": "YU02-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 8850,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 20
+            },
+            {
+              "room": "YU02-D",
+              "enemies": 2,
+              "attacks": 4,
+              "combatMs": 12017,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 20
+            }
+          ]
+        }
+      ],
+      "stop": {
+        "room": "YU02-D",
+        "mission": "YU02",
+        "hp": 2,
+        "player": {
+          "x": 620.6833333333379,
+          "y": 298,
+          "vx": 58,
+          "vy": 0,
+          "facing": 1,
+          "animation_id": "crouch",
+          "crouching": true,
+          "dashReady": 0,
+          "chargeReady": 0
+        },
+        "score": 1975,
+        "active_seconds": 124.33333333334663,
+        "visits": [
+          {
+            "room": "YU02-A",
+            "entered_seconds": 0,
+            "left_seconds": 16.6,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-B",
+            "entered_seconds": 16.6,
+            "left_seconds": 48.567,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU02-C",
+            "entered_seconds": 48.567,
+            "left_seconds": 71.033,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 71.033,
+            "left_seconds": 124.33333333334663,
+            "score_in": 675,
+            "score_out": 1975
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 3750,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 32
+          },
+          {
+            "room": "YU02-B",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 767,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 78
+          },
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 9950,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 18
+          },
+          {
+            "room": "YU02-D",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 11117,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 11
+          }
+        ]
+      }
+    },
+    {
+      "run": "bd102-c03-hard",
+      "clean_driver_and_build": true,
+      "entry_fixture": "legacy C01 unlock",
+      "full_route": false,
+      "sectors": [
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU01-A",
+              "entered_seconds": 0,
+              "left_seconds": 14.617,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU01-B",
+              "entered_seconds": 14.617,
+              "left_seconds": 45.117,
+              "score_in": 225,
+              "score_out": 400
+            },
+            {
+              "room": "YU01-C",
+              "entered_seconds": 45.117,
+              "left_seconds": 59.85,
+              "score_in": 400,
+              "score_out": 625
+            },
+            {
+              "room": "YU01-D",
+              "entered_seconds": 59.85,
+              "left_seconds": 101.40000000000663,
+              "score_in": 625,
+              "score_out": 1925
+            }
+          ],
+          "result": {
+            "attempt_id": "dbb2588a-264e-4a8f-8930-530ee1554d94",
+            "mission_id": "YU01",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 3,
+            "max_hp": 5,
+            "score": 1925,
+            "score_breakdown": {
+              "combat": 525,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 101400.00000000662,
+            "screen_ms": 1739.2000000029802,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU01-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 2733,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 44
+            },
+            {
+              "room": "YU01-B",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 267,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 225
+            },
+            {
+              "room": "YU01-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 4967,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 36
+            },
+            {
+              "room": "YU01-D",
+              "enemies": 3,
+              "attacks": 2,
+              "combatMs": 1050,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 114
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU02-A",
+              "entered_seconds": 0,
+              "left_seconds": 16.4,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU02-B",
+              "entered_seconds": 16.4,
+              "left_seconds": 48.6,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU02-C",
+              "entered_seconds": 48.6,
+              "left_seconds": 71.317,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU02-D",
+              "entered_seconds": 71.317,
+              "left_seconds": 108.63333333334207,
+              "score_in": 675,
+              "score_out": 1975
+            }
+          ],
+          "result": {
+            "attempt_id": "224e308a-e742-47ab-8a83-ac0e117da7e2",
+            "mission_id": "YU02",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 2,
+            "max_hp": 5,
+            "score": 1975,
+            "score_breakdown": {
+              "combat": 575,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 108633.33333334206,
+            "screen_ms": 4731.89999999851,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU02-A",
+              "enemies": 2,
+              "attacks": 4,
+              "combatMs": 3650,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 66
+            },
+            {
+              "room": "YU02-B",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 783,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 77
+            },
+            {
+              "room": "YU02-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 12517,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 14
+            },
+            {
+              "room": "YU02-D",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 3983,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 15
+            }
+          ],
+          "losses": []
+        }
+      ],
+      "failed_attempts": [
+        {
+          "loss": {
+            "mission": "YU03",
+            "room": "YU03-B",
+            "reason": "relay-crawler-shot",
+            "seconds": 40.44999999999984
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 275,
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 29.8,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 29.8,
+              "left_seconds": 40.44999999999984,
+              "score_in": 150,
+              "score_out": 275
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 517,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 3833,
+              "hpLost": 5,
+              "attacksPerCombatMinute": 47
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU03",
+            "room": "YU03-B",
+            "reason": "relay-crawler-shot",
+            "seconds": 23.26666666666693
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 225,
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 13.883,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 13.883,
+              "left_seconds": 23.26666666666693,
+              "score_in": 150,
+              "score_out": 225
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 517,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 3933,
+              "hpLost": 5,
+              "attacksPerCombatMinute": 46
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU03",
+            "room": "YU03-C",
+            "reason": "world-pulse",
+            "seconds": 71.24999999999784
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 375,
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 16.117,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 16.117,
+              "left_seconds": 60.117,
+              "score_in": 150,
+              "score_out": 375
+            },
+            {
+              "room": "YU03-C",
+              "entered_seconds": 60.117,
+              "left_seconds": 71.24999999999784,
+              "score_in": 375,
+              "score_out": 375
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 517,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 4983,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 36
+            },
+            {
+              "room": "YU03-C",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 1400,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 43
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "run": "harbor-exit-chain",
+      "clean_driver_and_build": false,
+      "entry_fixture": "legacy C01 unlock",
+      "full_route": true,
+      "sectors": [
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU01-A",
+              "entered_seconds": 0,
+              "left_seconds": 15.483,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU01-B",
+              "entered_seconds": 15.483,
+              "left_seconds": 47.317,
+              "score_in": 225,
+              "score_out": 400
+            },
+            {
+              "room": "YU01-C",
+              "entered_seconds": 47.317,
+              "left_seconds": 66.867,
+              "score_in": 400,
+              "score_out": 625
+            },
+            {
+              "room": "YU01-D",
+              "entered_seconds": 66.867,
+              "left_seconds": 152.05000000000305,
+              "score_in": 625,
+              "score_out": 1925
+            }
+          ],
+          "result": {
+            "attempt_id": "254728fe-fe14-41b4-ac46-f06244df7a43",
+            "mission_id": "YU01",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 5,
+            "max_hp": 6,
+            "score": 1925,
+            "score_breakdown": {
+              "combat": 525,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 152050.00000000306,
+            "screen_ms": 884.0999999940395,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU01-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 4067,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 30
+            },
+            {
+              "room": "YU01-B",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 250,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 240
+            },
+            {
+              "room": "YU01-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 5067,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 36
+            },
+            {
+              "room": "YU01-D",
+              "enemies": 3,
+              "attacks": 2,
+              "combatMs": 1033,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU02-A",
+              "entered_seconds": 0,
+              "left_seconds": 13.783,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU02-B",
+              "entered_seconds": 13.783,
+              "left_seconds": 37.267,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU02-C",
+              "entered_seconds": 37.267,
+              "left_seconds": 53.883,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU02-D",
+              "entered_seconds": 53.883,
+              "left_seconds": 95.45000000000489,
+              "score_in": 675,
+              "score_out": 1975
+            }
+          ],
+          "result": {
+            "attempt_id": "af8d9fce-405b-478d-a3cd-438135121c70",
+            "mission_id": "YU02",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 4,
+            "max_hp": 6,
+            "score": 1975,
+            "score_breakdown": {
+              "combat": 575,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 95450.00000000489,
+            "screen_ms": 2795.2999999970198,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU02-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 2633,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 46
+            },
+            {
+              "room": "YU02-B",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 783,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 77
+            },
+            {
+              "room": "YU02-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 7633,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 24
+            },
+            {
+              "room": "YU02-D",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 4517,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 27
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 12.8,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 12.8,
+              "left_seconds": 56.083,
+              "score_in": 150,
+              "score_out": 375
+            },
+            {
+              "room": "YU03-C",
+              "entered_seconds": 56.083,
+              "left_seconds": 87.517,
+              "score_in": 375,
+              "score_out": 675
+            },
+            {
+              "room": "YU03-D",
+              "entered_seconds": 87.517,
+              "left_seconds": 131.2000000000152,
+              "score_in": 675,
+              "score_out": 2050
+            }
+          ],
+          "result": {
+            "attempt_id": "c9da69af-0f7f-4ab6-9c63-d30c72846f2e",
+            "mission_id": "YU03",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 3,
+            "max_hp": 6,
+            "score": 2050,
+            "score_breakdown": {
+              "combat": 650,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 131200.0000000152,
+            "screen_ms": 4423.19999999553,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 533,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 113
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 3117,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 38
+            },
+            {
+              "room": "YU03-C",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 3767,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 32
+            },
+            {
+              "room": "YU03-D",
+              "enemies": 3,
+              "attacks": 3,
+              "combatMs": 3983,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 45
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU04-A",
+              "entered_seconds": 0,
+              "left_seconds": 15.633,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU04-B",
+              "entered_seconds": 15.633,
+              "left_seconds": 48.033,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU04-C",
+              "entered_seconds": 48.033,
+              "left_seconds": 70.9,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU04-D",
+              "entered_seconds": 70.9,
+              "left_seconds": 110.05000000000913,
+              "score_in": 675,
+              "score_out": 2050
+            }
+          ],
+          "result": {
+            "attempt_id": "83c0c75d-cca7-4383-a3e0-9e185cb48bec",
+            "mission_id": "YU04",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 3,
+            "max_hp": 6,
+            "score": 2050,
+            "score_breakdown": {
+              "combat": 650,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 110050.00000000914,
+            "screen_ms": 7042.89999999851,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU04-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 683,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 176
+            },
+            {
+              "room": "YU04-B",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 7383,
+              "hpLost": 3,
+              "attacksPerCombatMinute": 16
+            },
+            {
+              "room": "YU04-C",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 3450,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 17
+            },
+            {
+              "room": "YU04-D",
+              "enemies": 3,
+              "attacks": 4,
+              "combatMs": 9867,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 24
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "easy",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU05-A",
+              "entered_seconds": 0,
+              "left_seconds": 17.733,
+              "score_in": 0,
+              "score_out": 275
+            },
+            {
+              "room": "YU05-B",
+              "entered_seconds": 17.733,
+              "left_seconds": 52.583,
+              "score_in": 275,
+              "score_out": 575
+            },
+            {
+              "room": "YU05-C",
+              "entered_seconds": 52.583,
+              "left_seconds": 78.183,
+              "score_in": 575,
+              "score_out": 800
+            },
+            {
+              "room": "YU05-D",
+              "entered_seconds": 78.183,
+              "left_seconds": 114.8166666666772,
+              "score_in": 800,
+              "score_out": 2175
+            }
+          ],
+          "result": {
+            "attempt_id": "ba390fc3-4652-4bdb-a52e-293da38d0fa9",
+            "mission_id": "YU05",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 2,
+            "max_hp": 6,
+            "score": 2175,
+            "score_breakdown": {
+              "combat": 775,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 114816.66666667719,
+            "screen_ms": 9237.79999999702,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": false,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU05-A",
+              "enemies": 3,
+              "attacks": 3,
+              "combatMs": 3300,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 55
+            },
+            {
+              "room": "YU05-B",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 7717,
+              "hpLost": 3,
+              "attacksPerCombatMinute": 23
+            },
+            {
+              "room": "YU05-C",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 733,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 164
+            },
+            {
+              "room": "YU05-D",
+              "enemies": 3,
+              "attacks": 3,
+              "combatMs": 7200,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 25
+            }
+          ],
+          "losses": []
+        }
+      ],
+      "failed_attempts": [],
+      "final": {
+        "unique_rooms": 20,
+        "world_facts": [
+          "c03-adriatic-1986:transmission:YU01",
+          "c03-adriatic-1986:transmission:YU02",
+          "c03-adriatic-1986:transmission:YU03",
+          "c03-adriatic-1986:transmission:YU04",
+          "c03-adriatic-1986:transmission:YU05"
+        ],
+        "run_stats": {
+          "ruleset_id": "campaign-arcade1",
+          "active_ms": 603566.6666667095,
+          "deaths": 0,
+          "score": 10175,
+          "foundry_route": null,
+          "history_complete": true,
+          "assisted": false
+        }
+      }
+    },
+    {
+      "run": "harbor-rail-hard",
+      "clean_driver_and_build": false,
+      "entry_fixture": "legacy C01 unlock",
+      "full_route": false,
+      "sectors": [
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU01-A",
+              "entered_seconds": 0,
+              "left_seconds": 14.65,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU01-B",
+              "entered_seconds": 14.65,
+              "left_seconds": 35.65,
+              "score_in": 225,
+              "score_out": 400
+            },
+            {
+              "room": "YU01-C",
+              "entered_seconds": 35.65,
+              "left_seconds": 53.05,
+              "score_in": 400,
+              "score_out": 625
+            },
+            {
+              "room": "YU01-D",
+              "entered_seconds": 53.05,
+              "left_seconds": 96.21666666667178,
+              "score_in": 625,
+              "score_out": 1925
+            }
+          ],
+          "result": {
+            "attempt_id": "69641c21-d439-4839-939a-6b1b1bcc3aad",
+            "mission_id": "YU01",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 1,
+            "max_hp": 5,
+            "score": 1925,
+            "score_breakdown": {
+              "combat": 525,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 96216.66666667178,
+            "screen_ms": 1160.3999999985099,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU01-A",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 4550,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 40
+            },
+            {
+              "room": "YU01-B",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 250,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 240
+            },
+            {
+              "room": "YU01-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 5300,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 34
+            },
+            {
+              "room": "YU01-D",
+              "enemies": 3,
+              "attacks": 2,
+              "combatMs": 1067,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 112
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU02-A",
+              "entered_seconds": 0,
+              "left_seconds": 17.133,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU02-B",
+              "entered_seconds": 17.133,
+              "left_seconds": 43.017,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU02-C",
+              "entered_seconds": 43.017,
+              "left_seconds": 61.067,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU02-D",
+              "entered_seconds": 61.067,
+              "left_seconds": 101.70000000000671,
+              "score_in": 675,
+              "score_out": 1975
+            }
+          ],
+          "result": {
+            "attempt_id": "0d692797-77bc-4808-b900-2d5e0fe5c822",
+            "mission_id": "YU02",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 3,
+            "max_hp": 5,
+            "score": 1975,
+            "score_breakdown": {
+              "combat": 575,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 101700.00000000671,
+            "screen_ms": 4164.79999999702,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU02-A",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 3500,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 51
+            },
+            {
+              "room": "YU02-B",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 783,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 77
+            },
+            {
+              "room": "YU02-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 8217,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 22
+            },
+            {
+              "room": "YU02-D",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 7167,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 17
+            }
+          ],
+          "losses": []
+        },
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 12.483,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 12.483,
+              "left_seconds": 38.9,
+              "score_in": 150,
+              "score_out": 375
+            },
+            {
+              "room": "YU03-C",
+              "entered_seconds": 38.9,
+              "left_seconds": 56.6,
+              "score_in": 375,
+              "score_out": 675
+            },
+            {
+              "room": "YU03-D",
+              "entered_seconds": 56.6,
+              "left_seconds": 89.98333333333663,
+              "score_in": 675,
+              "score_out": 2050
+            }
+          ],
+          "result": {
+            "attempt_id": "65401a50-b73d-48b2-97e5-4f262bdf85a3",
+            "mission_id": "YU03",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 2,
+            "max_hp": 5,
+            "score": 2050,
+            "score_breakdown": {
+              "combat": 650,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 89983.33333333663,
+            "screen_ms": 7602.0999999940395,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 517,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 4,
+              "combatMs": 4883,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 49
+            },
+            {
+              "room": "YU03-C",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 7033,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 26
+            },
+            {
+              "room": "YU03-D",
+              "enemies": 3,
+              "attacks": 3,
+              "combatMs": 4400,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 41
+            }
+          ],
+          "losses": [
+            {
+              "mission": "YU03",
+              "room": "YU03-C",
+              "reason": "signal-watcher-shot",
+              "seconds": 45.83333333333239
+            },
+            {
+              "mission": "YU03",
+              "room": "YU03-C",
+              "reason": "signal-watcher-shot",
+              "seconds": 65.61666666666288
+            }
+          ]
+        },
+        {
+          "difficulty": "hard",
+          "seed": 4,
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "visits": [
+            {
+              "room": "YU04-A",
+              "entered_seconds": 0,
+              "left_seconds": 12.333,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU04-B",
+              "entered_seconds": 12.333,
+              "left_seconds": 38.233,
+              "score_in": 225,
+              "score_out": 450
+            },
+            {
+              "room": "YU04-C",
+              "entered_seconds": 38.233,
+              "left_seconds": 55.783,
+              "score_in": 450,
+              "score_out": 675
+            },
+            {
+              "room": "YU04-D",
+              "entered_seconds": 55.783,
+              "left_seconds": 88.46666666666952,
+              "score_in": 675,
+              "score_out": 2050
+            }
+          ],
+          "result": {
+            "attempt_id": "8e2ed0b1-eb36-400a-8347-b6f94affe602",
+            "mission_id": "YU04",
+            "result": "victory",
+            "reason": "objective_complete",
+            "hp": 1,
+            "max_hp": 5,
+            "score": 2050,
+            "score_breakdown": {
+              "combat": 650,
+              "rooms": 400,
+              "salvage": 0,
+              "extraction": 1000
+            },
+            "active_ms": 88466.66666666952,
+            "screen_ms": 15393.79999999702,
+            "nodes": [],
+            "foundry_route": null,
+            "reward_granted": true,
+            "applied": true
+          },
+          "pressure": [
+            {
+              "room": "YU04-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 717,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 167
+            },
+            {
+              "room": "YU04-B",
+              "enemies": 2,
+              "attacks": 3,
+              "combatMs": 7700,
+              "hpLost": 3,
+              "attacksPerCombatMinute": 23
+            },
+            {
+              "room": "YU04-C",
+              "enemies": 2,
+              "attacks": 1,
+              "combatMs": 2050,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 29
+            },
+            {
+              "room": "YU04-D",
+              "enemies": 3,
+              "attacks": 4,
+              "combatMs": 9533,
+              "hpLost": 3,
+              "attacksPerCombatMinute": 25
+            }
+          ],
+          "losses": [
+            {
+              "mission": "YU04",
+              "room": "YU04-B",
+              "reason": "drone-contact",
+              "seconds": 24.06666666666699
+            }
+          ]
+        }
+      ],
+      "failed_attempts": [
+        {
+          "loss": {
+            "mission": "YU03",
+            "room": "YU03-C",
+            "reason": "signal-watcher-shot",
+            "seconds": 45.83333333333239
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 375,
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 10.967,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 10.967,
+              "left_seconds": 36.2,
+              "score_in": 150,
+              "score_out": 375
+            },
+            {
+              "room": "YU03-C",
+              "entered_seconds": 36.2,
+              "left_seconds": 45.83333333333239,
+              "score_in": 375,
+              "score_out": 375
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 517,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 116
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 4,
+              "combatMs": 4850,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 49
+            },
+            {
+              "room": "YU03-C",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 3467,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 35
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU03",
+            "room": "YU03-C",
+            "reason": "signal-watcher-shot",
+            "seconds": 65.61666666666288
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 375,
+          "visits": [
+            {
+              "room": "YU03-A",
+              "entered_seconds": 0,
+              "left_seconds": 21.117,
+              "score_in": 0,
+              "score_out": 150
+            },
+            {
+              "room": "YU03-B",
+              "entered_seconds": 21.117,
+              "left_seconds": 55.25,
+              "score_in": 150,
+              "score_out": 375
+            },
+            {
+              "room": "YU03-C",
+              "entered_seconds": 55.25,
+              "left_seconds": 65.61666666666288,
+              "score_in": 375,
+              "score_out": 375
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU03-A",
+              "enemies": 1,
+              "attacks": 1,
+              "combatMs": 467,
+              "hpLost": 0,
+              "attacksPerCombatMinute": 128
+            },
+            {
+              "room": "YU03-B",
+              "enemies": 2,
+              "attacks": 4,
+              "combatMs": 5033,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 48
+            },
+            {
+              "room": "YU03-C",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 2850,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 42
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU04",
+            "room": "YU04-B",
+            "reason": "drone-contact",
+            "seconds": 24.06666666666699
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 275,
+          "visits": [
+            {
+              "room": "YU04-A",
+              "entered_seconds": 0,
+              "left_seconds": 14.083,
+              "score_in": 0,
+              "score_out": 225
+            },
+            {
+              "room": "YU04-B",
+              "entered_seconds": 14.083,
+              "left_seconds": 24.06666666666699,
+              "score_in": 225,
+              "score_out": 275
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU04-A",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 1517,
+              "hpLost": 2,
+              "attacksPerCombatMinute": 79
+            },
+            {
+              "room": "YU04-B",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 5500,
+              "hpLost": 3,
+              "attacksPerCombatMinute": 22
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU05",
+            "room": "YU05-B",
+            "reason": "signal-watcher-shot",
+            "seconds": 23.700000000000294
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 325,
+          "visits": [
+            {
+              "room": "YU05-A",
+              "entered_seconds": 0,
+              "left_seconds": 14.933,
+              "score_in": 0,
+              "score_out": 275
+            },
+            {
+              "room": "YU05-B",
+              "entered_seconds": 14.933,
+              "left_seconds": 23.700000000000294,
+              "score_in": 275,
+              "score_out": 325
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU05-A",
+              "enemies": 3,
+              "attacks": 4,
+              "combatMs": 6033,
+              "hpLost": 4,
+              "attacksPerCombatMinute": 40
+            },
+            {
+              "room": "YU05-B",
+              "enemies": 2,
+              "attacks": 2,
+              "combatMs": 4367,
+              "hpLost": 1,
+              "attacksPerCombatMinute": 27
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU05",
+            "room": "YU05-A",
+            "reason": "relay-crawler-shot",
+            "seconds": 9.066666666666695
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 175,
+          "visits": [
+            {
+              "room": "YU05-A",
+              "entered_seconds": 0,
+              "left_seconds": 9.066666666666695,
+              "score_in": 0,
+              "score_out": 175
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU05-A",
+              "enemies": 3,
+              "attacks": 4,
+              "combatMs": 6517,
+              "hpLost": 5,
+              "attacksPerCombatMinute": 37
+            }
+          ]
+        },
+        {
+          "loss": {
+            "mission": "YU05",
+            "room": "YU05-A",
+            "reason": "induction-orb-shot",
+            "seconds": 6.6833333333333655
+          },
+          "source_sha": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+          "difficulty": "hard",
+          "seed": 4,
+          "score": 50,
+          "visits": [
+            {
+              "room": "YU05-A",
+              "entered_seconds": 0,
+              "left_seconds": 6.6833333333333655,
+              "score_in": 0,
+              "score_out": 50
+            }
+          ],
+          "pressure": [
+            {
+              "room": "YU05-A",
+              "enemies": 3,
+              "attacks": 3,
+              "combatMs": 5683,
+              "hpLost": 5,
+              "attacksPerCombatMinute": 32
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

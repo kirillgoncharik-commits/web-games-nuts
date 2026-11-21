@@ -1,0 +1,1204 @@
+{
+  "published_head": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+  "build": "0.8.0-alpha.16",
+  "seed": 4,
+  "weapon": "stock",
+  "checks": [
+    {
+      "run": "5cd4-rotors",
+      "case": "Room entry YU02-B, hard",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU02-B",
+      "clean_build_and_driver": true,
+      "evidence": {
+        "fixture": "room entry YU02-B",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 3,
+        "score": 225,
+        "active_seconds": 26.150000000000475,
+        "route": [
+          {
+            "room": "YU02-B",
+            "entered_seconds": 0,
+            "left_seconds": 26.1,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-C",
+            "entered_seconds": 26.1,
+            "left_seconds": 26.150000000000475,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-B",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 2783,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 22
+          }
+        ]
+      }
+    },
+    {
+      "run": "5cd4-hoist",
+      "case": "Room entry YU04-B, easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-B",
+      "clean_build_and_driver": true,
+      "evidence": {
+        "fixture": "room entry YU04-B",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 4,
+        "score": 225,
+        "active_seconds": 29.7666666666674,
+        "route": [
+          {
+            "room": "YU04-B",
+            "entered_seconds": 0,
+            "left_seconds": 29.7,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 29.7,
+            "left_seconds": 29.7666666666674,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 4,
+            "combatMs": 6683,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 36
+          }
+        ]
+      }
+    },
+    {
+      "run": "5cd4-hoist-hard",
+      "case": "Room entry YU04-B, hard",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-B",
+      "clean_build_and_driver": true,
+      "evidence": {
+        "fixture": "room entry YU04-B",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 3,
+        "score": 225,
+        "active_seconds": 24.216666666667,
+        "route": [
+          {
+            "room": "YU04-B",
+            "entered_seconds": 0,
+            "left_seconds": 24.15,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 24.15,
+            "left_seconds": 24.216666666667,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 4,
+            "combatMs": 5750,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 42
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-quay-proof",
+      "case": "Hard harbor quay from the actual one HP at entry; in-game repair",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU02-C",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU02-C",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 1,
+        "hp_end": 3,
+        "score": 225,
+        "active_seconds": 14.949999999999815,
+        "route": [
+          {
+            "room": "YU02-C",
+            "entered_seconds": 0,
+            "left_seconds": 14.933,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 14.933,
+            "left_seconds": 14.949999999999815,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 8150,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 22
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-hoist-confirm",
+      "case": "Hoist rotor and guard, with sector replay on easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "sector entry YU04-A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "sector entry YU04-A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "a7e60112-fdae-43cd-bb44-b5ffeeb5f53b",
+          "mission_id": "YU04",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 4,
+          "max_hp": 6,
+          "score": 2050,
+          "score_breakdown": {
+            "combat": 650,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 78299.9999999999,
+          "screen_ms": 754.2999999970198,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU04-A",
+            "entered_seconds": 0,
+            "left_seconds": 10.5,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-B",
+            "entered_seconds": 10.5,
+            "left_seconds": 33.8,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 33.8,
+            "left_seconds": 49.65,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU04-D",
+            "entered_seconds": 49.65,
+            "left_seconds": 78.2999999999999,
+            "score_in": 675,
+            "score_out": 2050
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 700,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 171
+          },
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 7383,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 16
+          },
+          {
+            "room": "YU04-C",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 1833,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 33
+          },
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 4,
+            "combatMs": 9100,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 26
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-hoist-confirm",
+      "case": "Hoist rotor and guard, with sector replay on easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-B",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU04-B",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 3,
+        "score": 225,
+        "active_seconds": 22.883333333333567,
+        "route": [
+          {
+            "room": "YU04-B",
+            "entered_seconds": 0,
+            "left_seconds": 22.883,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 22.883,
+            "left_seconds": 22.883333333333567,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 7367,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 16
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-quay-roof",
+      "case": "Harbor roof and stock repair pocket on hard",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU02-C",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU02-C",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 5,
+        "score": 225,
+        "active_seconds": 16.66666666666645,
+        "route": [
+          {
+            "room": "YU02-C",
+            "entered_seconds": 0,
+            "left_seconds": 16.65,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-D",
+            "entered_seconds": 16.65,
+            "left_seconds": 16.66666666666645,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 8150,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 22
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-radio-dry",
+      "case": "Radio phase two return to dry ground",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "sector entry YU05-A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "sector entry YU05-A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "cd668037-ce3b-4a79-8d1c-6e56c6845f7b",
+          "mission_id": "YU05",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 2,
+          "max_hp": 6,
+          "score": 2175,
+          "score_breakdown": {
+            "combat": 775,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 94716.66666667134,
+          "screen_ms": 998,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": false,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU05-A",
+            "entered_seconds": 0,
+            "left_seconds": 14.917,
+            "score_in": 0,
+            "score_out": 275
+          },
+          {
+            "room": "YU05-B",
+            "entered_seconds": 14.917,
+            "left_seconds": 39.8,
+            "score_in": 275,
+            "score_out": 575
+          },
+          {
+            "room": "YU05-C",
+            "entered_seconds": 39.8,
+            "left_seconds": 60.383,
+            "score_in": 575,
+            "score_out": 800
+          },
+          {
+            "room": "YU05-D",
+            "entered_seconds": 60.383,
+            "left_seconds": 94.71666666667134,
+            "score_in": 800,
+            "score_out": 2175
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU05-A",
+            "enemies": 3,
+            "attacks": 4,
+            "combatMs": 4350,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 55
+          },
+          {
+            "room": "YU05-B",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 5850,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 21
+          },
+          {
+            "room": "YU05-C",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 767,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 156
+          },
+          {
+            "room": "YU05-D",
+            "enemies": 3,
+            "attacks": 3,
+            "combatMs": 6983,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 26
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-radio-dry",
+      "case": "Radio phase two return to dry ground",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU05-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU05-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 5,
+        "score": 1375,
+        "active_seconds": 29.066666666667352,
+        "route": [
+          {
+            "room": "YU05-D",
+            "entered_seconds": 0,
+            "left_seconds": 29.066666666667352,
+            "score_in": 0,
+            "score_out": 1375
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU05-D",
+            "enemies": 3,
+            "attacks": 2,
+            "combatMs": 3983,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 30
+          }
+        ]
+      }
+    },
+    {
+      "run": "foundry-edge",
+      "case": "Foundry, stock service route on Nightmare",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "Foundry sector entry M3A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "Foundry sector entry M3A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "result": {
+          "attempt_id": "844cb332-19b8-464d-9d8a-84d8909394d7",
+          "mission_id": "foundry",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 4,
+          "max_hp": 4,
+          "score": 2625,
+          "score_breakdown": {
+            "combat": 825,
+            "rooms": 800,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 74083.333333332,
+          "screen_ms": 1594.2000000104308,
+          "nodes": [],
+          "foundry_route": "service",
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "M3A",
+            "entered_seconds": 0,
+            "left_seconds": 7.5,
+            "score_in": 0,
+            "score_out": 150
+          },
+          {
+            "room": "M3E",
+            "entered_seconds": 7.5,
+            "left_seconds": 16.483,
+            "score_in": 150,
+            "score_out": 375
+          },
+          {
+            "room": "M3F",
+            "entered_seconds": 16.483,
+            "left_seconds": 23.333,
+            "score_in": 375,
+            "score_out": 525
+          },
+          {
+            "room": "M3B",
+            "entered_seconds": 23.333,
+            "left_seconds": 32.417,
+            "score_in": 525,
+            "score_out": 750
+          },
+          {
+            "room": "M3G",
+            "entered_seconds": 32.417,
+            "left_seconds": 42.15,
+            "score_in": 750,
+            "score_out": 1000
+          },
+          {
+            "room": "M3H",
+            "entered_seconds": 42.15,
+            "left_seconds": 58.567,
+            "score_in": 1000,
+            "score_out": 1300
+          },
+          {
+            "room": "M3K",
+            "entered_seconds": 58.567,
+            "left_seconds": 64.433,
+            "score_in": 1300,
+            "score_out": 1400
+          },
+          {
+            "room": "M3D",
+            "entered_seconds": 64.433,
+            "left_seconds": 74.083333333332,
+            "score_in": 1400,
+            "score_out": 2625
+          }
+        ],
+        "pressure": [
+          {
+            "room": "M3A",
+            "enemies": 1,
+            "attacks": 1,
+            "combatMs": 2050,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 29
+          },
+          {
+            "room": "M3E",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2717,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 44
+          },
+          {
+            "room": "M3F",
+            "enemies": 1,
+            "attacks": 1,
+            "combatMs": 1617,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 37
+          },
+          {
+            "room": "M3B",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 4633,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 39
+          },
+          {
+            "room": "M3G",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2400,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 50
+          },
+          {
+            "room": "M3H",
+            "enemies": 2,
+            "attacks": 5,
+            "combatMs": 10033,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 30
+          },
+          {
+            "room": "M3K",
+            "enemies": 0,
+            "attacks": 0,
+            "combatMs": 0,
+            "hpLost": 0,
+            "attacksPerCombatMinute": null
+          },
+          {
+            "room": "M3D",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 2467,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 49
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-drive-sector2",
+      "case": "Factory, four rooms after arming the first drive contact",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "sector entry YU04-A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "sector entry YU04-A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "2b0bc13d-2f27-4531-9283-15e527fafb22",
+          "mission_id": "YU04",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 2,
+          "max_hp": 6,
+          "score": 2050,
+          "score_breakdown": {
+            "combat": 650,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 89700.00000000322,
+          "screen_ms": 1049.1999999955297,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU04-A",
+            "entered_seconds": 0,
+            "left_seconds": 11.8,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-B",
+            "entered_seconds": 11.8,
+            "left_seconds": 37.417,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 37.417,
+            "left_seconds": 63.267,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU04-D",
+            "entered_seconds": 63.267,
+            "left_seconds": 89.70000000000321,
+            "score_in": 675,
+            "score_out": 2050
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 733,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 164
+          },
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 4,
+            "combatMs": 5333,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 45
+          },
+          {
+            "room": "YU04-C",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 2933,
+            "hpLost": 1,
+            "attacksPerCombatMinute": 20
+          },
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 5,
+            "combatMs": 9000,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 33
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-drive-crest",
+      "case": "Factory drive from 3 HP on easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU04-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 3,
+        "hp_end": 1,
+        "score": 1375,
+        "active_seconds": 29.650000000000727,
+        "route": [
+          {
+            "room": "YU04-D",
+            "entered_seconds": 0,
+            "left_seconds": 29.650000000000727,
+            "score_in": 0,
+            "score_out": 1375
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 4,
+            "combatMs": 9267,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 26
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-drive-crest-hard",
+      "case": "Factory drive from 3 HP on hard",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU04-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 3,
+        "hp_end": 1,
+        "score": 1375,
+        "active_seconds": 39.916666666666586,
+        "route": [
+          {
+            "room": "YU04-D",
+            "entered_seconds": 0,
+            "left_seconds": 39.916666666666586,
+            "score_in": 0,
+            "score_out": 1375
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 5,
+            "combatMs": 13467,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 22
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-drive-crest-sector",
+      "case": "Factory sector with the firing slit, easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "sector entry YU04-A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "sector entry YU04-A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "result": {
+          "attempt_id": "665557a1-b409-43bf-a9f2-0d93015bf792",
+          "mission_id": "YU04",
+          "result": "victory",
+          "reason": "objective_complete",
+          "hp": 4,
+          "max_hp": 6,
+          "score": 2050,
+          "score_breakdown": {
+            "combat": 650,
+            "rooms": 400,
+            "salvage": 0,
+            "extraction": 1000
+          },
+          "active_ms": 100750.00000000643,
+          "screen_ms": 2324.0000000074506,
+          "nodes": [],
+          "foundry_route": null,
+          "reward_granted": true,
+          "applied": true
+        },
+        "visits": [
+          {
+            "room": "YU04-A",
+            "entered_seconds": 0,
+            "left_seconds": 15.15,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-B",
+            "entered_seconds": 15.15,
+            "left_seconds": 43.3,
+            "score_in": 225,
+            "score_out": 450
+          },
+          {
+            "room": "YU04-C",
+            "entered_seconds": 43.3,
+            "left_seconds": 68.283,
+            "score_in": 450,
+            "score_out": 675
+          },
+          {
+            "room": "YU04-D",
+            "entered_seconds": 68.283,
+            "left_seconds": 100.75000000000644,
+            "score_in": 675,
+            "score_out": 2050
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 700,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 171
+          },
+          {
+            "room": "YU04-B",
+            "enemies": 2,
+            "attacks": 5,
+            "combatMs": 6600,
+            "hpLost": 4,
+            "attacksPerCombatMinute": 45
+          },
+          {
+            "room": "YU04-C",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 4367,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 27
+          },
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 4,
+            "combatMs": 13683,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 18
+          }
+        ]
+      }
+    },
+    {
+      "run": "signal-shutter",
+      "case": "Transmitter from the real 2 HP sector entry on Nightmare; room entry fixture",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU01-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU01-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "nightmare",
+        "hp_start": 2,
+        "hp_end": 2,
+        "score": 1300,
+        "active_seconds": 34.95000000000064,
+        "route": [
+          {
+            "room": "YU01-D",
+            "entered_seconds": 0,
+            "left_seconds": 34.95000000000064,
+            "score_in": 0,
+            "score_out": 1300
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU01-D",
+            "enemies": 3,
+            "attacks": 2,
+            "combatMs": 1033,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 116
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-radio-cross",
+      "case": "Operate the second radio contact while crossing to dry ground",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU05-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU05-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 3,
+        "score": 1375,
+        "active_seconds": 43.63333333333271,
+        "route": [
+          {
+            "room": "YU05-D",
+            "entered_seconds": 0,
+            "left_seconds": 43.63333333333271,
+            "score_in": 0,
+            "score_out": 1375
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU05-D",
+            "enemies": 3,
+            "attacks": 5,
+            "combatMs": 9000,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 33
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-harbor",
+      "case": "Harbor crane beneath the entrance tread",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU02-B",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU02-B",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 5,
+        "score": 225,
+        "active_seconds": 26.366666666667154,
+        "route": [
+          {
+            "room": "YU02-B",
+            "entered_seconds": 0,
+            "left_seconds": 26.317,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU02-C",
+            "entered_seconds": 26.317,
+            "left_seconds": 26.366666666667154,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU02-B",
+            "enemies": 2,
+            "attacks": 1,
+            "combatMs": 783,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 77
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-floor",
+      "case": "Factory entry floor firing lane, hard",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-A",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU04-A",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 5,
+        "hp_end": 5,
+        "score": 225,
+        "active_seconds": 11.566666666666604,
+        "route": [
+          {
+            "room": "YU04-A",
+            "entered_seconds": 0,
+            "left_seconds": 11.5,
+            "score_in": 0,
+            "score_out": 225
+          },
+          {
+            "room": "YU04-B",
+            "entered_seconds": 11.5,
+            "left_seconds": 11.566666666666604,
+            "score_in": 225,
+            "score_out": 225
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-A",
+            "enemies": 2,
+            "attacks": 2,
+            "combatMs": 733,
+            "hpLost": 0,
+            "attacksPerCombatMinute": 164
+          }
+        ]
+      }
+    },
+    {
+      "run": "factory-drive",
+      "case": "Practical order of contact and combat in YU04-D, easy",
+      "game_source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+      "entry": "room entry YU04-D",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU04-D",
+        "source_sha": "5cd4e2c99fd11860a13d181cdfbde28660b1bec0",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 6,
+        "hp_end": 3,
+        "score": 1375,
+        "active_seconds": 23.316666666666933,
+        "route": [
+          {
+            "room": "YU04-D",
+            "entered_seconds": 0,
+            "left_seconds": 23.316666666666933,
+            "score_in": 0,
+            "score_out": 1375
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU04-D",
+            "enemies": 3,
+            "attacks": 5,
+            "combatMs": 8767,
+            "hpLost": 3,
+            "attacksPerCombatMinute": 34
+          }
+        ]
+      }
+    },
+    {
+      "run": "tunnel-running",
+      "case": "Tunnel traversal from 3 HP, easy",
+      "game_source_sha": "5263fac7c80933f211ffcf8f9f236edd98213fa2",
+      "entry": "room entry YU03-C",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU03-C",
+        "source_sha": "5263fac7c80933f211ffcf8f9f236edd98213fa2",
+        "seed": 4,
+        "difficulty": "easy",
+        "hp_start": 3,
+        "hp_end": 3,
+        "score": 300,
+        "active_seconds": 21.53333333333347,
+        "route": [
+          {
+            "room": "YU03-C",
+            "entered_seconds": 0,
+            "left_seconds": 21.5,
+            "score_in": 0,
+            "score_out": 300
+          },
+          {
+            "room": "YU03-D",
+            "entered_seconds": 21.5,
+            "left_seconds": 21.53333333333347,
+            "score_in": 300,
+            "score_out": 300
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU03-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 6883,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 26
+          }
+        ]
+      }
+    },
+    {
+      "run": "tunnel-running-hard",
+      "case": "Tunnel traversal from 3 HP, hard",
+      "game_source_sha": "5263fac7c80933f211ffcf8f9f236edd98213fa2",
+      "entry": "room entry YU03-C",
+      "clean_build_and_driver": false,
+      "evidence": {
+        "fixture": "room entry YU03-C",
+        "source_sha": "5263fac7c80933f211ffcf8f9f236edd98213fa2",
+        "seed": 4,
+        "difficulty": "hard",
+        "hp_start": 3,
+        "hp_end": 3,
+        "score": 300,
+        "active_seconds": 20.783333333333417,
+        "route": [
+          {
+            "room": "YU03-C",
+            "entered_seconds": 0,
+            "left_seconds": 20.733,
+            "score_in": 0,
+            "score_out": 300
+          },
+          {
+            "room": "YU03-D",
+            "entered_seconds": 20.733,
+            "left_seconds": 20.783333333333417,
+            "score_in": 300,
+            "score_out": 300
+          }
+        ],
+        "pressure": [
+          {
+            "room": "YU03-C",
+            "enemies": 2,
+            "attacks": 3,
+            "combatMs": 9817,
+            "hpLost": 2,
+            "attacksPerCombatMinute": 18
+          }
+        ]
+      }
+    }
+  ]
+}

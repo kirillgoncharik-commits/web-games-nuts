@@ -12,11 +12,11 @@
       "room_id": "SW01-A",
       "name": "Столешница",
       "target_seconds": 50,
-      "intent": "Безопасно поднять крышку, пройти под ручкой кружки и бросить её в крупный контакт. Контакт открывает ящик; ошибки не наносят урон.",
-      "choice_and_acceptance": "Короткий нижний путь или верхний уступ с необязательным ресурсом; обе ветки возвращаются к контакту.",
+      "intent": "Поднять крышку в укрытии, провести её к контакту ящика и пройти участок, который патрулирует наземный робот.",
+      "choice_and_acceptance": "Первая крышка лежит в спокойной части комнаты. За выступом, перед ящиком, маршрут пересекает наземный патруль.",
       "art_sector": "SW01",
       "music_cue": "SW_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -25,10 +25,10 @@
       "name": "Сушилка",
       "target_seconds": 65,
       "intent": "Перенести крышку через тарелки: нижняя тропа защищена от пара, верхняя быстрее, но требует прочитать световой/звуковой предвестник.",
-      "choice_and_acceptance": "Выбрать укрытие под тарелкой или освободить руки и снять мешающий сканер. Пар не поражает до первого предупреждения.",
+      "choice_and_acceptance": "Низкая ступень перед полосой пара даёт место для первого обмена выстрелами. После наземного охранника включается сканер.",
       "art_sector": "SW01",
       "music_cue": "SW_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -40,7 +40,7 @@
       "choice_and_acceptance": "Одно короткое предметное препятствие и один обход; выход не требует модуля мобильности.",
       "art_sector": "SW01",
       "music_cue": "SW_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -52,7 +52,7 @@
       "choice_and_acceptance": "Уязвимость показана раскрытием панели и остановкой механизма. Не нужно уничтожать бытовой прибор; отключение дока завершает миссию.",
       "art_sector": "SW01",
       "music_cue": "SW_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -64,7 +64,7 @@
       "choice_and_acceptance": "Низкая линия с укрытиями или быстрый верхний ряд; на обеих есть безопасная точка остановки.",
       "art_sector": "SW02",
       "music_cue": "SW_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -73,10 +73,10 @@
       "name": "Кабельный мост",
       "target_seconds": 65,
       "intent": "Катушка открывает фиксатор кабеля, но занятые руки мешают отстреливать сервисный дрон. Оставить предмет в защищённой нише, очистить путь, продолжить перенос.",
-      "choice_and_acceptance": "Верхний путь с ресурсом и нижний обход. Катушка не может улететь в недоступный для возврата участок.",
+      "choice_and_acceptance": "Ступень перед центральной полкой позволяет зайти к тайнику сверху. После наземного робота линию полки простреливает дрон.",
       "art_sector": "SW02",
       "music_cue": "SW_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -88,7 +88,7 @@
       "choice_and_acceptance": "Переждать цикл в нише либо пройти по постоянным опорам; обязательного ожидания длиннее одного короткого цикла нет.",
       "art_sector": "SW02",
       "music_cue": "SW_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -100,7 +100,7 @@
       "choice_and_acceptance": "Два цикла с меняющимся положением покрытия и финальное действие. Награда — маршрут, не четвёртый фрагмент маяка.",
       "art_sector": "SW02",
       "music_cue": "SW_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -112,7 +112,7 @@
       "choice_and_acceptance": "Нижний безопасный подъём и верхняя опциональная полка с расходником; не повторять геометрию SW02.",
       "art_sector": "SW03",
       "music_cue": "SW_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -121,10 +121,10 @@
       "name": "Прищепочный мост",
       "target_seconds": 70,
       "intent": "Сушильная стойка: прищепки дают постоянные опоры, ткань движется по детерминированному циклу. Крышка защищает один контакт, но блокирует стрельбу.",
-      "choice_and_acceptance": "Путь по жёстким опорам медленнее, по ткани короче. Обратный проход не обновляет ресурсы.",
+      "choice_and_acceptance": "Полка над правой стороной барабана даёт другой угол атаки. После сканера преследователь занимает нижний проход.",
       "art_sector": "SW03",
       "music_cue": "SW_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -136,7 +136,7 @@
       "choice_and_acceptance": "Обычный прыжок базовой Миры достаточен; не требовать нового воздушного управления или трёх одновременных касаний.",
       "art_sector": "SW03",
       "music_cue": "SW_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -148,7 +148,7 @@
       "choice_and_acceptance": "Порядок действий меняет темп, а не исход: нет положения заслонки, которое навсегда запирает героя.",
       "art_sector": "SW03",
       "music_cue": "SW_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -157,10 +157,10 @@
       "name": "Терракотовый сад",
       "target_seconds": 60,
       "intent": "Кромки горшков, листья и широкая безопасная площадка показывают направление ветра. Первый порыв без пропасти.",
-      "choice_and_acceptance": "Внутренняя тропа между горшками либо верхний край; нормальные животные не становятся врагами.",
+      "choice_and_acceptance": "С верхней площадки справа можно атаковать дрон около тайника. Внизу тот же участок патрулирует наземный робот.",
       "art_sector": "SW04",
       "music_cue": "SW_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -172,7 +172,7 @@
       "choice_and_acceptance": "Короткая линия с точным таймингом или чуть более длинная стабильная линия; обе доступны без покупки.",
       "art_sector": "SW04",
       "music_cue": "SW_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -184,7 +184,7 @@
       "choice_and_acceptance": "Не превращать спуск в длинное ожидание; можно наблюдать и двигаться по безопасной стороне.",
       "art_sector": "SW04",
       "music_cue": "SW_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -196,7 +196,7 @@
       "choice_and_acceptance": "Фазы изменяют доступный подход, а не увеличивают HP врага. Получение фрагмента необратимо записывается в ledger.",
       "art_sector": "SW04",
       "music_cue": "SW_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -205,10 +205,10 @@
       "name": "Полочная лестница",
       "target_seconds": 60,
       "intent": "По переплёту, книгам и кабельным креплениям подняться к маяку. Видимый короткий путь и защищённый обход.",
-      "choice_and_acceptance": "В этой миссии не вводить новый приём передвижения; на старте показать видимую конечную цель.",
+      "choice_and_acceptance": "Низкая книга перед лестницей даёт первый подъём. Наземный патруль и ротор перекрывают разные высоты у верхнего тайника.",
       "art_sector": "SW05",
       "music_cue": "SW_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -220,7 +220,7 @@
       "choice_and_acceptance": "Каждая остановка даёт читаемый следующий шаг, а не одинаковые пустые пролёты.",
       "art_sector": "SW05",
       "music_cue": "SW_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -232,7 +232,7 @@
       "choice_and_acceptance": "Логика проверяет fragment IDs, а не количество визуальных объектов; reload не дублирует награду.",
       "art_sector": "SW05",
       "music_cue": "SW_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c02-small-world",
@@ -244,7 +244,7 @@
       "choice_and_acceptance": "Финальный результат, короткая оригинальная развязка, запись завершения и понятные Replay/выход. Нет внезапной новой кнопки или невидимой волны.",
       "art_sector": "SW05",
       "music_cue": "SW_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -253,10 +253,10 @@
       "name": "Двор и вход",
       "target_seconds": 50,
       "intent": "Дать увидеть цель на крыше, телефонный шкаф и безопасный переключатель. Первый контур включает лестничный свет и открывает дверь.",
-      "choice_and_acceptance": "Путь виден без чтения длинного текста; короткая необязательная ниша задаёт характер жилого квартала.",
+      "choice_and_acceptance": "Дополнительная верхняя полка оставляет нижний проход к рубильнику свободным. После патруля во дворе вступает орб.",
       "art_sector": "YU01",
       "music_cue": "YU_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -268,7 +268,7 @@
       "choice_and_acceptance": "Переключатель доступен с обеих сторон либо есть ручной возврат: ни одна конфигурация не создаёт softlock.",
       "art_sector": "YU01",
       "music_cue": "YU_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -280,7 +280,7 @@
       "choice_and_acceptance": "Затенённый безопасный обход или открытый верхний путь с ресурсом. Люди/животные не являются противниками.",
       "art_sector": "YU01",
       "music_cue": "YU_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -292,7 +292,7 @@
       "choice_and_acceptance": "Два подготовительных состояния и итоговая передача; карта загорается физически и в UI. Не вводить отдельную сложную frequency mini-game.",
       "art_sector": "YU01",
       "music_cue": "YU_M01",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -301,10 +301,10 @@
       "name": "Складские ворота",
       "target_seconds": 55,
       "intent": "Повторить A/B на широком знакомом объекте: питание ворот или подъёмной площадки. Первое действие без одновременного обстрела.",
-      "choice_and_acceptance": "Пути разной длины, но одинаково доступны базовой сборке; декоративные контейнеры не мимикрируют под уступы.",
+      "choice_and_acceptance": "С подъёмника можно подняться на верхнюю огневую позицию. Патруль и орб одновременно контролируют подход к грузу.",
       "art_sector": "YU02",
       "music_cue": "YU_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -316,7 +316,7 @@
       "choice_and_acceptance": "Груз предупреждён звуком/силуэтом и не падает из-за кадра; аварийная тропа сохраняет возврат к рубильнику.",
       "art_sector": "YU02",
       "music_cue": "YU_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -328,7 +328,7 @@
       "choice_and_acceptance": "Длиннее под укрытиями или короче по открытой линии; не использовать полную темноту как скрытое наказание.",
       "art_sector": "YU02",
       "music_cue": "YU_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -340,7 +340,7 @@
       "choice_and_acceptance": "Три разных действия на одном наборе правил; передача открывает железнодорожный маршрут.",
       "art_sector": "YU02",
       "music_cue": "YU_M02",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -352,7 +352,7 @@
       "choice_and_acceptance": "Короткая боковая ниша знакомит с бумажными расписаниями/эпохой, не превращаясь в fetch quest.",
       "art_sector": "YU03",
       "music_cue": "YU_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -361,10 +361,10 @@
       "name": "Служебный состав",
       "target_seconds": 70,
       "intent": "Переходить между устойчивыми площадками состава; контур меняет двери и освещение, а не непредсказуемую скорость мира.",
-      "choice_and_acceptance": "Постоянная безопасная линия плюс опциональный верхний путь; пауза и reload не сдвигают механизмы случайным образом.",
+      "choice_and_acceptance": "С верхней полки над поездом можно зайти к тайнику. Наземный патруль у дверей и орб у крыши требуют смены позиции.",
       "art_sector": "YU03",
       "music_cue": "YU_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -376,7 +376,7 @@
       "choice_and_acceptance": "Не отрезать возврат движущимся поездом; ремонтная ниша находится после осмысленного риска.",
       "art_sector": "YU03",
       "music_cue": "YU_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -388,7 +388,7 @@
       "choice_and_acceptance": "Две задачи последовательно, а не три одновременных угрозы. Подстанция подтверждает передачу на завод.",
       "art_sector": "YU03",
       "music_cue": "YU_M03",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -397,10 +397,10 @@
       "name": "Цех на рассвете",
       "target_seconds": 60,
       "intent": "Безопасно показать две конфигурации конвейера. Переключение не увеличивает скорость героя и не меняет его jump envelope.",
-      "choice_and_acceptance": "Боковые мостки или короткая линия по остановленному конвейеру; последствия видны до переключения.",
+      "choice_and_acceptance": "Полка над подъёмником даёт обзор на конвейер. У нижнего прохода патруль, у дальней опоры орб.",
       "art_sector": "YU04",
       "music_cue": "YU_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -412,7 +412,7 @@
       "choice_and_acceptance": "Разница в маршруте/ресурсе; никаких одинаковых коридоров с увеличенным количеством роботов.",
       "art_sector": "YU04",
       "music_cue": "YU_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -424,7 +424,7 @@
       "choice_and_acceptance": "Никаких скользящих переключателей вне досягаемости и бесконечного backtracking за одной кнопкой.",
       "art_sector": "YU04",
       "music_cue": "YU_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -436,7 +436,7 @@
       "choice_and_acceptance": "Три фазы изменяют задачу/геометрию, а не только запас HP; восстановленный канал даёт путь к радиостанции.",
       "art_sector": "YU04",
       "music_cue": "YU_M04",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -445,10 +445,10 @@
       "name": "Подъём к станции",
       "target_seconds": 60,
       "intent": "Вид на залив и цель; короткие связки знакомых уступов с одним выбором питания безопасной линии.",
-      "choice_and_acceptance": "Пауза для ориентации без принудительной катсцены/длинного лифта.",
+      "choice_and_acceptance": "Нижний уступ ведёт к лестнице на холм. После первой наземной цели вступает резервный робот, пока на другом ярусе работает орб.",
       "art_sector": "YU05",
       "music_cue": "YU_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -460,7 +460,7 @@
       "choice_and_acceptance": "Можно вернуться к рубильнику из каждого устойчивого состояния; обход не требует технологии.",
       "art_sector": "YU05",
       "music_cue": "YU_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -472,7 +472,7 @@
       "choice_and_acceptance": "Зафиксированные передачи не отнимаются из-за reload. Это сборка решения, а не новая головоломка в последний момент.",
       "art_sector": "YU05",
       "music_cue": "YU_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     },
     {
       "campaign_id": "c03-adriatic-1986",
@@ -484,7 +484,7 @@
       "choice_and_acceptance": "Разлом закрыт, Мира возвращается по сюжетному переходу; результат, запись кампании, Replay и выход. Нормальный город остаётся мирным.",
       "art_sector": "YU05",
       "music_cue": "YU_M05",
-      "status": "design_not_implemented"
+      "status": "implemented_in_balance_branch"
     }
   ]
 }

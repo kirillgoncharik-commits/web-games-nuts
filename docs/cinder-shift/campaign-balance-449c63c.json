@@ -1,0 +1,398 @@
+{
+  "source_sha": "449c63cc5ea7dffa4a4f9d677f2729b583f6da36",
+  "workflow_run": 44843635601,
+  "build": "0.8.0-alpha.16",
+  "seed": 4,
+  "stock_weapon": true,
+  "historical_base": "03f9e5d8e22d1911674054f2547d6ad0759147b5",
+  "authored_population": {
+    "columns": [
+      "total_rooms",
+      "rooms_with_robots",
+      "robots"
+    ],
+    "base": {
+      "C01": [
+        44,
+        36,
+        55
+      ],
+      "C02": [
+        20,
+        6,
+        6
+      ],
+      "C03": [
+        20,
+        5,
+        5
+      ]
+    },
+    "candidate": {
+      "C01": [
+        44,
+        36,
+        55
+      ],
+      "C02": [
+        20,
+        19,
+        36
+      ],
+      "C03": [
+        20,
+        20,
+        43
+      ]
+    }
+  },
+  "runs": [
+    {
+      "campaign": "C01",
+      "difficulty": "easy",
+      "artifact_id": 14681554989,
+      "entry_fixture": null,
+      "sectors": [
+        {
+          "mission": "airlock",
+          "score": 2275,
+          "hp": 4,
+          "active_ms": 50183
+        },
+        {
+          "mission": "cargo",
+          "score": 2550,
+          "hp": 5,
+          "active_ms": 88417
+        },
+        {
+          "mission": "foundry",
+          "score": 2625,
+          "hp": 6,
+          "active_ms": 61800
+        },
+        {
+          "mission": "archive",
+          "score": 2475,
+          "hp": 5,
+          "active_ms": 75083
+        },
+        {
+          "mission": "reactor",
+          "score": 2775,
+          "hp": 4,
+          "active_ms": 109217
+        }
+      ],
+      "losses": [],
+      "complete": true
+    },
+    {
+      "campaign": "C01",
+      "difficulty": "hard",
+      "artifact_id": 14682900393,
+      "entry_fixture": null,
+      "sectors": [
+        {
+          "mission": "airlock",
+          "score": 2275,
+          "hp": 3,
+          "active_ms": 51433
+        },
+        {
+          "mission": "cargo",
+          "score": 2550,
+          "hp": 1,
+          "active_ms": 82033
+        }
+      ],
+      "losses": [
+        {
+          "mission": "foundry",
+          "room": "M3H",
+          "reason": "walker-shot",
+          "seconds": 38.0000000000002
+        },
+        {
+          "mission": "foundry",
+          "room": "M3H",
+          "reason": "walker-shot",
+          "seconds": 38.28333333333349
+        },
+        {
+          "mission": "foundry",
+          "room": "M3H",
+          "reason": "walker-shot",
+          "seconds": 38.01666666666686
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C01",
+      "difficulty": "nightmare",
+      "artifact_id": 14682800084,
+      "entry_fixture": null,
+      "sectors": [
+        {
+          "mission": "airlock",
+          "score": 2275,
+          "hp": 4,
+          "active_ms": 53583
+        }
+      ],
+      "losses": [
+        {
+          "mission": "cargo",
+          "room": "M2D",
+          "reason": "drone-shot",
+          "seconds": 47.266666666665515
+        },
+        {
+          "mission": "cargo",
+          "room": "M2D",
+          "reason": "drone-shot",
+          "seconds": 47.38333333333217
+        },
+        {
+          "mission": "cargo",
+          "room": "M2D",
+          "reason": "drone-shot",
+          "seconds": 47.28333333333218
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C02",
+      "difficulty": "easy",
+      "artifact_id": 14683045178,
+      "entry_fixture": "C01 unlock",
+      "sectors": [
+        {
+          "mission": "SW01",
+          "score": 1825,
+          "hp": 5,
+          "active_ms": 42683
+        },
+        {
+          "mission": "SW02",
+          "score": 1900,
+          "hp": 5,
+          "active_ms": 47033
+        },
+        {
+          "mission": "SW03",
+          "score": 1825,
+          "hp": 5,
+          "active_ms": 48950
+        },
+        {
+          "mission": "SW04",
+          "score": 1850,
+          "hp": 2,
+          "active_ms": 73900
+        },
+        {
+          "mission": "SW05",
+          "score": 2000,
+          "hp": 4,
+          "active_ms": 58633
+        }
+      ],
+      "losses": [],
+      "complete": true
+    },
+    {
+      "campaign": "C02",
+      "difficulty": "hard",
+      "artifact_id": 14682880359,
+      "entry_fixture": "C01 unlock",
+      "sectors": [
+        {
+          "mission": "SW01",
+          "score": 1825,
+          "hp": 4,
+          "active_ms": 48783
+        },
+        {
+          "mission": "SW02",
+          "score": 1900,
+          "hp": 3,
+          "active_ms": 51733
+        },
+        {
+          "mission": "SW03",
+          "score": 1825,
+          "hp": 3,
+          "active_ms": 52833
+        }
+      ],
+      "losses": [
+        {
+          "mission": "SW04",
+          "room": "SW04-D",
+          "reason": "walker-contact",
+          "seconds": 40.149999999999885
+        },
+        {
+          "mission": "SW04",
+          "room": "SW04-B",
+          "reason": "drone-contact",
+          "seconds": 17.116666666666482
+        },
+        {
+          "mission": "SW04",
+          "room": "SW04-B",
+          "reason": "drone-contact",
+          "seconds": 17.316666666666496
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C02",
+      "difficulty": "nightmare",
+      "artifact_id": 14682296514,
+      "entry_fixture": "C01 unlock",
+      "sectors": [
+        {
+          "mission": "SW01",
+          "score": 1825,
+          "hp": 3,
+          "active_ms": 42133
+        },
+        {
+          "mission": "SW02",
+          "score": 1900,
+          "hp": 2,
+          "active_ms": 42083
+        },
+        {
+          "mission": "SW03",
+          "score": 1825,
+          "hp": 2,
+          "active_ms": 46317
+        }
+      ],
+      "losses": [
+        {
+          "mission": "SW04",
+          "room": "SW04-A",
+          "reason": "walker-shot",
+          "seconds": 3.5666666666666567
+        },
+        {
+          "mission": "SW04",
+          "room": "SW04-A",
+          "reason": "walker-shot",
+          "seconds": 3.5666666666666567
+        },
+        {
+          "mission": "SW04",
+          "room": "SW04-B",
+          "reason": "drone-contact",
+          "seconds": 16.19999999999977
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C03",
+      "difficulty": "easy",
+      "artifact_id": 14682151891,
+      "entry_fixture": "C01 unlock",
+      "sectors": [],
+      "losses": [
+        {
+          "mission": "YU01",
+          "room": "YU01-D",
+          "reason": "world-pulse",
+          "seconds": 64.54999999999633
+        },
+        {
+          "mission": "YU01",
+          "room": "YU01-D",
+          "reason": "world-pulse",
+          "seconds": 77.4166666666663
+        },
+        {
+          "mission": "YU01",
+          "room": "YU01-D",
+          "reason": "induction-orb-shot",
+          "seconds": 66.91666666666325
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C03",
+      "difficulty": "hard",
+      "artifact_id": 14682446533,
+      "entry_fixture": "C01 unlock",
+      "sectors": [
+        {
+          "mission": "YU01",
+          "score": 1925,
+          "hp": 1,
+          "active_ms": 49250
+        },
+        {
+          "mission": "YU02",
+          "score": 1975,
+          "hp": 3,
+          "active_ms": 64567
+        }
+      ],
+      "losses": [
+        {
+          "mission": "YU03",
+          "room": "YU03-C",
+          "reason": "relay-crawler-shot",
+          "seconds": 33.75000000000082
+        },
+        {
+          "mission": "YU03",
+          "room": "YU03-C",
+          "reason": "relay-crawler-shot",
+          "seconds": 33.78333333333414
+        },
+        {
+          "mission": "YU03",
+          "room": "YU03-C",
+          "reason": "relay-crawler-shot",
+          "seconds": 33.78333333333414
+        }
+      ],
+      "complete": false
+    },
+    {
+      "campaign": "C03",
+      "difficulty": "nightmare",
+      "artifact_id": 14681916951,
+      "entry_fixture": "C01 unlock",
+      "sectors": [],
+      "losses": [
+        {
+          "mission": "YU01",
+          "room": "YU01-C",
+          "reason": "induction-orb-shot",
+          "seconds": 26.81666666666719
+        },
+        {
+          "mission": "YU01",
+          "room": "YU01-C",
+          "reason": "induction-orb-shot",
+          "seconds": 29.41666666666738
+        },
+        {
+          "mission": "YU01",
+          "room": "YU01-C",
+          "reason": "induction-orb-shot",
+          "seconds": 28.45000000000064
+        }
+      ],
+      "complete": false
+    }
+  ]
+}

@@ -20,3 +20,22 @@ test('all six families are deployed only in their respective worlds, with distin
  expect([0,1,2].map(i=>worldShotOffset('signal-watcher',i))).toEqual([0,-.16,.16]);
  expect(worldShotOffset('lint-rotor',0)).toBeLessThan(0);expect(worldShotOffset('lint-rotor',1)).toBeGreaterThan(0);
 });
+
+for(const roomId of ['SW05-D','YU05-D'] as const){
+ test(roomId+' guardian fires two different warned patterns before recovery',()=>{
+  const room=rooms[roomId],def=room.enemies.find(enemy=>enemy.guardian)!;
+  expect(def.afterEnemy).toBeTruthy();
+  for(const half of [false,true]){
+   const enemy=createEnemy(def),shots=new Projectiles();
+   if(half)enemy.hp=Math.floor(enemy.hp/2);
+   enemy.provoked=true;
+   const player={x:enemy.x-76,y:enemy.y-12};
+   let warnings=0;
+   for(let t=0;t<9000&&enemy.attackPhase!=='recovery';t+=20)
+    stepEnemy(enemy,20,player,room.solids,shots,()=>warnings++);
+   expect(warnings).toBe(1);
+   expect(enemy.attackPhase).toBe('recovery');
+   expect(shots.shots.map(shot=>shot.source)).toEqual(Array(half?3:2).fill(def.guardian+'-shot'));
+  }
+ });
+}

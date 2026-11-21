@@ -15,5 +15,13 @@ for(const name of [...m.enemies,'base-walker','base-drone','base-ram','regulator
 for(const map of [m.backgrounds,m.baseBackgrounds])for(const [name,meta]of Object.entries(map)){const b=await readFile(root+meta.file);assert.equal(hash(b),meta.sha256,name);const i=await sharp(b).metadata();assert.deepEqual([i.width,i.height],[320,140]);}
 for(const file of Object.values(m.materials))await readFile(root+file);
 const world=await readFile('games/cinder-shift/src/art/world-art.ts','utf8'),render=await readFile('games/cinder-shift/src/render.ts','utf8');
-assert.doesNotMatch(world,/fillRect|strokeRect/,'world objects use sprites instead of placeholder rectangles');assert.doesNotMatch(render,/fillRect\(core\./,'boss aperture cannot be painted over by a placeholder');assert.match(render,/regulator-core-/);assert.match(render,/base-drone/);
+// Small graphics primitives now belong to authored instrument bezels, status
+// lamps, wiring and the steam feed. Keep the actual interactive objects bound
+// to production art instead of reviving anonymous rectangle placeholders.
+assert.doesNotMatch(world,/scene\.add\.rectangle/,'world objects use sprites instead of placeholder rectangles');
+assert.match(world,/p\.draw\('switch-'/,'power switches use authored sprites');
+assert.match(world,/p\.rect\('contact-'/,'world contacts use authored sprites');
+assert.match(world,/kitchen-steam-manifold/,'the kitchen steam source uses authored art');
+assert.match(world,/p\.draw\('YU05-relay'/,'the Adriatic relay housing uses authored art');
+assert.doesNotMatch(render,/fillRect\(core\./,'boss aperture cannot be painted over by a placeholder');assert.match(render,/regulator-core-/);assert.match(render,/base-drone/);
 console.log(`Production art PASS: 176 frames, 60 sector props, 60 mechanism states, 30 world enemy states, 20 base enemy/core states, 6 carry overlays; 16 backgrounds, 10 materials; ${Math.round(bytes.length/1024)} KiB atlas.`);
