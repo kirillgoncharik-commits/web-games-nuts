@@ -70,7 +70,15 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   if(exitFrom&&s.exitOpen&&p.x>=584&&p.vy===0){await Promise.all([page.keyboard.up('a'),page.keyboard.up('d'),page.keyboard.up('s'),page.keyboard.up('Space')]);return;}
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=routePulse(s),feetNow=p.y+22;
-  if(pulse&&feetNow>274){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
+  if(pulse&&feetNow>274){
+   // Brake while the complete standing body is still outside the field. An
+   // 80ms input sample can carry Mira another 9px after key-up; waiting at the
+   // old 12px edge therefore put her collision body into an active pulse.
+   const brake=28,near=96;
+   const approaching=f>0
+    ?p.x<pulse.x-brake&&pulse.x-p.x<near
+    :p.x>pulse.x+pulse.width+brake&&p.x-pulse.x-pulse.width<near;
+   const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
    if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){
     await Promise.all([page.keyboard.up('a'),page.keyboard.up('d')]);
     await page.waitForFunction(({cycle,start,end})=>{
@@ -199,6 +207,12 @@ async function combat(page:Page){
   // The lower panel protects Mira against steeply descending bolts.
   await to(page,95);await ground(page,320);await face(page,1);
   await fireFromCover(page,['yu05d-rift','yu05d-coast','yu05d-last']);
+	  // Stay below the transmitter lip until the final locked volley has passed.
+	  // Enemy death removes the shooter, not a projectile already in flight.
+	  await page.keyboard.down('s');await page.waitForTimeout(500);
+	  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||!s.projectiles.some((shot:any)=>shot.team==='enemy');});
+	  await page.keyboard.up('s');
+	  expect((await state(page)).hp,'rift clear-lane wait').toBeGreaterThan(0);
   // The gap is a firing slit, so climb onto its top before the first contact.
   await jump(page,132,178);await ground(page,276);
   await to(page,248);await ground(page,320);return;
@@ -249,7 +263,13 @@ async function combat(page:Page){
   }else{
    await fireFromCover(page,['yu05b-drone']);await fireFromCover(page,['yu05b-roof']);
   }
-  await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'&&shot.source==='relay-crawler-shot'));
+	  // Read the clear lane from cover. A dead defender can still have its last
+	  // marked bolt in flight; leaving immediately turns a cleared combat into an
+	  // avoidable post-combat hit.
+	  await page.keyboard.down('s');await page.waitForTimeout(500);
+	  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||!s.projectiles.some((shot:any)=>shot.team==='enemy');});
+	  await page.keyboard.up('s');
+	  expect((await state(page)).hp,'gallery clear-lane wait').toBeGreaterThan(0);
   return;
  }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
@@ -586,16 +606,16 @@ async function solveRoom(page:Page){
      // by activation; tapping movement here exposes Mira to the previous fan.
      await page.keyboard.down('s');
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-     await page.keyboard.up('s');await page.keyboard.down('Space');
+	    await page.keyboard.up('s');await page.keyboard.down('Space');
      try{
-      // Player shots expand solids by 1.5px.  The old <287 check placed the
-      // first horizontal cutter inside the screen's expanded 286.5px top.
-      // At <285 it clears that collision hull while remaining inside the
-      // guardian's expanded 280.5..303.5px hit lane.
-      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<285;});
-      await page.keyboard.down('j');
+	     // The usable stock-shot lane is only 6px high: above the screen's
+	     // expanded 286.5px top and inside the drone's 280.5px hitbox. Browser
+	     // input arrives one physics tick after an ascent sample, which made the
+	     // old held shot pass above the drone. Fire once on the slower descent.
+	     await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),muzzle=s.player.y+22-28;return s.hp<=0||s.player.vy>0&&muzzle>281.5&&muzzle<284.5;});
+	     await page.keyboard.press('j',{delay:45});
       await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
-     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');await page.keyboard.down('s');}
+	    }finally{await page.keyboard.up('Space');await page.keyboard.up('j');await page.keyboard.down('s');}
      expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
      continue;
     }
