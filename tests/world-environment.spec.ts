@@ -325,3 +325,31 @@ test('a closed transmitter contact beside a lever keeps the selected circuit whe
  await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.worldPulse==='safe'&&s.worldPulseElapsed%5200<3400;});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);expect((await state(page)).world.power.circuit).toBe('A');
  await writeFile(info.outputPath('closed-contact-evidence.json'),JSON.stringify({fixture:'one YU02-D entry; real switching and confirmation, including a deliberate press during a closed window',before,blocked,confirmed:await state(page)},null,2));
 });
+
+for(const locale of ['ru','en'] as const){
+ for(const mission of ['SW05','YU05'] as const){
+  test(mission+' guardian shot names the cause on the '+locale+' result screen',async({page},info)=>{
+   const beacon=mission==='SW05',room=beacon?'SW05-D':'YU05-D';
+   const cause=beacon?'beacon-warden-shot':'rift-marshal-shot';
+   const label=beacon
+    ? (locale==='ru'?'Выстрел Стража маяка':'A shot from the Beacon Warden')
+    : (locale==='ru'?'Выстрел Коменданта разлома':'A shot from the Rift Marshal');
+   await page.addInitScript(locale=>localStorage.setItem('cinder-shift-language-v1',locale),locale);
+   // Isolated result-screen fixture. The lead wave is cleared at entry.
+   await encounter(page,{mission,room,seed:4,hp:1,difficulty:'hard',
+    clearedEnemyIds:beacon?['sw05d-beacon']:['yu05d-rift','yu05d-coast']});
+   if(beacon){
+    await to(page,244);await ground(page,320);
+    await page.waitForFunction(()=>{const e=(window as any).__CINDER__().worldEncounter;return e.phase==='open'&&e.remaining>2450;});
+    await jump(page,244,284);await ground(page,288);await standingJump(page,385);
+   }else{
+    await jump(page,128,180);await ground(page,288);await to(page,230);
+    await page.keyboard.press('j',{delay:300});
+   }
+   await expect(page.getByTestId('retry')).toBeVisible();
+   expect((await state(page)).campaign.result.reason).toBe(cause);
+   await expect(page.getByText((locale==='ru'?'Причина: ':'Cause: ')+label,{exact:true})).toBeVisible();
+   await page.screenshot({path:info.outputPath(room+'-'+locale+'-cause.png')});
+  });
+ }
+}
