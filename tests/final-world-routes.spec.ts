@@ -27,9 +27,18 @@ async function unlocked(page:Page){
  if(await notes.isVisible())await notes.click();
  await expect(resume).toBeVisible();
 }
-async function walk(page:Page,target:number,{exitFrom,enemyId}:{exitFrom?:string;enemyId?:string}={}){
+async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?:string;enemyId?:string;pickup?:boolean}={}){
  const origin=exitFrom??(await state(page)).room;let previous=NaN;for(let n=0;n<120;n++){
   const s=await state(page);
+  if(pickup&&s.state==='playing'&&s.room===origin&&s.player.vy===0){
+   const canPickup=(snapshot:typeof s)=>worldContext(rooms[snapshot.room as keyof typeof rooms].world!,
+    snapshot.world,{x:snapshot.player.x,y:snapshot.player.y+22},snapshot.simMs,snapshot.hp<snapshot.maxHp)==='pickup';
+   if(canPickup(s)){
+    await Promise.all(['a','d','s','Space'].map(key=>page.keyboard.up(key)));
+    await ground(page);
+    if(canPickup(await state(page)))return;
+   }
+  }
   if(enemyId&&s.state==='playing'&&s.room===origin&&s.enemies.find((e:any)=>e.id===enemyId)?.hp<=0){
    await Promise.all(['a','d','s','Space'].map(key=>page.keyboard.up(key)));
    await ground(page);
@@ -97,6 +106,14 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  const entry=await state(page);
  if(entry.room==='YU01-B'&&point.y===280&&entry.player.y+22>282){
   await walk(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
+ }
+ if(entry.room==='YU01-B'&&entry.world.power.circuit==='A'&&point.x>456&&entry.player.x<416){
+  // The lower aperture is only a firing slit. Climb the two powered stairs
+  // from the entry crate before crossing the housing to the far contact.
+  await walk(page,196);await ground(page,288);
+  await standingJump(page,272);await ground(page,288);
+  await standingJump(page,352);await ground(page,256);
+  await standingJump(page,432);await ground(page,280);
  }
  if(entry.room==='YU02-B'&&point.y===276&&entry.player.y+22>278){
   await walk(page,204);await ground(page,288);await standingJump(page,328);await ground(page,276);
@@ -172,7 +189,7 @@ async function solveRoom(page:Page){
  if(s.world.carry){for(let n=0;n<12;n++){
   s=await state(page);const contact=s.world.carry.contacts.find((c:any)=>!c.active);if(!contact)break;
   const spec=rooms[s.room as keyof typeof rooms].world!,pickup=contextPoint(s,'pickup',{x:s.world.carry.item.position.x,y:320});
-  await walk(page,pickup);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=spec.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
+  await walk(page,pickup,{pickup:true});await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.carry.item.state).toBe('held');const ground=(await state(page)).solids,pulse=spec.pulse;const launch=[contact.rect.x-52,contact.rect.x+52,contact.rect.x-92,contact.rect.x+92].find(x=>x>32&&x<610&&(!pulse||x+16<pulse.x||x-16>pulse.x+pulse.width)&&!ground.some((r:any)=>r.y<320&&r.y+r.height>276&&r.x<x+20&&r.x+r.width>x-20));if(launch===undefined)throw Error('no grounded throw lane '+contact.id);await walk(page,launch);await face(page,launch<contact.rect.x?1:-1);if((await state(page)).world.carry.item.state!=='held')continue;
   const flightMs=Math.abs(contact.rect.x-launch)/220*1000+220;
   await page.waitForFunction(({pulse,flightMs})=>{const s=(window as any).__CINDER__();return s.world.carry.contacts.find((c:any)=>!c.active)?.open&&(!pulse||pulse.cycle-s.simMs%pulse.cycle>flightMs);},{pulse,flightMs});if((await state(page)).world.carry.item.state!=='held')continue;await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.carry.item.state).not.toBe('held');await page.waitForFunction(()=>(window as any).__CINDER__().world.carry.item.state!=='thrown');
@@ -200,7 +217,9 @@ async function solveRoom(page:Page){
 for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full ${world}: 20 rooms, 5 missions, final fact and persisted result`,async({page},info)=>{
  // Allow five full sectors and their real retries on a hosted browser.
  // Individual movement, combat and interaction timeouts still identify stalls.
- test.setTimeout(25*60_000);await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],losses:RouteLoss[]=[],pressure:ReturnType<typeof campaignPressure>=[];
+ test.setTimeout(25*60_000);
+ page.setDefaultTimeout(15_000);page.setDefaultNavigationTimeout(30_000);
+ await unlocked(page);await page.getByTestId('menu-campaigns').click();const difficulty=info.project.metadata.difficulty??'easy';await page.getByTestId('campaign-difficulty').selectOption(difficulty);await page.getByTestId('world-'+world).click();expect((await state(page)).campaign.difficulty).toBe(difficulty);const visited:string[]=[],losses:RouteLoss[]=[],pressure:ReturnType<typeof campaignPressure>=[];
  for(let mission=1;mission<=5;mission++){
   await page.getByTestId('map-prepare').click();await page.getByTestId('briefing').click();await expect.poll(async()=>(await state(page)).state).toBe('playing');
   await playSector(page,info,losses,async()=>{
@@ -224,7 +243,7 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);

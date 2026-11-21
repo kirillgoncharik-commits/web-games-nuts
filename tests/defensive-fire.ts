@@ -1,9 +1,13 @@
 import {expect,type Page} from '@playwright/test';
 
 // Holds position and uses the normal jump control to evade approaching enemy shots.
-export async function fireFromCover(page:Page, targets:readonly string[]) {
+export async function fireFromCover(page:Page, targets:readonly string[],stance?:'crouch') {
+  if(stance==='crouch')await page.waitForFunction(()=>(window as any).__CINDER__().player.crouching);
   const start=await page.evaluate(()=>(window as any).__CINDER__());
   const crouched=start.player.crouching,feet=start.player.y+22;
+  const turretLane=start.enemies.some((enemy:{id:string;kind:string;mob?:string})=>
+    targets.includes(enemy.id)&&enemy.kind==='turret'&&!enemy.mob);
+  const jumpLead=turretLane?0.46:0.31;
   let jumping=false;
   await page.keyboard.down('j');
   try {
@@ -27,12 +31,13 @@ export async function fireFromCover(page:Page, targets:readonly string[]) {
       const incoming=state.projectiles.some((shot:{team:string;x:number;vx:number})=>
         shot.team==='enemy' && (state.player.x-shot.x)*Math.sign(shot.vx)>=-16);
       if(!incoming && state.player.vy===0 && targets.every(id=>state.enemies.find((enemy:{id:string})=>enemy.id===id)?.hp<=0))return;
-      // The lidar turret fixes its aim 300 ms before the burst. Jump while
-      // tracking is still active so its fan passes above the landing point.
-      const drawAimHigh=state.enemies.some((enemy:{mob?:string;phase:string;remaining:number;aimLocked:boolean})=>
-        enemy.mob==='lidar-guardian' && enemy.phase==='telegraph' && !enemy.aimLocked &&
-        enemy.remaining>350 && enemy.remaining<660);
-      const shouldJump=drawAimHigh || dangerous.some((shot:{x:number;vx:number})=>(state.player.x-shot.x)/shot.vx<0.31);
+      // Draw the fan above the landing point before the turret finishes aiming.
+      const drawAimHigh=state.enemies.some((enemy:{kind:string;mob?:string;phase:string;remaining:number;aimLocked:boolean})=>{
+        if(enemy.kind!=='turret'||enemy.phase!=='telegraph'||enemy.aimLocked)return false;
+        if(enemy.mob==='lidar-guardian')return enemy.remaining>350 && enemy.remaining<660;
+        return !enemy.mob && enemy.remaining>140 && enemy.remaining<380;
+      });
+      const shouldJump=drawAimHigh || dangerous.some((shot:{x:number;vx:number})=>(state.player.x-shot.x)/shot.vx<jumpLead);
       if(shouldJump && !jumping && state.player.vy===0){
         await page.keyboard.up('s');
         await page.keyboard.down('Space');

@@ -27,7 +27,7 @@ export function airlockDriver(page:Page,input?:RouteInput){
 
 export async function airlockExtension(page:Page,input?:RouteInput,{salvage=false,evade=false}:{salvage?:boolean;evade?:boolean}={}){
  const {action,ground,move,jump,clear:holdFire,next,wait}=airlockDriver(page,input);
- const clear=evade?(ids:string[])=>fireFromCover(page,ids):holdFire;
+ const clear=evade?(ids:string[])=>fireFromCover(page,ids,'crouch'):holdFire;
 
  await next('M1A');
  await jump(114,172);await ground(288);
@@ -50,6 +50,17 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  await move(510);await ground();await next('M1C',true);
 
  if(evade)await action('fire',true);
- await jump(130,224);await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
+ if(evade&&(await read(page)).campaign.difficulty!=='easy'){
+  await jump(130,175);await ground(288);
+  // Let the ground patrol's burst pass the crate before stepping down.
+  await wait(()=>{
+   const s=(window as any).__CINDER__(),guard=s.enemies.find((e:any)=>e.id==='m1c-security');
+   return (guard.hp<=0||guard.phase==='recovery') &&
+    !s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>192&&p.x<450);
+  },null,'security burst past the crate');
+  await move(224);await action('crouch',true);await ground();
+  await move(263);
+ }else await jump(130,224);
+ await ground();await action('crouch',true);await clear(['m1c-security','m1c-turret']);await action('crouch',false);
  await next('C',true);
 }
