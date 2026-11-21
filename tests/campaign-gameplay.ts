@@ -2,7 +2,7 @@
 import {expect,type Page} from '@playwright/test';
 import {fireFromCover} from './defensive-fire';
 import {state} from './helpers';
-import {ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
+import {alignOnLedge,ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
 
 export async function clearFoundryGuard(page:Page){
  await page.keyboard.down('j');
@@ -248,15 +248,7 @@ export async function campaignRegulator(page:Page,onRoom?:()=>Promise<void>){
   if((await state(page)).player.x>112)await leaveRegulatorShelf(page);
   await jump(page,106,157);await ground(page,288);
   if(precise){
-   await page.keyboard.down('s');
-   // A held direction can carry the suit off the 40px crate before release.
-   for(let adjustment=0;adjustment<6;adjustment++){
-    const current=await state(page),distance=172-current.player.x;
-    if(Math.abs(distance)<=4)break;
-    const delay=Math.max(35,Math.min(100,(Math.abs(distance)-2)*1000/58));
-    await page.keyboard.press(distance>0?'d':'a',{delay});await ground(page,288);
-   }
-   await page.keyboard.up('s');
+   await alignOnLedge(page,172,288);
    await ground(page,288);await standingJump(page,249);
   }else await jump(page,173,267);
   await ground(page,256);climbed=true;

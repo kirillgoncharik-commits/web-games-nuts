@@ -74,3 +74,17 @@ export async function standingJump(page:Page,toX:number){
  await until(page,({toX,right})=>{const p=(window as any).__CINDER__().player;return right?p.x>=toX:p.x<=toX;},{toX,right},'standing jump landing');
  await Promise.all([page.keyboard.up(key),page.keyboard.up('Space')]);
 }
+
+
+export async function alignOnLedge(page:Page,target:number,feet:number){
+ await page.keyboard.down('s');
+ try{
+  for(let adjustment=0;adjustment<8;adjustment++){
+   const current=await state(page),distance=target-current.player.x;
+   if(Math.abs(distance)<=4)return;
+   const delay=Math.max(35,Math.min(100,(Math.abs(distance)-2)*1000/58));
+   await page.keyboard.press(distance>0?'d':'a',{delay});await ground(page,feet);
+  }
+  expect(Math.abs((await state(page)).player.x-target),'standing jump launch position').toBeLessThanOrEqual(4);
+ }finally{await page.keyboard.up('s');}
+}

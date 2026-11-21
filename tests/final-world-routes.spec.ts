@@ -11,7 +11,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {standingJump,ground,jump,to,clear} from './route-helpers';
+import {alignOnLedge,standingJump,ground,jump,to,clear} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -156,16 +156,6 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
  // This contact now sits on a working bridge above a crouchable underpass.
  // Follow its visible entry ledge; horizontal walking alone stays below it.
  const entry=await state(page);
- if(entry.room==='YU05-B'){
-  // Draw the gallery turret's first crossburst above the open ground lane.
-  await page.keyboard.down('j');await jump(page,122,167);await ground(page,288);
-  await page.waitForFunction(()=>{
-   const s=(window as any).__CINDER__(),turret=s.enemies.find((e:any)=>e.id==='yu05b-drone');
-   return s.hp<=0||!turret.active||turret.hp<=0||turret.aimLocked||turret.phase==='recovery';
-  },undefined,{timeout:6000});
-  await page.keyboard.down('s');await to(page,219);await ground(page,320);
-  await fireFromCover(page,['yu05b-roof','yu05b-drone'],'crouch');await page.keyboard.up('s');return;
- }
  if(entry.room==='YU05-A'&&point.x===112&&entry.player.x<90){
   // The first radio switch sits beside a 20px book. Mira can operate it
   // standing on the book, within the switch's normal interaction reach.
@@ -183,7 +173,11 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
   await walk(page,196);await ground(page,288);
   await standingJump(page,272);await ground(page,288);
   await standingJump(page,352);await ground(page,256);
-  await standingJump(page,432);await ground(page,280);
+  await standingJump(page,432);await ground(page);
+  const landing=(await state(page)).player;
+  const onHousing=Math.abs(landing.y+22-280)<2;
+  const beyondHousing=landing.x>=467&&Math.abs(landing.y+22-320)<2;
+  expect(onHousing||beyondHousing,'cross the exchange housing toward the far contact').toBe(true);
  }
  if(entry.room==='YU02-B'&&point.y===276&&entry.player.y+22>278){
   await walk(page,204);await ground(page,288);await standingJump(page,328);await ground(page,276);
@@ -228,6 +222,17 @@ async function combat(page:Page){
   }finally{await page.keyboard.up('s');await page.keyboard.up('j');}
   return;
  }
+ if(entry.room==='YU05-B'){
+  expect(entry.world.power.circuit,'open gallery firing lane').toBe('B');
+  // Draw the gallery turret's first crossburst above the open ground lane.
+  await page.keyboard.down('j');await jump(page,122,167);await ground(page,288);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__(),turret=s.enemies.find((e:any)=>e.id==='yu05b-drone');
+   return s.hp<=0||!turret.active||turret.hp<=0||turret.aimLocked||turret.phase==='recovery';
+  },undefined,{timeout:6000});
+  await page.keyboard.down('s');await to(page,219);await ground(page,320);
+  await fireFromCover(page,['yu05b-roof','yu05b-drone'],'crouch');await page.keyboard.up('s');return;
+ }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
   // The closed ridge door screens the two distant defenders during the first duel.
   await page.keyboard.down('j');await jump(page,66,104);await ground(page,300);
@@ -245,11 +250,21 @@ async function combat(page:Page){
   await page.keyboard.down('j');await jump(page,119,184);await ground(page);
   if((await state(page)).player.y+22>290)await standingJump(page,182);
   await ground(page,288);
-  await to(page,209);await ground(page,288);await standingJump(page,278);await ground(page,248);
+  await alignOnLedge(page,204,288);await ground(page,288);await standingJump(page,278);await ground(page,248);
   await jump(page,333,426);await ground(page,218);
   await jump(page,444,550);await ground(page,244);
   await to(page,618);await ground(page,320);await face(page,-1);
   await fireFromCover(page,['yu03b-train','yu03b-roof']);return;
+ }
+ if(entry.room==='YU03-D'&&entry.campaign.difficulty==='hard'){
+  // The first switch cuts the floor field. Draw the ground patrol to the
+  // crate, then fire through the clear space below the high distributor deck.
+  await page.keyboard.down('j');await jump(page,129,180);await ground(page,288);
+  await page.keyboard.down('s');await to(page,226);await ground(page,320);await face(page,1);
+  await fireFromCover(page,['yu03d-line'],'crouch');await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  await fireFromCover(page,['yu03d-relief']);await page.keyboard.down('s');
+  await fireFromCover(page,['yu03d-substation'],'crouch');await page.keyboard.up('s');return;
  }
  if(entry.room==='YU03-C'&&entry.campaign.difficulty==='hard'){
   await page.keyboard.down('j');await walk(page,203);
