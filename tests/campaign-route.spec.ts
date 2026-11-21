@@ -4,8 +4,8 @@ import {clearCargoDrone,playCargo} from './cargo-gameplay';
 import {state} from './helpers';
 import {campaignPressure,campaignVisits} from './campaign-pressure';
 import {writeFile} from 'node:fs/promises';
-import {campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
-import {jump,ground,to} from './route-helpers';
+import {clearReactorPatrol,crossFoundryDroneRoom,clearFoundryServiceRoom,campaignFoundry,clearFoundryGate,clearFoundryGuard,campaignReactor,campaignRegulator,leaveRegulatorShelf} from './campaign-gameplay';
+import {jump,ground,to,next} from './route-helpers';
 import {campaignJourney} from './campaign-journey';
 test.use({video:'on'});
 test('a fresh profile completes five sectors, saves the real campaign record and reloads it once',async({page},info)=>{await campaignJourney(page,info);});
@@ -84,5 +84,41 @@ test('focused sector entry Foundry stock service route',async({page},info)=>{
  test.setTimeout(240000);
  await encounter(page,{mission:'foundry',room:'M3A',difficulty:info.project.metadata.difficulty,seed:4});
  await campaignFoundry(page);
- expect((await state(page)).state).toBe('complete');
+ const end=await state(page);
+ expect(end.state).toBe('complete');
+ await writeFile(info.outputPath('focused-sector.json'),JSON.stringify({
+  fixture:'Foundry sector entry M3A',source_sha:end.sha,seed:4,difficulty:info.project.metadata.difficulty,
+  result:end.campaign.result,visits:campaignVisits(end),pressure:campaignPressure(end.roomStates),
+ },null,2));
+});
+
+test('focused service wall exit M3B from low health',async({page},info)=>{
+ test.setTimeout(90_000);
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
+ await encounter(page,{mission:'foundry',room:'M3B',difficulty:info.project.metadata.difficulty,seed:4,hp:2});
+ await clearFoundryServiceRoom(page);
+ await next(page,'M3G',536);
+ const end=await state(page);
+ expect(end.room).toBe('M3G');
+ expect(end.hp).toBeGreaterThan(0);
+});
+
+test('focused room entry M3G overhead patrols',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
+ test.setTimeout(90_000);
+ await encounter(page,{mission:'foundry',room:'M3G',difficulty:info.project.metadata.difficulty,seed:4});
+ await crossFoundryDroneRoom(page);
+ const end=await state(page);
+ expect(end.room).toBe('M3H');
+ expect(end.hp).toBeGreaterThan(0);
+});
+
+test('focused room entry M5G reactor security and drone',async({page},info)=>{
+ test.skip(!process.env.CINDER_QA_HARNESS,'Requires room entry fixture');
+ test.setTimeout(90_000);
+ await encounter(page,{mission:'reactor',room:'M5G',difficulty:info.project.metadata.difficulty,seed:4,hp:1});
+ await clearReactorPatrol(page);
+ const end=await state(page);
+ expect(end.hp).toBe(1);
+ expect(end.room).toBe('M5H');
 });

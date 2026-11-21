@@ -57,7 +57,15 @@ async function walk(page:Page,target:number,{exitFrom,enemyId,pickup}:{exitFrom?
   const f=target>p.x?1:-1,dir=f>0?'d':'a';
   const pulse=rooms[s.room as keyof typeof rooms].world?.pulse,feetNow=p.y+22;
   if(pulse&&feetNow>274&&(pulse.fromPhase===undefined||s.world.phase>=pulse.fromPhase)){const approaching=f>0?p.x<pulse.x-12&&pulse.x-p.x<60:p.x>pulse.x+pulse.width+12&&p.x-pulse.x-pulse.width<60;const crossing=(pulse.width+64)/115*1000+250,phase=(s.worldPulseElapsed??s.simMs)%pulse.cycle;
-   if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){await page.keyboard.up('a');await page.keyboard.up('d');await page.waitForFunction(({cycle,start,end})=>{const s=(window as any).__CINDER__(),p=(s.worldPulseElapsed??s.simMs)%cycle;return p>=start&&p<=end;},{cycle:pulse.cycle,start:pulse.warning+pulse.active,end:pulse.cycle-crossing});continue;}
+   if(approaching&&(phase<pulse.warning+pulse.active||phase>pulse.cycle-crossing)){
+    await Promise.all([page.keyboard.up('a'),page.keyboard.up('d')]);
+    await page.waitForFunction(({cycle,start,end})=>{
+     const s=(window as any).__CINDER__(),elapsed=(s.worldPulseElapsed??s.simMs)%cycle;
+     return s.hp<=0||elapsed>=start&&elapsed<=end;
+    },{cycle:pulse.cycle,start:pulse.warning+pulse.active,end:pulse.cycle-crossing});
+    expect((await state(page)).hp,'waiting for pulse in '+origin).toBeGreaterThan(0);
+    continue;
+   }
   }
   const feet=p.y+22;
   const head=s.solids.some((r:any)=>r.y<feet-40&&r.y+r.height>feet-44&&r.y+r.height<=feet-26&&r.x<p.x+f*24+12&&r.x+r.width>p.x+f*24-12);
@@ -155,6 +163,46 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='YU02-C'){
+  // Use the quay steps to cross the water above the arc of the ground fire.
+  await page.keyboard.down('j');await jump(page,103,145);await ground(page,288);
+  await standingJump(page,200);await ground(page,248);
+  await to(page,248);await ground(page,248);await standingJump(page,342);await ground(page,288);
+  await to(page,355);await ground(page,288);await standingJump(page,425);await ground(page,320);
+  await fireFromCover(page,['yu02c-drone']);await face(page,-1);
+  await page.keyboard.down('s');await fireFromCover(page,['yu02c-quay'],'crouch');
+  await page.keyboard.up('s');return;
+ }
+ if(entry.room==='YU01-D'){
+  await clear(page,['yu01d-relay']);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__();
+   const incoming=s.projectiles.filter((p:any)=>p.team==='enemy'&&p.vx<0);
+   return s.hp<=0||!incoming.length||incoming.some((p:any)=>p.x>s.player.x&&p.x-s.player.x<70);
+  });
+  await page.keyboard.down('j');
+  const start=(await state(page)).simMs;
+  await Promise.all([page.keyboard.down('Space'),page.keyboard.down('d')]);
+  // Knockback can leave Mira on the floor against the left edge of the footing.
+  // Recognise that landing and jump again from the edge using the normal controls.
+  await page.waitForFunction(start=>{
+   const s=(window as any).__CINDER__(),p=s.player;
+   return s.hp<=0||p.x>=180||(s.simMs-start>900&&p.vy===0&&p.y+22>=319&&p.x>=155);
+  },start,{timeout:8000});
+  await Promise.all([page.keyboard.up('d'),page.keyboard.up('Space')]);
+  await ground(page);
+  const landing=await state(page);
+  expect(landing.hp,'transmitter footing').toBeGreaterThan(0);
+  if(landing.player.y+22>302)await standingJump(page,180);
+  await ground(page,300);
+  // Let the tracking bolts pass under the footing before dropping into the patrol lane.
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||!s.projectiles.some((p:any)=>p.source==='induction-orb-shot'&&p.vx<0&&p.x>s.player.x-20);
+  });
+  await to(page,230);await ground(page,320);
+  await fireFromCover(page,['yu01d-feed','yu01d-relief']);return;
+ }
  if(entry.room==='YU01-C'){
   await jump(page,100,148);await ground(page,264);
   await to(page,201);await ground(page,320);
@@ -165,6 +213,20 @@ async function combat(page:Page){
   await clear(page,['yu01c-anomaly']);
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||!s.projectiles.some((p:any)=>p.team==='enemy'&&p.vx<0&&p.x>s.player.x-20);});
   await page.keyboard.up('s');return;
+ }
+ if(entry.room==='SW05-A'){
+  // Draw the rotor's fan toward the lectern, then drop to the floor behind it.
+  await jump(page,66,102);await ground(page,300);
+  await standingJump(page,188);await ground(page,280);
+  await page.waitForFunction(()=>{
+   const s=(window as any).__CINDER__();
+   return s.hp<=0||s.projectiles.some((p:any)=>p.source==='lint-rotor-shot'&&p.vx<0);
+  },undefined,{timeout:6500});
+  await page.keyboard.down('j');await to(page,236);
+  await page.keyboard.down('s');await ground(page,320);
+  await fireFromCover(page,['sw05a-books'],'crouch');await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+  await fireFromCover(page,['sw05a-spine']);return;
  }
  if(entry.room==='SW05-B'){
   // Use the low lane under the reserve rotor to clear the patrol behind it.
@@ -177,15 +239,10 @@ async function combat(page:Page){
  }
  if(entry.room==='SW04-B'){
   await page.keyboard.down('s');await fireFromCover(page,['sw04b-rail'],'crouch');
-  await page.keyboard.up('s');await walk(page,365);
-  await page.keyboard.down('j');await jump(page,378,436);await ground(page,280);
-  await jump(page,475,519);await ground(page);
-  // A rotor shot can knock Mira back onto the canopy during the descent.
-  // Walk off its right edge again before aiming at ground level.
-  while((await state(page)).player.y+22<318){
-   await to(page,524);await ground(page);
-   expect((await state(page)).hp).toBeGreaterThan(0);
-  }
+  // Crawl underneath the drying rack. Its 28px ground clearance lets
+  // Mira reach the open firing lane even when the wind pushes against her.
+  await to(page,519);await ground(page,320);await page.keyboard.up('s');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
   await fireFromCover(page,['sw04b-cloth']);return;
  }
  if(entry.room==='SW04-A'){
@@ -247,6 +304,7 @@ async function solveRoom(page:Page){
   }
   s=await state(page);
  }
+ if(s.room==='YU01-D')await page.keyboard.down('j');
  const entrance=rooms[s.room as keyof typeof rooms].world!;
  if(s.world.power&&entrance.switches?.length&&entrance.sequence?.[0]!==s.world.power.circuit){
   const first=entrance.switches[0];
@@ -338,13 +396,13 @@ for(const world of ['c02-small-world','c03-adriatic-1986'])test(`real input full
 });
 
 // Diagnostic entries into individual rooms. These do not count as campaign completions.
-for(const [mission,room] of [['SW05','SW05-D'],['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
+for(const [mission,room] of [['YU02','YU02-C'],['SW05','SW05-A'],['SW05','SW05-D'],['SW03','SW03-D'],['SW05','SW05-B'],['SW04','SW04-B'],['SW04','SW04-A'],['SW03','SW03-C'],['YU01','YU01-C'],['YU01','YU01-D'],['SW05','SW05-C'],['YU01','YU01-A'],['YU02','YU02-B'],['YU03','YU03-B'],['YU01','YU01-B'],['SW02','SW02-D']] as const){
  test('focused room entry '+room,async({page},info)=>{
   test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated encounter fixture build');
   test.setTimeout(100000);
   const difficulty=info.project.metadata.difficulty??'easy';
   // Nightmare route evidence in the exchange records an entry with two HP.
-  const hp=room==='SW03-C'||(['SW04-B','YU01-B','YU01-C'].includes(room)&&difficulty==='nightmare')?2:undefined;
+  const hp=room==='SW03-C'||(['SW04-B','YU01-B','YU01-C','YU01-D'].includes(room)&&difficulty==='nightmare')?2:undefined;
   await encounter(page,{mission,room,difficulty,hp,seed:4});
   expect((await state(page)).campaign.difficulty).toBe(difficulty);
   if(hp!==undefined)expect((await state(page)).hp).toBe(hp);
@@ -357,10 +415,15 @@ for(const [mission,room] of [['SW05','SW05-D'],['SW03','SW03-D'],['SW05','SW05-B
    expect(end.hp).toBeGreaterThan(2);
   }else expect(end.score).toBeGreaterThan(100);
   if(room.endsWith('-D'))expect(end.state).toBe('complete');else expect(end.room).not.toBe(room);
+  await writeFile(info.outputPath('focused-room.json'),JSON.stringify({
+   fixture:'room entry '+room,source_sha:end.sha,seed:4,difficulty,
+   hp_start:hp??end.maxHp,hp_end:end.hp,score:end.score,active_seconds:end.activeSeconds,
+   route:campaignVisits(end),pressure:campaignPressure(end.roomStates).filter(r=>r.room===room),
+  },null,2));
  });
 }
 
-for(const mission of ['SW02','SW04','SW05','YU01'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
+for(const mission of ['SW02','SW04','SW05','YU01','YU02'] as const)test('focused sector entry '+mission+' on stock equipment',async({page},info)=>{
  test.skip(!process.env.CINDER_QA_HARNESS,'Requires isolated sector entry fixture');
  test.setTimeout(240_000);
  const difficulty=info.project.metadata.difficulty??'easy';

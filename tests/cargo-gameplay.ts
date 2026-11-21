@@ -16,7 +16,7 @@ export async function clearCargoDrone(page:Page){
 
 export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security';power?:boolean;piercing?:boolean;buffer?:boolean;info?:any}={}){
  const circuit=options.circuit??'conveyor';
-  await jump(page,148,240);await ground(page,320);await page.keyboard.down('s');await clear(page,['d-security']);await next(page,'M2A');await page.keyboard.up('s');
+  await jump(page,148,240);await ground(page,320);await page.keyboard.down('s');await fireFromCover(page,['d-security'],'crouch');await page.keyboard.up('s');await next(page,'M2A');
   await jump(page,114,172);await ground(page,288);await jump(page,178,280);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m2a-drone']);await to(page,490);await page.keyboard.up('s');await ground(page,320);await next(page,'E',536);
   await jump(page,130,224);await ground(page,320);await page.keyboard.down('s');await fireFromCover(page,['e-turret'],'crouch');if(options.piercing){await page.keyboard.up('s');await to(page,398);await page.keyboard.down('Space');await page.waitForTimeout(170);await page.keyboard.down('j');await expect.poll(async()=>(await state(page)).roomStates.E.brokenPanels).toContain('e-sheet');await page.keyboard.up('j');await page.keyboard.up('Space');await ground(page,320);await page.keyboard.down('s');}await next(page,'M2B');await page.keyboard.up('s');

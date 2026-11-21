@@ -11,6 +11,28 @@ export async function clearFoundryGuard(page:Page){
  finally {await page.keyboard.up('s');}
 }
 
+export async function clearFoundryServiceRoom(page:Page){
+ await page.keyboard.down('j');
+ await jump(page,124,180);await ground(page,288);
+ await standingJump(page,264);await ground(page,256);
+ await page.keyboard.down('s');await clear(page,['m3b-drone']);
+ // Keep crouch through the descent. The service walker's horizontal shot
+ // passes above the crouched suit but can hit during a standing landing.
+ await to(page,220);await ground(page,320);
+ await to(page,231);await ground(page,320);
+ await fireFromCover(page,['m3b-walker'],'crouch');await page.keyboard.up('s');
+ await jump(page,324,401);await ground(page,320);
+}
+
+export async function crossFoundryDroneRoom(page:Page){
+ // The lower drone is screened by the middle platform from floor fire.
+ // Climb the real cover/platform steps, then use the crouched firing line.
+ await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
+ await page.keyboard.down('s');await clear(page,['m3g-drone-low']);await page.keyboard.up('s');
+ await page.keyboard.down('j');await jump(page,350,425);await ground(page,224);
+ await fireFromCover(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);
+}
+
 export async function clearFoundryGate(page:Page){
  await page.keyboard.down('j');await jump(page,130,216);
  await page.keyboard.down('s');await ground(page,320);
@@ -19,7 +41,8 @@ export async function clearFoundryGate(page:Page){
 }
 
 export async function campaignFoundry(page:Page,route:'service'|'press'='service'){
-  await jump(page,148,250);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
+  // Land beyond the crate but outside the ram's charge lane.
+  await jump(page,148,237);await ground(page,320);await counterRam(page,'m3a-ram');await next(page,'M3E',520);
   await page.keyboard.down('s');
   await to(page,112);
   await page.keyboard.up('s');
@@ -30,12 +53,8 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await clearFoundryGuard(page);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');
   if(route==='service'){
-   await jump(page,124,216);await ground(page,320);await clear(page,['m3b-walker']);await jump(page,324,370);await ground(page,272);await clear(page,['m3b-drone']);await next(page,'M3G',536);
-   // The lower drone is screened by the middle platform from floor fire.
-   // Climb the real cover/platform steps, then use the crouched firing line.
-   await jump(page,140,190);await ground(page,288);await jump(page,205,306);await ground(page,256);
-   await page.keyboard.down('s');await clear(page,['m3g-drone-low']);await page.keyboard.up('s');
-   await jump(page,350,446);await ground(page,224);await clear(page,['m3g-drone-high']);await to(page,510);await ground(page,320);await next(page,'M3H',552);
+   await clearFoundryServiceRoom(page);await next(page,'M3G',536);
+   await crossFoundryDroneRoom(page);
    await clearFoundryGate(page);await page.keyboard.down('s');await to(page,384);await page.keyboard.up('s');await ground(page,320);await next(page,'M3K',520);
   }else{
    await jump(page,114,208);await ground(page,320);await to(page,280);await clear(page,['m3c-ram']);await cross(page,'m3c-press');await cross(page,'m3c-heat');await next(page,'M3I',552);
@@ -100,16 +119,30 @@ export async function campaignArchive(page:Page){
 
 }
 
+export async function clearReactorPatrol(page:Page){
+ await page.keyboard.down('j');await jump(page,114,208);await page.keyboard.down('s');await ground(page,320);
+ await fireFromCover(page,['m5g-security'],'crouch');await page.keyboard.up('s');
+ await to(page,212);await jump(page,212,172);await ground(page,288);
+ await jump(page,178,292);await ground(page,256);
+ await page.keyboard.down('j');await jump(page,330,410);await ground(page,224);
+ await fireFromCover(page,['m5g-drone']);
+ await to(page,510);await ground(page,320);await next(page,'M5H',552);
+}
+
 export async function campaignReactor(page:Page){
  const circuit:string='isolation',acceptE06=(await state(page)).eventPlan.some((e:any)=>e.event_id==='E06');
-  await jump(page,130,224);await ground(page,320);await clear(page,['m5a-security']);await page.keyboard.down('s');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
+  await page.keyboard.down('j');await jump(page,130,224);await page.keyboard.down('s');await ground(page,320);
+  await fireFromCover(page,['m5a-security'],'crouch');await to(page,338);await page.keyboard.up('s');await jump(page,338,404);await ground(page,320);await clear(page,['m5a-turret']);
   await jump(page,426,500);await ground(page,272);await to(page,580);await ground(page,320);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().roomStates.M5A.terminal,null,'outer power');await page.keyboard.up('e');await next(page,'M5F');
-  await jump(page,130,188);await ground(page,288);await jump(page,204,306);await ground(page,256);await page.keyboard.down('s');await clear(page,['m5f-drone']);await page.keyboard.up('s');await to(page,400);await ground(page,320);await page.keyboard.down('s');await clear(page,['m5f-security']);await page.keyboard.up('s');await next(page,'M5B',552);
+  await jump(page,130,188);await ground(page,288);await jump(page,204,306);await ground(page,256);await page.keyboard.down('s');await clear(page,['m5f-drone']);
+  // Fire while descending from the hot crossing. Stay below the patrol's last shots.
+  await page.keyboard.down('j');await to(page,380);await ground(page,320);
+  await fireFromCover(page,['m5f-security'],'crouch');await page.keyboard.up('s');await next(page,'M5B',552);
   await jump(page,122,180);await ground(page,288);await jump(page,204,280);await ground(page,272);await clear(page,['m5b-drone']);
   await until(page,()=>{const s=(window as any).__CINDER__(),t=s.simMs%9000;return t>=6000&&t<6800;},null,'transit heat window',12000);await jump(page,308,400);await ground(page,320);await jump(page,386,484);await ground(page,320);await to(page,520);
   if(acceptE06){await page.keyboard.press('e');await page.getByTestId('event-challenge').click();await page.getByTestId('confirm-event').click();await to(page,472);await ground(page,320);await page.keyboard.down('d');await until(page,()=>(window as any).__CINDER__().player.facing===1,null,'face optional patrol');await page.keyboard.up('d');await clear(page,['m5b-e06-ram']);}
   await next(page,'M5G');
-  await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m5g-security']);await page.keyboard.up('s');await to(page,212);await jump(page,212,172);await ground(page,288);await jump(page,178,292);await ground(page,256);await jump(page,326,432);await ground(page,224);await clear(page,['m5g-drone']);await to(page,510);await ground(page,320);await next(page,'M5H',552);
+  await clearReactorPatrol(page);
   await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('cooling');if(circuit==='isolation'){await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('isolation');}await jump(page,242,336);await ground(page,320);await next(page,'M5I');
   await jump(page,106,200);await ground(page,320);await to(page,244);await counterRam(page,'m5i-ram');if(circuit==='cooling'){await page.keyboard.down('s');await clear(page,['m5i-turret']);await page.keyboard.up('s');await to(page,526);}else await cross(page,'m5i-heat',526);
   await next(page,'M5C',552);await to(page,120);await ground(page,320);const before=(await state(page)).hp;
