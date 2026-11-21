@@ -185,7 +185,7 @@ export async function clearReactorEntrance(page:Page){
       const s=(window as any).__CINDER__(),turret=s.enemies.find((e:any)=>e.id==='m5a-turret');
       return s.hp<=0||turret?.hp<=0||turret?.phase==='recovery'&&turret.remaining>1600;
     },undefined,{timeout:10000});
-    await page.keyboard.down('j');await jump(page,338,386);await page.keyboard.down('s');await ground(page,320);
+    await jump(page,338,386);await page.keyboard.down('s');await ground(page,320);await page.keyboard.down('j');
     try{await until(page,()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((e:any)=>e.id==='m5a-turret')?.hp<=0;},null,'nightmare entrance turret',3000);}
     finally{await page.keyboard.up('s');await page.keyboard.up('j');}
     expect((await state(page)).hp,'reactor phase-wall counterfire').toBeGreaterThan(0);
