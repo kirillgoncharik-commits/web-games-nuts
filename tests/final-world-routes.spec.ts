@@ -254,16 +254,6 @@ async function combat(page:Page){
   await to(page,618);await ground(page,320);await face(page,-1);
   await fireFromCover(page,['yu03b-train','yu03b-roof']);return;
  }
- if(entry.room==='YU03-D'&&entry.campaign.difficulty==='hard'){
-  // The first switch cuts the floor field. Draw the ground patrol to the
-  // crate, then fire through the clear space below the high distributor deck.
-  await page.keyboard.down('j');await jump(page,129,180);await ground(page,288);
-  await page.keyboard.down('s');await to(page,226);await ground(page,320);await face(page,1);
-  await fireFromCover(page,['yu03d-line'],'crouch');await page.keyboard.up('s');
-  await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
-  await fireFromCover(page,['yu03d-relief']);await page.keyboard.down('s');
-  await fireFromCover(page,['yu03d-substation'],'crouch');await page.keyboard.up('s');return;
- }
  if(entry.room==='YU03-C'&&entry.campaign.difficulty!=='easy'){
   await page.keyboard.down('j');await walk(page,203);
   await page.waitForFunction(()=>{const s=(window as any).__CINDER__(),phase=(s.worldPulseElapsed??s.simMs)%5000;return s.hp<=0||phase>=2300&&phase<=3500;});
@@ -279,14 +269,11 @@ async function combat(page:Page){
   // it before the tunnel fight left the next room with damage that could no
   // longer be recovered, despite the same cache remaining safe after combat.
   await face(page,-1);
-  if(entry.campaign.difficulty==='nightmare'){
-   // The marked service pocket is a real projectile shield. Stay fully inside
-   // it (the near edge is not protected), and fire left through the open floor
-   // lane until the watcher exposes itself and both defenders are down.
-   await clear(page,['yu03c-drone','yu03c-track']);return;
-  }
-  await page.keyboard.down('s');
-  await fireFromCover(page,['yu03c-track','yu03c-drone'],'crouch');await page.keyboard.up('s');return;
+  // The marked service pocket is a real projectile shield. Stay fully inside
+  // it (the near edge is not protected), and fire left through the open floor
+  // lane until the watcher exposes itself and both defenders are down. Jumping
+  // to evade from here leaves the shield and is less safe even on Hard.
+  await clear(page,['yu03c-drone','yu03c-track']);return;
  }
  if(entry.room==='YU03-C'){
   // Cross on the safe phase and fire past the right edge of the crate.
@@ -581,7 +568,7 @@ async function solveRoom(page:Page){
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
     await page.keyboard.down('j');
     try{
-     await standingJump(page,315);await ground(page,320);
+     await standingJump(page,315);await ground(page,288);
      await page.waitForTimeout(260);
      await standingJump(page,247);await ground(page,320);
     }finally{await page.keyboard.up('j');}
