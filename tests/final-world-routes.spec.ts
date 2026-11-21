@@ -188,6 +188,12 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='YU03-D'&&entry.campaign.difficulty==='nightmare'){
+  // The marked service shield is the stable counter position for the three
+  // overlapping substation waves. Leaving it to jump turns the protection off.
+  await to(page,224);await ground(page,320);await face(page,1);
+  await clear(page,['yu03d-line','yu03d-substation','yu03d-relief']);return;
+ }
  if(entry.room==='YU05-D'){
   // Return fire through the transmitter housing. Its slot admits both sides' shots at standing height.
   // The lower panel protects Mira against steeply descending bolts.
@@ -236,9 +242,13 @@ async function combat(page:Page){
   // visible high jump before locking their next volley, leaving the landing
   // point clear for stock-weapon counterfire.
   // Remove the exposed watcher during its first recovery before drawing the
-  // floor patrol into the same marked pocket.
-  await fireFromCover(page,['yu05b-drone']);
-  await fireFromCover(page,['yu05b-roof']);
+  // floor patrol into the same marked pocket. Nightmare must remain inside the
+  // shield; the jump-evade helper would deliberately leave it.
+  if(entry.campaign.difficulty==='nightmare'){
+   await clear(page,['yu05b-drone']);await clear(page,['yu05b-roof']);
+  }else{
+   await fireFromCover(page,['yu05b-drone']);await fireFromCover(page,['yu05b-roof']);
+  }
   await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'&&shot.source==='relay-crawler-shot'));
   return;
  }
@@ -246,6 +256,12 @@ async function combat(page:Page){
   // The closed ridge door screens the two distant defenders during the first duel.
   await page.keyboard.down('j');await jump(page,66,104);await ground(page,300);
   await to(page,131);await page.keyboard.down('s');await ground(page,320);
+  if(entry.campaign.difficulty==='nightmare'){
+   await page.keyboard.up('s');await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
+   await clear(page,['yu05a-bay']);
+   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
+   await clear(page,['yu05a-hill','yu05a-switchback']);return;
+  }
   await fireFromCover(page,['yu05a-bay'],'crouch');
   await page.keyboard.up('s');await page.keyboard.press('e');
   await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
@@ -311,8 +327,8 @@ async function combat(page:Page){
   await page.keyboard.down('j');await jump(page,130,182);await ground(page,288);
   await standingJump(page,245);await ground(page,272);await standingJump(page,327);await ground(page,244);
   await to(page,405);await ground(page,320);await face(page,1);
-  await fireFromCover(page,['yu04c-scanner']);await face(page,-1);
-  await page.keyboard.down('s');await fireFromCover(page,['yu04c-feed'],'crouch');await page.keyboard.up('s');return;
+  await clear(page,['yu04c-scanner']);await face(page,-1);
+  await clear(page,['yu04c-feed']);return;
  }
  if(entry.room==='YU04-B'&&entry.campaign.difficulty!=='easy'){
   // Circuit A holds the hoist above the cutter's standing firing lane.
@@ -582,9 +598,19 @@ async function solveRoom(page:Page){
       enemy?.phase==='recovery'&&enemy.remaining>850;
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
-    await page.keyboard.down('s');
-    try{await fireFromCover(page,[id],'crouch');}
-    finally{await page.keyboard.up('s');await page.keyboard.up('j');}
+    if(id==='sw05d-last'){
+     // The lower slit hits the ground turret; the flying guardian is higher.
+     // Fire over the same screen in a vertical jump, only during recovery.
+     await page.keyboard.down('j');await page.keyboard.down('Space');
+     try{
+      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0;});
+      await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
+     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
+    }else{
+     await page.keyboard.down('s');
+     try{await fireFromCover(page,[id],'crouch');}
+     finally{await page.keyboard.up('s');await page.keyboard.up('j');}
+    }
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
    }
    throw Error('scanner-cover counter did not clear '+id);
