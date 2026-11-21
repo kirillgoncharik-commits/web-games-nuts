@@ -4,6 +4,7 @@ import type {Point,Rect,RoomId} from '../room-data';
 
 /** Keeps the Airlock drone behind the walker's first response or the designed sight break. */
 export function roomThreatCanActivate(room:RoomId,candidate:EnemyState,roster:EnemyState[],player:Point,solids:Rect[]){
+ if(candidate.afterEnemy&&!candidate.active){const lead=roster.find(enemy=>enemy.id===candidate.afterEnemy);if(lead&&lead.hp>0)return false;}
  if(room==='B'&&candidate.id==='b-drone'){
   const walker=roster.find(enemy=>enemy.id==='b-walker');
   if(!walker)return false;

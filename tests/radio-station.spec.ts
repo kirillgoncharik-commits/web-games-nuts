@@ -77,7 +77,9 @@ for(const reduced of [false,true])test(`radio links persist after real activatio
 });
 
 test('radio finale ordinary input: canopy shelters the pulse, pause freezes it and closure stops it',async({page},info)=>{
- test.setTimeout(45000);await encounter(page,{mission:'YU05',room:'YU05-D'});const hp=(await state(page)).hp;
+ // Focused environment fixture: the full campaign matrix fights the room's
+ // new guardian separately; this case measures only canopy/pulse behaviour.
+ test.setTimeout(45000);await encounter(page,{mission:'YU05',room:'YU05-D',cleared:true});const hp=(await state(page)).hp;
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await jump(page,130,240);await ground(page,320);await to(page,264);await ground(page,320);await page.keyboard.press('e');
  await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await to(page,348);await ground(page,320);
  await until(page,()=>(window as any).__CINDER__().worldPulse==='active',null,'rift pulse under real canopy');expect((await state(page)).hp).toBe(hp);await page.screenshot({path:info.outputPath('radio-rift-shelter.png')});

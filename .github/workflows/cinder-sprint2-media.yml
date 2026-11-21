@@ -28,7 +28,10 @@ jobs:
           node-version: 22
       - name: Use the same audible capture driver
         run: |
-          cp driver/tests/sprint2-media.spec.ts driver/tests/runtime-media.ts driver/tests/campaign-journey.ts game/tests/
+          cp driver/tests/sprint2-media.spec.ts driver/tests/runtime-media.ts game/tests/
+          if [ '${{ matrix.variant }}' != baseline-atlas ]; then
+            cp driver/tests/campaign-journey.ts game/tests/
+          fi
           cp driver/playwright.media.config.ts game/
           cp driver/scripts/report-sprint2-media.mjs game/scripts/
       - name: Build and capture real runtime
