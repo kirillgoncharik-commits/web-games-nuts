@@ -578,23 +578,19 @@ async function solveRoom(page:Page){
      expect((await state(page)).hp,'beacon scanner-cover activation').toBeGreaterThan(0);
     }
     if(id==='sw05d-last'){
-     // Once the previous recovery ends, the passive guardian cannot see Mira
-     // through the screen and will not start another volley on its own.  Read
-     // the scanner, briefly show above the screen, then return to shelter.
-     const current=(await state(page)).enemies.find((unit:any)=>unit.id===id);
-     if(current?.phase==='recovery'&&current.remaining<=850){
-      await page.waitForFunction(id=>{const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);return s.hp<=0||enemy?.hp<=0||enemy?.phase!=='recovery';},id);
-     }
-     const afterRecovery=(await state(page)).enemies.find((unit:any)=>unit.id===id);
-     if(afterRecovery?.hp>0&&!['telegraph','attack','recovery'].includes(afterRecovery.phase)){
-      for(let draw=0;draw<4;draw++){
-       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
-       await page.keyboard.press('Space',{delay:260});
-       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0;});
-       const shown=(await state(page)).enemies.find((unit:any)=>unit.id===id);
-       if(shown?.hp<=0||shown&&['telegraph','attack','recovery'].includes(shown.phase))break;
-      }
-     }
+     // The guardian is a flying, always-damageable target; the lower slit is
+     // below it.  On each open scan, jump vertically from the marked screen
+     // and fire only after the stock muzzle clears the top edge.  Its aimed
+     // response then passes over the landing shelter.
+     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
+     await page.keyboard.up('s');await face(page,1);await page.keyboard.down('Space');
+     try{
+      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
+      await page.keyboard.down('j');
+      await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
+     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
+     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
+     continue;
     }
     // The screen is a low firing shelter, not full standing cover.  Wait for
     // the warned volley in the same crouch a player uses to read the slit.
@@ -603,27 +599,12 @@ async function solveRoom(page:Page){
      await page.waitForFunction(id=>{
       const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
       return s.hp<=0||enemy?.hp<=0||enemy?.phase==='recovery'&&enemy.remaining>850&&
-       (id==='sw05d-last'||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900);
+       s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900;
      },id,{timeout:16000});
     }catch(error){await page.keyboard.up('s');throw error;}
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0){await page.keyboard.up('s');return;}
-    if(id==='sw05d-last'){
-     // The lower slit hits the ground turret; the flying guardian is higher.
-     // Fire over the same screen in a vertical jump, only during recovery.
-     await page.keyboard.up('s');
-     // Jump first and only begin firing once the muzzle has physically cleared
-     // the screen.  Starting both keys together wastes the first cooldown into
-     // the cover and leaves no airborne shot for the guardian.
-     await page.keyboard.down('Space');
-     try{
-      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy<0&&s.player.y+22-28<287;});
-      await page.keyboard.down('j');
-      await page.waitForFunction(id=>{const s=(window as any).__CINDER__();return s.hp<=0||s.enemies.find((unit:any)=>unit.id===id)?.hp<=0||s.player.vy===0;},id);
-     }finally{await page.keyboard.up('Space');await page.keyboard.up('j');}
-    }else{
-     try{await fireFromCover(page,[id],'crouch');}
-     finally{await page.keyboard.up('s');await page.keyboard.up('j');}
-    }
+    try{await fireFromCover(page,[id],'crouch');}
+    finally{await page.keyboard.up('s');await page.keyboard.up('j');}
     expect((await state(page)).hp,'beacon scanner-cover counterfire').toBeGreaterThan(0);
    }
    throw Error('scanner-cover counter did not clear '+id);
