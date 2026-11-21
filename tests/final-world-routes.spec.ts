@@ -11,7 +11,7 @@ import {missionIds} from '../games/cinder-shift/src/session/missions';
 import {clearLine,expand,intersects} from '../games/cinder-shift/src/geometry';
 import {state} from './helpers';
 import {writeFile} from 'node:fs/promises';
-import {alignOnLedge,standingJump,ground,jump,to,clear,face} from './route-helpers';
+import {alignOnLedge,standingJump,ground,jump,to,clear,drone,face} from './route-helpers';
 import {standingLaneClear,standingHalfWidth,contextCandidates} from './world-route-clearance';
 
 // The unlock is a labelled legacy fixture; every action inside C02/C03 uses ordinary input.
@@ -257,10 +257,15 @@ async function combat(page:Page){
   await page.keyboard.down('j');await jump(page,66,104);await ground(page,300);
   await to(page,131);await page.keyboard.down('s');await ground(page,320);
   if(entry.campaign.difficulty==='nightmare'){
+   // The marked bay is a low firing shelter: its canopy blocks standing
+   // shots, while the lower lane reaches both floor guards.  The induction
+   // orb is countered with vertical stock fire above the same shelter.
+   await fireFromCover(page,['yu05a-bay'],'crouch');
    await page.keyboard.up('s');await page.waitForFunction(()=>!(window as any).__CINDER__().player.crouching);
-   await clear(page,['yu05a-bay']);
    await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
-   await clear(page,['yu05a-hill','yu05a-switchback']);return;
+   await face(page,1);await page.keyboard.down('s');
+   await fireFromCover(page,['yu05a-switchback'],'crouch');await page.keyboard.up('s');
+   await drone(page,'yu05a-hill');return;
   }
   await fireFromCover(page,['yu05a-bay'],'crouch');
   await page.keyboard.up('s');await page.keyboard.press('e');
@@ -583,7 +588,7 @@ async function solveRoom(page:Page){
     // The relief guardian is dormant until the lead turret is gone and Mira
     // crosses its normal activation line. Briefly show above the same cover,
     // then wait out the warned volley before returning fire.
-    if(!enemy.activated||enemy.phase==='patrol'){
+    if(!enemy.activated){
      await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
      if(id==='sw05d-last'){
       await standingJump(page,350);await ground(page,320);
