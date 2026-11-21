@@ -7,9 +7,28 @@ export type RouteLoss={mission:string;room:string;reason:string;seconds:number};
 
 export async function playSector(page:Page,info:TestInfo,losses:RouteLoss[],play:()=>Promise<void>){
   const retries=info.project.metadata.difficulty ? 2 : 0;
+  let controlRestarts=0;
   for(let attempt=0;;attempt++){
     try{await play();return;}catch(error){
       const failed=await state(page);
+      // A transient Phaser asset-load screen is a test-control interruption,
+      // not a route loss. Reload the persisted sector entrance and continue
+      // without consuming one of the two real-death retries.
+      if(failed.state==='error'&&controlRestarts<2){
+        controlRestarts++;
+        await writeFile(info.outputPath('control-restarts.json'),JSON.stringify({
+          source_sha:failed.sha,seed:4,difficulty:info.project.metadata.difficulty,
+          kind:'asset-load',count:controlRestarts,losses,
+        },null,2));
+        await page.getByTestId('reload').click();
+        await expect(page.getByTestId('continue')).toBeVisible();
+        await page.getByTestId('continue').click();
+        await expect(page.getByTestId('restart-entry')).toBeVisible();
+        await page.getByTestId('restart-entry').click();
+        await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.state==='playing'&&s.simMs>0&&s.player?.vy===0;});
+        attempt--;
+        continue;
+      }
       if(failed.hp!==0 || !['dying','dead'].includes(failed.state)){
         const snapshot={source_sha:failed.sha,seed:failed.campaign.campaign_seed,difficulty:failed.campaign.difficulty,mission:failed.missionId,room:failed.room,active_seconds:failed.activeSeconds,score:failed.score,hp:failed.hp,player:failed.player,enemies:failed.enemies,visits:campaignVisits(failed),pressure:campaignPressure(failed.roomStates),losses};
         await writeFile(info.outputPath('route-stop.json'),JSON.stringify(snapshot,null,2));
