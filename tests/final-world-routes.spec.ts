@@ -229,7 +229,11 @@ async function combat(page:Page){
    return s.hp<=0||!turret.active||turret.hp<=0||turret.aimLocked||turret.phase==='recovery';
   },undefined,{timeout:6000});
   await page.keyboard.down('s');await to(page,219);await ground(page,320);
-  await fireFromCover(page,['yu05b-roof','yu05b-drone'],'crouch');await page.keyboard.up('s');return;
+  // Finish the floor patrol and let its last bolt pass while Mira remains
+  // below that lane. Only then draw and counter the gallery watcher's burst.
+  await fireFromCover(page,['yu05b-roof'],'crouch');
+  await page.waitForFunction(()=>!(window as any).__CINDER__().projectiles.some((shot:any)=>shot.team==='enemy'));
+  await fireFromCover(page,['yu05b-drone'],'crouch');await page.keyboard.up('s');return;
  }
  if(entry.room==='YU05-A'&&entry.campaign.difficulty!=='easy'){
   // The closed ridge door screens the two distant defenders during the first duel.
@@ -563,7 +567,7 @@ async function solveRoom(page:Page){
     await page.waitForFunction(id=>{
      const s=(window as any).__CINDER__(),enemy=s.enemies.find((unit:any)=>unit.id===id);
      return s.hp<=0||enemy?.hp<=0||s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>1900&&
-      enemy?.phase==='recovery'&&enemy.remaining>800;
+      enemy?.phase==='recovery'&&enemy.remaining>1450;
     },id,{timeout:16000});
     if((await state(page)).enemies.find((unit:any)=>unit.id===id)?.hp<=0)return;
     await page.keyboard.down('j');
