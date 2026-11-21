@@ -606,6 +606,13 @@ async function solveRoom(page:Page){
 	     }
 	     await face(page,1);await fireFromCover(page,[id]);
 	     expect((await state(page)).hp,'beacon open-lane counterfire').toBeGreaterThan(0);
+	     // Combat ends on the right of the moving scanner. Wait for its visible
+	     // open phase and jump back behind the screen before walking to the item;
+	     // crossing on a closed scan caused a post-combat death with both enemies dead.
+	     await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||
+	      s.worldEncounter.phase==='open'&&s.worldEncounter.remaining>2300;});
+	     await standingJump(page,260);await ground(page,320);
+	     expect((await state(page)).hp,'beacon return crossing').toBeGreaterThan(0);
 	     return;
     }
     // The screen is a low firing shelter, not full standing cover.  Wait for
