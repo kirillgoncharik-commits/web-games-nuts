@@ -8,6 +8,8 @@ export const productionFrames=manifest.frames as Record<string,Meta>;
 export const baseArtSector=(room:RoomDefinition)=>room.boss?'regulator':roomSector(room);
 export function preloadProductionArt(scene:Phaser.Scene,room:RoomDefinition){
  if(!scene.textures.exists('production-objects'))scene.load.atlas('production-objects','./assets/world-production/objects.png','./assets/world-production/objects.json');
+ if(room.world?.pulse?.kind==='steam'&&!scene.textures.exists('kitchen-steam-manifold'))
+  scene.load.image('kitchen-steam-manifold','./assets/kitchen/steam-manifold.png');
  if(room.world){const sector=room.id.slice(0,4) as keyof typeof manifest.backgrounds;
   if(!scene.textures.exists('production-bg-'+sector))scene.load.image('production-bg-'+sector,'./assets/world-production/'+manifest.backgrounds[sector].file);
   if(!scene.textures.exists('production-material-'+sector))scene.load.image('production-material-'+sector,'./assets/world-production/'+manifest.materials[sector]);

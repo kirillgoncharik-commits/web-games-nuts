@@ -37,7 +37,8 @@ export class WorldMotionArt{
     this.previous=current;
     const motionNow=this.room.world?.landmark==='drive'&&world.phase>=2?0:now;
     const signature=[reduced?0:Math.floor(motionNow/80),reduced].join(':');
-    if(signature!==this.signature){
+    // These two rooms draw their machinery at its physical location.
+    if(signature!==this.signature&&this.room.id!=='SW01-B'&&this.room.id!=='YU01-B'){
       this.signature=signature;const g=this.background;g.clear();this.sprites.begin();
       // Separate background prop plane above the routes. It never resembles a platform.
       const x=roomPlacement(this.room.id),y=65;

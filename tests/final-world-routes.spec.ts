@@ -206,6 +206,13 @@ async function approachContext(page:Page,action:'switch'|'activate',point:{x:num
 }
 async function combat(page:Page){
  const entry=await state(page);
+ if(entry.room==='YU01-B'&&entry.campaign.difficulty==='nightmare'){
+  // Stand in the floor-level firing lane. The cabinet slit passes the
+  // cutter; the bridge and cabinet screen shots aimed above Mira's head.
+  await page.keyboard.down('j');await jump(page,120,176);await ground(page,288);
+  await to(page,231);await ground(page,320);await fireFromCover(page,['yu01b-exchange']);
+  return;
+ }
  if(entry.room==='SW02-A'){
   // From the gap between the keys, standing shots clear the low housing.
   // The guard fires horizontally at head height. Duck until its bolt passes.

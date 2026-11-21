@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test';
 import {writeFile} from 'node:fs/promises';
 import {encounter} from './encounter-helpers';
 import {state} from './helpers';
+import {fireFromCover} from './defensive-fire';
 import {jump,standingJump,to,ground,until} from './route-helpers';
 
 test('warehouse lift joins the optional salvage route and opens the gate in the cleared warehouse',async({page},info)=>{
@@ -84,12 +85,19 @@ test('courtyard lever opens its real entrance and the optional alcove is reachab
 test('switchboard earns its elevated bridge contact and returns over the A stairs with both levers reachable',async({page},info)=>{
  test.setTimeout(60000);await encounter(page,{mission:'YU01',room:'YU01-B'});const samples:any[]=[];
  const capture=async(label:string)=>{samples.push({label,state:await state(page)});await page.screenshot({path:info.outputPath(label+'.png')});};
+ const hint=page.locator('#hud-objective');
+ await expect(hint).toContainText(/включить мост B|power bridge B/i);
  await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('B');
- await jump(page,120,176);await ground(page,288);await to(page,196);await ground(page,288);await standingJump(page,284);await ground(page,280);
+ await expect(hint).toContainText(/с ящика|from the crate/i);await capture('exchange-B-first-jump');
+ await page.keyboard.down('j');await jump(page,120,176);await ground(page,288);
+ await to(page,231);await ground(page,320);await fireFromCover(page,['yu01b-exchange']);
+ await standingJump(page,190);await ground(page,288);await to(page,196);await ground(page,288);
+ await standingJump(page,284);await ground(page,280);
  await to(page,324);await ground(page,280);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(1);await capture('exchange-B-bridge-connected');
  await to(page,394);await ground(page,280);await standingJump(page,456);await ground(page,280);await to(page,552);await ground(page,320);
+ await expect(hint).toContainText(/правого рубильника|right lever/i);
  await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.power.circuit).toBe('A');await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).world.phase).toBe(2);await capture('exchange-A-exit-connected');
- await to(page,544);await ground(page,320);await standingJump(page,488);await ground(page,280);await to(page,440);await ground(page,280);await standingJump(page,384);await ground(page,256);
+ await to(page,480);await ground(page,320);await standingJump(page,436);await ground(page,280);await to(page,440);await ground(page,280);await standingJump(page,384);await ground(page,256);
  await to(page,348);await ground(page,256);await standingJump(page,280);await ground(page,288);await to(page,260);await ground(page,288);await standingJump(page,184);await ground(page,288);await to(page,112);await ground(page,320);
  const final=await state(page);expect(final.hp).toBe(6);expect(final.world.ledger).toEqual(['stairs:phase-0','stairs:phase-1']);expect(final.exitOpen).toBe(true);await capture('exchange-A-physical-return');
  await writeFile(info.outputPath('exchange-evidence.json'),JSON.stringify({fixture:'one YU01-B entry; bridge, far lever, both contacts and A-stair return use ordinary keyboard input',samples},null,2));
@@ -224,7 +232,11 @@ test('drawer contact opens its real gate through normal carry and throw input',a
 });
 
 test('kitchen lower shelter protects crouching Mira during the same live steam pulse that hits a standing Mira',async({page},info)=>{
- await encounter(page,{mission:'SW01',room:'SW01-B',cleared:true});await to(page,248);await ground(page,320);await page.keyboard.down('s');await to(page,304);await ground(page,320);
+ await encounter(page,{mission:'SW01',room:'SW01-B',cleared:true});await jump(page,160,248);await ground(page,320);await page.keyboard.down('s');await to(page,304);await ground(page,320);
+ for(const phase of ['safe','warning']){
+  await page.waitForFunction(phase=>(window as any).__CINDER__().worldPulse===phase,phase);
+  await page.screenshot({path:info.outputPath('steam-'+phase+'.png')});
+ }
  await page.waitForFunction(()=>{const t=(window as any).__CINDER__().simMs%5400;return t>=1400&&t<1550;});const before=await state(page);
  await page.waitForFunction(t=>(window as any).__CINDER__().simMs>=t+250,before.simMs);const protectedState=await state(page);expect(protectedState.hp).toBe(6);expect(protectedState.player.crouching).toBe(true);
  await page.screenshot({path:info.outputPath('steam-lower-shelter.png')});await page.keyboard.up('s');await expect.poll(async()=>(await state(page)).hp).toBeLessThan(6);

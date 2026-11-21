@@ -1,3 +1,4 @@
+import {exchangeGuide} from '../exchange-guide';
 import type Phaser from 'phaser';
 import type {RoomDefinition,Rect} from '../room-data';
 import type {MissionAttempt,RoomState} from '../mission';
@@ -19,9 +20,21 @@ export class WorldArt{
   const props=productionArt.sectors[sector],variant=room.id.charCodeAt(room.id.length-1)-65;
   const decorations=new ProductionSprites(scene);decorations.begin();
   // Rear props remain subdued and never provide collision.
-  for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i]==='YU01-laundry'?'YU01-balcony':props[i],x,y,w,h,1.45,1,.65);
+  if(room.id==='SW01-B'){
+   decorations.draw('SW01-plates',192,236,76,62,1.45,1,.65);
+   decorations.draw('SW01-kettle',380,246,65,58,1.45,1,.65);
+  }else if(room.id!=='YU01-B')for(const [i,x,y,w,h]of [[variant%6,100,220,150,120],[(variant+2)%6,330,192,126,105],[(variant+4)%6,550,248,130,128]])decorations.draw(props[i]==='YU01-laundry'?'YU01-balcony':props[i],x,y,w,h,1.45,1,.65);
   decorations.end();
   for(const r of room.solids)if(!r.id)scene.add.tileSprite(r.x,r.y,r.width,r.height,'production-material-'+sector).setOrigin(0).setDepth(2.2);
+  if(room.world!.pulse?.kind==='steam'){
+   const area=worldPulseArea(room.world!)!;
+   const feed=scene.add.graphics().setDepth(3);
+   const x=area.x-35,y=area.y-15;
+   feed.fillStyle(0x263139).fillRect(x-3,y-3,11,7).fillRect(x-3,y,7,236-y);
+   feed.fillStyle(0xb46b49).fillRect(x-1,y,3,236-y).fillRect(x,y-1,8,3);
+   feed.fillStyle(0x50443c).fillRect(x-6,231,13,5);
+   scene.add.image(area.x+18,area.y+1,'kitchen-steam-manifold').setOrigin(.5,1).setDepth(4.3);
+  }
   for(const q of room.world!.switches??[]){
     const bezel=scene.add.graphics().setDepth(6.55);
     bezel.fillStyle(0x15242f).fillRoundedRect(q.x-24,q.y-68,48,20,3);
@@ -51,7 +64,22 @@ export class WorldArt{
     p.draw('switch-'+s.power.circuit,q.x,q.y-6,36,42,6.4);
     g.fillStyle(0x9edbc2).fillRect(q.x+(s.power.circuit==='A'?-15:9),q.y-47,7,2);
    }
-   const target=powerTarget(spec,s);if(target)p.draw('contact-'+(spec.sequence![s.phase]===s.power.circuit&&worldPulse(spec,now,s)==='safe'?'ready':'inactive'),target.x,target.y-7,28,36,6.4);
+   if(this.room.id==='YU01-B'&&!worldReady(spec,s)){
+    const next=exchangeGuide(s.phase,s.power.circuit,player.x,player.feet);
+    const y=next.y-9+(reduced?0:Math.round(Math.sin(now/220)*2));
+    g.fillStyle(0x15242f).fillTriangle(next.x-7,y-4,next.x+7,y-4,next.x,y+4);
+    g.fillStyle(0xffda82).fillTriangle(next.x-5,y-3,next.x+5,y-3,next.x,y+2);
+   }
+   const target=powerTarget(spec,s);
+   if(target){
+    p.draw('contact-'+(spec.sequence![s.phase]===s.power.circuit&&worldPulse(spec,now,s)==='safe'?'ready':'inactive'),target.x,target.y-7,28,36,6.4);
+    if(this.room.id==='YU01-B'){
+     const count=spec.sequence![s.phase]==='B'?2:1;
+     g.fillStyle(0x182930).fillRect(target.x-7,target.y-51,14,8);
+     for(let lamp=0;lamp<count;lamp++)g.fillStyle(0xffda82).fillRect(target.x-2+(lamp-(count-1)/2)*6,target.y-49,4,4);
+    }
+   }
+   if(this.room.id==='YU01-B')p.draw('YU01-exchange',436,319,35,20,3.3);
   }
   if(s.carry){for(const c of s.carry.contacts)p.rect('contact-'+(c.active?'locked':c.open?'ready':'inactive'),c.rect,6.4);
    const item=s.carry.item,pose=item.state==='held'?'held':item.state==='thrown'?'thrown':item.state==='ready'?'ground':'landed';
@@ -62,10 +90,28 @@ export class WorldArt{
   if(spec.encounter&&s.encounter){const e=spec.encounter,t=encounterTiming(e,s.encounter,now),stage=e.stages[s.encounter.stage];for(const r of encounterSolids(e,s.encounter))plate('door-closed',r);p.draw('scanner-'+(t.phase==='complete'?'disabled':t.phase==='open'?'exposed':t.phase==='scan'?'active':t.phase==='warning'?'warning':'idle'),580,256,90,100,3.3);if(stage&&(t.phase==='scan'||t.phase==='warning'))wire([{x:stage.origin.x,y:stage.origin.y},{x:stage.beam.x,y:stage.origin.y}],t.phase==='scan'?0xe77762:0xdfa568,t.phase==='scan' ? .85 : .35);}
   const pulse=worldPulse(spec,now,s),area=worldPulseArea(spec);if(area){const kind=spec.pulse!.kind;
    if(kind==='load'){const y=pulse==='active'?area.y+area.height:area.y+24;p.draw('YU02-container',area.x+area.width/2,y,area.width,24,4);}
-   if(pulse!=='safe'){
-    const color=kind==='water'?0x83b4c2:kind==='steam'?0xc7d1c3:pulse==='active'?0xe77762:0xdfa568;
+   if(kind==='steam'){
+    // Three outlets on the copper manifold. The low crouching pocket stays clear.
+    const warning=pulse==='warning',active=pulse==='active',outlets=[area.x+3,area.x+26,area.x+50];
+    const depth=(spec.pulse!.shelters?.[0]?.y??area.y+area.height)-area.y;
+    g.fillStyle(active?0xffe6b0:warning?0xffac51:0x61968c).fillRect(area.x-16,area.y-30,4,3);
+    if(warning||active)for(const [jet,x] of outlets.entries()){
+     const length=active?depth:16;
+     for(let band=0;band<length;band+=8){
+      const offset=band+(reduced?3:(Math.floor(now/36)+jet*3)%8);
+      if(offset+4>length)continue;
+      const spread=active?2+Math.floor(offset/16):2;
+      const drift=reduced?0:Math.round(Math.sin((offset+jet*9)/11)*2);
+      const cloudX=x+drift,cloudY=area.y+offset;
+      g.fillStyle(0x9bbfc0,active ? .52 : .36).fillEllipse(cloudX,cloudY,spread*2+3,6);
+      g.fillStyle(0xe2e8dc,active ? .80 : .55).fillCircle(cloudX-2,cloudY-1,Math.min(4,spread));
+      g.fillStyle(0xc3d7ce,.65).fillCircle(cloudX+2,cloudY+1,Math.min(3,spread));
+     }
+    }
+   }else if(pulse!=='safe'){
+    const color=kind==='water'?0x83b4c2:pulse==='active'?0xe77762:0xdfa568;
     g.lineStyle(pulse==='active'?3:1,color,.8).lineBetween(area.x,area.y+area.height-2,area.x+area.width,area.y+area.height-2);
-    for(let n=0;n<Math.max(2,Math.ceil(area.width/16));n++){const x=area.x+8+n*16,y=area.y+area.height-(reduced?12:(now/30+n*11)%Math.max(16,area.height));g.fillStyle(color,pulse==='active' ? .65 : .25).fillCircle(x,y,kind==='steam'?3:1);}
+    for(let n=0;n<Math.max(2,Math.ceil(area.width/16));n++){const x=area.x+8+n*16,y=area.y+area.height-(reduced?12:(now/30+n*11)%Math.max(16,area.height));g.fillStyle(color,pulse==='active' ? .65 : .25).fillCircle(x,y,1);}
    }
    for(const q of spec.pulse!.signals??[])p.draw('signal-'+pulse,q.x,q.y+28,22,50,4);
   }
