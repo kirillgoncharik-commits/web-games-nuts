@@ -355,7 +355,7 @@ for(const locale of ['ru','en'] as const){
     await page.waitForFunction(()=>{const e=(window as any).__CINDER__().worldEncounter;return e.phase==='open'&&e.remaining>2450;});
     await jump(page,244,284);await ground(page,288);await standingJump(page,385);
    }else{
-    await jump(page,128,180);await ground(page,288);await to(page,230);
+    await jump(page,128,180);await ground(page,276);await to(page,230);
     await page.keyboard.press('j',{delay:300});
    }
    await expect(page.getByTestId('retry')).toBeVisible();
