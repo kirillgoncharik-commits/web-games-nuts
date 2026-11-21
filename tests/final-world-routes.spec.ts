@@ -593,6 +593,7 @@ async function solveRoom(page:Page){
      if(id==='sw05d-last'){
       await standingJump(page,350);await ground(page,320);
       await standingJump(page,260);await ground(page,320);
+     await face(page,1);
      }else{
       await page.keyboard.press('Space',{delay:260});
       await page.waitForFunction(()=>{const s=(window as any).__CINDER__();return s.hp<=0||s.player.vy===0;});
