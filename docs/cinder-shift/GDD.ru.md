@@ -1,5 +1,8 @@
 # Дизайн игры Cinder Shift
 
+> **25.11.2026 — следующая продуктовая итерация Pressure & Survival (PLANNED).** [Спецификация PS-01–08](pressure-survival-design.ru.md) · [Задание Codex: implementation + delivery](pressure-survival-codex-work-order.ru.md) · [Предварительная матрица энергии 15 миссий](pressure-survival-baseline.json). Основание: PR #24, integration SHA 86787e36b3112f2d6e1f65c142b9c0e019ad9674. Новый дизайн разделяет Lives/HP/Energy, добавляет room retry, mission-wide energy и ограниченные зарядки, пересчитывает маршруты всех 3 кампаний и пять испытаний. Для следующей версии это уточнение имеет приоритет над противоречащими историческими правилами; runtime, версии, старые сохранения и статусы существующих релизов этим изменением НЕ изменены. Номер 0.8.0-alpha.17 предложен, сверить свободный release_id и текущую линию. До доказательств все PS-01–08 PLANNED, human balance pending. После реализации обновить фактический implementation-status/coverage/save-format/QA и platform release report; не перезаписывать исторические свидетельства.
+
+
 Nuts Games · R01 · GDD 0.1 · 5 ноября 2026
 
 ## Название и основа игры
