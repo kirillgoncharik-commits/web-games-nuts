@@ -1,3 +1,4 @@
+import {MissionPressure,pressureCapacity} from './session/mission-pressure';
 import {createWorldState,worldSolids,worldReady,worldAbsorb,clearWorldTransient,type WorldRoomState} from './session/world-runtime';
 import {combatBalance,incomingDamage} from './session/difficulty';
 import {RegulatorEncounter} from './boss';
@@ -17,12 +18,63 @@ import {rooms,type RoomId,type RoomDefinition} from './room-data';
 export type Mode='mission'|'training';
 export type RoomState={enemyContactMs:number;hpLost:number;world?:WorldRoomState;powerCircuit:'press'|'furnace';targetHp:number;terminal:boolean;enemies:EnemyState[];visited:boolean;containerUsed:boolean;repairUsed:boolean;cacheUsed:boolean;bufferUsed:boolean;brokenPanels:string[];route:'ground'|'service'|'press'|'archive'};
 export type Result='victory'|'death';
+const roomEntryFields = [
+ 'states','legacyScore','relayIntelCollected','relayRepairUsed','reactorCircuit','reactorRerouted',
+ 'cargoCircuit','cargoRerouted','objective','cellCollected','cellInstalled','archiveCarrierCollected',
+ 'archiveUploadPowered','dataUploaded','scoutedArchive','s05Accepted','e06Rewarded','abilityReadyAt','foundryRoute'
+] as const;
 export class MissionAttempt{
  readonly balance:ReturnType<typeof combatBalance>;
  readonly id=crypto.randomUUID();readonly missionId:PlayableMissionId;private harmEvent=0;
  current:RoomId;hp:number;readonly profile:CharacterProfile;readonly maxHp:number;readonly entry:MissionEntry;
  readonly campaignScore?:CampaignScore;
- private legacyScore:number;
+ legacyScore:number;
+ readonly pressure: MissionPressure | null;
+ private roomEntry: {
+  room: RoomId;
+  side: 'left' | 'right';
+  state: Pick<MissionAttempt, typeof roomEntryFields[number]>;
+  time: number;
+  energy: number;
+  charges: Set<string>;
+  score?: ReturnType<CampaignScore['checkpoint']>;
+  trialScore?: ReturnType<ScoreLedger['checkpoint']>;
+  boss: ReturnType<RegulatorEncounter['checkpoint']>;
+ } | null = null;
+
+ get entryEnergy(){return this.roomEntry?.energy??null;}
+ captureRoomEntry(side: 'left' | 'right') {
+  if (!this.pressure) return;
+  this.roomEntry = {
+   room: this.current,
+   side,
+   state: structuredClone(Object.fromEntries(roomEntryFields.map(key => [key, this[key]]))) as Pick<MissionAttempt, typeof roomEntryFields[number]>,
+   time: this.clock.now,
+   energy: this.pressure.energy,
+   charges: new Set(this.pressure.charges),
+   score: this.campaignScore?.checkpoint(),
+   trialScore: this.scoreLedger?.checkpoint(),
+   boss: this.regulator.checkpoint()
+  };
+ }
+ retryRoom() {
+  const entry = this.roomEntry;
+  if (!entry || !this.pressure?.retry()) return null;
+  Object.assign(this, structuredClone(entry.state));
+  this.current = entry.room;
+  this.clock.now = entry.time;
+  this.clock.clear();
+  this.pressure.energy = entry.energy;
+  this.pressure.charges = new Set(entry.charges);
+  if(entry.score)this.campaignScore?.restore(entry.score);
+  if(entry.trialScore)this.scoreLedger?.restore(entry.trialScore);
+  this.regulator.restore(entry.boss);
+  this.hp = this.maxHp;
+  this.hurtUntil = this.damageFlashUntil = -1;
+  this.lastDamageAbsorbed = this.lastDeathSaved = false;
+  this.reason = '';
+  return entry.side;
+ }
  get score(){return this.legacyScore+(this.campaignScore?.total??0);}
  recordKill(enemy:EnemyState){this.campaignScore?.kill(enemy.id,enemy.kind);this.scoreLedger?.kill(enemy.id,enemy.kind);}
  recordPatrol(points:number){if(this.campaignScore)this.campaignScore.patrol('E06',points);else this.legacyScore+=points;}
@@ -35,7 +87,7 @@ export class MissionAttempt{
  reactorCircuit:'cooling'|'isolation'='isolation';reactorRerouted=false;
  cargoCircuit:'conveyor'|'security'='security';cargoRerouted=false;objective=false;cellCollected=false;cellInstalled=false;archiveCarrierCollected=false;archiveUploadPowered=false;dataUploaded=false;scoutedArchive=false;s05Accepted=false;e06Rewarded=false;d4Used=false;lastDeathSaved=false;readonly regulator=new RegulatorEncounter();abilityReadyAt=0;foundryRoute:'service'|'press'|null=null;activeMs=0;hurtUntil=-1;damageFlashUntil=-1;lastDamageAbsorbed=false;
  result:Result|'abandoned'|null=null;reason='';tutorial=new Set<string>();clock=new SimulationClock();states:Partial<Record<RoomId,RoomState>>={};
- constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger,campaignScoring=mode==='mission'&&!scoreLedger){if(campaignScoring)this.campaignScore=new CampaignScore();this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.balance=combatBalance(this.missionId,this.entry.difficulty);this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active,this.entry.difficulty);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.legacyScore=this.entry.initial_score;
+ constructor(readonly mode:Mode,entry?:MissionEntry,readonly scoreLedger?:ScoreLedger,campaignScoring=mode==='mission'&&!scoreLedger,trialLives?:number){if(campaignScoring)this.campaignScore=new CampaignScore();this.entry=structuredClone(entry||{mission_id:'airlock',seed:0,build:loadout([]),max_hp:6,initial_hp:6,initial_score:0,event_plan:[]});this.missionId=this.entry.mission_id;this.pressure=mode==='mission'&&(campaignScoring||trialLives!==undefined)?new MissionPressure(pressureCapacity[this.missionId],this.entry.difficulty,trialLives):null;this.balance=combatBalance(this.missionId,this.entry.difficulty);this.current=mode==='training'?'T':missions[this.missionId].rooms[0];this.profile=characterProfile(this.entry.build.nodes,this.entry.build.active,this.entry.difficulty);this.maxHp=this.entry.max_hp;this.hp=this.entry.initial_hp;this.legacyScore=this.entry.initial_score;
  if(campaignScoring&&this.entry.attachment==='accelerator')this.profile.projectileSpeed*=1.25;
  if(campaignScoring&&this.entry.attachment==='cycler')this.profile.shotsPerSecond*=1.15;
  if(this.entry.relay_leg==='B'&&this.entry.relay_support==='power'&&this.missionId==='cargo'&&hasEvent(this.eventPlan,'E01'))this.room('F').terminal=true;}

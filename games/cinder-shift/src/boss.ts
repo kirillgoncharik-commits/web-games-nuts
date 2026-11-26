@@ -52,6 +52,8 @@ export class RegulatorEncounter{
   if(this.hp===config.m05b3.boss_phase_two_hp&&this.phaseTwoAt===null){this.phaseTwoAt=this.elapsedMs;this.windowKey='transition:0';this.windowDamage=0;}
   return accepted;
  }
+ checkpoint(){return {hp:this.hp,elapsedMs:this.elapsedMs,phaseTwoAt:this.phaseTwoAt,aimX:this.aimX,windowDamage:this.windowDamage,windowKey:this.windowKey,lastWarning:this.lastWarning};}
+ restore(checkpoint:ReturnType<RegulatorEncounter['checkpoint']>){Object.assign(this,checkpoint);}
  snapshot(){return{hp:this.hp,elapsedMs:this.elapsedMs,phaseTwoAt:this.phaseTwoAt,aimX:this.aimX,windowDamage:this.windowDamage,pattern:this.pattern()};}
 }
 

@@ -29,16 +29,17 @@ export function stats(i:I18n,nodes:readonly NodeId[],selected?:NodeId,changesOnl
  return'<section class="stats-card"><h3>'+e(i.t('workshop.stats'))+'</h3><table class="profile-stats"><thead><tr><th scope="col">'+e(i.t('workshop.parameter'))+'</th><th scope="col">'+e(i.t('workshop.current'))+'</th>'+(selected?'<th scope="col">'+e(i.t('workshop.after',{node:selected}))+'</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table>'+(next.active==='M1'&&!changesOnly?'<p class="helper">'+e(i.t('workshop.dash',{distance:next.dashDistance,seconds:next.dashSeconds,cooldown:next.dashCooldown}))+'</p>':'')+(selected==='W1'&&!changesOnly?'<p class="helper">'+e(i.t('workshop.spreadNote'))+'</p>':'')+'</section>';
 }
 
-export function workshopBody(i:I18n,ui:Panels,d:CampaignData,selected:NodeId,select:(id:NodeId)=>void,buy:(id:NodeId)=>void,busy=false){
+export function workshopBody(i:I18n,ui:Panels,d:CampaignData,selected:NodeId,select:(id:NodeId)=>void,buy:(id:NodeId)=>void,busy=false,compact=false){
  const owned=d.nodes.map(id=>{const node=research.find(node=>node.id===id)!;const active=id==='M1'||id==='W4';return'<li>'+researchIcon(id)+'<span><strong>'+e(i.t(node.nameKey))+'</strong><small>'+e(i.t(active?(d.active===id?'research.equipped':'rework.activeIdle'):'rework.passiveInstalled'))+'</small></span></li>';}).join('');
- const cards=research.filter(node=>!d.nodes.includes(node.id)).map(node=>{
+ const cards=research.filter(node=>!d.nodes.includes(node.id)&&(!compact||node.requires.length===0)).map(node=>{
   const insufficient=d.points<node.cost,locked=!prerequisitesMet(d.nodes,node.id);
   const visualState=locked?'locked':insufficient?'no-points':selected===node.id?'selected':'available';
   const stateText=locked?i.t('research.requires',{nodes:node.requires.map(id=>id+' / '+i.t('research.'+id+'.name')).join(', ')}):i.t(insufficient?'research.insufficient':'research.available');
-  const heading=ui.button('research-'+node.id,e(node.id+' / '+i.t(node.nameKey)),()=>select(node.id),{pressed:selected===node.id,sound:'silent',html:true,className:'module-inspect'});
+  const heading=ui.button('research-'+node.id,e(i.t(node.nameKey)),()=>select(node.id),{pressed:selected===node.id,sound:'silent',html:true,className:'module-inspect'});
   const purchase=ui.button('buy-'+node.id,i.t('rework.buyModule',{cost:node.cost}),()=>buy(node.id),{kind:'secondary',disabled:locked||insufficient||busy,className:'module-purchase',label:i.t('rework.buyNamed',{name:i.t(node.nameKey),cost:node.cost})});
   return{branch:node.branch,html:'<article class="research-card state-'+visualState+'" data-module="'+node.id+'"><span class="module-emblem">'+researchIcon(node.icon)+moduleStateMark(visualState)+'</span><div class="module-copy"><div class="module-heading">'+heading+'</div><span class="module-kind">'+e(i.t(node.id==='M1'||node.id==='W4'?'workshop.activeType':'workshop.passiveType'))+'</span><span class="effect">'+e(i.t(node.effectKey))+'</span><span class="node-state">'+e(stateText)+'</span>'+purchase+'</div></article>'};
  });
+ if(compact)return '<div class="research-grid starter-modules">'+cards.map(card=>card.html).join('')+'</div>';
  const branches=(['weapon','movement','defence'] as const).map(branch=>{
   const nodes=research.filter(node=>node.branch===branch),count=nodes.filter(node=>d.nodes.includes(node.id)).length;
   const progress=nodes.map(node=>'<li class="'+(d.nodes.includes(node.id)?'owned':'')+'"'+(d.active===node.id?' aria-current="true"':'')+'>'+e(node.id)+(d.nodes.includes(node.id)?' ✓':'')+'</li>').join('');

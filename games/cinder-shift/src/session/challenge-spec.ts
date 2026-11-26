@@ -1,3 +1,4 @@
+import {pressureCapacity,pressurePresets,pressureStations} from './mission-pressure';
 import type {PlayableMissionId} from './missions';
 import type {RunModeId,RunTimingPolicy} from './run-clock';
 
@@ -7,10 +8,18 @@ export type ChallengeSpec=Readonly<{
   timing_policy:RunTimingPolicy;scoring_version:string;comparison_metric:'elapsed_ms'|'score';assist_profile:'standard-manual'|'assisted';duration_limit_ms:number;
 }>;
 export type ChallengeInput=Omit<ChallengeSpec,'game_id'>;
-export const trialRuleset='combat-clear-v7';
+export const trialRuleset='pressure-v1';
 export const trialMissions=['airlock','cargo'] as const;
-export const trialSimulationVersion='phaser-60hz-rework7';
-export const trialContentId=(mission:string)=>`${mission}-rework7`;
+export const trialSimulationVersion='phaser-60hz-pressure-v1';
+export const pressureScoreVersion='score-pressure-v1';
+export const trialPreset='stock-standard-pressure-v1';
+export const trialContentId=(mission:string)=>{
+  const stationIds=mission==='airlock'?['M1A']:mission==='cargo'?['E','M2D']:['M1A','E','M2D'];
+  const input=JSON.stringify([pressurePresets.easy,pressureCapacity.airlock,pressureCapacity.cargo,stationIds.map(id=>pressureStations[id])]);
+  let hash=2166136261;
+  for(const char of input)hash=Math.imul(hash^char.charCodeAt(0),16777619);
+  return `${mission}-pressure-v1-${(hash>>>0).toString(16)}`;
+};
 export function isTrialMission(value:unknown):value is typeof trialMissions[number] {
   return trialMissions.some(mission=>mission===value);
 }

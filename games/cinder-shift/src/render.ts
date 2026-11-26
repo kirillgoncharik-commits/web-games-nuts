@@ -63,6 +63,12 @@ export class SceneArt{
     // Composite the complete static background once; avoid extra fullscreen alpha layers.
     const statics=(scene.children.list.slice(staticStart) as Array<Phaser.GameObjects.GameObject & {depth:number}>).filter(object=>object.depth<1.4).sort((a,b)=>a.depth-b.depth);
     scene.add.renderTexture(0,0,640,360).setOrigin(0).setDepth(1.05).draw(statics);
+    const pilotRoom=!room.world&&['A','B','M1A','M1B','M1C','C','D','M2A','E','M2B','M2C','M2D','F','M2E','G'].includes(room.id);
+    if(pilotRoom){
+      scene.add.rectangle(0,40,640,280,0x0a1728,.32).setOrigin(0).setDepth(1.45);
+      const edges=scene.add.graphics().setDepth(2.05).lineStyle(1,0x99c2ce,.8);
+      for(const solid of room.solids)if(!solid.id&&solid.y<320)edges.lineBetween(solid.x,solid.y,solid.x+solid.width,solid.y);
+    }
     for(const object of statics)object.destroy();
     for(const solid of room.solids)if(!solid.id)this.platform(solid);
     this.exitMarker=scene.add.text(609,222,'→',{fontFamily:'Arial',fontSize:'18px',color:'#FFB65B'}).setOrigin(.5).setDepth(3);

@@ -74,11 +74,32 @@ test.describe('full mission demonstration',()=>{
   });
 });
 
-test('actual combat death stops input, emits one result and retry resets the mission',async({page},info)=>{
-  test.setTimeout(35000);await start(page);await roomA(page);await forwardJump(page,194,370);
-  await page.waitForFunction(()=>(window as any).__CINDER__().enemies.some((e:any)=>e.phase==='telegraph'));await page.screenshot({path:info.outputPath('attack-warning.png')});
-  await expect.poll(async()=>(await state(page)).state,{timeout:15000}).toBe('dead');
-  const dead=await state(page);expect(dead.hp).toBe(0);expect(dead.campaign.result.score).toBeGreaterThanOrEqual(150);expect(dead.campaign.result.score_breakdown.extraction).toBe(0);expect(dead.campaign.loadout_budget).toBe(dead.campaign.result.score);const end=dead.eventLog.filter((e:any)=>e.name==='mission_end');expect(end).toHaveLength(1);expect(end[0].params.result).toBe('death');expect(end[0].params.reason).toBeTruthy();
-  await page.keyboard.down('d');await page.waitForTimeout(250);await page.keyboard.up('d');expect((await state(page)).player).toEqual(dead.player);
-  await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&Boolean(s.player)&&s.attemptId!==dead.attemptId;}).toBe(true);const fresh=await state(page);expect(fresh.hp).toBe(6);expect(fresh.room).toBe('A');expect(fresh.powered).toBe(false);expect(fresh.targetHp).toBe(0);
+test('combat death in B keeps the same mission and restores room entry',async({page},info)=>{
+  test.setTimeout(45000);
+  await start(page);
+  await roomA(page);
+  const entry=await state(page);
+  await forwardJump(page,194,370);
+  await page.waitForFunction(()=>(window as any).__CINDER__().enemies.some((e:any)=>e.phase==='telegraph'));
+  await page.screenshot({path:info.outputPath('attack-warning.png')});
+  await expect.poll(async()=>(await state(page)).screen,{timeout:20000}).toBe('room-retry');
+  const dead=await state(page);
+  expect(dead.hp).toBe(0);
+  expect(dead.pressure.lives).toBe(2);
+  expect(dead.eventLog.filter((e:any)=>e.name==='mission_end')).toHaveLength(0);
+  await page.screenshot({path:info.outputPath('room-retry.png')});
+  await page.getByTestId('retry').click();
+  await expect.poll(async()=>{
+    const s=await state(page);
+    return s.room==='B'&&s.pressure?.lives===2&&s.hp===s.maxHp&&!s.pressure.waitingForRetry;
+  }).toBe(true);
+  const restored=await state(page);
+  expect(restored.attemptId).toBe(dead.attemptId);
+  expect(restored.score).toBe(entry.score);
+  expect(restored.activeSeconds).toBeGreaterThanOrEqual(dead.activeSeconds);
+  expect(restored.pressure.entryEnergy).toBe(entry.pressure.entryEnergy);
+  expect(restored.pressure.energy).toBeCloseTo(entry.pressure.entryEnergy,0);
+  expect(restored.player.x).toBeLessThan(100);
+  expect(restored.enemies.map((enemy:any)=>enemy.hp)).toEqual(entry.enemies.map((enemy:any)=>enemy.hp));
+  await page.screenshot({path:info.outputPath('room-restored.png')});
 });

@@ -3,8 +3,8 @@ export type Difficulty = typeof difficulties[number];
 
 const settings = {
   easy: { hpPenalty: 0, shot: 1, heavy: 1, aggression: 1 },
-  hard: { hpPenalty: 1, shot: 2, heavy: 2, aggression: 1.20 },
-  nightmare: { hpPenalty: 2, shot: 2, heavy: 3, aggression: 1.42 },
+  hard: { hpPenalty: 0, shot: 1, heavy: 2, aggression: 1.10 },
+  nightmare: { hpPenalty: 0, shot: 2, heavy: 2, aggression: 1.20 },
 } as const;
 
 export function isDifficulty(value: unknown): value is Difficulty {

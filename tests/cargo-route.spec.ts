@@ -30,6 +30,14 @@ for(const circuit of ['conveyor','security'] as const)test(`${build.id} suit com
   await jump(page,236,332);await ground(page,320);await next(page,'M2D');await mark();
   expect((await state(page)).conveyor.enabled).toBe(circuit==='conveyor');
   await jump(page,114,172);await ground(page,288);await jump(page,178,300);await ground(page,256);
+  const beforeCharge=await state(page);
+  await page.keyboard.down('e');
+  await expect.poll(async()=>(await state(page)).pressure.energy).toBeGreaterThan(beforeCharge.pressure.energy);
+  await page.keyboard.up('e');
+  const charged=await state(page);
+  await page.keyboard.press('e');
+  expect((await state(page)).pressure.energy).toBeLessThanOrEqual(charged.pressure.energy);
+  await page.screenshot({path:info.outputPath('cargo-station.png')});
   await page.keyboard.down('s');await clear(page,['m2d-drone']);await page.keyboard.up('s');await to(page,380);await ground(page,320);
   if(circuit==='security'){await page.keyboard.down('s');await clear(page,['m2d-routed-turret']);await page.keyboard.up('s');}
   await next(page,'F',552);await mark();

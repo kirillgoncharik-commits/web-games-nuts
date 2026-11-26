@@ -6,14 +6,20 @@ export class ScoreLedger{
   goal(id:string){if(!safeId(id)||this.goals.has(id))return false;this.goals.add(id);return true;}
   kill(id:string,kind:EnemyKind){if(!safeId(id)||this.enemies.has(id))return false;this.enemies.set(id,kind);return true;}
   harm(id:string){if(!safeId(id)||this.harms.has(id))return false;this.harms.add(id);return true;}
-  finish(elapsedMs:number,outcome:'victory'|'death'|'dnf'):ScoreBreakdown{
+  checkpoint(){return {goals:[...this.goals],enemies:[...this.enemies]};}
+  restore(checkpoint:ReturnType<ScoreLedger['checkpoint']>){
+    this.goals.clear();this.enemies.clear();
+    for(const id of checkpoint.goals)this.goals.add(id);
+    for(const [id,kind] of checkpoint.enemies)this.enemies.set(id,kind);
+  }
+  finish(elapsedMs:number,outcome:'victory'|'death'|'dnf', adjustment=0):ScoreBreakdown{
     const victory=outcome==='victory'?1000:0,optional_goals=this.goals.size*250;
     const walkers=[...this.enemies.values()].filter(k=>k==='walker').length;
     const drones=[...this.enemies.values()].filter(k=>k==='drone').length;
     const turrets=[...this.enemies.values()].filter(k=>k==='turret').length;
     const time_bonus=outcome==='victory'?Math.max(0,1200-2*Math.floor(Math.max(0,elapsedMs)/1000)):0;
     const clean_bonus=outcome==='victory'&&this.harms.size===0?400:0;
-    return{victory,optional_goals,walkers:walkers*enemyScore.walker,drones:drones*enemyScore.drone,turrets:turrets*enemyScore.turret,time_bonus,clean_bonus,total:victory+optional_goals+walkers*enemyScore.walker+drones*enemyScore.drone+turrets*enemyScore.turret+time_bonus+clean_bonus,harm_events:this.harms.size};
+    return{victory,optional_goals,walkers:walkers*enemyScore.walker,drones:drones*enemyScore.drone,turrets:turrets*enemyScore.turret,time_bonus,clean_bonus,total:Math.max(0,victory+optional_goals+walkers*enemyScore.walker+drones*enemyScore.drone+turrets*enemyScore.turret+time_bonus+clean_bonus+adjustment),harm_events:this.harms.size};
   }
 }
 function safeId(id:string){return typeof id==='string'&&id.length>0&&id.length<=120&&/^[A-Za-z0-9_.:-]+$/.test(id);}

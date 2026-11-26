@@ -1,5 +1,7 @@
 # Cinder Shift — действующее задание на завершение игры
 
+[Рабочая версия Pressure & Survival и состояние приёмки](pressure-survival-status.ru.md).
+
 Ветка баланса трёх кампаний ведётся в [задании по уровням и критериям приёмки](campaign-encounters-work-order.ru.md). [Правила счёта и стартового магазина](campaign-arcade-score.ru.md) включают расчёт при победе и поражении.
 
 20.11.2026. Продолжение существующего M-REWORK. Текущая продуктовая итерация — **alpha.14**, [радиостанция и личные рекорды](alpha14-personal-records.ru.md). Рабочая ветка `codex/cinder-shift-development-revival`, [PR #20](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/20); [место остановки, исправления и проверки](development-revival-2026-11-20.ru.md). Очередь работ и фактические пробелы — [бэклог 01–13](product-backlog-progress.ru.md). Проверки текущего кандидата на GitHub ожидают запуска; подтверждения прежних версий не заменяют его собственный прогон.
