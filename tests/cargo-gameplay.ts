@@ -12,6 +12,13 @@ export async function clearCargoDrone(page:Page){
   }
   await jump(page,178,300);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m2d-drone']);await page.keyboard.up('s');
+  if((await state(page)).pressure){
+   await ground(page,256);
+   if(Math.abs((await state(page)).player.x-300)>15){await to(page,300);await ground(page,256);}
+   await page.keyboard.down('e');
+   await until(page,()=>(window as any).__CINDER__().pressure?.charges.includes('cargo-conveyor'),null,'Cargo shelf recharge');
+   await page.keyboard.up('e');
+  }
 }
 
 export async function playCargo(page:Page,options:{circuit?:'conveyor'|'security';power?:boolean;piercing?:boolean;buffer?:boolean;info?:any}={}){

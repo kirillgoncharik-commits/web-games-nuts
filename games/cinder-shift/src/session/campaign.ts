@@ -6,6 +6,8 @@ import {planEvents,type EventPlan} from './events';
 import {missions,missionSeed,unlocked,type PlayableMissionId} from './missions';
 import {attachmentPrices,isAttachment,type Attachment,type CampaignTally} from './campaign-score';
 export const campaignRuleset='campaign-arcade1';
+export const pressureCampaignRuleset='campaign-pressure-v1';
+const mixedPressureRuleset='campaign-mixed-pressure-v1';
 export const contentVersion='campaign-m05b3.0';
 export type Stage='map'|'research'|'briefing'|'mission'|'result'|'campaign_checkpoint'|'campaign_complete';
 export type RelaySupport='none'|'power'|'repair';
@@ -33,12 +35,15 @@ export class Campaign{
   if(isAttachment(attachment)&&attachmentPrices[attachment]<=(d.loadout_budget??0))this.data.entry.attachment=attachment;
   delete d.next_attachment;
   d.loadout_budget=0;
- if(this.data.run_stats.ruleset_id!==campaignRuleset)this.data.run_stats.ruleset_id=this.data.processed_attempts.length?'mixed-legacy-arcade1':campaignRuleset;this.data.mission_id=this.data.entry.mission_id;this.data.location_id=this.data.mission_id;this.data.stage='mission';return true;}
+ if(![pressureCampaignRuleset,mixedPressureRuleset].includes(this.data.run_stats.ruleset_id||'')&&this.data.run_stats.ruleset_id!==campaignRuleset)this.data.run_stats.ruleset_id=this.data.processed_attempts.length?'mixed-legacy-arcade1':campaignRuleset;this.data.mission_id=this.data.entry.mission_id;this.data.location_id=this.data.mission_id;this.data.stage='mission';return true;}
  advance(){const d=this.data;if(d.result?.result!=='victory')return false;const next=missions[d.result.mission_id].next;if(next&&missions[next].implemented){d.mission_id=next as PlayableMissionId;d.stage='map';return true;}if(next){d.stage='campaign_checkpoint';return false;}d.stage='campaign_complete';return true;}
- applyResult(input:Omit<AttemptResult,'reward_granted'|'applied'>&{foundry_route?:'service'|'press'|null}){
+ applyResult(input:Omit<AttemptResult,'reward_granted'|'applied'>&{foundry_route?:'service'|'press'|null},pressureDeaths?:number){
   const d=this.data;if(input.result==='victory'&&input.mission_id==='SW05'&&!fragmentIds.every(id=>d.world_facts?.includes(id)))return false;if(d.processed_attempts.includes(input.attempt_id)||input.mission_id!==d.entry?.mission_id)return false;
+  if(pressureDeaths!==undefined&&d.run_stats.ruleset_id!==pressureCampaignRuleset){
+   d.run_stats.ruleset_id=d.processed_attempts.length?mixedPressureRuleset:pressureCampaignRuleset;
+  }
   d.processed_attempts.push(input.attempt_id);d.loadout_budget=input.score;const key=d.campaign_id+':'+input.mission_id,firstVictory=input.result==='victory'&&!d.completed_missions.includes(input.mission_id),reward=firstVictory&&missions[input.mission_id].researchReward>0;
-  d.run_stats.active_ms+=input.active_ms;if(input.result==='death')d.run_stats.deaths++;if(firstVictory)d.run_stats.score+=input.score;if(input.mission_id==='foundry'&&input.foundry_route)d.run_stats.foundry_route=input.foundry_route;
+  d.run_stats.active_ms+=input.active_ms;d.run_stats.deaths+=pressureDeaths??Number(input.result==='death');if(firstVictory)d.run_stats.score+=input.score;if(input.mission_id==='foundry'&&input.foundry_route)d.run_stats.foundry_route=input.foundry_route;
   if(firstVictory){d.completed_missions.push(input.mission_id);if(isWorldMission(input.mission_id)){d.world_facts??=[];const fragment=fragmentIds.find(f=>f.includes(':'+input.mission_id+'-')),fact=fragment||(worldForMission(input.mission_id)==='c03-adriatic-1986'?'c03-adriatic-1986:transmission:'+input.mission_id:null);if(fact&&!d.world_facts.includes(fact))d.world_facts.push(fact);}}if(reward){d.reward_ledger.push(key);d.points+=missions[input.mission_id].researchReward;}
   d.mission_id=input.mission_id;d.result={...structuredClone(input),reward_granted:reward,applied:true};d.stage='result';return true;
  }

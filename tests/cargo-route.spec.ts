@@ -30,6 +30,14 @@ for(const circuit of ['conveyor','security'] as const)test(`${build.id} suit com
   await jump(page,236,332);await ground(page,320);await next(page,'M2D');await mark();
   expect((await state(page)).conveyor.enabled).toBe(circuit==='conveyor');
   await jump(page,114,172);await ground(page,288);await jump(page,178,300);await ground(page,256);
+  const beforeCharge=await state(page);
+  await page.keyboard.down('e');
+  await expect.poll(async()=>(await state(page)).pressure.energy).toBeGreaterThan(beforeCharge.pressure.energy);
+  await page.keyboard.up('e');
+  const charged=await state(page);
+  await page.keyboard.press('e');
+  expect((await state(page)).pressure.energy).toBeLessThanOrEqual(charged.pressure.energy);
+  await page.screenshot({path:info.outputPath('cargo-station.png')});
   await page.keyboard.down('s');await clear(page,['m2d-drone']);await page.keyboard.up('s');await to(page,380);await ground(page,320);
   if(circuit==='security'){await page.keyboard.down('s');await clear(page,['m2d-routed-turret']);await page.keyboard.up('s');}
   await next(page,'F',552);await mark();
@@ -49,7 +57,7 @@ for(const circuit of ['conveyor','security'] as const)test(`${build.id} suit com
   expect(won.campaign.result.result).toBe('victory');expect(won.cellInstalled).toBe(true);expect(won.hp).toBeGreaterThan(0);
   expect(Object.values(won.roomStates).filter((r:any)=>r.visited)).toHaveLength(9);
   expect(won.roomStates.M2B.cacheUsed).toBe(circuit==='security');
-  const report={status:'AUTOMATED_INPUT_ONLY',build:won.build,source_sha:won.sha,environment:process.env.CI?'CI_CHECKOUT':'DEVELOPMENT_WORKTREE',circuit,campaign_seed:4,...routeBuildEvidence(won,build),event_plan:won.eventPlan,active_seconds:won.activeSeconds,wall_seconds:(Date.now()-wallStart)/1000,hp:won.hp,optional_salvage:circuit==='security',rooms,hits:won.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
+  const report={status:'AUTOMATED_INPUT_ONLY',build:won.build,source_sha:won.sha,environment:process.env.CI?'CI_CHECKOUT':'DEVELOPMENT_WORKTREE',circuit,campaign_seed:4,...routeBuildEvidence(won,build),event_plan:won.eventPlan,active_seconds:won.activeSeconds,wall_seconds:(Date.now()-wallStart)/1000,hp:won.hp,optional_salvage:circuit==='security',energy_segments:won.pressure?.segments,energy_remaining:won.pressure?.energy,rooms,hits:won.eventLog.filter((e:any)=>e.name==='hit_received'),human_duration_target_verified:false};
   console.log('Cargo route report',JSON.stringify(report));await writeFile(info.outputPath('cargo-route.json'),JSON.stringify(report,null,2));await page.screenshot({path:info.outputPath('cargo-complete.png')});
   await page.getByTestId('retry').click();await expect.poll(async()=>{const s=await state(page);return s.state==='playing'&&s.room==='D'&&s.attemptId!==won.attemptId;}).toBe(true);
   const retry=await state(page);expect(retry.hp).toBe(build.maxHp);expect(retry.campaign.entry).toEqual(entry);expect(retry.cargoRerouted).toBe(false);expect(retry.cellCollected||retry.cellInstalled).toBe(false);expect(retry.campaign.reward_ledger).toEqual(won.campaign.reward_ledger);

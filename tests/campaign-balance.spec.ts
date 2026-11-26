@@ -21,21 +21,26 @@ for (const world of ['r01', ...newCampaignIds] as const) {
     for (const [index,difficulty] of difficulties.entries()) {
       const campaign=new Campaign(world==='r01'?newCampaign(4,difficulty):newWorldCampaign(world,4,difficulty));
       const entry=campaign.prepare();
-      expect(entry.max_hp).toBe(6-index);
+      expect(entry.max_hp).toBe(6);
       const attempt=new MissionAttempt('mission',entry);
       const envelope={schema_version:1,content_version:world==='r01'?contentVersion:'worlds-rw3.1',
         game_id:world,build_id:'balance-check',saved_at:new Date().toISOString(),campaign:campaign.snapshot()};
       const validate=()=>world==='r01'?validateSave(envelope):validateWorldSave(envelope,world);
       expect(validate()).toBeNull();
+      if(difficulty!=='easy'){
+        const legacy=structuredClone(envelope);
+        legacy.campaign.entry!.max_hp=legacy.campaign.entry!.initial_hp=6-index;
+        expect(world==='r01'?validateSave(legacy):validateWorldSave(legacy,world)).toBeNull();
+      }
       expect(attempt.damage(100,'turret-shot')).toBe(true);
-      expect(attempt.maxHp-attempt.hp).toBe(index+1);
+      expect(attempt.maxHp-attempt.hp).toBe(index===0?1:2);
       expect(attempt.damage(101,'walker-shot')).toBe(false);
       const contact=new MissionAttempt('mission',entry);
       contact.damage(100,'walker-contact');
       expect(contact.maxHp-contact.hp).toBe(1);
       const regular=new MissionAttempt('mission',entry);
       regular.damage(100,'walker-shot');
-      expect(regular.maxHp-regular.hp).toBe(index===0?1:2);
+      expect(regular.maxHp-regular.hp).toBe(index===2?2:1);
       expect(campaign.prepare()).toEqual(entry);
       if (difficulty==='easy') {
         delete envelope.campaign.difficulty;
@@ -92,7 +97,7 @@ test('all campaign damage sources have a readable result in both languages',()=>
 
 test('a world robot kill shows its cause and partial score on the result screen',async({page})=>{
  // One-HP room entry fixture. The enemies use their normal AI and projectiles.
- await encounter(page,{mission:'YU01',room:'YU01-D',difficulty:'hard',seed:4,hp:1});
+ await encounter(page,{mission:'YU01',room:'YU01-D',difficulty:'nightmare',seed:4,hp:1});
  await jump(page,142,232);
  await expect(page.getByTestId('retry')).toBeVisible({timeout:16000});
  const result=(await state(page)).campaign.result;

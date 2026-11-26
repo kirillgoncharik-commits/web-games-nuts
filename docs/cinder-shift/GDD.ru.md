@@ -1,5 +1,7 @@
 # Дизайн игры Cinder Shift
 
+[Рабочая версия Pressure & Survival и состояние приёмки](pressure-survival-status.ru.md).
+
 Nuts Games · R01 · GDD 0.1 · 5 ноября 2026
 
 ## Название и основа игры

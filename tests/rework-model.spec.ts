@@ -62,7 +62,7 @@ test('new combat rules isolate challenge records and relay keys from the audited
  const current=makeRelaySpec('none');expect(current.content_hash).toBe(trialContentId('relay-airlock-cargo'));
  const old=makeChallengeSpec({...current,ruleset_id:'relay-base-manual-v1',content_hash:'relay-airlock-cargo-release-rc1',simulation_version:'phaser-60hz-rc1'});
  expect(await challengeKey(current)).not.toBe(await challengeKey(old));
- expect(trialRuleset).toBe('combat-clear-v7');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
+ expect(trialRuleset).toBe('pressure-v1');expect(trialSimulationVersion).not.toBe('phaser-60hz-rc1');
 });
 
 test('purchase is atomic across duplicate callbacks and preserves the installed active slot',()=>{

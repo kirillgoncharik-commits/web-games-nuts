@@ -1,0 +1,358 @@
+{
+  "status": "PROVISIONAL_DESIGN_NOT_RUNTIME_NOT_ACCEPTED",
+  "date": "2026-11-25",
+  "integration_base": "86787e36b3112f2d6e1f65c142b9c0e019ad9674",
+  "measurement_source": "bd102b820b0b56d5fc0be5bc3d81b81cfea02f62",
+  "report": "campaign-balance-bd102b8.json",
+  "seed": 4,
+  "loadout": "stock",
+  "measurement_difficulty": "easy",
+  "measurement_note": "Historical automated input, not human; C02/C03 legacy unlock fixture. Actual shot counts not reported.",
+  "formula": {
+    "reference_seconds": "ceil(1.8*historical_seconds/5)*5",
+    "assumed_shots": "ceil(0.8*historical_seconds/5)*5",
+    "capacity": "ceil((reference_seconds+0.5*assumed_shots)/(0.85+0.35*station_groups.length)/5)*5",
+    "energy_unit": "EU",
+    "standard_drain_eu_sec": 1,
+    "standard_volley_eu": 0.5,
+    "standard_w4_eu": 1.5,
+    "standard_charge_fraction": 0.35,
+    "finish_reserve_target": 0.15,
+    "clipping": "not accounted for in illustrative total; required segment validation"
+  },
+  "modes": {
+    "easy": {
+      "display": "Standard",
+      "lives": 3,
+      "drain": 1,
+      "volley": 0.5,
+      "charge_fraction": 0.35
+    },
+    "hard": {
+      "lives": 2,
+      "drain": 1.12,
+      "volley": 0.55,
+      "charge_fraction": 0.3
+    },
+    "nightmare": {
+      "lives": 1,
+      "drain": 1.25,
+      "volley": 0.65,
+      "charge_fraction": 0.25
+    }
+  },
+  "missions": [
+    {
+      "campaign": "C01",
+      "mission": "airlock",
+      "baseline_active_ms": 49200,
+      "baseline_route": [
+        "A",
+        "B",
+        "M1A",
+        "M1B",
+        "M1C",
+        "C"
+      ],
+      "reference_seconds": 90,
+      "assumed_shots": 40,
+      "station_groups": [
+        "M1A"
+      ],
+      "capacity_eu": 95,
+      "illustrative_exit_percent": 19,
+      "topology_proposal": "A: обучение одному guard и читаемым сигналам Energy; B: верхняя/нижняя траектория у створки; M1A: станция на полке после безопасного обучения прыжку; M1B: сохранить верхний тайник и дать выбор риска; M1C/C: разные укрытия, staggered threat, обязательное питание/выход."
+    },
+    {
+      "campaign": "C01",
+      "mission": "cargo",
+      "baseline_active_ms": 79500,
+      "baseline_route": [
+        "D",
+        "M2A",
+        "E",
+        "M2B",
+        "M2C",
+        "M2D",
+        "F",
+        "M2D",
+        "F",
+        "M2E",
+        "G"
+      ],
+      "reference_seconds": 145,
+      "assumed_shots": 65,
+      "station_groups": [
+        "E",
+        "M2D"
+      ],
+      "capacity_eu": 115,
+      "illustrative_exit_percent": 16,
+      "topology_proposal": "D/M2A: разные высоты и цена укрытия; E: короткий открытый путь или защищённая полка; M2B: верхний salvage; M2C/M2D: сравнить реально разные conveyor/security ветви; F: сохранить E01/Relay, обязательную ячейку и возврат; M2E/G: установка и финальный выход. Станции E/M2D доступны в обеих конфигурациях."
+    },
+    {
+      "campaign": "C01",
+      "mission": "foundry",
+      "baseline_active_ms": 68267,
+      "baseline_route": [
+        "M3A",
+        "M3E",
+        "M3F",
+        "M3B",
+        "M3G",
+        "M3H",
+        "M3K",
+        "M3D"
+      ],
+      "reference_seconds": 125,
+      "assumed_shots": 55,
+      "station_groups": [
+        "M3F",
+        "M3G|M3I"
+      ],
+      "capacity_eu": 100,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "M3E/M3F: питание и выбор service/press; M3B/G/H: верхние огневые позиции, укрытия, необязательные цели; M3C/I/J: окна пресса и тепла, безопасные карманы. Веточные станции M3G/M3I имеют общий charge-group, одинаковую доступную ёмкость; M3K cooling и финал неизменны."
+    },
+    {
+      "campaign": "C01",
+      "mission": "archive",
+      "baseline_active_ms": 74150,
+      "baseline_route": [
+        "M4A",
+        "M4E",
+        "M4B",
+        "M4F",
+        "M4G",
+        "M4H",
+        "M4C",
+        "M4I",
+        "M4D"
+      ],
+      "reference_seconds": 135,
+      "assumed_shots": 60,
+      "station_groups": [
+        "M4B",
+        "M4H"
+      ],
+      "capacity_eu": 110,
+      "illustrative_exit_percent": 20,
+      "topology_proposal": "M4E: физический carrier; M4B/F: реальный выбор Scout/HP/маршрут; M4G: прямая или более защищённая траектория при неизменном подключении upload power; M4H: читаемый цикл marksman и зарядка после контрогня; M4C/D: upload и выход без обхода обязательных условий."
+    },
+    {
+      "campaign": "C01",
+      "mission": "reactor",
+      "baseline_active_ms": 106750,
+      "baseline_route": [
+        "M5A",
+        "M5F",
+        "M5B",
+        "M5G",
+        "M5H",
+        "M5I",
+        "M5C",
+        "M5D",
+        "M5E"
+      ],
+      "reference_seconds": 195,
+      "assumed_shots": 90,
+      "station_groups": [
+        "M5B",
+        "M5C"
+      ],
+      "capacity_eu": 155,
+      "illustrative_exit_percent": 15,
+      "topology_proposal": "M5B: окно тепла и необязательный E06; M5H/I: cooling vs isolation — выбор между боем и временем ожидания; M5C: гарантированная станция перед Regulator; M5D: сохранить ядро, окна уязвимости и отражение; M5E: эвакуация, учесть остаток энергии после босса."
+    },
+    {
+      "campaign": "C02",
+      "mission": "SW01",
+      "baseline_active_ms": 52017,
+      "baseline_route": [
+        "SW01-A",
+        "SW01-B",
+        "SW01-C",
+        "SW01-D"
+      ],
+      "reference_seconds": 95,
+      "assumed_shots": 45,
+      "station_groups": [
+        "SW01-B"
+      ],
+      "capacity_eu": 100,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "A: короткая столешница и обход под укрытием; B: пар, нижний crouch и верхний переход; C: варианты спуска с читаемой опорой; D: контакты Лидара и безопасные окна."
+    },
+    {
+      "campaign": "C02",
+      "mission": "SW02",
+      "baseline_active_ms": 49083,
+      "baseline_route": [
+        "SW02-A",
+        "SW02-B",
+        "SW02-C",
+        "SW02-D"
+      ],
+      "reference_seconds": 90,
+      "assumed_shots": 40,
+      "station_groups": [
+        "SW02-B"
+      ],
+      "capacity_eu": 95,
+      "illustrative_exit_percent": 19,
+      "topology_proposal": "A: выбор клавиш/опор без слома обязательной клавиши; B: кабельный мост или защищённый нижний маршрут; C: бумажная платформа и постоянная опора; D: фазы лампы, разделённые угрозы."
+    },
+    {
+      "campaign": "C02",
+      "mission": "SW03",
+      "baseline_active_ms": 54900,
+      "baseline_route": [
+        "SW03-A",
+        "SW03-B",
+        "SW03-C",
+        "SW03-D"
+      ],
+      "reference_seconds": 100,
+      "assumed_shots": 45,
+      "station_groups": [
+        "SW03-B"
+      ],
+      "capacity_eu": 105,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "A: мезонин/нижняя дорожка; B: риск на прищепочном мосту, защищённая зарядка; C: использование тяги и обход; D: читаемое окно вентиляции."
+    },
+    {
+      "campaign": "C02",
+      "mission": "SW04",
+      "baseline_active_ms": 68950,
+      "baseline_route": [
+        "SW04-A",
+        "SW04-B",
+        "SW04-C",
+        "SW04-D"
+      ],
+      "reference_seconds": 125,
+      "assumed_shots": 60,
+      "station_groups": [
+        "SW04-B"
+      ],
+      "capacity_eu": 130,
+      "illustrative_exit_percent": 16,
+      "topology_proposal": "A: варианты высоты в саду; B: парус и необязательная зарядка на защищённом обходе (обеспечить основную достижимую станцию); C: вода и сухая полка; D: ветер/флюгер, стабильная опора для возврата."
+    },
+    {
+      "campaign": "C02",
+      "mission": "SW05",
+      "baseline_active_ms": 71083,
+      "baseline_route": [
+        "SW05-A",
+        "SW05-B",
+        "SW05-C",
+        "SW05-D"
+      ],
+      "reference_seconds": 130,
+      "assumed_shots": 60,
+      "station_groups": [
+        "SW05-B"
+      ],
+      "capacity_eu": 135,
+      "illustrative_exit_percent": 16,
+      "topology_proposal": "A: полочная лестница; B: кабельный подъём и зарядка; C: плата с альтернативными позициями; D: сохранить три фрагмента и фазовый финал. Проверить запас до конца D; дополнительную станцию только по расчёту."
+    },
+    {
+      "campaign": "C03",
+      "mission": "YU01",
+      "baseline_active_ms": 59150,
+      "baseline_route": [
+        "YU01-A",
+        "YU01-B",
+        "YU01-C",
+        "YU01-D"
+      ],
+      "reference_seconds": 110,
+      "assumed_shots": 50,
+      "station_groups": [
+        "YU01-B"
+      ],
+      "capacity_eu": 115,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "A: двор/вход, два читаемых подхода; B: коммутация и зарядка; C: крыша с безопасными карманами; D: обязательная передача и окна атаки; устранить прежние непреодолимые комбинации."
+    },
+    {
+      "campaign": "C03",
+      "mission": "YU02",
+      "baseline_active_ms": 54167,
+      "baseline_route": [
+        "YU02-A",
+        "YU02-B",
+        "YU02-C",
+        "YU02-D"
+      ],
+      "reference_seconds": 100,
+      "assumed_shots": 45,
+      "station_groups": [
+        "YU02-B"
+      ],
+      "capacity_eu": 105,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "A: складские ворота; B: крановые пути, зарядка вне опасной зоны; C: сигналы причала и варианты укрытий; D: передатчик и читаемая контратака."
+    },
+    {
+      "campaign": "C03",
+      "mission": "YU03",
+      "baseline_active_ms": 68317,
+      "baseline_route": [
+        "YU03-A",
+        "YU03-B",
+        "YU03-C",
+        "YU03-D"
+      ],
+      "reference_seconds": 125,
+      "assumed_shots": 55,
+      "station_groups": [
+        "YU03-B"
+      ],
+      "capacity_eu": 130,
+      "illustrative_exit_percent": 18,
+      "topology_proposal": "A: платформа; B: состав, выбор безопасного окна, зарядка; C: тоннельная ниша, проверить прохождение под огнём и безопасные карманы; D: подстанция. Блокирующий баланс Hard/Nightmare в старых отчётах — исправить до усиления."
+    },
+    {
+      "campaign": "C03",
+      "mission": "YU04",
+      "baseline_active_ms": 72767,
+      "baseline_route": [
+        "YU04-A",
+        "YU04-B",
+        "YU04-C",
+        "YU04-D"
+      ],
+      "reference_seconds": 135,
+      "assumed_shots": 60,
+      "station_groups": [
+        "YU04-B"
+      ],
+      "capacity_eu": 140,
+      "illustrative_exit_percent": 17,
+      "topology_proposal": "A: цех и знакомство с конвейером; B: конвейерный обход/подъёмник, зарядка достижима в обеих конфигурациях; C: верхний/нижний контакты; D: три фазы привода, не сокращать обязательную механику."
+    },
+    {
+      "campaign": "C03",
+      "mission": "YU05",
+      "baseline_active_ms": 73350,
+      "baseline_route": [
+        "YU05-A",
+        "YU05-B",
+        "YU05-C",
+        "YU05-D"
+      ],
+      "reference_seconds": 135,
+      "assumed_shots": 60,
+      "station_groups": [
+        "YU05-B"
+      ],
+      "capacity_eu": 140,
+      "illustrative_exit_percent": 17,
+      "topology_proposal": "A: подъём и видимость цели; B: техническая галерея, зарядка; C: три антенных связи, безопасный возврат; D: настройка/импульс/окно/закрытие разлома, проверить резерв на весь цикл."
+    }
+  ]
+}

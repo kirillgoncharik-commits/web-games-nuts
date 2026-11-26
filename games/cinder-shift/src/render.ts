@@ -63,6 +63,12 @@ export class SceneArt{
     // Composite the complete static background once; avoid extra fullscreen alpha layers.
     const statics=(scene.children.list.slice(staticStart) as Array<Phaser.GameObjects.GameObject & {depth:number}>).filter(object=>object.depth<1.4).sort((a,b)=>a.depth-b.depth);
     scene.add.renderTexture(0,0,640,360).setOrigin(0).setDepth(1.05).draw(statics);
+    const pilotRoom=!room.world&&['A','B','M1A','M1B','M1C','C','D','M2A','E','M2B','M2C','M2D','F','M2E','G'].includes(room.id);
+    if(pilotRoom){
+      scene.add.rectangle(0,40,640,280,0x0a1728,.32).setOrigin(0).setDepth(1.45);
+      const edges=scene.add.graphics().setDepth(2.05).lineStyle(1,0x99c2ce,.8);
+      for(const solid of room.solids)if(!solid.id&&solid.y<320)edges.lineBetween(solid.x,solid.y,solid.x+solid.width,solid.y);
+    }
     for(const object of statics)object.destroy();
     for(const solid of room.solids)if(!solid.id)this.platform(solid);
     this.exitMarker=scene.add.text(609,222,'→',{fontFamily:'Arial',fontSize:'18px',color:'#FFB65B'}).setOrigin(.5).setDepth(3);
@@ -70,7 +76,7 @@ export class SceneArt{
     const repairSlots=new Map<string,{x:number;y:number}>();
     for(const zone of room.safeZones||[])if(zone.slot)repairSlots.set(zone.slot,{x:room.id==='B'?repairPosition.x:room.repair?.x??zone.x+zone.width/2,y:270});
     if(room.repair)repairSlots.set(room.repair.slot,{x:room.repair.x,y:270});
-    this.shieldLabels=[...repairSlots].map(([slot,point])=>scene.add.text(point.x-14,point.y,slot,{fontFamily:'Arial',fontSize:'9px',color:'#76DCC8',backgroundColor:'#101823'}).setPadding(2,1).setDepth(6));this.threats=scene.add.graphics().setDepth(5);this.debug=scene.add.graphics().setDepth(20);
+    this.shieldLabels=[...repairSlots].map(([,point])=>scene.add.text(point.x-5,point.y,'+',{fontFamily:'Arial',fontSize:'9px',color:'#76DCC8',backgroundColor:'#101823'}).setPadding(2,1).setDepth(6));this.threats=scene.add.graphics().setDepth(5);this.debug=scene.add.graphics().setDepth(20);
   }
   private platform(s:Rect){
     for(let y=0;y<s.height;y+=16)for(let x=0;x<s.width;x+=16){

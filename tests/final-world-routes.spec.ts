@@ -1,3 +1,4 @@
+import {pressureStations} from '../games/cinder-shift/src/session/mission-pressure';
 import {encounter} from './encounter-helpers';
 import {playSector,type RouteLoss} from './campaign-retry';
 import {fireFromCover} from './defensive-fire';
@@ -541,6 +542,14 @@ async function combat(page:Page){
 }
 async function solveRoom(page:Page){
  let s=await state(page);
+ const charger=pressureStations[s.room];
+ if(charger&&s.pressure&&s.pressure.energy<s.pressure.capacity-1&&!s.pressure.charges.includes(charger.group)){
+  if(Math.abs(s.player.x-charger.x)>21)await walk(page,charger.x+10);
+  await page.keyboard.down('e');
+  try{await expect.poll(async()=>(await state(page)).pressure.charges).toContain(charger.group);}
+  finally{await page.keyboard.up('e');}
+  s=await state(page);
+ }
  if(s.room==='YU01-C'){
   // The parapet slit covers the near orb while the A shutter screens the patrol.
   await page.keyboard.down('j');await to(page,94);await ground(page,320);

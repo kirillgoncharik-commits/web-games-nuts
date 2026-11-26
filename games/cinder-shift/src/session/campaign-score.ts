@@ -28,6 +28,13 @@ export class CampaignScore{
   if(outcome==='victory')this.award('finish','extraction',1000+200*this.recovered);
   this.ended=true;
  }
+ checkpoint(){return {events:[...this.events],tally:{...this.tally},recovered:this.recovered};}
+ restore(checkpoint:ReturnType<CampaignScore['checkpoint']>){
+  this.events.clear();
+  for(const event of checkpoint.events)this.events.add(event);
+  Object.assign(this.tally,checkpoint.tally);
+  this.recovered=checkpoint.recovered;
+ }
  get total(){const t=this.tally;return t.combat+t.rooms+t.salvage+t.extraction;}
  breakdown(){return {...this.tally};}
 }

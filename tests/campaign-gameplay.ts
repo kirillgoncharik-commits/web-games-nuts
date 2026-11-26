@@ -2,7 +2,18 @@
 import {expect,type Page} from '@playwright/test';
 import {fireFromCover} from './defensive-fire';
 import {state} from './helpers';
+import {pressureStations} from '../games/cinder-shift/src/session/mission-pressure';
 import {alignOnLedge,face,ground,to,jump,clear,counterRam,drone,cross,next,until,standingJump} from './route-helpers';
+
+async function recharge(page:Page){
+ const snapshot=await state(page),station=pressureStations[snapshot.room];
+ if(!station||!snapshot.pressure||snapshot.pressure.charges.includes(station.group))return;
+ if(Math.abs(snapshot.player.x-station.x)>20)await to(page,station.x);
+ await ground(page,station.y);
+ await page.keyboard.down('e');
+ try{await expect.poll(async()=>(await state(page)).pressure.charges).toContain(station.group);}
+ finally{await page.keyboard.up('e');}
+}
 
 export async function clearFoundryGuard(page:Page){
  await page.keyboard.down('j');
@@ -97,14 +108,17 @@ export async function campaignFoundry(page:Page,route:'service'|'press'='service
   await ground(page,320);
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).powerCircuit).toBe('furnace');
   await clearFoundryFurnace(page);
+  await recharge(page);
   await clearFoundryGuard(page);await to(page,556);await ground(page,320);
   await page.keyboard.press('e');await page.getByTestId('fork-'+route).click();await next(page,route==='service'?'M3B':'M3C');
   if(route==='service'){
    await clearFoundryServiceRoom(page);await next(page,'M3G',536);
+   await recharge(page);
    await crossFoundryDroneRoom(page);
    await clearFoundryGate(page);await page.keyboard.down('s');await to(page,384);await page.keyboard.up('s');await ground(page,320);await next(page,'M3K',520);
   }else{
    await jump(page,114,208);await ground(page,320);await to(page,280);await clear(page,['m3c-ram']);await cross(page,'m3c-press');await cross(page,'m3c-heat');await next(page,'M3I',552);
+   await recharge(page);
    // Fire from the actual shelf: standing under its edge forces crouch and blocks jumping.
    await jump(page,130,190);await ground(page,288);await jump(page,215,310);await ground(page,248);
    await page.keyboard.down('s');await clear(page,['m3i-drone']);await page.keyboard.up('s');
@@ -129,6 +143,7 @@ export async function campaignArchive(page:Page){
   await page.keyboard.down('s');await clear(page,['m4e-drone']);await page.keyboard.up('s');
   await jump(page,326,432);await ground(page,224);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).archiveCarrierCollected).toBe(true);
   await to(page,510);await ground(page,320);await next(page,'M4B',552);
+  await recharge(page);
   await jump(page,114,208);await ground(page,320);
   if(choice==='health'&&(await state(page)).hp===(await state(page)).maxHp){
    // Earlier real damage normally supplies the repair case. If none was taken,
@@ -149,6 +164,7 @@ export async function campaignArchive(page:Page){
   await page.keyboard.down('s');await clear(page,['m4f-security']);await to(page,510);await page.keyboard.up('s');await next(page,'M4G',552);
   await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m4g-walker']);await to(page,550);await page.keyboard.up('s');
   await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).archiveUploadPowered).toBe(true);await next(page,'M4H');
+  await recharge(page);
   await jump(page,114,208);await ground(page,320);await page.keyboard.down('s');await clear(page,['m4h-security']);await page.keyboard.up('s');
   await jump(page,212,172);await ground(page,288);await jump(page,178,292);await ground(page,256);
   await page.keyboard.down('s');await clear(page,['m4h-drone']);await page.keyboard.up('s');await to(page,510);await ground(page,320);await next(page,'M4C',552);
@@ -234,11 +250,12 @@ export async function campaignReactor(page:Page){
  const circuit:string='isolation',acceptE06=(await state(page)).eventPlan.some((e:any)=>e.event_id==='E06');
   await clearReactorEntrance(page);
   await crossReactorHeatRoom(page);
+  await recharge(page);
   await crossReactorTransit(page,acceptE06);
   await clearReactorPatrol(page);
   await to(page,112);await ground(page,320);await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('cooling');if(circuit==='isolation'){await page.keyboard.press('e');await expect.poll(async()=>(await state(page)).reactorCircuit).toBe('isolation');}await jump(page,242,336);await ground(page,320);await next(page,'M5I');
   await jump(page,106,200);await ground(page,320);await to(page,244);await counterRam(page,'m5i-ram');if(circuit==='cooling'){await page.keyboard.down('s');await clear(page,['m5i-turret']);await page.keyboard.up('s');await to(page,526);}else await cross(page,'m5i-heat',526);
-  await next(page,'M5C',552);await to(page,120);await ground(page,320);const before=(await state(page)).hp;
+  await next(page,'M5C',552);await recharge(page);await to(page,120);await ground(page,320);const before=(await state(page)).hp;
   if(before<(await state(page)).maxHp){await page.keyboard.press('e');await page.getByTestId('event-repair').click();await page.getByTestId('confirm-event').click();expect((await state(page)).hp).toBe(Math.min(before+2,(await state(page)).maxHp));}
 
  await jump(page,178,272);await ground(page,320);await jump(page,370,474);await ground(page,320);await to(page,568);await page.keyboard.down('e');await until(page,()=>(window as any).__CINDER__().powered,null,'preboss terminal');await page.keyboard.up('e');await next(page,'M5D');
