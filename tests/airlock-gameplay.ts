@@ -50,6 +50,7 @@ export async function airlockExtension(page:Page,input?:RouteInput,{salvage=fals
  await action('crouch',true);await clear(['m1a-drone']);await action('crouch',false);
  if((await read(page)).pressure){
   await ground(256);
+  if(Math.abs((await read(page)).player.x-282)>15){await move(282);await ground(256);}
   await action('interact',true);
   await wait(()=>(window as any).__CINDER__().pressure?.charges.includes('airlock-service'),null,'airlock recharge');
   await action('interact',false);
