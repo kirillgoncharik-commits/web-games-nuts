@@ -204,7 +204,7 @@ export class RoomScene extends Phaser.Scene{
   const a=this.attempt,def=a.definition(),saved=a.room(),terminal=def.terminal;
   if(def.world&&saved.world&&frame.pressed.has('interact')&&!(def.terminal&&this.readyTerminal()&&terminalInReach(this.player.x,this.player.feet,def.terminal))){
    const result=actWorld(def.world,saved.world,{x:this.player.x,y:this.player.feet},this.player.rect(),this.player.facing===-1?-1:1,a.clock.now,frame.down.has('crouch'),a.hp<a.maxHp);
-   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}
+   if(result){if(result.action==='repair'){if(a.hp<a.maxHp)a.hp=Math.min(a.maxHp,a.hp+2);}else this.hooks.effects.play(result.action==='switch'?'power_restore':result.action==='activate'?'power_restore':'cache_claim');for(const id of result.ids)a.scoreLedger?.goal(a.current+':'+id);if(result.geometry)this.rebuildWorldSolids();if(a.current==='YU05-C'&&result.action==='activate')this.onWorldCheckpoint();this.hooks.emit('mission_objective',{objective:a.current+':'+result.action});return;}
   }
   const station=pressureStations[a.current];
   if(station&&a.pressure&&!a.pressure.charges.has(station.group)&&frame.down.has('interact')&&cacheInReach(this.player.x,this.player.feet,{...station,radius:26})){
@@ -246,7 +246,6 @@ export class RoomScene extends Phaser.Scene{
  }
  private beginTransition(to:RoomId,entry:'left'|'right'){
   this.attempt.pressure?.leaveRoom('transfer');
-  if(this.attempt.current==='YU05-C')this.onWorldCheckpoint();
   this.transition={to,entry,remaining:config.combat.transition_ms};this.hold=0;this.player.body.setVelocity(0,0);this.projectiles.clear();this.hooks.controls.setScope('menu');this.hooks.transition(true);}
  private tutorial(){
   const a=this.attempt;if(a.current!=='A'&&a.current!=='T')return;

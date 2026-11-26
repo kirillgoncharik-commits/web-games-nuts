@@ -320,8 +320,11 @@ export class Application{
   }
   private async finish(result:Result){
     const a=this.attempt;
+    const radioEntry=result==='death'&&!this.challengeEntry&&this.activeWorld==='c03-adriatic-1986'?a?.radioLinksAtEntry():null;
+    if(radioEntry&&this.campaign)this.campaign.data.radio_links=radioEntry;
     if(result==='death'&&a?.pressure?.waitingForRetry){
       this.game.scene.pause('Room');this.state='dead';this.effects.pauseWorld();
+      if(radioEntry&&this.campaign){this.busy=true;await this.persist();this.busy=false;}
       this.emit('death',{reason:a.reason});this.show('room-retry');return;
     }
     if(!a||!a.finish(result))return;this.statistics.tick(performance.now(),false,false);void this.statistics.flush();this.game.scene.pause('Room');this.state=result==='victory'?'complete':'dead';this.controls.setScope('menu');this.effects.pauseWorld();this.effects.play(result==='victory'?'mission_win':'mission_death','result:'+a.id);

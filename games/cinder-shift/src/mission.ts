@@ -43,6 +43,10 @@ export class MissionAttempt{
  } | null = null;
 
  get entryEnergy(){return this.roomEntry?.energy??null;}
+ radioLinksAtEntry(){
+  const entry=this.roomEntry;
+  return entry?.room==='YU05-C'?[...(entry.state.states['YU05-C']?.world?.ledger??[])]:null;
+ }
  captureRoomEntry(side: 'left' | 'right') {
   if (!this.pressure) return;
   this.roomEntry = {
