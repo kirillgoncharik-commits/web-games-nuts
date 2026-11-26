@@ -28,7 +28,8 @@ test('RW2 actual rebound interact key appears in the objective',async({page})=>{
  await page.keyboard.down('d');await x(page,143);await page.keyboard.down('Space');await x(page,242);await page.keyboard.up('Space');await x(page,294);await page.keyboard.up('d');
  await page.keyboard.down('s');await page.keyboard.down('d');await x(page,442);await page.keyboard.up('d');await page.keyboard.up('s');
  await page.keyboard.down('d');await x(page,550);await page.keyboard.up('d');
- await expect(page.locator('#hud-objective')).toContainText('F');
+ await expect(page.locator('#context-prompt')).toBeVisible();
+ await expect(page.locator('#context-prompt')).toContainText('F');
  await page.keyboard.press('f');await expect.poll(async()=>(await state(page)).powered).toBe(true);
 });
 
