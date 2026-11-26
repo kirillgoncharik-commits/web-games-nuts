@@ -217,4 +217,4 @@
  pointer-events: none;
 }
 .viewport:has(#hud[hidden]) .context-prompt,
-.viewport:has(#transition:not([hidden])) .context-prompt { display: none; }
+.viewport:has(:not([hidden])#transition) .context-prompt { display: none; }
