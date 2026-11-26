@@ -1,0 +1,275 @@
+{
+  "source_sha": "a4fd49ff946be23ffd58c95efc3efb2936f9c357",
+  "seed": 4,
+  "difficulty": "easy",
+  "losses": [],
+  "mission": "airlock",
+  "hp": 3,
+  "max_hp": 6,
+  "active_seconds": 50.41666666666506,
+  "score": 2275,
+  "visits": [
+    {
+      "room": "A",
+      "entered_seconds": 0,
+      "left_seconds": 7.683,
+      "score_in": 0,
+      "score_out": 150,
+      "energy_segment": {
+        "room": "A",
+        "activeMs": 7683.333333333384,
+        "energyIn": 95,
+        "energyOut": 84.8166666666671,
+        "minEnergy": 84.8166666666671,
+        "volleys": 5,
+        "chargedVolleys": 0,
+        "gained": 0,
+        "clipped": 0,
+        "exit": "transfer"
+      }
+    },
+    {
+      "room": "B",
+      "entered_seconds": 7.683,
+      "left_seconds": 14.833,
+      "score_in": 150,
+      "score_out": 375,
+      "energy_segment": {
+        "room": "B",
+        "activeMs": 7150.000000000041,
+        "energyIn": 84.8166666666671,
+        "energyOut": 69.16666666666751,
+        "minEnergy": 69.16666666666751,
+        "volleys": 17,
+        "chargedVolleys": 0,
+        "gained": 0,
+        "clipped": 0,
+        "exit": "transfer"
+      }
+    },
+    {
+      "room": "M1A",
+      "entered_seconds": 14.833,
+      "left_seconds": 21.65,
+      "score_in": 375,
+      "score_out": 550,
+      "energy_segment": {
+        "room": "M1A",
+        "activeMs": 6816.6666666667015,
+        "energyIn": 69.16666666666751,
+        "energyOut": 91.78333333333352,
+        "minEnergy": 64.56666666666771,
+        "volleys": 2,
+        "chargedVolleys": 0,
+        "gained": 30.433333333332286,
+        "clipped": 2.8166666666677145,
+        "exit": "transfer"
+      }
+    },
+    {
+      "room": "M1B",
+      "entered_seconds": 21.65,
+      "left_seconds": 29.617,
+      "score_in": 550,
+      "score_out": 700,
+      "energy_segment": {
+        "room": "M1B",
+        "activeMs": 7966.666666666722,
+        "energyIn": 91.78333333333352,
+        "energyOut": 81.8166666666673,
+        "minEnergy": 81.8166666666673,
+        "volleys": 4,
+        "chargedVolleys": 0,
+        "gained": 0,
+        "clipped": 0,
+        "exit": "transfer"
+      }
+    },
+    {
+      "room": "M1C",
+      "entered_seconds": 29.617,
+      "left_seconds": 39.567,
+      "score_in": 700,
+      "score_out": 1000,
+      "energy_segment": {
+        "room": "M1C",
+        "activeMs": 9949.999999999996,
+        "energyIn": 81.8166666666673,
+        "energyOut": 62.86666666666787,
+        "minEnergy": 62.86666666666787,
+        "volleys": 18,
+        "chargedVolleys": 0,
+        "gained": 0,
+        "clipped": 0,
+        "exit": "transfer"
+      }
+    },
+    {
+      "room": "C",
+      "entered_seconds": 39.567,
+      "left_seconds": 50.41666666666506,
+      "score_in": 1000,
+      "score_out": 2275,
+      "energy_segment": {
+        "room": "C",
+        "activeMs": 10849.999999999964,
+        "energyIn": 62.86666666666787,
+        "energyOut": 33.516666666668485,
+        "minEnergy": 33.516666666668485,
+        "volleys": 37,
+        "chargedVolleys": 0,
+        "gained": 0,
+        "clipped": 0,
+        "exit": "victory"
+      }
+    }
+  ],
+  "pressure": [
+    {
+      "room": "A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 683,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 88
+    },
+    {
+      "room": "B",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 3133,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 38
+    },
+    {
+      "room": "M1A",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1483,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 40
+    },
+    {
+      "room": "M1B",
+      "enemies": 1,
+      "attacks": 1,
+      "combatMs": 1417,
+      "hpLost": 0,
+      "attacksPerCombatMinute": 42
+    },
+    {
+      "room": "M1C",
+      "enemies": 2,
+      "attacks": 2,
+      "combatMs": 4667,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 26
+    },
+    {
+      "room": "C",
+      "enemies": 3,
+      "attacks": 3,
+      "combatMs": 6400,
+      "hpLost": 1,
+      "attacksPerCombatMinute": 28
+    }
+  ],
+  "visited": 6,
+  "repair": [
+    "B"
+  ],
+  "events": [
+    {
+      "event_id": "E03",
+      "definition_version": 2,
+      "room_id": "B",
+      "variant": "repair-cache"
+    }
+  ],
+  "damage": [
+    {
+      "name": "hit_received",
+      "event_id": "f1611055-ca84-4622-9a74-8a37e1f957f1",
+      "at": 12013,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.17",
+        "source_sha": "a4fd49ff946be23ffd58c95efc3efb2936f9c357",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "3bc3d49b-6d9b-47d8-b0d4-58afd75e1259",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "B",
+        "attempt_id": "0992f228-119a-4e7c-876d-2545590c64b9",
+        "active_duration": 10.483,
+        "reason": "walker-contact",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "0c425930-033c-4061-98ba-78201816fc79",
+      "at": 19573,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.17",
+        "source_sha": "a4fd49ff946be23ffd58c95efc3efb2936f9c357",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "3bc3d49b-6d9b-47d8-b0d4-58afd75e1259",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1A",
+        "attempt_id": "0992f228-119a-4e7c-876d-2545590c64b9",
+        "active_duration": 17.45,
+        "reason": "drone-shot",
+        "hp": 5
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "b724cb36-98b0-4236-b78a-342bc104dc35",
+      "at": 38561,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.17",
+        "source_sha": "a4fd49ff946be23ffd58c95efc3efb2936f9c357",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "3bc3d49b-6d9b-47d8-b0d4-58afd75e1259",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "M1C",
+        "attempt_id": "0992f228-119a-4e7c-876d-2545590c64b9",
+        "active_duration": 36.033,
+        "reason": "turret-shot",
+        "hp": 4
+      }
+    },
+    {
+      "name": "hit_received",
+      "event_id": "7e1abacd-8204-4f71-b1bb-6011aeb7f39f",
+      "at": 49409,
+      "params": {
+        "game_id": "r01",
+        "build_id": "0.8.0-alpha.17",
+        "source_sha": "a4fd49ff946be23ffd58c95efc3efb2936f9c357",
+        "locale": "ru",
+        "input_method": "keyboard",
+        "campaign_id": "3bc3d49b-6d9b-47d8-b0d4-58afd75e1259",
+        "campaign_seed": 4,
+        "mode": "mission",
+        "mission_id": "airlock",
+        "room_id": "C",
+        "attempt_id": "0992f228-119a-4e7c-876d-2545590c64b9",
+        "active_duration": 46.683,
+        "reason": "walker-shot",
+        "hp": 3
+      }
+    }
+  ]
+}
