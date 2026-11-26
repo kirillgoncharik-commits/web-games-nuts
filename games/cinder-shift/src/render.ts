@@ -295,13 +295,13 @@ export class SceneArt{
 
     if(room.id==='B'){
       const station=this.art(`repair-station_${state.containerUsed?'used':'ready'}`,repairPosition.x,320,46,48,5);
-      if(state.containerUsed||attempt.hp>=attempt.maxHp)station.setAlpha(.62);
+      if(state.containerUsed||attempt.energy>=attempt.energyCapacity)station.setAlpha(.62);
     }
     if(room.repair&&(room.repair.slot!=='R04'||attempt.dataUploaded)){
       const protectedSlot=(room.safeZones||[]).some(zone=>zone.slot===room.repair?.slot&&zone.shielded);
       const frame=state.repairUsed?'used':protectedSlot?'protected':'ready';
       this.art(`repair-station_${frame}`,room.repair.x,320,46,50,5);
-      if(attempt.hp>=attempt.maxHp&&!state.repairUsed)this.threats.lineStyle(2,signals.repair,.85).lineBetween(room.repair.x-7,280,room.repair.x-2,285).lineBetween(room.repair.x-2,285,room.repair.x+7,275);
+      if(attempt.energy>=attempt.energyCapacity&&!state.repairUsed)this.threats.lineStyle(2,signals.repair,.85).lineBetween(room.repair.x-7,280,room.repair.x-2,285).lineBetween(room.repair.x-2,285,room.repair.x+7,275);
     }
     if(room.cache){
       const family=room.cache.id==='S04'?'archive':room.cache.id==='S05'?'beacon':'salvage',nearby=cacheInReach(player.x,player.feet,room.cache),frame=state.cacheUsed?'used':nearby&&attempt.cacheReady()?'interact':'available';

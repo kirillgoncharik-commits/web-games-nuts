@@ -6,13 +6,13 @@ import {planEvents,type EventPlan} from './events';
 import {missions,missionSeed,unlocked,type PlayableMissionId} from './missions';
 import {attachmentPrices,isAttachment,type Attachment,type CampaignTally} from './campaign-score';
 export const campaignRuleset='campaign-arcade1';
-export const pressureCampaignRuleset='campaign-pressure-v1';
-const mixedPressureRuleset='campaign-mixed-pressure-v1';
+export const pressureCampaignRuleset='campaign-energy-v2';
+const mixedPressureRuleset='campaign-mixed-energy-v2';
 export const contentVersion='campaign-m05b3.0';
 export type Stage='map'|'research'|'briefing'|'mission'|'result'|'campaign_checkpoint'|'campaign_complete';
 export type RelaySupport='none'|'power'|'repair';
 export type MissionEntry={attachment?:Attachment;difficulty?:Difficulty;mission_id:PlayableMissionId;seed:number;build:Loadout;max_hp:number;initial_hp:number;initial_score:number;event_plan:EventPlan;relay_template?:string;relay_leg?:'A'|'B';relay_support?:RelaySupport};
-export type AttemptResult={score_breakdown?:CampaignTally;attempt_id:string;mission_id:PlayableMissionId;result:'victory'|'death';reason:string;hp:number;max_hp:number;score:number;active_ms:number;screen_ms:number;nodes:NodeId[];reward_granted:boolean;applied:boolean};
+export type AttemptResult={energy?:number;energy_capacity?:number;score_breakdown?:CampaignTally;attempt_id:string;mission_id:PlayableMissionId;result:'victory'|'death';reason:string;hp:number;max_hp:number;score:number;active_ms:number;screen_ms:number;nodes:NodeId[];reward_granted:boolean;applied:boolean};
 export type RunStats={ruleset_id?:string;active_ms:number;deaths:number;score:number;foundry_route:'service'|'press'|null;history_complete:boolean;assisted:boolean};
 export type CampaignData={loadout_budget?:number;next_attachment?:Attachment;difficulty?:Difficulty;radio_links?:string[];world_facts?:string[];character_id:'mira';campaign_id:string;campaign_seed:number;mission_id:PlayableMissionId;location_id:PlayableMissionId;stage:Stage;nodes:NodeId[];active:ActiveSkill;points:number;completed_missions:PlayableMissionId[];reward_ledger:string[];processed_attempts:string[];run_stats:RunStats;entry:MissionEntry|null;result:AttemptResult|null};
 export function newCampaign(seed:number,difficulty:Difficulty='easy'):CampaignData{return{difficulty,character_id:'mira',campaign_id:crypto.randomUUID(),campaign_seed:seed>>>0,mission_id:'airlock',location_id:'airlock',stage:'map',nodes:[],active:null,points:1,completed_missions:[],reward_ledger:[],processed_attempts:[],run_stats:{ruleset_id:campaignRuleset,active_ms:0,deaths:0,score:0,foundry_route:null,history_complete:true,assisted:false},entry:null,result:null};}

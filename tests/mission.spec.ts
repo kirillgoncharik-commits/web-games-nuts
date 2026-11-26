@@ -82,17 +82,14 @@ test('combat death in B keeps the same mission and restores room entry',async({p
   await forwardJump(page,194,370);
   await page.waitForFunction(()=>(window as any).__CINDER__().enemies.some((e:any)=>e.phase==='telegraph'));
   await page.screenshot({path:info.outputPath('attack-warning.png')});
-  await expect.poll(async()=>(await state(page)).screen,{timeout:20000}).toBe('room-retry');
-  const dead=await state(page);
-  expect(dead.hp).toBe(0);
-  expect(dead.pressure.lives).toBe(2);
-  expect(dead.eventLog.filter((e:any)=>e.name==='mission_end')).toHaveLength(0);
-  await page.screenshot({path:info.outputPath('room-retry.png')});
-  await page.getByTestId('retry').click();
   await expect.poll(async()=>{
     const s=await state(page);
-    return s.room==='B'&&s.pressure?.lives===2&&s.hp===s.maxHp&&!s.pressure.waitingForRetry;
-  }).toBe(true);
+    return s.room==='B'&&s.pressure?.deaths===1&&s.pressure.lives===2&&s.state==='playing'&&!s.pressure.waitingForRetry;
+  },{timeout:20000,intervals:[50]}).toBe(true);
+  await page.keyboard.press('Escape');
+  const dead=await state(page);
+  expect(dead.eventLog.filter((e:any)=>e.name==='mission_end')).toHaveLength(0);
+  await expect(page.getByTestId('retry')).not.toBeVisible();
   const restored=await state(page);
   expect(restored.attemptId).toBe(dead.attemptId);
   expect(restored.score).toBe(entry.score);

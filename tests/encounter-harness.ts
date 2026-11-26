@@ -25,7 +25,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
   const s=(window as any).__CINDER__();
   resolve({png:(image as HTMLImageElement).src,state:{build:s.build,sha:s.sha,hp:s.hp,maxHp:s.maxHp,feedback:s.feedback,audioStatus:s.audioStatus,settings:s.settings}});
  }));},
- start(input:{difficulty?:import('../games/cinder-shift/src/session/difficulty').Difficulty;mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];active?:ActiveSkill;reactorCircuit?:'cooling'|'isolation';cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;clearedEnemyIds?:string[];hp?:number;seed?:number;debug?:boolean;reduced?:boolean}){
+ start(input:{difficulty?:import('../games/cinder-shift/src/session/difficulty').Difficulty;mission:PlayableMissionId;room?:RoomId;nodes?:NodeId[];active?:ActiveSkill;reactorCircuit?:'cooling'|'isolation';cargoCircuit?:'conveyor'|'security';archiveState?:{carrier?:boolean;power?:boolean;uploaded?:boolean};cleared?:boolean;clearedEnemyIds?:string[];hp?:number;energy?:number;seed?:number;debug?:boolean;reduced?:boolean}){
   app.game.scene.stop('Room');app.game.scene.stop('Backdrop');
   const world=isWorldMission(input.mission)?worldForMission(input.mission):'r01';
   const campaign=new Campaign(world==='r01'?newCampaign(input.seed??4,input.difficulty):newWorldCampaign(world,input.seed??4,input.difficulty));
@@ -45,6 +45,7 @@ import {MissionAttempt} from '../games/cinder-shift/src/mission';
   if(input.cleared)attempt.room().enemies.forEach(enemy=>enemy.hp=0);
   for(const id of input.clearedEnemyIds||[]){const enemy=attempt.room().enemies.find(e=>e.id===id);if(!enemy)throw Error('Unknown fixture enemy '+id);enemy.hp=0;}
   if(input.hp!==undefined)attempt.hp=input.hp;
+  if(input.energy!==undefined)attempt.energy=input.energy;
   app.activeWorld=world;app.campaign=campaign;app.attempt=attempt;app.runSession=null;app.challengeEntry=null;app.challengeSpec=null;app.challengeResult=null;
   app.settings.debugBodies=input.debug||false;app.settings.reducedMotion=input.reduced||false;
   app.state='playing';app.ui.hide();app.controls.clear();app.controls.setScope('play');

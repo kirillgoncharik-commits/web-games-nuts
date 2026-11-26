@@ -2,6 +2,15 @@ import type {RoomId} from '../room-data';
 import type {Difficulty} from './difficulty';
 import type {PlayableMissionId} from './missions';
 
+// Fractions of the full battery, shared by combat, tuning and challenge hashes.
+export const energyRules = { projectileHit: 0.85, contactHit: 0.20, heavyHit: 0.40, repair: 1 / 3, smallRepair: 1 / 6, reserve: 0.25 } as const;
+export const isProjectileHit = (source: string) => source.endsWith('-shot');
+export function hitEnergyFraction(source: string) {
+ if (isProjectileHit(source)) return energyRules.projectileHit;
+ return ['press', 'regulator-beam', 'regulator-contact', 'world-traction', 'world-scan'].includes(source)
+  ? energyRules.heavyHit : energyRules.contactHit;
+}
+
 export const pressurePresets = {
  easy: { lives: 3, drain: 1, volley: 0.5, charge: 0.35 },
  hard: { lives: 2, drain: 1.12, volley: 0.55, charge: 0.30 },
@@ -49,6 +58,7 @@ export type PressureSegment = {
  chargedVolleys: number;
  gained: number;
  clipped: number;
+ damage: number;
  exit: 'transfer' | 'victory' | 'death' | 'abandoned' | null;
 };
 
@@ -58,6 +68,7 @@ export class MissionPressure {
  deaths = 0;
  timeSpent = 0;
  fireSpent = 0;
+ damageSpent = 0;
  volleyCount = 0;
  chargedVolleyCount = 0;
  chargeGained = 0;
@@ -76,7 +87,7 @@ export class MissionPressure {
 
  enterRoom(room: RoomId) {
   this.segment = {room,activeMs:0,energyIn:this.energy,energyOut:this.energy,minEnergy:this.energy,
-   volleys:0,chargedVolleys:0,gained:0,clipped:0,exit:null};
+   volleys:0,chargedVolleys:0,gained:0,clipped:0,damage:0,exit:null};
   this.segments.push(this.segment);
  }
 
@@ -88,10 +99,12 @@ export class MissionPressure {
  }
 
  spendTime(ms: number) {
+  if(this.waitingForRetry || this.lives===0 || !Number.isFinite(ms) || ms<=0)return;
   if(this.segment)this.segment.activeMs+=ms;
   this.timeSpent += this.spend(this.preset.drain * ms / 1000);
  }
  spendVolley(charged = false) {
+  if(this.waitingForRetry || this.lives===0 || this.energy<=0)return;
   this.volleyCount++;
   if(charged)this.chargedVolleyCount++;
   if(this.segment){
@@ -99,6 +112,21 @@ export class MissionPressure {
    if(charged)this.segment.chargedVolleys++;
   }
   this.fireSpent += this.spend(this.preset.volley * (charged ? 3 : 1));
+ }
+ spendHit(source: string) {
+  if(this.waitingForRetry || this.lives===0 || this.energy<=0)return 0;
+  const spent=this.spend(this.capacity*hitEnergyFraction(source));
+  this.damageSpent+=spent;
+  if(this.segment)this.segment.damage+=spent;
+  return spent;
+ }
+ restore(fraction: number) {
+  if(this.waitingForRetry || this.lives===0 || this.energy<=0 || !Number.isFinite(fraction) || fraction<=0)return 0;
+  const gained=Math.min(this.capacity-this.energy,this.capacity*fraction);
+  this.energy+=gained;
+  this.chargeGained+=gained;
+  if(this.segment){this.segment.energyOut=this.energy;this.segment.gained+=gained;}
+  return gained;
  }
  private spend(amount: number) {
   const spent = Math.min(this.energy, amount);
@@ -128,6 +156,7 @@ export class MissionPressure {
 
  loseLife() {
   if (this.waitingForRetry || this.lives === 0) return;
+  this.energy=0;
   this.leaveRoom('death');
   this.deaths++;
   this.lives--;

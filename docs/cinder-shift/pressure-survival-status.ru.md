@@ -1,5 +1,7 @@
 # Pressure & Survival · рабочая версия alpha.17
 
+> Актуальное уточнение 26.11: [одна энергия и попытки, без отдельного HP](energy-attempts.ru.md), alpha.18. Оно заменяет прежние требования о HP; старые результаты alpha.17 не подтверждают новую механику.
+
 Задачи [№25](https://github.com/kirillgoncharik-commits/web-games-nuts/issues/25) и [№27](https://github.com/kirillgoncharik-commits/web-games-nuts/issues/27) опираются на спецификацию из [PR №26](https://github.com/kirillgoncharik-commits/web-games-nuts/pull/26). Интеграционная база — `86787e36b3112f2d6e1f65c142b9c0e019ad9674`.
 
 - Кампании используют жизни, энергию, станции и восстановление входного состояния комнаты. Черновые объёмы всех 15 миссий и три профиля сложности основаны на исходных расчётах. Тест `pressure-topology.spec.ts` выгружает 84 комнаты и 45 строк бюджетов.

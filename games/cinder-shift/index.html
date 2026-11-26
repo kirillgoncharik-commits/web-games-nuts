@@ -25,7 +25,7 @@
         <div id="viewport" class="viewport">
           <div id="game" tabindex="0" role="application" data-i18n-aria="accessibility.game" aria-label="Game field"></div>
           <div id="hud" class="hud" hidden>
-            <div class="health" data-i18n-aria="accessibility.integrity" aria-live="off"><span data-i18n="hud.integrity">INTEGRITY</span><span id="hp-segments" aria-hidden="true"></span><strong id="hp-value"></strong></div>
+            <div class="battery"><span data-i18n="hud.battery">ENERGY</span><span id="energy-meter" role="progressbar" data-i18n-aria="accessibility.energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><i id="energy-fill"></i></span><strong id="energy-value">100%</strong></div>
             <strong id="hud-pressure" hidden></strong><span id="hud-objective"></span><span id="hud-score" hidden></span><span id="hud-split" class="hud-split" hidden aria-live="polite"></span><span id="hud-cell" hidden><span aria-hidden="true">◆</span><span id="hud-cell-label" data-i18n="hud.cellCarried">CORE</span></span><span id="interaction-progress" hidden></span><span id="ability-status" hidden><span id="ability-icon" class="ability-emblem" aria-hidden="true"></span><span data-i18n="hud.impulse">Impulse</span> <strong id="ability-time"></strong><i><b id="ability-fill"></b></i></span><span id="buffer-status" hidden></span><strong id="hud-room"></strong><button id="hud-pause" class="hud-pause" type="button" data-i18n-aria="accessibility.pause" aria-label="Pause">Ⅱ</button>
           </div>
           <div id="context-prompt" class="context-prompt" hidden></div>

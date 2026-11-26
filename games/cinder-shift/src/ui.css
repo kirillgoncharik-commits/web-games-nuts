@@ -218,3 +218,13 @@
 }
 .viewport:has(#hud[hidden]) .context-prompt,
 .viewport:has(:not([hidden])#transition) .context-prompt { display: none; }
+
+/* A single continuous battery replaces the old health pips. */
+.battery{display:flex;align-items:center;gap:6px;color:#a4f3dd;flex-shrink:0}
+#energy-meter{position:relative;display:block;width:64px;height:14px;padding:2px;border:1px solid currentColor}
+#energy-meter::after{content:"";position:absolute;right:-4px;top:3px;width:3px;height:6px;background:currentColor}
+#energy-fill{display:block;height:100%;width:100%;background:currentColor}
+#energy-meter[data-critical="true"]{color:#ff9e9e}
+#energy-value{min-width:4ch;text-align:right;font-variant-numeric:tabular-nums}
+#hud-pressure,#buffer-status{font-variant-numeric:tabular-nums}
+@media(max-width:700px){.battery>span:first-child{display:none}#energy-meter{width:42px;height:12px}#energy-meter::after{top:2px}#buffer-status:not([hidden]){display:inline;font-size:10px}.hud{gap:4px}#hud-pressure{font-size:11px}}
