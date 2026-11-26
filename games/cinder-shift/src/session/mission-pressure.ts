@@ -28,6 +28,7 @@ export const pressureStations: Partial<Record<string, {group: string; x: number;
  'YU02-B': {group: 'YU02', x: 44, y: 320},
  'YU02-D': {group: 'YU02-relay', x: 44, y: 320},
  'YU03-B': {group: 'YU03', x: 44, y: 320},
+ 'YU03-D': {group: 'YU03-substation', x: 44, y: 320},
  'YU04-B': {group: 'YU04', x: 44, y: 320},
  'YU05-B': {group: 'YU05', x: 44, y: 320}
 };
@@ -35,7 +36,7 @@ export const pressureStations: Partial<Record<string, {group: string; x: number;
 export const pressureCapacity = {
  airlock: 95, cargo: 115, foundry: 100, archive: 110, reactor: 155,
  SW01: 100, SW02: 95, SW03: 105, SW04: 130, SW05: 135,
- YU01: 115, YU02: 105, YU03: 130, YU04: 140, YU05: 140
+ YU01: 115, YU02: 115, YU03: 130, YU04: 140, YU05: 140
 } satisfies Record<PlayableMissionId, number>;
 
 export type PressureSegment = {
