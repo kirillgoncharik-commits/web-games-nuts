@@ -11,14 +11,14 @@ export const heroImage=(i:I18n,extra='')=>'<img class="mira-portrait '+extra+'" 
 
 export function heroProfile(i:I18n,nodes:readonly NodeId[],active:ActiveSkill=nodes.includes('M1')?'M1':null,difficulty?:Difficulty){
  const p=characterProfile(nodes,active,difficulty),icons=nodes.map(id=>researchIcon(id)).join('');
- return'<aside class="profile-card" aria-label="'+e(i.t('character.profile'))+'">'+heroImage(i)+'<h3>'+e(i.t('character.mira.name'))+'</h3><p class="helper">'+e(i.t('character.mira.role'))+'</p><p data-testid="profile-integrity">'+e(i.t('common.hp',{hp:p.maxHp,max:p.maxHp}))+'</p><p class="helper">'+e(i.t('workshop.skills'))+'</p><div class="profile-build-icons" aria-hidden="true">'+icons+'</div><p class="helper" data-testid="profile-active">'+e(i.t('workshop.active',{skill:i.t(p.active?'research.'+p.active+'.name':'workshop.noActive')}))+'</p><p class="helper">'+e(i.t('research.build',{build:nodes.length?nodes.map(id=>i.t('research.'+id+'.name')).join(' + '):i.t('common.base')}))+'</p></aside>';
+ return'<aside class="profile-card" aria-label="'+e(i.t('character.profile'))+'">'+heroImage(i)+'<h3>'+e(i.t('character.mira.name'))+'</h3><p class="helper">'+e(i.t('character.mira.role'))+'</p><p data-testid="profile-integrity">'+e(i.t('hud.energy',{percent:100}))+'</p><p class="helper">'+e(i.t('workshop.skills'))+'</p><div class="profile-build-icons" aria-hidden="true">'+icons+'</div><p class="helper" data-testid="profile-active">'+e(i.t('workshop.active',{skill:i.t(p.active?'research.'+p.active+'.name':'workshop.noActive')}))+'</p><p class="helper">'+e(i.t('research.build',{build:nodes.length?nodes.map(id=>i.t('research.'+id+'.name')).join(' + '):i.t('common.base')}))+'</p></aside>';
 }
 
-const fields=['maxHp','projectileDamage','projectilesPerShot','shotsPerSecond','projectileSpeed','walkSpeed','piercing','ricochet','chargedShot','airDash','wallMove','phaseDash','buffer','shieldClear','deathSave','active']as const;
+const fields=['projectileShield','projectileDamage','projectilesPerShot','shotsPerSecond','projectileSpeed','walkSpeed','piercing','ricochet','chargedShot','airDash','wallMove','phaseDash','buffer','shieldClear','deathSave','active']as const;
 
 function value(i:I18n,p:CharacterProfile,key:typeof fields[number]){
  if(key==='active')return i.t(p.active?'research.'+p.active+'.name':'workshop.noActive');
- if(key==='piercing'||key==='ricochet'||key==='chargedShot'||key==='airDash'||key==='wallMove'||key==='phaseDash'||key==='buffer'||key==='shieldClear'||key==='deathSave')return i.t(p[key]?'common.on':'common.off');
+ if(key==='projectileShield'||key==='piercing'||key==='ricochet'||key==='chargedShot'||key==='airDash'||key==='wallMove'||key==='phaseDash'||key==='buffer'||key==='shieldClear'||key==='deathSave')return i.t(p[key]?'common.on':'common.off');
  if(key==='walkSpeed'||key==='projectileSpeed')return i.t('workshop.speed',{speed:p[key]});
  return i.number(p[key]);
 }
@@ -54,7 +54,7 @@ export function characterSlots(i:I18n){
 
 export function selectionSummary(i:I18n,nodes:readonly NodeId[],selected:NodeId,points:number,active:ActiveSkill=nodes.includes('M1')?'M1':null,difficulty?:Difficulty){
  const node=research.find(n=>n.id===selected)!,now=characterProfile(nodes,active,difficulty),next=previewProfile(nodes,selected,active,difficulty);
- const key=selected==='D1'?'maxHp':selected==='D2'?'buffer':selected==='D3'?'shieldClear':selected==='D4'?'deathSave':selected==='W1'?'projectilesPerShot':selected==='W2'?'piercing':selected==='W3'?'ricochet':selected==='W4'?'chargedShot':selected==='M2'?'airDash':selected==='M3'?'wallMove':selected==='M4'?'phaseDash':'active';
+ const key=selected==='D1'?'projectileShield':selected==='D2'?'buffer':selected==='D3'?'shieldClear':selected==='D4'?'deathSave':selected==='W1'?'projectilesPerShot':selected==='W2'?'piercing':selected==='W3'?'ricochet':selected==='W4'?'chargedShot':selected==='M2'?'airDash':selected==='M3'?'wallMove':selected==='M4'?'phaseDash':'active';
  const display=(p:CharacterProfile)=>value(i,p,key);
  return'<div class="selected-module" role="status" aria-live="polite">'+researchIcon(node.icon)+'<div><strong>'+e(selected+' / '+i.t(node.nameKey))+'</strong><p class="selection-cost"><span data-testid="selected-cost">'+e(i.t('research.cost',{cost:node.cost}))+'</span><span data-testid="selected-points">'+e(i.t('common.points',{points}))+'</span></p><p class="selected-change">'+e(i.t('workshop.stat.'+key))+': <span data-testid="current-'+key+'">'+e(display(now))+'</span> → <span class="stat-change" data-testid="preview-'+key+'">'+e(display(next))+'</span></p></div></div>';
 }

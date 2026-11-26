@@ -54,8 +54,15 @@ for(const stage of ['research','briefing','mission','death','result','preview_co
 test('future and corrupt progress never migrate as a new campaign',()=>{
  const record:any=envelope(new Campaign(newCampaign(5)));record.content_version='future-999';expect(validateSave(record)).toBe('incompatible');expect(()=>migrateSave(record)).toThrow('incompatible');record.content_version=contentVersion;record.campaign.points=999;expect(validateSave(record)).toBe('corrupt');
 });
-test('D2 is one shield per room and per attempt, with shared hit invulnerability',()=>{
- const entry=cargoEntry(['D1','D2']),a=new MissionAttempt('mission',entry);expect(a.damage(0,'walker-shot')).toBe(true);expect(a.hp).toBe(8);expect(a.lastDamageAbsorbed).toBe(true);expect(a.damage(100,'walker-shot')).toBe(false);a.damage(1000,'walker-shot');expect(a.hp).toBe(7);a.current='E';a.damage(2000,'turret-shot');expect(a.hp).toBe(7);a.current='D';a.damage(3000,'walker-shot');expect(a.hp).toBe(6);const retry=new MissionAttempt('mission',entry);retry.damage(0,'walker-shot');expect(retry.hp).toBe(8);expect(retry.eventPlan).toEqual(a.eventPlan);
+test('D1 and D2 each absorb one hit per screen, with shared invulnerability and no revisit refill',()=>{
+ const entry=cargoEntry(['D1','D2']),a=new MissionAttempt('mission',entry);
+ expect(a.energy).toBe(115);expect(a.damage(0,'walker-shot')).toBe(true);
+ expect(a.energy).toBe(115);expect(a.room().shieldUsed).toBe(true);expect(a.room().bufferUsed).toBe(false);
+ expect(a.damage(100,'walker-shot')).toBe(false);
+ a.damage(1000,'walker-shot');expect(a.energy).toBe(115);expect(a.room().bufferUsed).toBe(true);
+ a.current='E';a.damage(2000,'turret-shot');expect(a.energy).toBe(115);
+ a.current='D';a.damage(3000,'walker-shot');expect(a.energy).toBeCloseTo(17.25);
+ const retry=new MissionAttempt('mission',entry);retry.damage(0,'walker-shot');expect(retry.energy).toBe(115);expect(retry.eventPlan).toEqual(a.eventPlan);
 });
 test('W2 consumes exactly one marked sheet; ordinary shots stop, and a second sheet still blocks',()=>{
  const first={id:'one',material:'thin' as const,x:20,y:80,width:4,height:40},second={id:'two',material:'thin' as const,x:40,y:80,width:4,height:40};

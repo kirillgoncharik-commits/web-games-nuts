@@ -1,4 +1,6 @@
 # Codex work order — Pressure & Survival: implementation + delivery
+
+> Актуальное уточнение 26.11: [одна энергия и попытки, без отдельного HP](energy-attempts.ru.md), alpha.18. Оно заменяет прежние требования о HP; старые результаты alpha.17 не подтверждают новую механику.
 Дата 25.11.2026. Статус READY FOR IMPLEMENTATION / NOT IMPLEMENTED. Родительский дизайн: [Pressure & Survival](pressure-survival-design.ru.md); расчётные inputs: [pressure-survival-baseline.json](pressure-survival-baseline.json). Репозиторий kirillgoncharik-commits/web-games-nuts. Стартовая интеграционная база 86787e36b3112f2d6e1f65c142b9c0e019ad9674 (PR #24). Документационная ветка codex/cinder-pressure-survival; прежде чем писать runtime, проверить актуальные refs, published manifests/платформы и параллельную rollout automation. Если primary продвинулась, переносить требования на актуальную линию, не перезаписывать существующий release, не форсировать refs и не брать старый main. Не объявлять эту документационную ветку релизом.
  
 ## Задание

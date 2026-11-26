@@ -64,10 +64,10 @@ test('room retry rolls back resources and world state together while preserving 
  attempt.cellCollected=true;
  attempt.regulator.hp=2;
  attempt.d4Used=true;
- attempt.hp=0;
  attempt.activeMs=6000;
  pressure.spendVolley();
  expect(pressure.charge('shared')).toBeGreaterThan(0);
+ attempt.energy=0;
  pressure.loseLife();
  expect(attempt.retryRoom()).toBe('right');
  expect(attempt.retryRoom()).toBeNull();

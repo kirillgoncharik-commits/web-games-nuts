@@ -1,0 +1,38 @@
+name: Cinder Shift energy and attempts
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'games/cinder-shift/**'
+      - 'tests/energy-attempts.spec.ts'
+      - 'tests/mission-pressure.spec.ts'
+      - 'tests/mission.spec.ts'
+      - '.github/workflows/cinder-energy.yml'
+      - 'package*.json'
+concurrency:
+  group: cinder-energy-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  battery-and-retry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - run: npx playwright test tests/energy-attempts.spec.ts tests/mission-pressure.spec.ts tests/personal-records-legacy-model.spec.ts tests/session-model.spec.ts tests/m05b1-model.spec.ts tests/new-modes-core.spec.ts --reporter=line
+      - run: npx playwright test tests/mission.spec.ts --grep 'combat death in B' --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cinder-energy-and-attempts
+          path: |
+            test-results
+            dist/cinder-shift/build-manifest.json
