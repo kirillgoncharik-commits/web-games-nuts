@@ -61,7 +61,7 @@ export class RoomScene extends Phaser.Scene{
   const a=this.attempt,id=a.current,def=a.definition(),saved=a.room();this.physics.world.setBounds(0,40,640,280);const platforms=this.platforms=this.physics.add.staticGroup();
   def.solids.forEach((s,index)=>{const r=this.add.rectangle(s.x+s.width/2,s.y+s.height/2,s.width,s.height,0xffffff,0);this.physics.add.existing(r,true);platforms.add(r);r.setData('worldSolidId',s.id||'fixed-'+index);if(s.id)this.solidRemovers.set(s.id,()=>{(r.body as Phaser.Physics.Arcade.StaticBody).destroy();r.destroy();});});
   this.player=new Player(this,this.entry==='right'?584:64);this.player.dashReady=a.abilityReadyAt;this.player.chargeReady=a.abilityReadyAt;this.physics.add.collider(this.player.sprite,platforms,undefined,(_player,platform)=>{if(this.attempt.clock.now>=this.player.dashUntil||!a.build.wallMove&&!a.build.phaseDash)return true;const object=platform as Phaser.GameObjects.Rectangle;return !def.solids.some(s=>(s.material==='wall'&&a.build.wallMove||s.material==='phase'&&a.build.phaseDash)&&Math.abs(s.x+s.width/2-object.x)<1&&Math.abs(s.y+s.height/2-object.y)<1);});this.art=new SceneArt(this,def,a.eventPlan,this.hooks.debug);this.worldArt=def.world?new WorldArt(this,def):undefined;
-  this.hooks.effects.startWorld(musicTheme(a.missionId,id));if(def.boss)void this.hooks.effects.unlock().then(()=>this.hooks.effects.play('boss_intro','boss-intro:'+a.id));this.hooks.controls.setScope(this.hooks.playAllowed()?'play':'menu');a.clock.clear();a.captureRoomEntry(this.entry);this.hooks.transition(false);this.hooks.emit('room_enter',{revisit:Number(saved.visited),score:a.score});saved.visited=true;if(!this.hooks.playAllowed())this.scene.pause();
+  this.hooks.effects.startWorld(musicTheme(a.missionId,id));if(def.boss)void this.hooks.effects.unlock().then(()=>this.hooks.effects.play('boss_intro','boss-intro:'+a.id));this.hooks.controls.setScope(this.hooks.playAllowed()?'play':'menu');a.clock.clear();a.captureRoomEntry(this.entry);a.pressure?.enterRoom(id);this.hooks.transition(false);this.hooks.emit('room_enter',{revisit:Number(saved.visited),score:a.score});saved.visited=true;if(!this.hooks.playAllowed())this.scene.pause();
   this.events.once(Phaser.Scenes.Events.SHUTDOWN,()=>{this.clearFeedback();this.events.off(Phaser.Scenes.Events.PAUSE,this.clearFeedback,this);for(const enemy of a.room(id).enemies)suspendEnemy(enemy);this.hooks.effects.clearCombat();this.projectiles.clear();this.hooks.controls.clear();});
  }
  update(_time:number,delta:number){
@@ -245,6 +245,7 @@ export class RoomScene extends Phaser.Scene{
   for(const r of existing.values())this.platforms.remove(r,true,true);
  }
  private beginTransition(to:RoomId,entry:'left'|'right'){
+  this.attempt.pressure?.leaveRoom('transfer');
   if(this.attempt.current==='YU05-C')this.onWorldCheckpoint();
   this.transition={to,entry,remaining:config.combat.transition_ms};this.hold=0;this.player.body.setVelocity(0,0);this.projectiles.clear();this.hooks.controls.setScope('menu');this.hooks.transition(true);}
  private tutorial(){

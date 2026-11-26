@@ -76,7 +76,7 @@ export class SceneArt{
     const repairSlots=new Map<string,{x:number;y:number}>();
     for(const zone of room.safeZones||[])if(zone.slot)repairSlots.set(zone.slot,{x:room.id==='B'?repairPosition.x:room.repair?.x??zone.x+zone.width/2,y:270});
     if(room.repair)repairSlots.set(room.repair.slot,{x:room.repair.x,y:270});
-    this.shieldLabels=[...repairSlots].map(([slot,point])=>scene.add.text(point.x-14,point.y,slot,{fontFamily:'Arial',fontSize:'9px',color:'#76DCC8',backgroundColor:'#101823'}).setPadding(2,1).setDepth(6));this.threats=scene.add.graphics().setDepth(5);this.debug=scene.add.graphics().setDepth(20);
+    this.shieldLabels=[...repairSlots].map(([,point])=>scene.add.text(point.x-5,point.y,'+',{fontFamily:'Arial',fontSize:'9px',color:'#76DCC8',backgroundColor:'#101823'}).setPadding(2,1).setDepth(6));this.threats=scene.add.graphics().setDepth(5);this.debug=scene.add.graphics().setDepth(20);
   }
   private platform(s:Rect){
     for(let y=0;y<s.height;y+=16)for(let x=0;x<s.width;x+=16){

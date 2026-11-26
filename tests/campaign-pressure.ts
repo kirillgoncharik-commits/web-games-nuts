@@ -1,3 +1,4 @@
+import type {PressureSegment} from '../games/cinder-shift/src/session/mission-pressure';
 import type {RoomState} from '../games/cinder-shift/src/mission';
 
 export function campaignPressure(rooms:Record<string,RoomState>) {
@@ -10,7 +11,7 @@ export function campaignPressure(rooms:Record<string,RoomState>) {
 }
 
 type RouteSnapshot={
-  attemptId:string; activeSeconds:number; score:number;
+  attemptId:string; activeSeconds:number; score:number; pressure?:{segments:PressureSegment[]};
   eventLog:{name:string;params:{attempt_id?:string;room_id?:string;active_duration?:number;score?:number}}[];
 };
 
@@ -22,6 +23,6 @@ export function campaignVisits(snapshot:RouteSnapshot){
     const end=entries[index+1]?.params;
     return {room:params.room_id, entered_seconds:params.active_duration,
       left_seconds:end?.active_duration??snapshot.activeSeconds,
-      score_in:params.score, score_out:end?.score??snapshot.score};
+      score_in:params.score, score_out:end?.score??snapshot.score, energy_segment:snapshot.pressure?.segments[index]};
   });
 }

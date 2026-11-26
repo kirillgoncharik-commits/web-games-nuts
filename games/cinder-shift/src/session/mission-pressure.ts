@@ -1,3 +1,4 @@
+import type {RoomId} from '../room-data';
 import type {Difficulty} from './difficulty';
 import type {PlayableMissionId} from './missions';
 
@@ -36,6 +37,19 @@ export const pressureCapacity = {
  YU01: 115, YU02: 105, YU03: 130, YU04: 140, YU05: 140
 } satisfies Record<PlayableMissionId, number>;
 
+export type PressureSegment = {
+ room: RoomId;
+ activeMs: number;
+ energyIn: number;
+ energyOut: number;
+ minEnergy: number;
+ volleys: number;
+ chargedVolleys: number;
+ gained: number;
+ clipped: number;
+ exit: 'transfer' | 'victory' | 'death' | 'abandoned' | null;
+};
+
 export class MissionPressure {
  energy: number;
  lives: number;
@@ -48,6 +62,8 @@ export class MissionPressure {
  chargeClipped = 0;
  charges = new Set<string>();
  waitingForRetry = false;
+ readonly segments: PressureSegment[] = [];
+ private segment: PressureSegment | null = null;
  readonly preset: typeof pressurePresets[Difficulty];
 
  constructor(readonly capacity: number, difficulty: Difficulty = 'easy', lives?: number) {
@@ -56,15 +72,39 @@ export class MissionPressure {
   this.energy = capacity;
  }
 
- spendTime(ms: number) { this.timeSpent += this.spend(this.preset.drain * ms / 1000); }
+ enterRoom(room: RoomId) {
+  this.segment = {room,activeMs:0,energyIn:this.energy,energyOut:this.energy,minEnergy:this.energy,
+   volleys:0,chargedVolleys:0,gained:0,clipped:0,exit:null};
+  this.segments.push(this.segment);
+ }
+
+ leaveRoom(exit: NonNullable<PressureSegment['exit']>) {
+  if(!this.segment)return;
+  this.segment.energyOut=this.energy;
+  this.segment.exit=exit;
+  this.segment=null;
+ }
+
+ spendTime(ms: number) {
+  if(this.segment)this.segment.activeMs+=ms;
+  this.timeSpent += this.spend(this.preset.drain * ms / 1000);
+ }
  spendVolley(charged = false) {
   this.volleyCount++;
   if(charged)this.chargedVolleyCount++;
+  if(this.segment){
+   this.segment.volleys++;
+   if(charged)this.segment.chargedVolleys++;
+  }
   this.fireSpent += this.spend(this.preset.volley * (charged ? 3 : 1));
  }
  private spend(amount: number) {
   const spent = Math.min(this.energy, amount);
   this.energy -= spent;
+  if(this.segment){
+   this.segment.energyOut=this.energy;
+   this.segment.minEnergy=Math.min(this.segment.minEnergy,this.energy);
+  }
   return spent;
  }
 
@@ -73,13 +113,20 @@ export class MissionPressure {
   const gained = Math.min(this.capacity - this.energy, this.capacity * this.preset.charge);
   this.energy += gained;
   this.chargeGained += gained;
-  this.chargeClipped += this.capacity * this.preset.charge - gained;
+  const clipped=this.capacity*this.preset.charge-gained;
+  this.chargeClipped+=clipped;
+  if(this.segment){
+   this.segment.energyOut=this.energy;
+   this.segment.gained+=gained;
+   this.segment.clipped+=clipped;
+  }
   this.charges.add(group);
   return gained;
  }
 
  loseLife() {
   if (this.waitingForRetry || this.lives === 0) return;
+  this.leaveRoom('death');
   this.deaths++;
   this.lives--;
   this.waitingForRetry = this.lives > 0;

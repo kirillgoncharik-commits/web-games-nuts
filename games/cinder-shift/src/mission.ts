@@ -143,7 +143,7 @@ export class MissionAttempt{
   if(worldAbsorb(this.room().world)){this.lastDamageAbsorbed=true;return true;}
   const hpBefore=this.hp;this.hp=Math.max(0,this.hp-incomingDamage(this.balance,reason));if(this.hp===0&&this.build.deathSave&&!this.d4Used){this.d4Used=true;this.lastDeathSaved=true;this.hp=Math.min(this.maxHp,config.m05b3.d4_restore_hp);}if(this.hp<hpBefore){this.room().hpLost+=hpBefore-this.hp;this.damageFlashUntil=now+130;this.scoreLedger?.harm(`accepted-hit-${this.harmEvent++}`);}this.reason=reason;return true;
  }
- finish(result:Result|'abandoned'){if(this.result)return false;if(result==='victory')this.campaignScore?.room(this.current);this.campaignScore?.finish(result);this.result=result;return true;}
+ finish(result:Result|'abandoned'){if(this.result)return false;this.pressure?.leaveRoom(result);if(result==='victory')this.campaignScore?.room(this.current);this.campaignScore?.finish(result);this.result=result;return true;}
 }
 // Render rate never changes simulation steps; long frames are admitted as bounded work.
 export class SimulationClock{
