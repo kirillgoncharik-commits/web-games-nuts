@@ -340,7 +340,7 @@ test('a closed transmitter contact beside a lever keeps the selected circuit whe
 
 for(const locale of ['ru','en'] as const){
  for(const mission of ['SW05','YU05'] as const){
-  test(mission+' guardian shot names the cause on the '+locale+' result screen',async({page},info)=>{
+  test(mission+' guardian shot names the cause on the '+locale+' room retry screen',async({page},info)=>{
    const beacon=mission==='SW05',room=beacon?'SW05-D':'YU05-D';
    const cause=beacon?'beacon-warden-shot':'rift-marshal-shot';
    const label=beacon
@@ -359,7 +359,9 @@ for(const locale of ['ru','en'] as const){
     await page.keyboard.press('j',{delay:300});
    }
    await expect(page.getByTestId('retry')).toBeVisible();
-   expect((await state(page)).campaign.result.reason).toBe(cause);
+   const defeated=await state(page);
+   expect(defeated.screen).toBe('room-retry');
+   expect(defeated.eventLog.findLast((event:any)=>event.name==='death')?.params.reason).toBe(cause);
    await expect(page.getByText((locale==='ru'?'Причина: ':'Cause: ')+label,{exact:true})).toBeVisible();
    await page.screenshot({path:info.outputPath(room+'-'+locale+'-cause.png')});
   });

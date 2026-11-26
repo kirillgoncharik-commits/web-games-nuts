@@ -20,10 +20,16 @@ for(const phaseDash of [false,true])test(`M${phaseDash?4:3} ${phaseDash?'crosses
  const before=(await state(page)).simMs;await page.keyboard.press('k');await until(page,before=>(window as any).__CINDER__().simMs>before+400,before,'phase dash completion');const s=await state(page);expect(s.player.x)[phaseDash?'toBeGreaterThan':'toBeLessThanOrEqual'](phaseDash?400:357);expect(s.roomStates.M5A.brokenPanels).toEqual([]);
 });
 
-test('D4 prevents one real lethal contact after the room shield, then a second lethal hit ends the attempt',async({page})=>{
+test('D4 prevents one lethal hit and remains spent after a room retry',async({page})=>{
  test.setTimeout(45000);await encounter(page,{mission:'reactor',room:'M5I',nodes:['D1','D2','D3','D4'],hp:1,reactorCircuit:'isolation'});await jump(page,106,200);await ground(page,320);await to(page,290);await ground(page,320);
  await until(page,()=>{const s=(window as any).__CINDER__();return s.d4Used;},null,'D4 rescue');const rescued=await state(page);expect(rescued.hp).toBe(2);expect(rescued.bufferUsed).toBe(true);expect(rescued.eventLog.filter((e:any)=>e.name==='death_prevented')).toHaveLength(1);
  await until(page,()=>(window as any).__CINDER__().state==='dead',null,'second lethal contact',20000);const dead=await state(page);expect(dead.hp).toBe(0);expect(dead.eventLog.filter((e:any)=>e.name==='death_prevented')).toHaveLength(1);
+ await page.getByTestId('retry').click();
+ await expect.poll(async()=>(await state(page)).hp).toBe(rescued.maxHp);
+ const retried=await state(page);
+ expect(retried.room).toBe('M5I');
+ expect(retried.d4Used).toBe(true);
+ expect(retried.pressure.lives).toBe(2);
 });
 
 import {hasEvent,planEvents} from '../games/cinder-shift/src/session/events';

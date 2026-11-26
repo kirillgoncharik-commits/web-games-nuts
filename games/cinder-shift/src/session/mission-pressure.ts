@@ -26,6 +26,7 @@ export const pressureStations: Partial<Record<string, {group: string; x: number;
  'SW05-B': {group: 'SW05', x: 44, y: 320},
  'YU01-B': {group: 'YU01', x: 44, y: 320},
  'YU02-B': {group: 'YU02', x: 44, y: 320},
+ 'YU02-D': {group: 'YU02-relay', x: 44, y: 320},
  'YU03-B': {group: 'YU03', x: 44, y: 320},
  'YU04-B': {group: 'YU04', x: 44, y: 320},
  'YU05-B': {group: 'YU05', x: 44, y: 320}
